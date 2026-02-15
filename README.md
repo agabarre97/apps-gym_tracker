@@ -105,53 +105,79 @@ Run `make help` to see all available commands.
 ## Project Structure (Hexagonal Architecture)
 
 ```
+assets/
+├── data/
+│   ├── exercises_es.json
+│   ├── exercises_en.json
+│   └── mobility_routines/
+│       └── feet_ankles_2.json
+└── images/
+    └── gym_background.png
+
 lib/
 ├── main.dart
 ├── l10n/
-│   ├── app_es.arb            # Spanish translations (template)
-│   └── app_en.arb            # English translations
+│   ├── app_es.arb
+│   ├── app_en.arb
+│   └── app_localizations*.dart
 ├── domain/
 │   ├── entities/
+│   │   ├── exercise.dart
+│   │   ├── routine.dart
+│   │   ├── mobility_routine.dart
+│   │   ├── mobility_session.dart
+│   │   ├── training_day.dart
+│   │   ├── workout_session.dart
+│   │   ├── muscle_group.dart
 │   │   └── user_profile.dart
 │   └── ports/
 │       ├── storage_port.dart
-│       └── profile_port.dart
+│       ├── profile_port.dart
+│       ├── routine_port.dart
+│       ├── training_day_port.dart
+│       ├── workout_session_port.dart
+│       └── mobility_session_port.dart
 ├── data/
 │   └── datasources/
 │       ├── local_storage_datasource.dart
-│       └── profile_datasource.dart
+│       ├── profile_datasource.dart
+│       ├── routine_datasource.dart
+│       ├── training_day_datasource.dart
+│       ├── workout_session_datasource.dart
+│       └── mobility_session_datasource.dart
 └── presentation/
     ├── components/
-    │   └── language_selector.dart
+    │   ├── language_selector.dart
+    │   ├── selectable_option_card.dart
+    │   ├── routine_type_helper.dart
+    │   ├── mobility_exercise_tile.dart
+    │   └── delete_routine_dialog.dart
     └── screens/
         ├── loading_screen.dart
         ├── get_profile_flow.dart
+        ├── landing_screen.dart
         ├── profile_summary_screen.dart
-        └── profile/
-            ├── basic_info_screen.dart
-            ├── advanced_measures_1_screen.dart
-            ├── advanced_measures_2_screen.dart
-            ├── goals_screen.dart
-            └── welcome_screen.dart
+        ├── profile/
+        ├── routine/
+        ├── workout/
+        └── mobility/
+
+archive/
+├── gym_tracker_compose/   # Android Jetpack Compose scaffold
+├── gym_tracker_flutter/   # Early Flutter scaffold
+└── gym_tracker_expo/      # React Native + Expo scaffold
+
 test/
 ├── helpers/
 │   └── test_helpers.dart
 ├── unit/
-│   ├── domain/
-│   │   └── user_profile_test.dart
 │   ├── data/
-│   │   ├── local_storage_datasource_test.dart
-│   │   └── profile_datasource_test.dart
-│   └── presentation/
-│       └── language_selector_test.dart
+│   └── domain/
 ├── widget/
-│   ├── loading_screen_test.dart
-│   ├── basic_info_screen_test.dart
-│   ├── advanced_measures_1_screen_test.dart
-│   ├── advanced_measures_2_screen_test.dart
-│   ├── goals_screen_test.dart
-│   ├── welcome_screen_test.dart
-│   └── profile_summary_screen_test.dart
+│   ├── profile flow tests
+│   ├── routine creation/detail tests
+│   ├── workout flow tests
+│   └── landing and mobility tests
 └── e2e/
     ├── onboarding_flow_test.dart
     └── language_switch_test.dart
