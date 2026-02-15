@@ -1,0 +1,404 @@
+[
+    {
+        "key": "press_en_multipower_con_ligera_inclinacion",
+        "ejercicio": "Smith machine incline press",
+        "descripcion": "Chest press on a Smith machine with a slightly inclined bench to emphasize the upper pectoral.",
+        "grupo_muscular": [
+            "Pectoral superior",
+            "Deltoide anterior",
+            "Tríceps"
+        ],
+        "dificultad_tecnica": 6
+    },
+    {
+        "key": "press_declinado_en_multipower",
+        "ejercicio": "Smith machine decline press",
+        "descripcion": "Press on a Smith machine with a declined bench to target the lower pectoral.",
+        "grupo_muscular": [
+            "Pectoral inferior",
+            "Tríceps",
+            "Deltoide anterior"
+        ],
+        "dificultad_tecnica": 5
+    },
+    {
+        "key": "press_sentado_guiado",
+        "ejercicio": "Seated machine press",
+        "descripcion": "Guided seated press to work the chest with greater stability.",
+        "grupo_muscular": [
+            "Pectoral",
+            "Tríceps",
+            "Deltoide anterior"
+        ],
+        "dificultad_tecnica": 4
+    },
+    {
+        "key": "cruce_de_poleas",
+        "ejercicio": "Cable crossover",
+        "descripcion": "Cable fly focused on maximum pectoral contraction.",
+        "grupo_muscular": [
+            "Pectoral mayor"
+        ],
+        "dificultad_tecnica": 5
+    },
+    {
+        "key": "elevaciones_laterales_en_banco_inclinado",
+        "ejercicio": "Incline bench lateral raises",
+        "descripcion": "Lateral raises with torso supported to isolate the medial deltoid.",
+        "grupo_muscular": [
+            "Deltoide medio"
+        ],
+        "dificultad_tecnica": 6
+    },
+    {
+        "key": "elevaciones_laterales_con_mancuerna",
+        "ejercicio": "Dumbbell lateral raises",
+        "descripcion": "Shoulder abduction movement with dumbbells to work the medial deltoid.",
+        "grupo_muscular": [
+            "Deltoide medio"
+        ],
+        "dificultad_tecnica": 5
+    },
+    {
+        "key": "elevaciones_laterales_en_polea_baja",
+        "ejercicio": "Low cable lateral raises",
+        "descripcion": "Lateral raise with cable maintaining constant tension throughout the range of motion.",
+        "grupo_muscular": [
+            "Deltoide medio"
+        ],
+        "dificultad_tecnica": 6
+    },
+    {
+        "key": "extension_de_triceps_a_una_mano",
+        "ejercicio": "Single-arm triceps extension",
+        "descripcion": "Unilateral cable extension focused on triceps contraction.",
+        "grupo_muscular": [
+            "Tríceps"
+        ],
+        "dificultad_tecnica": 5
+    },
+    {
+        "key": "extension_trasnuca_en_polea",
+        "ejercicio": "Overhead cable triceps extension",
+        "descripcion": "Overhead triceps extension to emphasize the long head.",
+        "grupo_muscular": [
+            "Tríceps (porción larga)"
+        ],
+        "dificultad_tecnica": 6
+    },
+    {
+        "key": "remo_con_pectoral_apoyado_en_maquina",
+        "ejercicio": "Chest-supported machine row",
+        "descripcion": "Guided row with chest support to isolate the back muscles.",
+        "grupo_muscular": [
+            "Dorsal ancho",
+            "Romboides",
+            "Trapecio medio"
+        ],
+        "dificultad_tecnica": 5
+    },
+    {
+        "key": "jalon_abierto",
+        "ejercicio": "Wide-grip lat pulldown",
+        "descripcion": "Vertical pull with wide grip to work lat width.",
+        "grupo_muscular": [
+            "Dorsal ancho",
+            "Bíceps"
+        ],
+        "dificultad_tecnica": 5
+    },
+    {
+        "key": "jalon_agarre_cerrado",
+        "ejercicio": "Close-grip lat pulldown",
+        "descripcion": "Vertical pull with close grip emphasizing the mid back.",
+        "grupo_muscular": [
+            "Dorsal ancho",
+            "Bíceps"
+        ],
+        "dificultad_tecnica": 5
+    },
+    {
+        "key": "remo_en_polea_baja",
+        "ejercicio": "Seated cable row",
+        "descripcion": "Horizontal row toward the navel to build back thickness.",
+        "grupo_muscular": [
+            "Dorsal ancho",
+            "Romboides",
+            "Trapecio medio",
+            "Bíceps"
+        ],
+        "dificultad_tecnica": 5
+    },
+    {
+        "key": "hiperextensiones_con_lastre",
+        "ejercicio": "Weighted hyperextensions",
+        "descripcion": "Hip extension on a Roman bench to strengthen the posterior chain.",
+        "grupo_muscular": [
+            "Erectores espinales",
+            "Glúteos",
+            "Isquiotibiales"
+        ],
+        "dificultad_tecnica": 6
+    },
+    {
+        "key": "facepull",
+        "ejercicio": "Face pull",
+        "descripcion": "Cable pull toward the face to work the posterior deltoid and scapular stability.",
+        "grupo_muscular": [
+            "Deltoide posterior",
+            "Trapecio medio",
+            "Romboides"
+        ],
+        "dificultad_tecnica": 6
+    },
+    {
+        "key": "pajaros",
+        "ejercicio": "Reverse fly",
+        "descripcion": "Posterior fly to isolate the rear deltoid.",
+        "grupo_muscular": [
+            "Deltoide posterior"
+        ],
+        "dificultad_tecnica": 5
+    },
+    {
+        "key": "curl_de_biceps_con_codos_adelantados_en_polea_baja",
+        "ejercicio": "Cable biceps curl with elbows forward",
+        "descripcion": "Cable curl keeping elbows forward for greater biceps tension.",
+        "grupo_muscular": [
+            "Bíceps braquial"
+        ],
+        "dificultad_tecnica": 6
+    },
+    {
+        "key": "spider_curl",
+        "ejercicio": "Spider curl",
+        "descripcion": "Arm-supported curl to isolate the biceps and minimize swinging.",
+        "grupo_muscular": [
+            "Bíceps braquial"
+        ],
+        "dificultad_tecnica": 6
+    },
+    {
+        "key": "prensa",
+        "ejercicio": "Leg press",
+        "descripcion": "Knee and hip extension on the leg press to primarily work the quadriceps.",
+        "grupo_muscular": [
+            "Cuádriceps",
+            "Glúteos"
+        ],
+        "dificultad_tecnica": 4
+    },
+    {
+        "key": "sentadilla_en_multipower",
+        "ejercicio": "Smith machine squat",
+        "descripcion": "Guided squat to work the lower body with greater stability.",
+        "grupo_muscular": [
+            "Cuádriceps",
+            "Glúteos",
+            "Isquiotibiales"
+        ],
+        "dificultad_tecnica": 6
+    },
+    {
+        "key": "peso_muerto_rumano_con_mancuerna",
+        "ejercicio": "Dumbbell Romanian deadlift",
+        "descripcion": "Hip hinge focused on hamstrings and glutes.",
+        "grupo_muscular": [
+            "Isquiotibiales",
+            "Glúteos",
+            "Erectores espinales"
+        ],
+        "dificultad_tecnica": 7
+    },
+    {
+        "key": "extension_de_cuadriceps",
+        "ejercicio": "Leg extension",
+        "descripcion": "Knee extension on a machine to isolate the quadriceps.",
+        "grupo_muscular": [
+            "Cuádriceps"
+        ],
+        "dificultad_tecnica": 3
+    },
+    {
+        "key": "sentadilla_bulgara",
+        "ejercicio": "Bulgarian split squat",
+        "descripcion": "Unilateral squat with rear foot elevated to build stability and strength.",
+        "grupo_muscular": [
+            "Cuádriceps",
+            "Glúteos",
+            "Isquiotibiales"
+        ],
+        "dificultad_tecnica": 8
+    },
+    {
+        "key": "femoral_sentado",
+        "ejercicio": "Seated leg curl",
+        "descripcion": "Seated knee flexion on a machine to isolate the hamstrings.",
+        "grupo_muscular": [
+            "Isquiotibiales"
+        ],
+        "dificultad_tecnica": 3
+    },
+    {
+        "key": "femoral_tumbado",
+        "ejercicio": "Lying leg curl",
+        "descripcion": "Lying knee flexion on a machine to work the hamstrings.",
+        "grupo_muscular": [
+            "Isquiotibiales"
+        ],
+        "dificultad_tecnica": 3
+    },
+    {
+        "key": "gemelo_en_prensa",
+        "ejercicio": "Calf press",
+        "descripcion": "Plantar flexion on the leg press to strengthen the calf muscles.",
+        "grupo_muscular": [
+            "Gemelos",
+            "Sóleo"
+        ],
+        "dificultad_tecnica": 3
+    },
+    {
+        "key": "press_tumbado_con_mancuernas",
+        "ejercicio": "Dumbbell bench press",
+        "descripcion": "Horizontal press with dumbbells requiring active stabilization.",
+        "grupo_muscular": [
+            "Pectoral mayor",
+            "Tríceps",
+            "Deltoide anterior"
+        ],
+        "dificultad_tecnica": 7
+    },
+    {
+        "key": "press_sentado_en_maquina",
+        "ejercicio": "Seated machine press",
+        "descripcion": "Guided press to work chest or shoulder with controlled stability.",
+        "grupo_muscular": [
+            "Pectoral",
+            "Deltoide anterior",
+            "Tríceps"
+        ],
+        "dificultad_tecnica": 4
+    },
+    {
+        "key": "aperturas_con_mancuerna",
+        "ejercicio": "Dumbbell fly",
+        "descripcion": "Horizontal fly movement to stretch and contract the pectoral.",
+        "grupo_muscular": [
+            "Pectoral mayor"
+        ],
+        "dificultad_tecnica": 6
+    },
+    {
+        "key": "press_para_hombros",
+        "ejercicio": "Shoulder press",
+        "descripcion": "Vertical press to develop the anterior and medial deltoid.",
+        "grupo_muscular": [
+            "Deltoide anterior",
+            "Deltoide medio",
+            "Tríceps"
+        ],
+        "dificultad_tecnica": 6
+    },
+    {
+        "key": "pullover",
+        "ejercicio": "Pullover",
+        "descripcion": "Shoulder extension movement targeting the lats and pectoral.",
+        "grupo_muscular": [
+            "Dorsal ancho",
+            "Pectoral mayor"
+        ],
+        "dificultad_tecnica": 6
+    },
+    {
+        "key": "curl_a_la_sien",
+        "ejercicio": "Temple curl",
+        "descripcion": "Biceps curl with trajectory toward the temple to emphasize the long head.",
+        "grupo_muscular": [
+            "Bíceps braquial"
+        ],
+        "dificultad_tecnica": 6
+    },
+    {
+        "key": "extension_de_triceps_con_cuerda",
+        "ejercicio": "Rope triceps extension",
+        "descripcion": "Cable extension with rope emphasizing the final contraction.",
+        "grupo_muscular": [
+            "Tríceps"
+        ],
+        "dificultad_tecnica": 4
+    },
+    {
+        "key": "curl_en_polea_baja",
+        "ejercicio": "Low cable biceps curl",
+        "descripcion": "Cable curl with eccentric control to maintain constant tension.",
+        "grupo_muscular": [
+            "Bíceps braquial"
+        ],
+        "dificultad_tecnica": 6
+    },
+    {
+        "key": "extension_en_cruz",
+        "ejercicio": "Cross cable triceps extension",
+        "descripcion": "Triceps extension on crossed cables to emphasize contraction.",
+        "grupo_muscular": [
+            "Tríceps"
+        ],
+        "dificultad_tecnica": 6
+    },
+    {
+        "key": "biceps_en_maquina",
+        "ejercicio": "Machine biceps curl",
+        "descripcion": "Guided machine curl to isolate the biceps with stability.",
+        "grupo_muscular": [
+            "Bíceps braquial"
+        ],
+        "dificultad_tecnica": 3
+    },
+    {
+        "key": "extension_unilateral_en_polea_alta",
+        "ejercicio": "Single-arm high cable triceps extension",
+        "descripcion": "Individual triceps extension on high cable with load control.",
+        "grupo_muscular": [
+            "Tríceps"
+        ],
+        "dificultad_tecnica": 5
+    },
+    {
+        "key": "kazz_press",
+        "ejercicio": "Kaz press",
+        "descripcion": "Triceps press with barbell or dumbbells on a flat bench combining extension and press to maximize long-head triceps activation.",
+        "grupo_muscular": [
+            "Tríceps"
+        ],
+        "dificultad_tecnica": 4
+    },
+    {
+        "key": "curl_bayesian_con_banco",
+        "ejercicio": "Bayesian curl on bench",
+        "descripcion": "Low cable biceps curl performed on an incline bench maintaining continuous tension and maximum biceps elongation.",
+        "grupo_muscular": [
+            "Bíceps braquial"
+        ],
+        "dificultad_tecnica": 4
+    },
+    {
+        "key": "press_katana_unilateral",
+        "ejercicio": "Unilateral katana press",
+        "descripcion": "Overhead triceps extension with cable or dumbbell using one arm, emphasizing the long head of the triceps.",
+        "grupo_muscular": [
+            "Tríceps"
+        ],
+        "dificultad_tecnica": 5
+    },
+    {
+        "key": "pullover_unilateral",
+        "ejercicio": "Unilateral pullover",
+        "descripcion": "Single-arm pullover with dumbbell or cable to work the lats, serratus, and scapular stability.",
+        "grupo_muscular": [
+            "Dorsal ancho",
+            "Serrato anterior"
+        ],
+        "dificultad_tecnica": 4
+    }
+]

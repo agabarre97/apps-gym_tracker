@@ -1,0 +1,21 @@
+{
+  "key": "feet_ankles_2",
+  "name_key": "mobility_feet_ankles_2",
+  "total_duration_minutes": 11,
+  "exercises": [
+    {"key": "single_leg_stand", "duration_seconds": 30, "bilateral": false},
+    {"key": "ankle_circles", "duration_seconds": 30, "bilateral": false},
+    {"key": "heel_to_toe_rocks", "duration_seconds": 30, "bilateral": true},
+    {"key": "lateral_foot_rocks", "duration_seconds": 30, "bilateral": true},
+    {"key": "knee_circles", "duration_seconds": 30, "bilateral": true},
+    {"key": "soleus_stretch", "duration_seconds": 60, "bilateral": false},
+    {"key": "leaning_calf", "duration_seconds": 60, "bilateral": false},
+    {"key": "toe_to_wall", "duration_seconds": 60, "bilateral": false},
+    {"key": "standing_quad", "duration_seconds": 60, "bilateral": false},
+    {"key": "single_leg_calf_stretch", "duration_seconds": 60, "bilateral": false},
+    {"key": "single_leg_shin_stretch", "duration_seconds": 60, "bilateral": false},
+    {"key": "toe_stretch", "duration_seconds": 60, "bilateral": false},
+    {"key": "thunderbolt", "duration_seconds": 30, "bilateral": true},
+    {"key": "toe_squat", "duration_seconds": 30, "bilateral": true}
+  ]
+}

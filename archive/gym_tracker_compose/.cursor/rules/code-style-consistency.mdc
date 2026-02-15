@@ -1,0 +1,15 @@
+---
+description: Ensure new code follows established style and conventions
+globs: app/src/**/*.kt
+alwaysApply: false
+---
+
+# Code Style Consistency
+
+Before generating code, analyze the codebase for:
+- Naming conventions (camelCase for variables, PascalCase for classes)
+- Indentation (4 spaces)
+- Import organization
+- Kotlin idioms (coroutines, Flow, etc.)
+
+Adapt new code to match existing patterns. Structure new modules to mirror similar existing modules.

@@ -1,0 +1,18 @@
+---
+description: Android Jetpack Compose best practices
+globs: app/src/**/*.kt
+alwaysApply: false
+---
+
+# Android Jetpack Compose Best Practices
+
+- Follow Material Design 3 guidelines and components
+- Implement clean architecture with domain, data, and presentation layers
+- Use Kotlin coroutines and Flow for asynchronous operations
+- Follow unidirectional data flow with ViewModel and UI State
+- Use Compose navigation for screen management
+- Implement proper state hoisting and composition
+- Use remember and derivedStateOf appropriately
+- Implement proper recomposition optimization
+- Use proper Compose modifiers ordering
+- Implement proper error handling and loading states

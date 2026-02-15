@@ -1,0 +1,16 @@
+---
+description: Flutter app expert best practices
+globs: lib/**/*.dart
+alwaysApply: false
+---
+
+# Flutter Best Practices
+
+- Use Flutter 3.x features and Material 3 design
+- Implement clean architecture with domain, data, and presentation layers
+- Use proper null safety practices
+- Use const constructors when possible
+- Keep widgets small and focused
+- Implement proper error handling
+- Follow proper widget composition and layout principles
+- Use proper dependency injection (GetIt or similar)

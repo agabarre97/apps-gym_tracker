@@ -1,0 +1,20 @@
+---
+description: Core code guidelines for the project
+alwaysApply: true
+---
+
+# Code Guidelines
+
+1. Verify information before presenting it. Do not assume or speculate without clear evidence.
+2. Make changes file by file and give the user a chance to spot mistakes.
+3. Never use apologies.
+4. Preserve existing code; do not remove unrelated code or functionalities.
+5. Use explicit, descriptive variable names over short, ambiguous ones.
+6. Follow consistent coding style with the project.
+7. Prioritize performance where applicable.
+8. Consider security implications when modifying code.
+9. Suggest or include appropriate unit tests for new or modified code.
+10. Implement robust error handling and logging.
+11. Encourage modular design for maintainability and reusability.
+12. Avoid magic numbers; use named constants.
+13. Consider edge cases when implementing logic.

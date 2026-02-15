@@ -1,0 +1,15 @@
+---
+description: Ensure new code follows established style and conventions
+globs: lib/**/*.dart
+alwaysApply: false
+---
+
+# Code Style Consistency
+
+Before generating code, analyze the codebase for:
+- Naming conventions (camelCase for variables, PascalCase for classes)
+- Indentation (2 spaces)
+- Import organization
+- Functional vs OOP usage
+
+Adapt new code to match existing patterns. Prefer libraries already in use. Structure new modules to mirror similar existing modules.

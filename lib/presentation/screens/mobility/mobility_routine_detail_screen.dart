@@ -1,0 +1,204 @@
+import 'package:flutter/material.dart';
+
+import 'package:gym_tracker/domain/entities/mobility_routine.dart';
+import 'package:gym_tracker/domain/entities/routine.dart';
+import 'package:gym_tracker/domain/ports/mobility_session_port.dart';
+import 'package:gym_tracker/domain/ports/routine_port.dart';
+import 'package:gym_tracker/l10n/app_localizations.dart';
+import 'package:gym_tracker/presentation/components/delete_routine_dialog.dart';
+import 'package:gym_tracker/presentation/components/mobility_exercise_tile.dart';
+import 'package:gym_tracker/presentation/screens/mobility/mobility_timer_screen.dart';
+
+/// Detail screen for a mobility routine.
+///
+/// Shows every exercise in its own card (no day grouping).
+/// Start and delete buttons at the bottom, properly spaced.
+class MobilityRoutineDetailScreen extends StatefulWidget {
+  const MobilityRoutineDetailScreen({
+    super.key,
+    required this.routine,
+    required this.allRoutines,
+    required this.routinePort,
+    required this.mobilitySessionPort,
+  });
+
+  final Routine routine;
+  final List<Routine> allRoutines;
+  final RoutinePort routinePort;
+  final MobilitySessionPort mobilitySessionPort;
+
+  @override
+  State<MobilityRoutineDetailScreen> createState() =>
+      _MobilityRoutineDetailScreenState();
+}
+
+class _MobilityRoutineDetailScreenState
+    extends State<MobilityRoutineDetailScreen> {
+  MobilityRoutine? _mobilityRoutine;
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadRoutine();
+  }
+
+  Future<void> _loadRoutine() async {
+    final key = widget.routine.recommendedRoutineKey;
+    if (key == null) {
+      setState(() => _loading = false);
+      return;
+    }
+    try {
+      final mr = await MobilityRoutine.loadFromAsset(key);
+      setState(() {
+        _mobilityRoutine = mr;
+        _loading = false;
+      });
+    } catch (_) {
+      setState(() => _loading = false);
+    }
+  }
+
+  Future<void> _confirmDelete() async {
+    final confirmed = await showDeleteRoutineDialog(
+      context,
+      routineName: widget.routine.name,
+    );
+
+    if (confirmed != true || !mounted) return;
+
+    final updated =
+        widget.allRoutines.where((r) => r.id != widget.routine.id).toList();
+    await widget.routinePort.saveRoutines(updated);
+
+    if (!mounted) return;
+    Navigator.of(context).pop(true);
+  }
+
+  Future<void> _startRoutine() async {
+    final mr = _mobilityRoutine;
+    if (mr == null) return;
+
+    await Navigator.of(context).push<bool>(
+      MaterialPageRoute(
+        builder: (_) => MobilityTimerScreen(
+          routine: mr,
+          mobilitySessionPort: widget.mobilitySessionPort,
+          routineName: widget.routine.name,
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    return Scaffold(
+      appBar: AppBar(title: Text(widget.routine.name)),
+      body: _loading
+          ? const Center(child: CircularProgressIndicator())
+          : _mobilityRoutine == null
+              ? Center(
+                  child: Text(
+                    l10n.mobilityRoutineNotFound,
+                    style: const TextStyle(color: Colors.white54),
+                  ),
+                )
+              : _buildContent(l10n),
+    );
+  }
+
+  Widget _buildContent(AppLocalizations l10n) {
+    final mr = _mobilityRoutine!;
+
+    return Column(
+      children: [
+        // Header info
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+          child: Row(
+            children: [
+              const Icon(Icons.timer_outlined,
+                  size: 20, color: Colors.white54),
+              const SizedBox(width: 8),
+              Text(
+                l10n.mobilityRoutineDuration('${mr.totalDurationMinutes}'),
+                style: const TextStyle(fontSize: 14, color: Colors.white54),
+              ),
+              const SizedBox(width: 24),
+              const Icon(Icons.format_list_numbered,
+                  size: 20, color: Colors.white54),
+              const SizedBox(width: 8),
+              Text(
+                l10n.mobilityRoutineExerciseCount('${mr.exercises.length}'),
+                style: const TextStyle(fontSize: 14, color: Colors.white54),
+              ),
+            ],
+          ),
+        ),
+        const Divider(),
+
+        // Exercise cards
+        Expanded(
+          child: ListView.builder(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+            itemCount: mr.exercises.length,
+            itemBuilder: (context, index) => MobilityExerciseTile(
+              exercise: mr.exercises[index],
+              index: index,
+              l10n: l10n,
+              variant: MobilityExerciseTileVariant.detailed,
+            ),
+          ),
+        ),
+
+        // Bottom action buttons
+        SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Start button
+                SizedBox(
+                  width: double.infinity,
+                  height: 52,
+                  child: FilledButton.icon(
+                    onPressed: _startRoutine,
+                    icon: const Icon(Icons.play_arrow),
+                    label: Text(l10n.sharedStart),
+                    style: FilledButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                // Delete button
+                SizedBox(
+                  width: double.infinity,
+                  height: 44,
+                  child: OutlinedButton.icon(
+                    icon: const Icon(Icons.delete_outline, size: 18),
+                    label: Text(l10n.routineDelete),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.redAccent,
+                      side: const BorderSide(color: Colors.redAccent),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    onPressed: _confirmDelete,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}

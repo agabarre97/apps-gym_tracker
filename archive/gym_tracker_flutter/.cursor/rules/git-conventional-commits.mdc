@@ -1,0 +1,18 @@
+---
+description: Conventional commit messages
+alwaysApply: true
+---
+
+# Git Commit Messages
+
+Use Conventional Commits: `type(scope): description`
+
+- `feat:` new feature
+- `fix:` bug fix
+- `docs:` documentation
+- `style:` formatting
+- `refactor:` code restructuring
+- `test:` tests
+- `chore:` maintenance
+
+Example: `feat(storage): add local storage adapter`

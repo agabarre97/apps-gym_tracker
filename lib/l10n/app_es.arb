@@ -1,0 +1,252 @@
+{
+  "@@locale": "es",
+
+  "@@_SHARED": "Textos compartidos entre múltiples pantallas",
+  "sharedAppTitle": "Gym Tracker",
+  "sharedNext": "Siguiente",
+  "sharedBack": "Atrás",
+  "sharedSkip": "Omitir",
+  "sharedStart": "Comenzar",
+  "sharedGain": "Ganar",
+  "sharedLose": "Perder",
+  "sharedMaintain": "Mantener",
+  "sharedFieldRequired": "Campo obligatorio",
+  "sharedFieldInvalidRange": "Valor fuera de rango ({min}-{max})",
+  "@sharedFieldInvalidRange": {
+    "placeholders": {
+      "min": { "type": "String" },
+      "max": { "type": "String" }
+    }
+  },
+  "sharedNotAvailable": "N/D",
+  "sharedLanguageToggle": "Idioma",
+  "sharedStepOf": "Paso {current} de {total}",
+  "@sharedStepOf": {
+    "placeholders": {
+      "current": { "type": "String" },
+      "total": { "type": "String" }
+    }
+  },
+  "sharedConfirm": "Confirmar",
+  "sharedCancel": "Cancelar",
+  "sharedSave": "Guardar",
+
+  "@@_LOADING": "Pantalla de carga",
+  "loadingMotto": "Improve yourself",
+
+  "@@_LANDING": "Pantalla principal (landing)",
+  "landingTrain": "Entrenar",
+  "landingRoutines": "Mis rutinas",
+  "landingCreateRoutine": "Crear rutina",
+  "landingNoRoutines": "Aún no tienes rutinas",
+  "landingRoutineName": "Nombre de la rutina",
+  "landingDeleteRoutine": "Eliminar",
+  "landingAddTraining": "Añadir entrenamiento",
+  "landingViewDetails": "Ver detalles",
+  "landingFilterAll": "Todos",
+
+  "@@_ROUTINE_CREATION": "Flujo de creación de rutina",
+  "routineSelectType": "Tipo de rutina",
+  "routineMusculacion": "Musculación",
+  "routineAbdominales": "Abdominales",
+  "routinePliometricos": "Pliométricos",
+  "routineMovilidad": "Movilidad",
+  "routineHiit": "HIIT",
+  "routineComingSoon": "Próximamente",
+  "mobilityCadera": "Cadera",
+  "mobilityTobillos": "Tobillos",
+  "mobilityCustomRoutine": "Crear rutina personalizada",
+  "mobilityRecommendedRoutine": "Rutina recomendada",
+  "mobilityChooseOption": "Elige una opción",
+  "mobilityFeetAnkles2": "Pies y tobillos 2",
+
+  "@@_MOBILITY_TIMER": "Pantalla de temporizador de movilidad",
+  "mobilityTimerTitle": "Movilidad",
+  "mobilityExerciseOf": "{current} / {total}",
+  "mobilityLeftSide": "Lado izquierdo",
+  "mobilityRightSide": "Lado derecho",
+  "mobilityBothSides": "Ambos lados",
+  "mobilityRest": "Descanso",
+  "mobilityRestOff": "Sin descanso",
+  "mobilityRestSeconds": "{seconds}s",
+  "mobilityComplete": "¡Completado!",
+  "mobilitySound": "Sonido",
+  "mobilityRestDuration": "Descanso entre ejercicios",
+  "mobilitySettings": "Ajustes",
+  "mobilitySingleLegStand": "Apoyo a una pierna",
+  "mobilityAnkleCircles": "Círculos de tobillo",
+  "mobilityHeelToToeRocks": "Balanceo talón-punta",
+  "mobilityLateralFootRocks": "Balanceo lateral del pie",
+  "mobilityKneeCircles": "Círculos de rodilla",
+  "mobilitySoleusStretch": "Estiramiento de sóleo",
+  "mobilityLeaningCalf": "Estiramiento de gemelo",
+  "mobilityToeToWall": "Punta contra pared",
+  "mobilityStandingQuad": "Estiramiento de cuádriceps",
+  "mobilitySingleLegCalfStretch": "Estiramiento de gemelo a una pierna",
+  "mobilitySingleLegShinStretch": "Estiramiento de tibial a una pierna",
+  "mobilityToeStretch": "Estiramiento de dedos",
+  "mobilityThunderbolt": "Postura del rayo",
+  "mobilityToeSquat": "Sentadilla de dedos",
+  "mobilityRoutineNotFound": "No se encontró la rutina de movilidad",
+  "mobilityRoutineDuration": "{minutes} min",
+  "@mobilityRoutineDuration": {
+    "placeholders": {
+      "minutes": { "type": "String" }
+    }
+  },
+  "mobilityRoutineExerciseCount": "{count} ejercicios",
+  "@mobilityRoutineExerciseCount": {
+    "placeholders": {
+      "count": { "type": "String" }
+    }
+  },
+  "mobilityNextExercise": "Siguiente",
+  "mobilityGetReady": "¡Prepárate!",
+  "mobilityFinishEarly": "Finalizar",
+  "mobilityFinishEarlyConfirm": "¿Quieres finalizar la rutina?",
+
+  "routineSelectDays": "¿Cuántos días por semana?",
+  "routineDayOf": "Día {current} de {total}",
+  "@routineDayOf": {
+    "placeholders": {
+      "current": { "type": "String" },
+      "total": { "type": "String" }
+    }
+  },
+  "routineDaysCount": "{count} días",
+  "@routineDaysCount": {
+    "placeholders": {
+      "count": { "type": "String" }
+    }
+  },
+  "routineSelectMuscleGroups": "Grupos musculares",
+  "routineSelectExercises": "Selecciona ejercicios",
+  "routineExerciseDetail": "Detalle del ejercicio",
+  "routineAdd": "Añadir",
+  "routineRemove": "Quitar",
+  "routineSelected": "{count} seleccionados",
+  "@routineSelected": {
+    "placeholders": {
+      "count": { "type": "String" }
+    }
+  },
+  "routineSummaryTitle": "Resumen de rutina",
+  "routineNameHint": "Nombre de la rutina",
+  "routineSave": "Guardar rutina",
+  "routineDifficulty": "Dificultad",
+  "routineMuscles": "Músculos",
+  "routineDayLabel": "Día {day}",
+  "@routineDayLabel": {
+    "placeholders": {
+      "day": { "type": "String" }
+    }
+  },
+  "routineExercises": "ejercicios",
+  "routineDeleteTitle": "Eliminar rutina",
+  "routineDeleteConfirm": "¿Estás seguro de que quieres eliminar \"{name}\"?",
+  "@routineDeleteConfirm": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "routineDelete": "Eliminar",
+  "routineEditDay": "Editar",
+  "routineViewProgress": "Ver progreso",
+
+  "@@_PROGRESS": "Pantalla de progreso de ejercicio",
+  "progressTitle": "Progreso",
+  "progressPeriod1m": "1 mes",
+  "progressPeriod3m": "3 meses",
+  "progressPeriod6m": "6 meses",
+  "progressPeriod12m": "12 meses",
+  "progressMetricVolume": "Volumen (kg)",
+  "progressMetricMaxWeight": "Peso máximo",
+  "progressMetricTotalReps": "Reps totales",
+  "progressFirstRecord": "Primer registro",
+  "progressLastRecord": "Último registro",
+  "progressMinValue": "Mínimo",
+  "progressMaxValue": "Máximo",
+  "progressNoData": "No hay datos en este periodo",
+
+  "@@_WORKOUT": "Flujo de entrenamiento",
+  "workoutPickRoutine": "Elige una rutina",
+  "workoutPickDay": "Elige un día",
+  "workoutStart": "Comenzar",
+  "workoutFinish": "Finalizar entrenamiento",
+  "workoutFinishConfirm": "¿Quieres finalizar el entrenamiento?",
+  "workoutSets": "Series",
+  "workoutSet": "Serie {n}",
+  "@workoutSet": {
+    "placeholders": {
+      "n": { "type": "String" }
+    }
+  },
+  "workoutReps": "Reps",
+  "workoutWeight": "Peso (kg)",
+  "workoutNotes": "Observaciones",
+  "workoutSaveExercise": "Guardar",
+  "workoutExerciseDone": "Hecho",
+  "workoutAddSet": "Añadir serie",
+  "workoutRemoveSet": "Quitar serie",
+  "workoutElapsed": "Tiempo",
+  "workoutNoRoutines": "Crea una rutina primero",
+  "workoutSaveChanges": "Guardar cambios",
+  "workoutSessionsForDay": "Entrenamientos del día",
+  "workoutSessionTime": "{start} - {end}",
+  "@workoutSessionTime": {
+    "placeholders": {
+      "start": { "type": "String" },
+      "end": { "type": "String" }
+    }
+  },
+  "workoutSessionNoTime": "Sin registro de tiempo",
+  "workoutDayLabel": "Día {day}",
+  "@workoutDayLabel": {
+    "placeholders": {
+      "day": { "type": "String" }
+    }
+  },
+
+  "@@_BASIC_INFO": "Pantalla de información básica",
+  "basicInfoTitle": "Información básica",
+  "basicInfoBirthDate": "Fecha de nacimiento",
+  "basicInfoBirthDateHint": "Pulsa para seleccionar",
+  "basicInfoSex": "Sexo",
+  "basicInfoSexMale": "Hombre",
+  "basicInfoSexFemale": "Mujer",
+  "basicInfoWeight": "Peso (kg)",
+  "basicInfoHeight": "Altura (cm)",
+  "basicInfoGymExperience": "Experiencia en gimnasio",
+  "basicInfoExpLessThan1": "<1 año",
+  "basicInfoExp1to3": "1-3 años",
+  "basicInfoExp3to5": "3-5 años",
+  "basicInfoExpMoreThan5": ">5 años",
+
+  "@@_ADVANCED_MEASURES_1": "Pantalla de medidas avanzadas 1",
+  "advancedMeasures1Title": "Medidas avanzadas 1",
+  "advancedMeasures1ArmSpan": "Envergadura brazo a brazo (cm)",
+  "advancedMeasures1BicepsPerimeter": "Perímetro de bíceps (cm)",
+  "advancedMeasures1ChestPerimeter": "Perímetro de pecho (cm)",
+
+  "@@_ADVANCED_MEASURES_2": "Pantalla de medidas avanzadas 2",
+  "advancedMeasures2Title": "Medidas avanzadas 2",
+  "advancedMeasures2WaistPerimeter": "Perímetro de cintura (cm)",
+  "advancedMeasures2QuadPerimeter": "Perímetro de cuádriceps (cm)",
+  "advancedMeasures2CalfPerimeter": "Perímetro de pantorrilla (cm)",
+
+  "@@_GOALS": "Pantalla de objetivos",
+  "goalsTitle": "Objetivos",
+  "goalsWeightObjective": "Objetivo de peso",
+  "goalsTargetWeight": "Peso objetivo (kg)",
+  "goalsKcalToGain": "Kcal/día para ganar",
+  "goalsKcalToLose": "Kcal/día para perder",
+
+  "@@_WELCOME": "Pantalla de bienvenida",
+  "welcomeTitle": "Bienvenido",
+  "welcomeMotivationalGain": "Es hora de construir. Cada repetición cuenta.",
+  "welcomeMotivationalLose": "Más ligero, más fuerte, imparable.",
+  "welcomeMotivationalMaintain": "Constancia es la clave. Sigue así.",
+
+  "@@_PROFILE_SUMMARY": "Pantalla de resumen del perfil",
+  "profileSummaryTitle": "Tu perfil"
+}
