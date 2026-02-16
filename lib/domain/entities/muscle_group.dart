@@ -12,6 +12,7 @@ enum MuscleGroupCategory {
   gluteos,
   isquiotibiales,
   gemelos,
+  abdominales,
 }
 
 /// Maps each category to the raw JSON muscle-group strings it covers.
@@ -55,6 +56,13 @@ const Map<MuscleGroupCategory, List<String>> muscleGroupMapping = {
     'Gemelos',
     'Sóleo',
   ],
+  MuscleGroupCategory.abdominales: [
+    'Abdominales',
+    'Recto abdominal',
+    'Recto abdominal inferior',
+    'Core profundo',
+    'Oblicuos',
+  ],
 };
 
 /// Display names for each category (Spanish — default).
@@ -68,6 +76,7 @@ const Map<MuscleGroupCategory, String> muscleGroupLabelEs = {
   MuscleGroupCategory.gluteos: 'Glúteos',
   MuscleGroupCategory.isquiotibiales: 'Isquiotibiales',
   MuscleGroupCategory.gemelos: 'Gemelos',
+  MuscleGroupCategory.abdominales: 'Abdominales',
 };
 
 /// Display names for each category (English).
@@ -81,6 +90,7 @@ const Map<MuscleGroupCategory, String> muscleGroupLabelEn = {
   MuscleGroupCategory.gluteos: 'Glutes',
   MuscleGroupCategory.isquiotibiales: 'Hamstrings',
   MuscleGroupCategory.gemelos: 'Calves',
+  MuscleGroupCategory.abdominales: 'Abs',
 };
 
 /// Returns the localised label map for a given language code.
@@ -98,6 +108,7 @@ const Map<MuscleGroupCategory, IconData> muscleGroupIcons = {
   MuscleGroupCategory.gluteos: Icons.event_seat,
   MuscleGroupCategory.isquiotibiales: Icons.directions_run,
   MuscleGroupCategory.gemelos: Icons.do_not_step,
+  MuscleGroupCategory.abdominales: Icons.self_improvement,
 };
 
 /// Filters exercises that have at least one muscle group matching

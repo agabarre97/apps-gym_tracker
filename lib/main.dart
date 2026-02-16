@@ -17,6 +17,7 @@ import 'package:gym_tracker/data/datasources/training_day_datasource.dart';
 import 'package:gym_tracker/domain/ports/sync_port.dart';
 import 'package:gym_tracker/data/datasources/workout_session_datasource.dart';
 import 'package:gym_tracker/data/datasources/mobility_session_datasource.dart';
+import 'package:gym_tracker/data/datasources/hiit_session_datasource.dart';
 import 'package:gym_tracker/domain/ports/auth_port.dart';
 import 'package:gym_tracker/domain/ports/profile_port.dart';
 import 'package:gym_tracker/domain/ports/routine_port.dart';
@@ -24,6 +25,7 @@ import 'package:gym_tracker/domain/ports/storage_port.dart';
 import 'package:gym_tracker/domain/ports/training_day_port.dart';
 import 'package:gym_tracker/domain/ports/workout_session_port.dart';
 import 'package:gym_tracker/domain/ports/mobility_session_port.dart';
+import 'package:gym_tracker/domain/ports/hiit_session_port.dart';
 import 'package:gym_tracker/firebase_options.dart';
 import 'package:gym_tracker/presentation/components/language_selector.dart';
 import 'package:gym_tracker/presentation/screens/loading_screen.dart';
@@ -76,6 +78,8 @@ void main() async {
       WorkoutSessionDatasource(storage);
   final MobilitySessionPort mobilitySessionPort =
       MobilitySessionDatasource(storage);
+  final HiitSessionPort hiitSessionPort =
+      HiitSessionDatasource(storage);
 
   runApp(GymTrackerApp(
     storage: storage,
@@ -86,6 +90,7 @@ void main() async {
     trainingDayPort: trainingDayPort,
     workoutSessionPort: workoutSessionPort,
     mobilitySessionPort: mobilitySessionPort,
+    hiitSessionPort: hiitSessionPort,
   ));
 }
 
@@ -100,6 +105,7 @@ class GymTrackerApp extends StatefulWidget {
     required this.trainingDayPort,
     required this.workoutSessionPort,
     required this.mobilitySessionPort,
+    required this.hiitSessionPort,
   });
 
   final StoragePort storage;
@@ -110,6 +116,7 @@ class GymTrackerApp extends StatefulWidget {
   final TrainingDayPort trainingDayPort;
   final WorkoutSessionPort workoutSessionPort;
   final MobilitySessionPort mobilitySessionPort;
+  final HiitSessionPort hiitSessionPort;
 
   @override
   State<GymTrackerApp> createState() => _GymTrackerAppState();
@@ -160,6 +167,7 @@ class _GymTrackerAppState extends State<GymTrackerApp> {
         trainingDayPort: widget.trainingDayPort,
         workoutSessionPort: widget.workoutSessionPort,
         mobilitySessionPort: widget.mobilitySessionPort,
+        hiitSessionPort: widget.hiitSessionPort,
         onLocaleChanged: _setLocale,
       ),
     );

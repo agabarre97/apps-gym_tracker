@@ -4,45 +4,57 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:uuid/uuid.dart';
 
-import 'package:gym_tracker/domain/entities/mobility_routine.dart';
-import 'package:gym_tracker/domain/entities/mobility_session.dart';
-import 'package:gym_tracker/domain/ports/mobility_session_port.dart';
+import 'package:gym_tracker/domain/entities/hiit_exercise.dart';
+import 'package:gym_tracker/domain/entities/hiit_session.dart';
+import 'package:gym_tracker/domain/ports/hiit_session_port.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
 import 'package:gym_tracker/presentation/components/circular_timer_painter.dart';
-import 'package:gym_tracker/presentation/components/mobility_exercise_tile.dart';
+import 'package:gym_tracker/presentation/components/time_wheel_picker.dart';
+import 'package:gym_tracker/presentation/screens/hiit/hiit_config_screen.dart';
 import 'package:gym_tracker/presentation/utils/time_formatter.dart';
 
-/// Full-screen mobility timer with preview, countdown, circular timer,
-/// rest periods, beeps, and early finish support.
-class MobilityTimerScreen extends StatefulWidget {
-  const MobilityTimerScreen({
+/// Full-screen HIIT timer with preview, countdown, exercise/rest phases,
+/// set rest, and completion.
+class HiitTimerScreen extends StatefulWidget {
+  const HiitTimerScreen({
     super.key,
-    required this.routine,
-    required this.mobilitySessionPort,
+    required this.exercises,
     required this.routineName,
+    required this.sets,
+    required this.workSeconds,
+    required this.restSeconds,
+    required this.setRestSeconds,
+    required this.hiitSessionPort,
   });
 
-  final MobilityRoutine routine;
-  final MobilitySessionPort mobilitySessionPort;
+  final List<HiitExercise> exercises;
   final String routineName;
+  final int sets;
+  final int workSeconds;
+  final int restSeconds;
+  final int setRestSeconds;
+  final HiitSessionPort hiitSessionPort;
 
   @override
-  State<MobilityTimerScreen> createState() => _MobilityTimerScreenState();
+  State<HiitTimerScreen> createState() => _HiitTimerScreenState();
 }
 
-enum _Phase { preview, countdown, exercise, rest, complete }
+enum _Phase { preview, countdown, exercise, exerciseRest, setRest, complete }
 
-class _MobilityTimerScreenState extends State<MobilityTimerScreen>
+class _HiitTimerScreenState extends State<HiitTimerScreen>
     with SingleTickerProviderStateMixin {
   static const _countdownDuration = 5;
 
-  // Settings
-  int _restSeconds = 5;
+  // Configurable settings (can be adjusted in preview)
+  late int _sets;
+  late int _workSeconds;
+  late int _restSeconds;
+  late int _setRestSeconds;
   bool _soundEnabled = true;
 
   // Timer state
+  int _setIndex = 0;
   int _exerciseIndex = 0;
-  bool _isLeftSide = true;
   _Phase _phase = _Phase.preview;
   int _remainingSeconds = 0;
   int _totalPhaseSeconds = 0;
@@ -58,6 +70,10 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
   @override
   void initState() {
     super.initState();
+    _sets = widget.sets;
+    _workSeconds = widget.workSeconds;
+    _restSeconds = widget.restSeconds;
+    _setRestSeconds = widget.setRestSeconds;
     _animController = AnimationController(vsync: this);
     _progressAnim =
         Tween<double>(begin: 1.0, end: 0.0).animate(_animController);
@@ -70,33 +86,26 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
     super.dispose();
   }
 
-  MobilityExercise get _currentExercise =>
-      widget.routine.exercises[_exerciseIndex];
+  HiitExercise get _currentExercise => widget.exercises[_exerciseIndex];
 
-  MobilityExercise? get _nextExercise {
+  HiitExercise? get _nextExercise {
     final nextIdx = _exerciseIndex + 1;
-    if (nextIdx < widget.routine.exercises.length) {
-      return widget.routine.exercises[nextIdx];
+    if (nextIdx < widget.exercises.length) {
+      return widget.exercises[nextIdx];
     }
     return null;
   }
 
-  int get _totalExerciseSteps {
-    int count = 0;
-    for (final ex in widget.routine.exercises) {
-      count += ex.bilateral ? 1 : 2;
-    }
-    return count;
+  int get _totalDurationSeconds {
+    final exerciseCount = widget.exercises.length;
+    final workPerSet = exerciseCount * _workSeconds;
+    final restPerSet = (exerciseCount - 1) * _restSeconds;
+    final setRest = (_sets - 1) * _setRestSeconds;
+    return _sets * (workPerSet + restPerSet) + setRest;
   }
 
-  int get _currentStepNumber {
-    int count = 0;
-    for (int i = 0; i < _exerciseIndex; i++) {
-      count += widget.routine.exercises[i].bilateral ? 1 : 2;
-    }
-    if (!_currentExercise.bilateral && !_isLeftSide) count++;
-    return count + 1;
-  }
+  String _formatDuration(int totalSeconds) =>
+      TimeFormatter.duration(totalSeconds);
 
   // ── Start / Phases ────────────────────────────────────────────
 
@@ -142,8 +151,10 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
         _startFirstExercise();
       case _Phase.exercise:
         _advanceAfterExercise();
-      case _Phase.rest:
+      case _Phase.exerciseRest:
         _advanceToNextExercise();
+      case _Phase.setRest:
+        _advanceToNextSet();
       default:
         break;
     }
@@ -151,46 +162,61 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
 
   void _startFirstExercise() {
     setState(() {
+      _setIndex = 0;
+      _exerciseIndex = 0;
       _phase = _Phase.exercise;
       _paused = false;
     });
-    _beginPhase(_currentExercise.durationSeconds);
+    _beginPhase(_workSeconds);
   }
 
   void _advanceAfterExercise() {
-    final ex = _currentExercise;
-    if (!ex.bilateral && _isLeftSide) {
-      setState(() => _isLeftSide = false);
-      _beginPhase(ex.durationSeconds);
-      return;
-    }
-    if (_exerciseIndex < widget.routine.exercises.length - 1) {
-      _startRest();
+    // After an exercise: either rest between exercises, set rest, or complete
+    if (_exerciseIndex < widget.exercises.length - 1) {
+      // More exercises in this set → exercise rest
+      if (_restSeconds > 0) {
+        setState(() {
+          _phase = _Phase.exerciseRest;
+          _paused = false;
+        });
+        _beginPhase(_restSeconds);
+      } else {
+        _advanceToNextExercise();
+      }
+    } else if (_setIndex < _sets - 1) {
+      // Last exercise of set, more sets to go → set rest
+      if (_setRestSeconds > 0) {
+        setState(() {
+          _phase = _Phase.setRest;
+          _paused = false;
+        });
+        _beginPhase(_setRestSeconds);
+      } else {
+        _advanceToNextSet();
+      }
     } else {
+      // All sets done
       _onRoutineComplete();
     }
-  }
-
-  void _startRest() {
-    if (_restSeconds == 0) {
-      _advanceToNextExercise();
-      return;
-    }
-    setState(() {
-      _phase = _Phase.rest;
-      _paused = false;
-    });
-    _beginPhase(_restSeconds);
   }
 
   void _advanceToNextExercise() {
     setState(() {
       _exerciseIndex++;
-      _isLeftSide = true;
       _phase = _Phase.exercise;
       _paused = false;
     });
-    _beginPhase(_currentExercise.durationSeconds);
+    _beginPhase(_workSeconds);
+  }
+
+  void _advanceToNextSet() {
+    setState(() {
+      _setIndex++;
+      _exerciseIndex = 0;
+      _phase = _Phase.exercise;
+      _paused = false;
+    });
+    _beginPhase(_workSeconds);
   }
 
   Future<void> _onRoutineComplete() async {
@@ -198,16 +224,16 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
     _animController.stop();
     setState(() => _phase = _Phase.complete);
 
-    final session = MobilitySession(
+    final session = HiitSession(
       id: const Uuid().v4(),
-      routineKey: widget.routine.key,
+      routineName: widget.routineName,
       date: DateTime.now(),
       startTime: _sessionStartTime,
       endTime: DateTime.now(),
     );
 
-    final existing = await widget.mobilitySessionPort.loadSessions();
-    await widget.mobilitySessionPort.saveSessions([...existing, session]);
+    final existing = await widget.hiitSessionPort.loadSessions();
+    await widget.hiitSessionPort.saveSessions([...existing, session]);
   }
 
   // ── Finish early ──────────────────────────────────────────────
@@ -215,15 +241,14 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
   Future<void> _confirmFinishEarly() async {
     final l10n = AppLocalizations.of(context)!;
 
-    // Pause while the dialog is open
     final wasPaused = _paused;
     if (!_paused) _togglePause();
 
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text(l10n.mobilityFinishEarly),
-        content: Text(l10n.mobilityFinishEarlyConfirm),
+        title: Text(l10n.hiitFinishEarly),
+        content: Text(l10n.hiitFinishEarlyConfirm),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
@@ -232,7 +257,7 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
             style: TextButton.styleFrom(foregroundColor: Colors.redAccent),
-            child: Text(l10n.mobilityFinishEarly),
+            child: Text(l10n.hiitFinishEarly),
           ),
         ],
       ),
@@ -273,45 +298,60 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
             return SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(20),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(l10n.mobilitySettings,
-                        style: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 16),
-                    Text(l10n.mobilityRestDuration,
-                        style: const TextStyle(fontSize: 14)),
-                    const SizedBox(height: 8),
-                    SegmentedButton<int>(
-                      segments: [
-                        ButtonSegment(
-                            value: 0, label: Text(l10n.mobilityRestOff)),
-                        ButtonSegment(
-                            value: 5,
-                            label: Text(l10n.mobilityRestSeconds('5'))),
-                        ButtonSegment(
-                            value: 10,
-                            label: Text(l10n.mobilityRestSeconds('10'))),
-                      ],
-                      selected: {_restSeconds},
-                      onSelectionChanged: (val) {
-                        setSheetState(() => _restSeconds = val.first);
-                        setState(() {});
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    SwitchListTile(
-                      contentPadding: EdgeInsets.zero,
-                      title: Text(l10n.mobilitySound),
-                      value: _soundEnabled,
-                      onChanged: (val) {
-                        setSheetState(() => _soundEnabled = val);
-                        setState(() {});
-                      },
-                    ),
-                  ],
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(l10n.hiitConfig,
+                          style: const TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 16),
+                      // Work duration
+                      _buildSettingsTimeRow(
+                        label: l10n.hiitWorkDuration,
+                        value: _workSeconds,
+                        min: hiitMinWorkSeconds,
+                        max: hiitMaxWorkSeconds,
+                        onChanged: (v) {
+                          setSheetState(() => _workSeconds = v);
+                          setState(() {});
+                        },
+                      ),
+                      // Rest between exercises
+                      _buildSettingsTimeRow(
+                        label: l10n.hiitRestDuration,
+                        value: _restSeconds,
+                        min: hiitMinRestSeconds,
+                        max: hiitMaxRestSeconds,
+                        onChanged: (v) {
+                          setSheetState(() => _restSeconds = v);
+                          setState(() {});
+                        },
+                      ),
+                      // Rest between sets
+                      _buildSettingsTimeRow(
+                        label: l10n.hiitSetRestDuration,
+                        value: _setRestSeconds,
+                        min: hiitMinSetRestSeconds,
+                        max: hiitMaxSetRestSeconds,
+                        onChanged: (v) {
+                          setSheetState(() => _setRestSeconds = v);
+                          setState(() {});
+                        },
+                      ),
+                      const SizedBox(height: 8),
+                      SwitchListTile(
+                        contentPadding: EdgeInsets.zero,
+                        title: Text(l10n.mobilitySound),
+                        value: _soundEnabled,
+                        onChanged: (val) {
+                          setSheetState(() => _soundEnabled = val);
+                          setState(() {});
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );
@@ -327,10 +367,10 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    final showSettings =
-        _phase != _Phase.complete && _phase != _Phase.preview;
+    final showSettings = _phase == _Phase.preview;
     final showFinish = _phase == _Phase.exercise ||
-        _phase == _Phase.rest ||
+        _phase == _Phase.exerciseRest ||
+        _phase == _Phase.setRest ||
         _phase == _Phase.countdown;
 
     return Scaffold(
@@ -341,7 +381,7 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
             TextButton(
               onPressed: _confirmFinishEarly,
               child: Text(
-                l10n.mobilityFinishEarly,
+                l10n.hiitFinishEarly,
                 style: const TextStyle(color: Colors.redAccent),
               ),
             ),
@@ -349,7 +389,7 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
             IconButton(
               icon: const Icon(Icons.settings),
               onPressed: _showSettings,
-              tooltip: l10n.mobilitySettings,
+              tooltip: l10n.hiitConfig,
             ),
         ],
       ),
@@ -365,20 +405,66 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
   // ── Preview ───────────────────────────────────────────────────
 
   Widget _buildPreview(AppLocalizations l10n) {
-    final exercises = widget.routine.exercises;
-
     return Column(
       children: [
+        // Total duration header
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+          child: Row(
+            children: [
+              const Icon(Icons.timer_outlined, size: 20, color: Colors.white54),
+              const SizedBox(width: 8),
+              Text(
+                '${l10n.hiitTotalDuration}: ${_formatDuration(_totalDurationSeconds)}',
+                style: const TextStyle(fontSize: 14, color: Colors.white54),
+              ),
+            ],
+          ),
+        ),
+        // Config summary
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Wrap(
+            spacing: 8,
+            children: [
+              Chip(
+                avatar: const Icon(Icons.repeat, size: 16),
+                label: Text(l10n.hiitSetCount('$_sets')),
+              ),
+              Chip(
+                avatar: const Icon(Icons.fitness_center, size: 16),
+                label: Text(l10n.hiitSeconds('$_workSeconds')),
+              ),
+              Chip(
+                avatar: const Icon(Icons.pause, size: 16),
+                label: Text(l10n.hiitSeconds('$_restSeconds')),
+              ),
+            ],
+          ),
+        ),
+        const Divider(),
         Expanded(
           child: ListView.builder(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-            itemCount: exercises.length,
-            itemBuilder: (context, index) => MobilityExerciseTile(
-              exercise: exercises[index],
-              index: index,
-              l10n: l10n,
-              variant: MobilityExerciseTileVariant.compact,
-            ),
+            itemCount: widget.exercises.length,
+            itemBuilder: (context, index) {
+              final exercise = widget.exercises[index];
+              return ListTile(
+                dense: true,
+                leading: CircleAvatar(
+                  radius: 14,
+                  backgroundColor: Colors.white12,
+                  child: Text('${index + 1}',
+                      style: const TextStyle(fontSize: 12, color: Colors.white70)),
+                ),
+                title: Text(exercise.name,
+                    style: const TextStyle(color: Colors.white)),
+                subtitle: Text(exercise.description,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontSize: 12, color: Colors.white38)),
+              );
+            },
           ),
         ),
         SafeArea(
@@ -399,7 +485,7 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
     );
   }
 
-  // ── Countdown (Get ready!) ────────────────────────────────────
+  // ── Countdown ─────────────────────────────────────────────────
 
   Widget _buildCountdown(AppLocalizations l10n) {
     return SafeArea(
@@ -408,7 +494,7 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              l10n.mobilityGetReady,
+              l10n.hiitGetReady,
               style: const TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
@@ -417,7 +503,7 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
             ),
             const SizedBox(height: 12),
             Text(
-              mobilityExerciseDisplayName(_currentExercise.key, l10n),
+              _currentExercise.name,
               style: const TextStyle(fontSize: 16, color: Colors.white54),
             ),
             const SizedBox(height: 40),
@@ -455,65 +541,79 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
     );
   }
 
-  // ── Timer ─────────────────────────────────────────────────────
+  // ── Timer view (exercise, exerciseRest, setRest) ──────────────
 
   Widget _buildTimerView(AppLocalizations l10n) {
-    final isRest = _phase == _Phase.rest;
-    final exerciseName =
-        mobilityExerciseDisplayName(_currentExercise.key, l10n);
+    final isExercise = _phase == _Phase.exercise;
+    final isExerciseRest = _phase == _Phase.exerciseRest;
+    final isSetRest = _phase == _Phase.setRest;
 
-    String sideLabel;
-    if (isRest) {
-      sideLabel = l10n.mobilityRest;
-    } else if (_currentExercise.bilateral) {
-      sideLabel = l10n.mobilityBothSides;
+    String title;
+    String subtitle;
+    Color timerColor;
+
+    if (isExercise) {
+      title = _currentExercise.name;
+      subtitle = l10n.hiitSetOf('${_setIndex + 1}', '$_sets');
+      timerColor = Colors.greenAccent;
+    } else if (isExerciseRest) {
+      title = l10n.hiitRest;
+      subtitle = l10n.hiitExerciseOf(
+          '${_exerciseIndex + 1}', '${widget.exercises.length}');
+      timerColor = Colors.orangeAccent;
     } else {
-      sideLabel =
-          _isLeftSide ? l10n.mobilityLeftSide : l10n.mobilityRightSide;
+      title = l10n.hiitSetComplete;
+      subtitle = l10n.hiitSetRest;
+      timerColor = Colors.blueAccent;
     }
 
-    final stepInfo = l10n.mobilityExerciseOf(
-      '$_currentStepNumber',
-      '$_totalExerciseSteps',
-    );
+    final stepInfo = isExercise
+        ? l10n.hiitExerciseOf(
+            '${_exerciseIndex + 1}', '${widget.exercises.length}')
+        : '';
 
     return SafeArea(
       child: Column(
         children: [
           const SizedBox(height: 16),
-          Text(stepInfo,
+          if (stepInfo.isNotEmpty)
+            Text(stepInfo,
+                style: const TextStyle(fontSize: 14, color: Colors.white54)),
+          if (stepInfo.isNotEmpty) const SizedBox(height: 4),
+          Text(subtitle,
               style: const TextStyle(fontSize: 14, color: Colors.white54)),
           const SizedBox(height: 8),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Text(
-              exerciseName,
+              title,
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: isRest ? Colors.white38 : Colors.white,
+                color: isExercise ? Colors.white : timerColor,
               ),
               textAlign: TextAlign.center,
             ),
           ),
           const SizedBox(height: 8),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-            decoration: BoxDecoration(
-              color: isRest ? Colors.orange.withAlpha(40) : Colors.white12,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(
-              sideLabel,
-              style: TextStyle(
-                fontSize: 14,
-                color: isRest ? Colors.orangeAccent : Colors.white70,
-                fontWeight: FontWeight.w600,
+          if (isExercise)
+            Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+              decoration: BoxDecoration(
+                color: Colors.white12,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                l10n.hiitSetOf('${_setIndex + 1}', '$_sets'),
+                style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.white70,
+                    fontWeight: FontWeight.w600),
               ),
             ),
-          ),
 
-          // Circular timer with smooth animation
+          // Circular timer
           Expanded(
             child: Center(
               child: SizedBox(
@@ -525,9 +625,7 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
                     return CustomPaint(
                       painter: CircularTimerPainter(
                         progress: 1.0 - _progressAnim.value,
-                        color: isRest
-                            ? Colors.orangeAccent
-                            : Colors.greenAccent,
+                        color: timerColor,
                         backgroundColor: Colors.white12,
                         strokeWidth: 10,
                       ),
@@ -546,10 +644,14 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
                             color: Colors.white,
                           ),
                         ),
-                        if (isRest)
-                          Text(l10n.mobilityRest,
-                              style: const TextStyle(
-                                  fontSize: 14, color: Colors.orangeAccent)),
+                        if (!isExercise)
+                          Text(
+                            isExerciseRest
+                                ? l10n.hiitRest
+                                : l10n.hiitSetRest,
+                            style: TextStyle(
+                                fontSize: 14, color: timerColor),
+                          ),
                       ],
                     ),
                   ),
@@ -558,20 +660,20 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
             ),
           ),
 
-          // Next exercise info during rest
-          if (isRest && _nextExercise != null)
+          // Next exercise info during rest phases
+          if ((isExerciseRest && _nextExercise != null) || isSetRest)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.skip_next,
-                      size: 18, color: Colors.white38),
+                  const Icon(Icons.skip_next, size: 18, color: Colors.white38),
                   const SizedBox(width: 6),
                   Text(
-                    mobilityExerciseDisplayName(_nextExercise!.key, l10n),
-                    style: const TextStyle(
-                        fontSize: 14, color: Colors.white54),
+                    isSetRest
+                        ? '${l10n.hiitSetOf('${_setIndex + 2}', '$_sets')} — ${widget.exercises.first.name}'
+                        : _nextExercise!.name,
+                    style: const TextStyle(fontSize: 14, color: Colors.white54),
                   ),
                 ],
               ),
@@ -606,15 +708,14 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
             const Icon(Icons.check_circle,
                 size: 80, color: Colors.greenAccent),
             const SizedBox(height: 24),
-            Text(l10n.mobilityComplete,
+            Text(l10n.hiitComplete,
                 style: const TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
                     color: Colors.white)),
             const SizedBox(height: 12),
             Text(widget.routineName,
-                style:
-                    const TextStyle(fontSize: 16, color: Colors.white54)),
+                style: const TextStyle(fontSize: 16, color: Colors.white54)),
             const SizedBox(height: 48),
             FilledButton.icon(
               onPressed: () => Navigator.of(context).pop(true),
@@ -628,4 +729,32 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
   }
 
   String _formatSeconds(int seconds) => TimeFormatter.mmss(seconds);
+
+  Widget _buildSettingsTimeRow({
+    required String label,
+    required int value,
+    required int min,
+    required int max,
+    required ValueChanged<int> onChanged,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(label, style: const TextStyle(fontSize: 14)),
+          ),
+          TimeWheelPicker(
+            minSeconds: min,
+            maxSeconds: max,
+            stepSeconds: hiitTimeStepSeconds,
+            selectedSeconds: value,
+            onChanged: onChanged,
+            height: 100,
+            width: 80,
+          ),
+        ],
+      ),
+    );
+  }
 }

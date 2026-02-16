@@ -8,8 +8,6 @@ abstract final class RoutineTypeHelper {
     switch (type) {
       case 'musculacion':
         return l10n.routineMusculacion;
-      case 'abdominales':
-        return l10n.routineAbdominales;
       case 'pliometricos':
         return l10n.routinePliometricos;
       case 'movilidad':
@@ -26,8 +24,6 @@ abstract final class RoutineTypeHelper {
     switch (type) {
       case 'musculacion':
         return Icons.fitness_center;
-      case 'abdominales':
-        return Icons.self_improvement;
       case 'pliometricos':
         return Icons.directions_run;
       case 'movilidad':

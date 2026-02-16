@@ -356,12 +356,6 @@ abstract class AppLocalizations {
   /// **'Musculación'**
   String get routineMusculacion;
 
-  /// No description provided for @routineAbdominales.
-  ///
-  /// In es, this message translates to:
-  /// **'Abdominales'**
-  String get routineAbdominales;
-
   /// No description provided for @routinePliometricos.
   ///
   /// In es, this message translates to:
@@ -805,6 +799,144 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'¿Quieres finalizar la rutina?'**
   String get mobilityFinishEarlyConfirm;
+
+  /// No description provided for @hiitSelectExercises.
+  ///
+  /// In es, this message translates to:
+  /// **'Selecciona ejercicios'**
+  String get hiitSelectExercises;
+
+  /// No description provided for @hiitWarningTooMany.
+  ///
+  /// In es, this message translates to:
+  /// **'No se recomienda seleccionar más de 6 ejercicios'**
+  String get hiitWarningTooMany;
+
+  /// No description provided for @hiitConfig.
+  ///
+  /// In es, this message translates to:
+  /// **'Configuración'**
+  String get hiitConfig;
+
+  /// No description provided for @hiitSets.
+  ///
+  /// In es, this message translates to:
+  /// **'Series'**
+  String get hiitSets;
+
+  /// No description provided for @hiitWorkDuration.
+  ///
+  /// In es, this message translates to:
+  /// **'Tiempo de trabajo'**
+  String get hiitWorkDuration;
+
+  /// No description provided for @hiitRestDuration.
+  ///
+  /// In es, this message translates to:
+  /// **'Descanso entre ejercicios'**
+  String get hiitRestDuration;
+
+  /// No description provided for @hiitSetRestDuration.
+  ///
+  /// In es, this message translates to:
+  /// **'Descanso entre series'**
+  String get hiitSetRestDuration;
+
+  /// No description provided for @hiitTotalDuration.
+  ///
+  /// In es, this message translates to:
+  /// **'Duración total'**
+  String get hiitTotalDuration;
+
+  /// No description provided for @hiitTimerTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'HIIT'**
+  String get hiitTimerTitle;
+
+  /// No description provided for @hiitSetOf.
+  ///
+  /// In es, this message translates to:
+  /// **'Serie {current} / {total}'**
+  String hiitSetOf(String current, String total);
+
+  /// No description provided for @hiitExerciseOf.
+  ///
+  /// In es, this message translates to:
+  /// **'Ejercicio {current} / {total}'**
+  String hiitExerciseOf(String current, String total);
+
+  /// No description provided for @hiitRest.
+  ///
+  /// In es, this message translates to:
+  /// **'Descanso'**
+  String get hiitRest;
+
+  /// No description provided for @hiitSetRest.
+  ///
+  /// In es, this message translates to:
+  /// **'Descanso entre series'**
+  String get hiitSetRest;
+
+  /// No description provided for @hiitComplete.
+  ///
+  /// In es, this message translates to:
+  /// **'¡Completado!'**
+  String get hiitComplete;
+
+  /// No description provided for @hiitGetReady.
+  ///
+  /// In es, this message translates to:
+  /// **'¡Prepárate!'**
+  String get hiitGetReady;
+
+  /// No description provided for @hiitFinishEarly.
+  ///
+  /// In es, this message translates to:
+  /// **'Finalizar'**
+  String get hiitFinishEarly;
+
+  /// No description provided for @hiitFinishEarlyConfirm.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Quieres finalizar el HIIT?'**
+  String get hiitFinishEarlyConfirm;
+
+  /// No description provided for @hiitSeconds.
+  ///
+  /// In es, this message translates to:
+  /// **'{seconds}s'**
+  String hiitSeconds(String seconds);
+
+  /// No description provided for @hiitMinutes.
+  ///
+  /// In es, this message translates to:
+  /// **'{minutes} min'**
+  String hiitMinutes(String minutes);
+
+  /// No description provided for @hiitExerciseCount.
+  ///
+  /// In es, this message translates to:
+  /// **'{count} ejercicios'**
+  String hiitExerciseCount(String count);
+
+  /// No description provided for @hiitSetCount.
+  ///
+  /// In es, this message translates to:
+  /// **'{count} series'**
+  String hiitSetCount(String count);
+
+  /// No description provided for @hiitNextExercise.
+  ///
+  /// In es, this message translates to:
+  /// **'Siguiente'**
+  String get hiitNextExercise;
+
+  /// No description provided for @hiitSetComplete.
+  ///
+  /// In es, this message translates to:
+  /// **'Serie completada'**
+  String get hiitSetComplete;
 
   /// No description provided for @routineSelectDays.
   ///

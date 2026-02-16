@@ -13,6 +13,7 @@ import 'package:gym_tracker/domain/ports/storage_port.dart';
 import 'package:gym_tracker/domain/ports/training_day_port.dart';
 import 'package:gym_tracker/domain/ports/workout_session_port.dart';
 import 'package:gym_tracker/domain/ports/mobility_session_port.dart';
+import 'package:gym_tracker/domain/ports/hiit_session_port.dart';
 import 'package:gym_tracker/domain/entities/workout_session.dart';
 import 'package:gym_tracker/presentation/components/language_selector.dart';
 import 'package:gym_tracker/presentation/components/routine_type_helper.dart';
@@ -21,6 +22,7 @@ import 'package:gym_tracker/presentation/screens/profile_summary_screen.dart';
 import 'package:gym_tracker/presentation/screens/routine/create_routine_flow.dart';
 import 'package:gym_tracker/presentation/screens/routine/routine_detail_screen.dart';
 import 'package:gym_tracker/presentation/screens/mobility/mobility_routine_detail_screen.dart';
+import 'package:gym_tracker/presentation/screens/hiit/hiit_detail_screen.dart';
 import 'package:gym_tracker/presentation/screens/workout/routine_picker_screen.dart';
 import 'package:gym_tracker/presentation/screens/workout/day_picker_screen.dart';
 import 'package:gym_tracker/presentation/screens/workout/workout_session_screen.dart';
@@ -40,6 +42,7 @@ class LandingScreen extends StatefulWidget {
     required this.trainingDayPort,
     required this.workoutSessionPort,
     required this.mobilitySessionPort,
+    required this.hiitSessionPort,
     required this.onLocaleChanged,
     this.authPort,
     this.syncedStorage,
@@ -51,6 +54,7 @@ class LandingScreen extends StatefulWidget {
   final TrainingDayPort trainingDayPort;
   final WorkoutSessionPort workoutSessionPort;
   final MobilitySessionPort mobilitySessionPort;
+  final HiitSessionPort hiitSessionPort;
   final ValueChanged<Locale> onLocaleChanged;
   final AuthPort? authPort;
   final SyncPort? syncedStorage;
@@ -177,6 +181,25 @@ class _LandingScreenState extends State<LandingScreen> {
     // Mobility routine: go straight to timer
     if (routine.recommendedRoutineKey != null) {
       await _startMobilityFlow(routine, date);
+      return;
+    }
+
+    // HIIT routine: open detail screen (which has its own timer entry)
+    if (routine.type == 'hiit') {
+      final result = await Navigator.of(context).push<bool>(
+        MaterialPageRoute(
+          builder: (_) => HiitDetailScreen(
+            routine: routine,
+            allRoutines: _routines,
+            routinePort: widget.routinePort,
+            hiitSessionPort: widget.hiitSessionPort,
+          ),
+        ),
+      );
+      if (result == true && mounted) {
+        await _markDayTrained(date);
+        _loadData();
+      }
       return;
     }
 
@@ -441,6 +464,17 @@ class _LandingScreenState extends State<LandingScreen> {
           ),
         ),
       );
+    } else if (routine.type == 'hiit') {
+      result = await Navigator.of(context).push<bool>(
+        MaterialPageRoute(
+          builder: (_) => HiitDetailScreen(
+            routine: routine,
+            allRoutines: _routines,
+            routinePort: widget.routinePort,
+            hiitSessionPort: widget.hiitSessionPort,
+          ),
+        ),
+      );
     } else {
       result = await Navigator.of(context).push<bool>(
         MaterialPageRoute(
@@ -481,6 +515,7 @@ class _LandingScreenState extends State<LandingScreen> {
           trainingDayPort: widget.trainingDayPort,
           workoutSessionPort: widget.workoutSessionPort,
           mobilitySessionPort: widget.mobilitySessionPort,
+          hiitSessionPort: widget.hiitSessionPort,
           onLocaleChanged: widget.onLocaleChanged,
         ),
       ),
@@ -826,6 +861,7 @@ class _SignedOutRedirect extends StatelessWidget {
     required this.trainingDayPort,
     required this.workoutSessionPort,
     required this.mobilitySessionPort,
+    required this.hiitSessionPort,
     required this.onLocaleChanged,
   });
 
@@ -837,6 +873,7 @@ class _SignedOutRedirect extends StatelessWidget {
   final TrainingDayPort trainingDayPort;
   final WorkoutSessionPort workoutSessionPort;
   final MobilitySessionPort mobilitySessionPort;
+  final HiitSessionPort hiitSessionPort;
   final ValueChanged<Locale> onLocaleChanged;
 
   @override
@@ -854,6 +891,7 @@ class _SignedOutRedirect extends StatelessWidget {
               trainingDayPort: trainingDayPort,
               workoutSessionPort: workoutSessionPort,
               mobilitySessionPort: mobilitySessionPort,
+              hiitSessionPort: hiitSessionPort,
               onLocaleChanged: onLocaleChanged,
               authPort: authPort,
               syncedStorage: syncedStorage,

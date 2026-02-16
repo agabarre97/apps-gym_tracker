@@ -1,0 +1,92 @@
+[
+  {
+    "key": "mountain_climbers",
+    "ejercicio": "Mountain climbers",
+    "descripcion": "From a plank position, alternate bringing your knees to your chest quickly."
+  },
+  {
+    "key": "jumping_jacks",
+    "ejercicio": "Jumping jacks",
+    "descripcion": "Jump while spreading arms and legs to raise your heart rate."
+  },
+  {
+    "key": "burpees",
+    "ejercicio": "Burpees",
+    "descripcion": "Combines squat, plank, push-up and explosive jump in one movement."
+  },
+  {
+    "key": "high_knee_sprints",
+    "ejercicio": "High knee sprints",
+    "descripcion": "Run in place lifting your knees as high as possible."
+  },
+  {
+    "key": "jump_rope",
+    "ejercicio": "Jump rope",
+    "descripcion": "Jump simulating a rope to improve coordination and heart rate."
+  },
+  {
+    "key": "rowing_machine_sprints",
+    "ejercicio": "Rowing machine sprints",
+    "descripcion": "Row at maximum intensity during the work period."
+  },
+  {
+    "key": "treadmill_sprint",
+    "ejercicio": "Treadmill sprint",
+    "descripcion": "Run at high speed on a treadmill during intervals."
+  },
+  {
+    "key": "treadmill_hills",
+    "ejercicio": "Treadmill hills",
+    "descripcion": "Sprint on an incline to increase cardiovascular work intensity."
+  },
+  {
+    "key": "battle_ropes",
+    "ejercicio": "Battle ropes",
+    "descripcion": "Wave the ropes forcefully alternating your arms."
+  },
+  {
+    "key": "rebounder_jumps",
+    "ejercicio": "Rebounder jumps",
+    "descripcion": "Jumps on a mini trampoline for low-impact cardio."
+  },
+  {
+    "key": "stair_running",
+    "ejercicio": "Stair running",
+    "descripcion": "Run up stairs as fast as possible during the interval."
+  },
+  {
+    "key": "kettlebell_swings",
+    "ejercicio": "Kettlebell swings",
+    "descripcion": "Swing the kettlebell from between your legs to shoulder height."
+  },
+  {
+    "key": "box_jumps",
+    "ejercicio": "Box jumps",
+    "descripcion": "Jump explosively onto a stable box or platform."
+  },
+  {
+    "key": "plank_jacks",
+    "ejercicio": "Plank jacks",
+    "descripcion": "From a plank, open and close your legs like jumping jacks."
+  },
+  {
+    "key": "jump_squats",
+    "ejercicio": "Jump squats",
+    "descripcion": "Squat with an explosive jump at the top of the movement."
+  },
+  {
+    "key": "jump_lunges",
+    "ejercicio": "Jump lunges",
+    "descripcion": "Alternate lunges with a jump, switching legs in the air."
+  },
+  {
+    "key": "sprint_in_place",
+    "ejercicio": "Sprint in place",
+    "descripcion": "Run in place at maximum speed focusing on explosiveness."
+  },
+  {
+    "key": "butt_kickers",
+    "ejercicio": "Butt kickers",
+    "descripcion": "Run in place bringing your heels to your glutes."
+  }
+]

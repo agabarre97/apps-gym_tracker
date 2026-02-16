@@ -9,6 +9,7 @@ import 'package:gym_tracker/domain/ports/storage_port.dart';
 import 'package:gym_tracker/domain/ports/training_day_port.dart';
 import 'package:gym_tracker/domain/ports/workout_session_port.dart';
 import 'package:gym_tracker/domain/ports/mobility_session_port.dart';
+import 'package:gym_tracker/domain/ports/hiit_session_port.dart';
 import 'package:gym_tracker/presentation/screens/auth/auth_screen.dart';
 import 'package:gym_tracker/presentation/screens/get_profile_flow.dart';
 import 'package:gym_tracker/presentation/screens/landing_screen.dart';
@@ -28,6 +29,7 @@ class LoadingScreen extends StatefulWidget {
     required this.trainingDayPort,
     required this.workoutSessionPort,
     required this.mobilitySessionPort,
+    required this.hiitSessionPort,
     required this.onLocaleChanged,
   });
 
@@ -39,6 +41,7 @@ class LoadingScreen extends StatefulWidget {
   final TrainingDayPort trainingDayPort;
   final WorkoutSessionPort workoutSessionPort;
   final MobilitySessionPort mobilitySessionPort;
+  final HiitSessionPort hiitSessionPort;
   final ValueChanged<Locale> onLocaleChanged;
 
   @override
@@ -102,6 +105,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
                   trainingDayPort: widget.trainingDayPort,
                   workoutSessionPort: widget.workoutSessionPort,
                   mobilitySessionPort: widget.mobilitySessionPort,
+                  hiitSessionPort: widget.hiitSessionPort,
                   onLocaleChanged: widget.onLocaleChanged,
                   authPort: widget.authPort!,
                   syncedStorage: widget.syncedStorage!,
@@ -122,6 +126,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
         trainingDayPort: widget.trainingDayPort,
         workoutSessionPort: widget.workoutSessionPort,
         mobilitySessionPort: widget.mobilitySessionPort,
+        hiitSessionPort: widget.hiitSessionPort,
         onLocaleChanged: widget.onLocaleChanged,
         authPort: widget.authPort,
         syncedStorage: widget.syncedStorage,
@@ -175,6 +180,7 @@ Future<void> _routeByProfile({
   required TrainingDayPort trainingDayPort,
   required WorkoutSessionPort workoutSessionPort,
   required MobilitySessionPort mobilitySessionPort,
+  required HiitSessionPort hiitSessionPort,
   required ValueChanged<Locale> onLocaleChanged,
   required bool Function() mounted,
   AuthPort? authPort,
@@ -191,6 +197,7 @@ Future<void> _routeByProfile({
           trainingDayPort: trainingDayPort,
           workoutSessionPort: workoutSessionPort,
           mobilitySessionPort: mobilitySessionPort,
+          hiitSessionPort: hiitSessionPort,
           onLocaleChanged: onLocaleChanged,
           authPort: authPort,
           syncedStorage: syncedStorage,
@@ -202,6 +209,7 @@ Future<void> _routeByProfile({
           trainingDayPort: trainingDayPort,
           workoutSessionPort: workoutSessionPort,
           mobilitySessionPort: mobilitySessionPort,
+          hiitSessionPort: hiitSessionPort,
           onLocaleChanged: onLocaleChanged,
           authPort: authPort,
           syncedStorage: syncedStorage,
@@ -223,6 +231,7 @@ class _PostAuthRouter extends StatefulWidget {
     required this.trainingDayPort,
     required this.workoutSessionPort,
     required this.mobilitySessionPort,
+    required this.hiitSessionPort,
     required this.onLocaleChanged,
     required this.authPort,
     required this.syncedStorage,
@@ -234,6 +243,7 @@ class _PostAuthRouter extends StatefulWidget {
   final TrainingDayPort trainingDayPort;
   final WorkoutSessionPort workoutSessionPort;
   final MobilitySessionPort mobilitySessionPort;
+  final HiitSessionPort hiitSessionPort;
   final ValueChanged<Locale> onLocaleChanged;
   final AuthPort authPort;
   final SyncPort syncedStorage;
@@ -254,6 +264,7 @@ class _PostAuthRouterState extends State<_PostAuthRouter> {
       trainingDayPort: widget.trainingDayPort,
       workoutSessionPort: widget.workoutSessionPort,
       mobilitySessionPort: widget.mobilitySessionPort,
+      hiitSessionPort: widget.hiitSessionPort,
       onLocaleChanged: widget.onLocaleChanged,
       authPort: widget.authPort,
       syncedStorage: widget.syncedStorage,

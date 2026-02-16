@@ -1,0 +1,518 @@
+import 'package:flutter/material.dart';
+import 'package:gym_tracker/domain/entities/hiit_exercise.dart';
+import 'package:gym_tracker/domain/entities/routine.dart';
+import 'package:gym_tracker/domain/ports/hiit_session_port.dart';
+import 'package:gym_tracker/domain/ports/routine_port.dart';
+import 'package:gym_tracker/l10n/app_localizations.dart';
+import 'package:gym_tracker/presentation/components/delete_routine_dialog.dart';
+import 'package:gym_tracker/presentation/components/export_sheet.dart';
+import 'package:gym_tracker/presentation/components/time_wheel_picker.dart';
+import 'package:gym_tracker/presentation/screens/hiit/hiit_config_screen.dart';
+import 'package:gym_tracker/presentation/screens/hiit/hiit_timer_screen.dart';
+import 'package:gym_tracker/presentation/utils/time_formatter.dart';
+
+/// Detail screen for an existing HIIT routine.
+///
+/// Displays exercise list, configuration summary, and offers
+/// settings adjustment before starting the timer.
+class HiitDetailScreen extends StatefulWidget {
+  const HiitDetailScreen({
+    super.key,
+    required this.routine,
+    required this.allRoutines,
+    required this.routinePort,
+    required this.hiitSessionPort,
+    @visibleForTesting this.preloadedExercises,
+  });
+
+  final Routine routine;
+  final List<Routine> allRoutines;
+  final RoutinePort routinePort;
+  final HiitSessionPort hiitSessionPort;
+
+  /// HIIT exercises injected for testing (skips asset loading).
+  @visibleForTesting
+  final List<HiitExercise>? preloadedExercises;
+
+  @override
+  State<HiitDetailScreen> createState() => _HiitDetailScreenState();
+}
+
+class _HiitDetailScreenState extends State<HiitDetailScreen> {
+  List<HiitExercise> _allHiitExercises = [];
+  bool _loading = true;
+  bool _loadStarted = false;
+
+  // Mutable config that can be adjusted before starting
+  late int _sets;
+  late int _workSeconds;
+  late int _restSeconds;
+  late int _setRestSeconds;
+
+  @override
+  void initState() {
+    super.initState();
+    _sets = widget.routine.hiitSets ?? hiitDefaultSets;
+    _workSeconds = widget.routine.hiitWorkSeconds ?? hiitDefaultWorkSeconds;
+    _restSeconds = widget.routine.hiitRestSeconds ?? hiitDefaultRestSeconds;
+    _setRestSeconds =
+        widget.routine.hiitSetRestSeconds ?? hiitDefaultSetRestSeconds;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_loadStarted) {
+      _loadStarted = true;
+      _loadExercises();
+    }
+  }
+
+  Future<void> _loadExercises() async {
+    try {
+      if (widget.preloadedExercises != null) {
+        _allHiitExercises = widget.preloadedExercises!;
+      } else {
+        final lang = Localizations.localeOf(context).languageCode;
+        _allHiitExercises = await HiitExercise.loadFromAsset(lang);
+      }
+      if (!mounted) return;
+      setState(() => _loading = false);
+    } catch (_) {
+      if (!mounted) return;
+      setState(() => _loading = false);
+    }
+  }
+
+  List<HiitExercise> get _routineExercises {
+    if (widget.routine.days.isEmpty) return [];
+    final keys = widget.routine.days.first.exerciseKeys;
+    return keys
+        .map((key) {
+          try {
+            return _allHiitExercises.firstWhere((e) => e.key == key);
+          } catch (_) {
+            return HiitExercise(key: key, name: key, description: '');
+          }
+        })
+        .toList();
+  }
+
+  int get _totalDurationSeconds {
+    final exerciseCount = _routineExercises.length;
+    if (exerciseCount == 0) return 0;
+    final workPerSet = exerciseCount * _workSeconds;
+    final restPerSet = (exerciseCount - 1) * _restSeconds;
+    final setRest = (_sets - 1) * _setRestSeconds;
+    return _sets * (workPerSet + restPerSet) + setRest;
+  }
+
+  String _formatDuration(int totalSeconds) =>
+      TimeFormatter.duration(totalSeconds);
+
+  void _handleExport() => showExportSheet(
+        context,
+        jsonString: widget.routine.toExportJsonString(),
+      );
+
+  Future<void> _confirmDelete() async {
+    final confirmed = await showDeleteRoutineDialog(
+      context,
+      routineName: widget.routine.name,
+    );
+
+    if (confirmed != true || !mounted) return;
+
+    final updated =
+        widget.allRoutines.where((r) => r.id != widget.routine.id).toList();
+    await widget.routinePort.saveRoutines(updated);
+
+    if (!mounted) return;
+    Navigator.of(context).pop(true);
+  }
+
+  void _showSettings() {
+    final l10n = AppLocalizations.of(context)!;
+    showModalBottomSheet(
+      context: context,
+      builder: (ctx) {
+        return StatefulBuilder(
+          builder: (ctx, setSheetState) {
+            return SafeArea(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(l10n.hiitConfig,
+                        style: const TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 16),
+
+                    // Sets
+                    _SettingsRow(
+                      label: l10n.hiitSets,
+                      value: '$_sets',
+                      onDecrement: _sets > 1
+                          ? () {
+                              setSheetState(() => _sets--);
+                              setState(() {});
+                            }
+                          : null,
+                      onIncrement: _sets < 10
+                          ? () {
+                              setSheetState(() => _sets++);
+                              setState(() {});
+                            }
+                          : null,
+                    ),
+                    const SizedBox(height: 12),
+
+                    // Work duration
+                    _buildSettingsTimeRow(
+                      label: l10n.hiitWorkDuration,
+                      value: _workSeconds,
+                      min: hiitMinWorkSeconds,
+                      max: hiitMaxWorkSeconds,
+                      onChanged: (v) {
+                        setSheetState(() => _workSeconds = v);
+                        setState(() {});
+                      },
+                    ),
+
+                    // Rest between exercises
+                    _buildSettingsTimeRow(
+                      label: l10n.hiitRestDuration,
+                      value: _restSeconds,
+                      min: hiitMinRestSeconds,
+                      max: hiitMaxRestSeconds,
+                      onChanged: (v) {
+                        setSheetState(() => _restSeconds = v);
+                        setState(() {});
+                      },
+                    ),
+
+                    // Rest between sets
+                    _buildSettingsTimeRow(
+                      label: l10n.hiitSetRestDuration,
+                      value: _setRestSeconds,
+                      min: hiitMinSetRestSeconds,
+                      max: hiitMaxSetRestSeconds,
+                      onChanged: (v) {
+                        setSheetState(() => _setRestSeconds = v);
+                        setState(() {});
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> _startRoutine() async {
+    final exercises = _routineExercises;
+    if (exercises.isEmpty) return;
+
+    final result = await Navigator.of(context).push<bool>(
+      MaterialPageRoute(
+        builder: (_) => HiitTimerScreen(
+          exercises: exercises,
+          routineName: widget.routine.name,
+          sets: _sets,
+          workSeconds: _workSeconds,
+          restSeconds: _restSeconds,
+          setRestSeconds: _setRestSeconds,
+          hiitSessionPort: widget.hiitSessionPort,
+        ),
+      ),
+    );
+
+    if (result == true && mounted) {
+      Navigator.of(context).pop(true);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.routine.name),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.share),
+            tooltip: l10n.routineExport,
+            onPressed: _handleExport,
+          ),
+        ],
+      ),
+      body: _loading
+          ? const Center(child: CircularProgressIndicator())
+          : _buildContent(l10n),
+    );
+  }
+
+  Widget _buildContent(AppLocalizations l10n) {
+    final exercises = _routineExercises;
+
+    return Column(
+      children: [
+        // Header info
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+          child: Row(
+            children: [
+              const Icon(Icons.timer_outlined, size: 20, color: Colors.white54),
+              const SizedBox(width: 8),
+              Text(
+                _formatDuration(_totalDurationSeconds),
+                style: const TextStyle(fontSize: 14, color: Colors.white54),
+              ),
+              const SizedBox(width: 24),
+              const Icon(Icons.format_list_numbered,
+                  size: 20, color: Colors.white54),
+              const SizedBox(width: 8),
+              Text(
+                l10n.hiitExerciseCount('${exercises.length}'),
+                style: const TextStyle(fontSize: 14, color: Colors.white54),
+              ),
+              const SizedBox(width: 24),
+              const Icon(Icons.repeat, size: 20, color: Colors.white54),
+              const SizedBox(width: 8),
+              Text(
+                l10n.hiitSetCount('$_sets'),
+                style: const TextStyle(fontSize: 14, color: Colors.white54),
+              ),
+            ],
+          ),
+        ),
+
+        // Config summary chips
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Wrap(
+            spacing: 8,
+            children: [
+              Chip(
+                avatar: const Icon(Icons.fitness_center, size: 16),
+                label: Text(l10n.hiitSeconds('$_workSeconds')),
+              ),
+              Chip(
+                avatar: const Icon(Icons.pause, size: 16),
+                label: Text(l10n.hiitSeconds('$_restSeconds')),
+              ),
+              Chip(
+                avatar: const Icon(Icons.snooze, size: 16),
+                label: Text(l10n.hiitSeconds('$_setRestSeconds')),
+              ),
+            ],
+          ),
+        ),
+        const Divider(),
+
+        // Exercise cards
+        Expanded(
+          child: ListView.builder(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+            itemCount: exercises.length,
+            itemBuilder: (context, index) {
+              final exercise = exercises[index];
+              return Card(
+                margin: const EdgeInsets.only(bottom: 8),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 16,
+                        backgroundColor: Colors.white12,
+                        child: Text(
+                          '${index + 1}',
+                          style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white70),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(exercise.name,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white)),
+                            if (exercise.description.isNotEmpty) ...[
+                              const SizedBox(height: 2),
+                              Text(
+                                exercise.description,
+                                style: const TextStyle(
+                                    fontSize: 12, color: Colors.white54),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+
+        // Bottom action buttons
+        SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Settings + Start row
+                Row(
+                  children: [
+                    // Settings button
+                    SizedBox(
+                      height: 52,
+                      child: OutlinedButton.icon(
+                        onPressed: _showSettings,
+                        icon: const Icon(Icons.settings, size: 18),
+                        label: Text(l10n.hiitConfig),
+                        style: OutlinedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    // Start button
+                    Expanded(
+                      child: SizedBox(
+                        height: 52,
+                        child: FilledButton.icon(
+                          onPressed: _startRoutine,
+                          icon: const Icon(Icons.play_arrow),
+                          label: Text(l10n.sharedStart),
+                          style: FilledButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                // Delete button
+                SizedBox(
+                  width: double.infinity,
+                  height: 44,
+                  child: OutlinedButton.icon(
+                    icon: const Icon(Icons.delete_outline, size: 18),
+                    label: Text(l10n.routineDelete),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.redAccent,
+                      side: const BorderSide(color: Colors.redAccent),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    onPressed: _confirmDelete,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSettingsTimeRow({
+    required String label,
+    required int value,
+    required int min,
+    required int max,
+    required ValueChanged<int> onChanged,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(label, style: const TextStyle(fontSize: 14)),
+          ),
+          TimeWheelPicker(
+            minSeconds: min,
+            maxSeconds: max,
+            stepSeconds: hiitTimeStepSeconds,
+            selectedSeconds: value,
+            onChanged: onChanged,
+            height: 100,
+            width: 80,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SettingsRow extends StatelessWidget {
+  const _SettingsRow({
+    required this.label,
+    required this.value,
+    this.onDecrement,
+    this.onIncrement,
+  });
+
+  final String label;
+  final String value;
+  final VoidCallback? onDecrement;
+  final VoidCallback? onIncrement;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label, style: const TextStyle(fontSize: 16)),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.remove_circle_outline),
+              onPressed: onDecrement,
+              iconSize: 20,
+            ),
+            SizedBox(
+              width: 28,
+              child: Text(value,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold)),
+            ),
+            IconButton(
+              icon: const Icon(Icons.add_circle_outline),
+              onPressed: onIncrement,
+              iconSize: 20,
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}

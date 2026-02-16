@@ -35,12 +35,16 @@ class Routine {
     required this.type,
     required this.days,
     this.recommendedRoutineKey,
+    this.hiitSets,
+    this.hiitWorkSeconds,
+    this.hiitRestSeconds,
+    this.hiitSetRestSeconds,
   });
 
   final String id;
   final String name;
 
-  /// One of: 'musculacion', 'abdominales', 'pliometricos', 'movilidad', 'hiit'.
+  /// One of: 'musculacion', 'pliometricos', 'movilidad', 'hiit'.
   final String type;
 
   final List<RoutineDay> days;
@@ -48,12 +52,22 @@ class Routine {
   /// If set, this routine is a predefined mobility routine (e.g. feet_ankles_2).
   final String? recommendedRoutineKey;
 
+  /// HIIT configuration (only populated when [type] == 'hiit').
+  final int? hiitSets;
+  final int? hiitWorkSeconds;
+  final int? hiitRestSeconds;
+  final int? hiitSetRestSeconds;
+
   Map<String, dynamic> toJson() => {
         'id': id,
         'name': name,
         'type': type,
         'days': days.map((d) => d.toJson()).toList(),
         if (recommendedRoutineKey != null) 'recommendedRoutineKey': recommendedRoutineKey,
+        if (hiitSets != null) 'hiitSets': hiitSets,
+        if (hiitWorkSeconds != null) 'hiitWorkSeconds': hiitWorkSeconds,
+        if (hiitRestSeconds != null) 'hiitRestSeconds': hiitRestSeconds,
+        if (hiitSetRestSeconds != null) 'hiitSetRestSeconds': hiitSetRestSeconds,
       };
 
   factory Routine.fromJson(Map<String, dynamic> json) => Routine(
@@ -67,6 +81,10 @@ class Routine {
                 .toList()
             : [],
         recommendedRoutineKey: json['recommendedRoutineKey'] as String?,
+        hiitSets: json['hiitSets'] as int?,
+        hiitWorkSeconds: json['hiitWorkSeconds'] as int?,
+        hiitRestSeconds: json['hiitRestSeconds'] as int?,
+        hiitSetRestSeconds: json['hiitSetRestSeconds'] as int?,
       );
 
   /// Creates a deep copy with optional field overrides.
@@ -76,6 +94,10 @@ class Routine {
     String? type,
     List<RoutineDay>? days,
     String? recommendedRoutineKey,
+    int? hiitSets,
+    int? hiitWorkSeconds,
+    int? hiitRestSeconds,
+    int? hiitSetRestSeconds,
   }) =>
       Routine(
         id: id ?? this.id,
@@ -83,6 +105,10 @@ class Routine {
         type: type ?? this.type,
         days: days ?? this.days,
         recommendedRoutineKey: recommendedRoutineKey ?? this.recommendedRoutineKey,
+        hiitSets: hiitSets ?? this.hiitSets,
+        hiitWorkSeconds: hiitWorkSeconds ?? this.hiitWorkSeconds,
+        hiitRestSeconds: hiitRestSeconds ?? this.hiitRestSeconds,
+        hiitSetRestSeconds: hiitSetRestSeconds ?? this.hiitSetRestSeconds,
       );
 
   /// Current export format version — bump when the schema changes.
@@ -96,6 +122,10 @@ class Routine {
         'days': days.map((d) => d.toJson()).toList(),
         if (recommendedRoutineKey != null)
           'recommendedRoutineKey': recommendedRoutineKey,
+        if (hiitSets != null) 'hiitSets': hiitSets,
+        if (hiitWorkSeconds != null) 'hiitWorkSeconds': hiitWorkSeconds,
+        if (hiitRestSeconds != null) 'hiitRestSeconds': hiitRestSeconds,
+        if (hiitSetRestSeconds != null) 'hiitSetRestSeconds': hiitSetRestSeconds,
       };
 
   /// Generates a portable JSON string for export (excludes `id`).
@@ -136,6 +166,10 @@ class Routine {
           .map(RoutineDay.fromJson)
           .toList(),
       recommendedRoutineKey: decoded['recommendedRoutineKey'] as String?,
+      hiitSets: decoded['hiitSets'] as int?,
+      hiitWorkSeconds: decoded['hiitWorkSeconds'] as int?,
+      hiitRestSeconds: decoded['hiitRestSeconds'] as int?,
+      hiitSetRestSeconds: decoded['hiitSetRestSeconds'] as int?,
     );
   }
 

@@ -226,4 +226,97 @@ void main() {
       expect(routine.recommendedRoutineKey, 'feet_ankles_2');
     });
   });
+
+  // ── HIIT config fields ──────────────────────────────────────
+
+  group('HIIT config fields', () {
+    test('toJson and fromJson round-trip preserves HIIT config', () {
+      final routine = Routine(
+        id: 'hiit1',
+        name: 'My HIIT',
+        type: 'hiit',
+        days: const [
+          RoutineDay(muscleGroups: [], exerciseKeys: ['burpees', 'jump_squats']),
+        ],
+        hiitSets: 4,
+        hiitWorkSeconds: 30,
+        hiitRestSeconds: 15,
+        hiitSetRestSeconds: 120,
+      );
+
+      final json = routine.toJson();
+      final restored = Routine.fromJson(json);
+
+      expect(restored.hiitSets, 4);
+      expect(restored.hiitWorkSeconds, 30);
+      expect(restored.hiitRestSeconds, 15);
+      expect(restored.hiitSetRestSeconds, 120);
+      expect(restored.type, 'hiit');
+      expect(restored.days.first.exerciseKeys, ['burpees', 'jump_squats']);
+    });
+
+    test('fromJson defaults to null for HIIT fields when absent', () {
+      final json = {
+        'id': 'r1',
+        'name': 'Strength',
+        'type': 'musculacion',
+        'days': <Map<String, dynamic>>[],
+      };
+
+      final routine = Routine.fromJson(json);
+
+      expect(routine.hiitSets, isNull);
+      expect(routine.hiitWorkSeconds, isNull);
+      expect(routine.hiitRestSeconds, isNull);
+      expect(routine.hiitSetRestSeconds, isNull);
+    });
+
+    test('copyWith overrides HIIT fields', () {
+      final routine = Routine(
+        id: 'hiit1',
+        name: 'My HIIT',
+        type: 'hiit',
+        days: const [],
+        hiitSets: 3,
+        hiitWorkSeconds: 20,
+        hiitRestSeconds: 10,
+        hiitSetRestSeconds: 90,
+      );
+
+      final updated = routine.copyWith(
+        hiitSets: 5,
+        hiitWorkSeconds: 40,
+      );
+
+      expect(updated.hiitSets, 5);
+      expect(updated.hiitWorkSeconds, 40);
+      expect(updated.hiitRestSeconds, 10);
+      expect(updated.hiitSetRestSeconds, 90);
+    });
+
+    test('export and import round-trip preserves HIIT fields', () {
+      final routine = Routine(
+        id: 'hiit1',
+        name: 'My HIIT',
+        type: 'hiit',
+        days: const [
+          RoutineDay(muscleGroups: [], exerciseKeys: ['burpees']),
+        ],
+        hiitSets: 4,
+        hiitWorkSeconds: 30,
+        hiitRestSeconds: 15,
+        hiitSetRestSeconds: 120,
+      );
+
+      final jsonString = routine.toExportJsonString();
+      final restored = Routine.fromImportJsonString(jsonString, id: 'new_id');
+
+      expect(restored.hiitSets, 4);
+      expect(restored.hiitWorkSeconds, 30);
+      expect(restored.hiitRestSeconds, 15);
+      expect(restored.hiitSetRestSeconds, 120);
+      expect(restored.name, 'My HIIT');
+      expect(restored.type, 'hiit');
+    });
+  });
 }

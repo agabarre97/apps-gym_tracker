@@ -5,7 +5,7 @@ import '../helpers/test_helpers.dart';
 
 void main() {
   group('RoutineTypeScreen', () {
-    testWidgets('renders routine type cards including Musculación',
+    testWidgets('renders routine type cards including Musculación and HIIT',
         (tester) async {
       await tester.pumpWidget(
         buildTestableWidget(
@@ -18,12 +18,12 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Musculación'), findsOneWidget);
-      expect(find.text('Abdominales'), findsOneWidget);
       expect(find.text('Pliométricos'), findsOneWidget);
       expect(find.text('Movilidad'), findsOneWidget);
+      expect(find.text('HIIT'), findsOneWidget);
     });
 
-    testWidgets('shows "Próximamente" badges on visible disabled types',
+    testWidgets('shows "Próximamente" badge only on Pliométricos',
         (tester) async {
       await tester.pumpWidget(
         buildTestableWidget(
@@ -35,8 +35,8 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      // Movilidad is enabled; at least 2 disabled types should show badge
-      expect(find.text('Próximamente'), findsAtLeast(2));
+      // Only Pliométricos is disabled now
+      expect(find.text('Próximamente'), findsOneWidget);
     });
 
     testWidgets('tapping Musculación calls onTypeSelected', (tester) async {
@@ -103,6 +103,30 @@ void main() {
 
       await tester.tap(find.text('Importar rutina'));
       expect(importCalled, isTrue);
+    });
+
+    testWidgets('HIIT card is rendered and enabled (tappable)',
+        (tester) async {
+      String? selectedType;
+
+      await tester.pumpWidget(
+        buildTestableWidget(
+          RoutineTypeScreen(
+            onTypeSelected: (type) => selectedType = type,
+            onBack: () {},
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // HIIT may require scrolling to be visible in grid
+      await tester.ensureVisible(find.text('HIIT'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('HIIT'), findsOneWidget);
+
+      await tester.tap(find.text('HIIT'));
+      expect(selectedType, 'hiit');
     });
   });
 }

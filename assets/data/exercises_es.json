@@ -400,5 +400,139 @@
             "Serrato anterior"
         ],
         "dificultad_tecnica": 4
+    },
+    {
+        "key": "rueda_abdominal",
+        "ejercicio": "Rueda abdominal",
+        "descripcion": "Extensión de core con rueda que trabaja la estabilización y la fuerza del abdomen en máxima elongación.",
+        "grupo_muscular": [
+            "Abdominales",
+            "Recto abdominal",
+            "Core profundo"
+        ],
+        "dificultad_tecnica": 5
+    },
+    {
+        "key": "dragon_fly",
+        "ejercicio": "Dragon fly",
+        "descripcion": "Elevación de piernas en banco o suelo controlando la bajada con énfasis excéntrico en el abdomen inferior.",
+        "grupo_muscular": [
+            "Abdominales",
+            "Recto abdominal inferior"
+        ],
+        "dificultad_tecnica": 5
+    },
+    {
+        "key": "plancha_abdominal",
+        "ejercicio": "Plancha abdominal",
+        "descripcion": "Ejercicio isométrico de estabilidad que activa todo el core manteniendo la alineación corporal.",
+        "grupo_muscular": [
+            "Abdominales",
+            "Core profundo"
+        ],
+        "dificultad_tecnica": 3
+    },
+    {
+        "key": "laterales_unilateral",
+        "ejercicio": "Laterales unilateral",
+        "descripcion": "Flexión lateral del tronco con mancuerna o polea que enfatiza los oblicuos de un lado a la vez.",
+        "grupo_muscular": [
+            "Abdominales",
+            "Oblicuos"
+        ],
+        "dificultad_tecnica": 3
+    },
+    {
+        "key": "crunch_rodillas_polea_alta",
+        "ejercicio": "Crunch de rodillas en polea alta",
+        "descripcion": "Flexión de columna en polea alta desde posición arrodillada con alta tensión continua sobre el recto abdominal.",
+        "grupo_muscular": [
+            "Abdominales",
+            "Recto abdominal"
+        ],
+        "dificultad_tecnica": 4
+    },
+    {
+        "key": "cable_woodchop",
+        "ejercicio": "Cable woodchop",
+        "descripcion": "Rotación del tronco en polea que desarrolla fuerza rotacional y estabilidad del core.",
+        "grupo_muscular": [
+            "Abdominales",
+            "Oblicuos"
+        ],
+        "dificultad_tecnica": 4
+    },
+    {
+        "key": "elevacion_piernas_colgado",
+        "ejercicio": "Elevación de piernas colgado",
+        "descripcion": "Elevación de piernas suspendido de barra que enfatiza el abdomen inferior y la estabilización pélvica.",
+        "grupo_muscular": [
+            "Abdominales",
+            "Recto abdominal inferior"
+        ],
+        "dificultad_tecnica": 4
+    },
+    {
+        "key": "crunch_banco_declinado",
+        "ejercicio": "Crunch en banco declinado",
+        "descripcion": "Flexión de tronco sobre banco declinado que aumenta la resistencia del propio peso corporal.",
+        "grupo_muscular": [
+            "Abdominales",
+            "Recto abdominal"
+        ],
+        "dificultad_tecnica": 3
+    },
+    {
+        "key": "dead_bug",
+        "ejercicio": "Dead bug",
+        "descripcion": "Ejercicio de control motor y estabilidad que activa el core profundo mientras se mueven extremidades opuestas.",
+        "grupo_muscular": [
+            "Abdominales",
+            "Core profundo"
+        ],
+        "dificultad_tecnica": 2
+    },
+    {
+        "key": "hollow_body_hold",
+        "ejercicio": "Hollow body hold",
+        "descripcion": "Posición isométrica que mantiene el cuerpo en forma de banana para máxima activación abdominal.",
+        "grupo_muscular": [
+            "Abdominales",
+            "Recto abdominal",
+            "Core profundo"
+        ],
+        "dificultad_tecnica": 4
+    },
+    {
+        "key": "crunch_bicicleta",
+        "ejercicio": "Crunch bicicleta",
+        "descripcion": "Movimiento alterno de rotación y flexión que trabaja oblicuos y recto abdominal.",
+        "grupo_muscular": [
+            "Abdominales",
+            "Oblicuos",
+            "Recto abdominal"
+        ],
+        "dificultad_tecnica": 3
+    },
+    {
+        "key": "farmer_carry_unilateral",
+        "ejercicio": "Farmer carry unilateral",
+        "descripcion": "Caminata cargando peso en un solo lado que desafía la estabilidad lateral del core.",
+        "grupo_muscular": [
+            "Abdominales",
+            "Oblicuos",
+            "Core profundo"
+        ],
+        "dificultad_tecnica": 3
+    },
+    {
+        "key": "sit_up_balon_medicinal",
+        "ejercicio": "Sit-up con balón medicinal",
+        "descripcion": "Flexión completa de tronco con carga externa para mayor estímulo de fuerza abdominal.",
+        "grupo_muscular": [
+            "Abdominales",
+            "Recto abdominal"
+        ],
+        "dificultad_tecnica": 3
     }
 ]

@@ -143,9 +143,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get routineMusculacion => 'Musculación';
 
   @override
-  String get routineAbdominales => 'Abdominales';
-
-  @override
   String get routinePliometricos => 'Pliométricos';
 
   @override
@@ -376,6 +373,88 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get mobilityFinishEarlyConfirm => '¿Quieres finalizar la rutina?';
+
+  @override
+  String get hiitSelectExercises => 'Selecciona ejercicios';
+
+  @override
+  String get hiitWarningTooMany =>
+      'No se recomienda seleccionar más de 6 ejercicios';
+
+  @override
+  String get hiitConfig => 'Configuración';
+
+  @override
+  String get hiitSets => 'Series';
+
+  @override
+  String get hiitWorkDuration => 'Tiempo de trabajo';
+
+  @override
+  String get hiitRestDuration => 'Descanso entre ejercicios';
+
+  @override
+  String get hiitSetRestDuration => 'Descanso entre series';
+
+  @override
+  String get hiitTotalDuration => 'Duración total';
+
+  @override
+  String get hiitTimerTitle => 'HIIT';
+
+  @override
+  String hiitSetOf(String current, String total) {
+    return 'Serie $current / $total';
+  }
+
+  @override
+  String hiitExerciseOf(String current, String total) {
+    return 'Ejercicio $current / $total';
+  }
+
+  @override
+  String get hiitRest => 'Descanso';
+
+  @override
+  String get hiitSetRest => 'Descanso entre series';
+
+  @override
+  String get hiitComplete => '¡Completado!';
+
+  @override
+  String get hiitGetReady => '¡Prepárate!';
+
+  @override
+  String get hiitFinishEarly => 'Finalizar';
+
+  @override
+  String get hiitFinishEarlyConfirm => '¿Quieres finalizar el HIIT?';
+
+  @override
+  String hiitSeconds(String seconds) {
+    return '${seconds}s';
+  }
+
+  @override
+  String hiitMinutes(String minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String hiitExerciseCount(String count) {
+    return '$count ejercicios';
+  }
+
+  @override
+  String hiitSetCount(String count) {
+    return '$count series';
+  }
+
+  @override
+  String get hiitNextExercise => 'Siguiente';
+
+  @override
+  String get hiitSetComplete => 'Serie completada';
 
   @override
   String get routineSelectDays => '¿Cuántos días por semana?';

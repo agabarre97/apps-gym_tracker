@@ -3,6 +3,7 @@ import 'package:gym_tracker/l10n/app_localizations.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:gym_tracker/domain/entities/exercise.dart';
+import 'package:gym_tracker/domain/entities/hiit_exercise.dart';
 import 'package:gym_tracker/domain/entities/muscle_group.dart';
 import 'package:gym_tracker/domain/entities/routine.dart';
 import 'package:gym_tracker/domain/ports/routine_port.dart';
@@ -14,6 +15,8 @@ import 'package:gym_tracker/presentation/screens/routine/routine_summary_screen.
 import 'package:gym_tracker/presentation/screens/routine/mobility_subtype_screen.dart';
 import 'package:gym_tracker/presentation/screens/routine/mobility_option_screen.dart';
 import 'package:gym_tracker/presentation/screens/routine/mobility_routine_selection_screen.dart';
+import 'package:gym_tracker/presentation/screens/hiit/hiit_exercise_selection_screen.dart';
+import 'package:gym_tracker/presentation/screens/hiit/hiit_config_screen.dart';
 
 /// Orchestrates the multi-step routine creation wizard.
 class CreateRoutineFlow extends StatefulWidget {
@@ -22,6 +25,7 @@ class CreateRoutineFlow extends StatefulWidget {
     required this.routinePort,
     required this.existingRoutines,
     @visibleForTesting this.preloadedExercises,
+    @visibleForTesting this.preloadedHiitExercises,
   });
 
   final RoutinePort routinePort;
@@ -30,6 +34,10 @@ class CreateRoutineFlow extends StatefulWidget {
   /// Exercises injected for testing (skips asset loading).
   @visibleForTesting
   final List<Exercise>? preloadedExercises;
+
+  /// HIIT exercises injected for testing (skips asset loading).
+  @visibleForTesting
+  final List<HiitExercise>? preloadedHiitExercises;
 
   @override
   State<CreateRoutineFlow> createState() => _CreateRoutineFlowState();
@@ -74,6 +82,11 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
   List<Exercise> _allExercises = [];
   bool _exercisesLoaded = false;
 
+  // HIIT state
+  List<HiitExercise> _hiitExercises = [];
+  bool _hiitExercisesLoaded = false;
+  List<String> _hiitSelectedKeys = [];
+
   // Logical step
   _Step _step = _Step.type;
 
@@ -86,6 +99,19 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
       _allExercises = await Exercise.loadFromAsset(lang);
     }
     _exercisesLoaded = true;
+    if (mounted) setState(() {});
+  }
+
+  Future<void> _loadHiitExercises() async {
+    if (_hiitExercisesLoaded) return;
+    if (widget.preloadedHiitExercises != null) {
+      _hiitExercises = widget.preloadedHiitExercises!;
+    } else {
+      final lang = Localizations.localeOf(context).languageCode;
+      _hiitExercises = await HiitExercise.loadFromAsset(lang);
+    }
+    _hiitExercisesLoaded = true;
+    if (mounted) setState(() {});
   }
 
   // ── Import ────────────────────────────────────────────────────
@@ -165,6 +191,8 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
       _selectedType = type;
       if (type == 'movilidad') {
         _step = _Step.mobilitySubType;
+      } else if (type == 'hiit') {
+        _step = _Step.hiitExercises;
       } else {
         _step = _Step.days;
       }
@@ -254,6 +282,43 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
     });
   }
 
+  void _onHiitExercisesConfirmed(List<String> keys) {
+    setState(() {
+      _hiitSelectedKeys = keys;
+      _step = _Step.hiitConfig;
+    });
+  }
+
+  Future<void> _onHiitSave({
+    required String name,
+    required int sets,
+    required int workSeconds,
+    required int restSeconds,
+    required int setRestSeconds,
+  }) async {
+    final routine = Routine(
+      id: _uuid.v4(),
+      name: name,
+      type: 'hiit',
+      days: [
+        RoutineDay(
+          muscleGroups: const [],
+          exerciseKeys: _hiitSelectedKeys,
+        ),
+      ],
+      hiitSets: sets,
+      hiitWorkSeconds: workSeconds,
+      hiitRestSeconds: restSeconds,
+      hiitSetRestSeconds: setRestSeconds,
+    );
+
+    final updated = [...widget.existingRoutines, routine];
+    await widget.routinePort.saveRoutines(updated);
+
+    if (!mounted) return;
+    Navigator.of(context).pop(true);
+  }
+
   Future<void> _editDayFromSummary(int dayIndex) async {
     final categories = _dayMuscleGroups[dayIndex];
     final currentKeys = _dayExerciseKeys[dayIndex];
@@ -320,6 +385,14 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
 
         case _Step.mobilityRoutineSelection:
           _step = _Step.mobilityOption;
+          return;
+
+        case _Step.hiitExercises:
+          _step = _Step.type;
+          return;
+
+        case _Step.hiitConfig:
+          _step = _Step.hiitExercises;
           return;
 
         case _Step.days:
@@ -425,6 +498,21 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
           onConfirmed: _onExercisesConfirmed,
           onBack: _goBack,
         );
+      case _Step.hiitExercises:
+        _loadHiitExercises();
+        return HiitExerciseSelectionScreen(
+          key: const ValueKey('hiitExercises'),
+          exercises: _hiitExercises,
+          initialSelectedKeys: _hiitSelectedKeys,
+          onConfirmed: _onHiitExercisesConfirmed,
+          onBack: _goBack,
+        );
+      case _Step.hiitConfig:
+        return HiitConfigScreen(
+          exerciseCount: _hiitSelectedKeys.length,
+          onSave: _onHiitSave,
+          onBack: _goBack,
+        );
       case _Step.summary:
         return RoutineSummaryScreen(
           type: _selectedType!,
@@ -439,4 +527,15 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
   }
 }
 
-enum _Step { type, mobilitySubType, mobilityOption, mobilityRoutineSelection, days, muscleGroups, exercises, summary }
+enum _Step {
+  type,
+  mobilitySubType,
+  mobilityOption,
+  mobilityRoutineSelection,
+  hiitExercises,
+  hiitConfig,
+  days,
+  muscleGroups,
+  exercises,
+  summary,
+}

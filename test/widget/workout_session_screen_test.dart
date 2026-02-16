@@ -4,6 +4,7 @@ import 'package:gym_tracker/domain/entities/exercise.dart';
 import 'package:gym_tracker/domain/entities/workout_session.dart';
 import 'package:gym_tracker/presentation/screens/workout/workout_session_screen.dart';
 
+import '../helpers/scroll_helpers.dart';
 import '../helpers/test_helpers.dart';
 
 void main() {
@@ -159,13 +160,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Scroll to the Save button and tap
-      await tester.scrollUntilVisible(
-        find.text('Guardar'),
-        200,
-        scrollable: find.byType(Scrollable).first,
-      );
-      await tester.tap(find.text('Guardar'));
-      await tester.pumpAndSettle();
+      await tester.scrollToAndTap(find.text('Guardar'));
 
       // Session should have been persisted
       final saved = await port.loadSessions();

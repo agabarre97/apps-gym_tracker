@@ -15,6 +15,7 @@ void main() {
     late FakeTrainingDayPort trainingDayPort;
     late FakeWorkoutSessionPort workoutSessionPort;
     late FakeMobilitySessionPort mobilitySessionPort;
+    late FakeHiitSessionPort hiitSessionPort;
 
     setUp(() {
       storage = FakeStoragePort();
@@ -23,6 +24,7 @@ void main() {
       trainingDayPort = FakeTrainingDayPort();
       workoutSessionPort = FakeWorkoutSessionPort();
       mobilitySessionPort = FakeMobilitySessionPort();
+      hiitSessionPort = FakeHiitSessionPort();
     });
 
     Widget buildApp() {
@@ -52,6 +54,7 @@ void main() {
           trainingDayPort: trainingDayPort,
           workoutSessionPort: workoutSessionPort,
           mobilitySessionPort: mobilitySessionPort,
+          hiitSessionPort: hiitSessionPort,
           onLocaleChanged: (_) {},
         ),
       );

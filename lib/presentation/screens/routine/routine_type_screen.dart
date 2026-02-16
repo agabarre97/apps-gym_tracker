@@ -21,10 +21,9 @@ class RoutineTypeScreen extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     const typeConfigs = <(String, bool)>[
       ('musculacion', true),
-      ('abdominales', false),
       ('pliometricos', false),
       ('movilidad', true),
-      ('hiit', false),
+      ('hiit', true),
     ];
     final types = typeConfigs
         .map(

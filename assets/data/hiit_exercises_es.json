@@ -1,0 +1,92 @@
+[
+  {
+    "key": "mountain_climbers",
+    "ejercicio": "Mountain climbers",
+    "descripcion": "Desde posición de plancha, alterna llevando las rodillas al pecho rápidamente."
+  },
+  {
+    "key": "jumping_jacks",
+    "ejercicio": "Jumping jacks",
+    "descripcion": "Salto con apertura de brazos y piernas que eleva la frecuencia cardíaca."
+  },
+  {
+    "key": "burpees",
+    "ejercicio": "Burpees",
+    "descripcion": "Combina sentadilla, plancha, flexión y salto explosivo en un solo movimiento."
+  },
+  {
+    "key": "high_knee_sprints",
+    "ejercicio": "High knee sprints",
+    "descripcion": "Corre en el sitio elevando las rodillas lo más alto posible."
+  },
+  {
+    "key": "jump_rope",
+    "ejercicio": "Jump rope",
+    "descripcion": "Salta simulando cuerda, mejorando coordinación y ritmo cardíaco."
+  },
+  {
+    "key": "rowing_machine_sprints",
+    "ejercicio": "Rowing machine sprints",
+    "descripcion": "Rema a máxima intensidad durante el período de trabajo."
+  },
+  {
+    "key": "treadmill_sprint",
+    "ejercicio": "Treadmill sprint",
+    "descripcion": "Corre a alta velocidad en cinta durante intervalos."
+  },
+  {
+    "key": "treadmill_hills",
+    "ejercicio": "Treadmill hills",
+    "descripcion": "Sprint en pendiente para aumentar la intensidad del trabajo cardiovascular."
+  },
+  {
+    "key": "battle_ropes",
+    "ejercicio": "Battle ropes",
+    "descripcion": "Ondea las cuerdas con fuerza alternando los brazos."
+  },
+  {
+    "key": "rebounder_jumps",
+    "ejercicio": "Rebounder jumps",
+    "descripcion": "Saltos en mini trampolín para cardio de bajo impacto."
+  },
+  {
+    "key": "stair_running",
+    "ejercicio": "Stair running",
+    "descripcion": "Sube escaleras lo más rápido posible durante el intervalo."
+  },
+  {
+    "key": "kettlebell_swings",
+    "ejercicio": "Kettlebell swings",
+    "descripcion": "Balancea la pesa rusa desde entre piernas hasta altura de hombros."
+  },
+  {
+    "key": "box_jumps",
+    "ejercicio": "Box jumps",
+    "descripcion": "Salta explosivamente sobre una caja o plataforma estable."
+  },
+  {
+    "key": "plank_jacks",
+    "ejercicio": "Plank jacks",
+    "descripcion": "Desde plancha, abre y cierra piernas como en jumping jacks."
+  },
+  {
+    "key": "jump_squats",
+    "ejercicio": "Jump squats",
+    "descripcion": "Sentadilla con salto explosivo al terminar la subida."
+  },
+  {
+    "key": "jump_lunges",
+    "ejercicio": "Jump lunges",
+    "descripcion": "Alterna zancadas con salto cambiando de pierna en el aire."
+  },
+  {
+    "key": "sprint_in_place",
+    "ejercicio": "Sprint in place",
+    "descripcion": "Corre en el sitio con máxima velocidad enfocando explosividad."
+  },
+  {
+    "key": "butt_kickers",
+    "ejercicio": "Butt kickers",
+    "descripcion": "Corre en el lugar llevando los talones hacia los glúteos."
+  }
+]

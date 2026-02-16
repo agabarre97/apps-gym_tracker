@@ -32,6 +32,7 @@ void main() {
             trainingDayPort: FakeTrainingDayPort(),
             workoutSessionPort: FakeWorkoutSessionPort(),
             mobilitySessionPort: FakeMobilitySessionPort(),
+            hiitSessionPort: FakeHiitSessionPort(),
             onLocaleChanged: (_) {},
           ),
         ),

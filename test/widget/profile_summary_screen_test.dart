@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gym_tracker/presentation/screens/profile_summary_screen.dart';
 
+import '../helpers/scroll_helpers.dart';
 import '../helpers/test_helpers.dart';
 
 void main() {
@@ -43,11 +44,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Scroll to the bottom to reveal the sign-out link
-      await tester.scrollUntilVisible(
-        find.text('Cerrar sesión'),
-        200,
-        scrollable: find.byType(Scrollable).first,
-      );
+      await tester.scrollDownTo(find.text('Cerrar sesión'));
 
       expect(find.text('Cerrar sesión'), findsOneWidget);
     });
@@ -70,11 +67,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Scroll to the sign-out link
-      await tester.scrollUntilVisible(
-        find.text('Cerrar sesión'),
-        200,
-        scrollable: find.byType(Scrollable).first,
-      );
+      await tester.scrollDownTo(find.text('Cerrar sesión'));
 
       // Tap the sign-out link
       await tester.tap(find.text('Cerrar sesión'));
@@ -96,11 +89,7 @@ void main() {
       }));
       await tester.pumpAndSettle();
 
-      await tester.scrollUntilVisible(
-        find.text('Cerrar sesión'),
-        200,
-        scrollable: find.byType(Scrollable).first,
-      );
+      await tester.scrollDownTo(find.text('Cerrar sesión'));
 
       await tester.tap(find.text('Cerrar sesión'));
       await tester.pumpAndSettle();
@@ -124,11 +113,7 @@ void main() {
       }));
       await tester.pumpAndSettle();
 
-      await tester.scrollUntilVisible(
-        find.text('Cerrar sesión'),
-        200,
-        scrollable: find.byType(Scrollable).first,
-      );
+      await tester.scrollDownTo(find.text('Cerrar sesión'));
 
       await tester.tap(find.text('Cerrar sesión'));
       await tester.pumpAndSettle();

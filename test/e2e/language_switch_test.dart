@@ -46,6 +46,7 @@ void main() {
                   trainingDayPort: trainingDayPort,
                   workoutSessionPort: workoutSessionPort,
                   mobilitySessionPort: FakeMobilitySessionPort(),
+                  hiitSessionPort: FakeHiitSessionPort(),
                   onLocaleChanged: (locale) {
                     setState(() => currentLocale = locale);
                   },

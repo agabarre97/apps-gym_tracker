@@ -142,9 +142,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routineMusculacion => 'Strength';
 
   @override
-  String get routineAbdominales => 'Abs';
-
-  @override
   String get routinePliometricos => 'Plyometrics';
 
   @override
@@ -373,6 +370,88 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get mobilityFinishEarlyConfirm => 'Do you want to finish the routine?';
+
+  @override
+  String get hiitSelectExercises => 'Select exercises';
+
+  @override
+  String get hiitWarningTooMany =>
+      'Selecting more than 6 exercises is not recommended';
+
+  @override
+  String get hiitConfig => 'Configuration';
+
+  @override
+  String get hiitSets => 'Sets';
+
+  @override
+  String get hiitWorkDuration => 'Work time';
+
+  @override
+  String get hiitRestDuration => 'Rest between exercises';
+
+  @override
+  String get hiitSetRestDuration => 'Rest between sets';
+
+  @override
+  String get hiitTotalDuration => 'Total duration';
+
+  @override
+  String get hiitTimerTitle => 'HIIT';
+
+  @override
+  String hiitSetOf(String current, String total) {
+    return 'Set $current / $total';
+  }
+
+  @override
+  String hiitExerciseOf(String current, String total) {
+    return 'Exercise $current / $total';
+  }
+
+  @override
+  String get hiitRest => 'Rest';
+
+  @override
+  String get hiitSetRest => 'Rest between sets';
+
+  @override
+  String get hiitComplete => 'Complete!';
+
+  @override
+  String get hiitGetReady => 'Get ready!';
+
+  @override
+  String get hiitFinishEarly => 'Finish';
+
+  @override
+  String get hiitFinishEarlyConfirm => 'Do you want to finish the HIIT?';
+
+  @override
+  String hiitSeconds(String seconds) {
+    return '${seconds}s';
+  }
+
+  @override
+  String hiitMinutes(String minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String hiitExerciseCount(String count) {
+    return '$count exercises';
+  }
+
+  @override
+  String hiitSetCount(String count) {
+    return '$count sets';
+  }
+
+  @override
+  String get hiitNextExercise => 'Next';
+
+  @override
+  String get hiitSetComplete => 'Set complete';
 
   @override
   String get routineSelectDays => 'How many days per week?';

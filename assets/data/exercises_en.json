@@ -400,5 +400,139 @@
             "Serrato anterior"
         ],
         "dificultad_tecnica": 4
+    },
+    {
+        "key": "rueda_abdominal",
+        "ejercicio": "Ab wheel rollout",
+        "descripcion": "Core extension with a wheel that builds stabilization and abdominal strength at maximum elongation.",
+        "grupo_muscular": [
+            "Abdominales",
+            "Recto abdominal",
+            "Core profundo"
+        ],
+        "dificultad_tecnica": 5
+    },
+    {
+        "key": "dragon_fly",
+        "ejercicio": "Dragon flag",
+        "descripcion": "Leg raise on a bench or floor with controlled lowering, emphasizing eccentric loading on the lower abs.",
+        "grupo_muscular": [
+            "Abdominales",
+            "Recto abdominal inferior"
+        ],
+        "dificultad_tecnica": 5
+    },
+    {
+        "key": "plancha_abdominal",
+        "ejercicio": "Plank",
+        "descripcion": "Isometric stability exercise that activates the entire core while maintaining body alignment.",
+        "grupo_muscular": [
+            "Abdominales",
+            "Core profundo"
+        ],
+        "dificultad_tecnica": 3
+    },
+    {
+        "key": "laterales_unilateral",
+        "ejercicio": "Unilateral side bend",
+        "descripcion": "Lateral trunk flexion with dumbbell or cable, emphasizing one side of the obliques at a time.",
+        "grupo_muscular": [
+            "Abdominales",
+            "Oblicuos"
+        ],
+        "dificultad_tecnica": 3
+    },
+    {
+        "key": "crunch_rodillas_polea_alta",
+        "ejercicio": "Kneeling cable crunch",
+        "descripcion": "Spinal flexion on a high pulley from a kneeling position with continuous tension on the rectus abdominis.",
+        "grupo_muscular": [
+            "Abdominales",
+            "Recto abdominal"
+        ],
+        "dificultad_tecnica": 4
+    },
+    {
+        "key": "cable_woodchop",
+        "ejercicio": "Cable woodchop",
+        "descripcion": "Trunk rotation on a cable machine that develops rotational strength and core stability.",
+        "grupo_muscular": [
+            "Abdominales",
+            "Oblicuos"
+        ],
+        "dificultad_tecnica": 4
+    },
+    {
+        "key": "elevacion_piernas_colgado",
+        "ejercicio": "Hanging leg raise",
+        "descripcion": "Leg raise while hanging from a bar, emphasizing the lower abs and pelvic stabilization.",
+        "grupo_muscular": [
+            "Abdominales",
+            "Recto abdominal inferior"
+        ],
+        "dificultad_tecnica": 4
+    },
+    {
+        "key": "crunch_banco_declinado",
+        "ejercicio": "Decline bench crunch",
+        "descripcion": "Trunk flexion on a decline bench that increases bodyweight resistance.",
+        "grupo_muscular": [
+            "Abdominales",
+            "Recto abdominal"
+        ],
+        "dificultad_tecnica": 3
+    },
+    {
+        "key": "dead_bug",
+        "ejercicio": "Dead bug",
+        "descripcion": "Motor control and stability exercise that activates the deep core while moving opposite limbs.",
+        "grupo_muscular": [
+            "Abdominales",
+            "Core profundo"
+        ],
+        "dificultad_tecnica": 2
+    },
+    {
+        "key": "hollow_body_hold",
+        "ejercicio": "Hollow body hold",
+        "descripcion": "Isometric position maintaining a banana shape for maximum abdominal activation.",
+        "grupo_muscular": [
+            "Abdominales",
+            "Recto abdominal",
+            "Core profundo"
+        ],
+        "dificultad_tecnica": 4
+    },
+    {
+        "key": "crunch_bicicleta",
+        "ejercicio": "Bicycle crunch",
+        "descripcion": "Alternating rotation and flexion movement that works the obliques and rectus abdominis.",
+        "grupo_muscular": [
+            "Abdominales",
+            "Oblicuos",
+            "Recto abdominal"
+        ],
+        "dificultad_tecnica": 3
+    },
+    {
+        "key": "farmer_carry_unilateral",
+        "ejercicio": "Unilateral farmer carry",
+        "descripcion": "Single-side loaded walk that challenges lateral core stability.",
+        "grupo_muscular": [
+            "Abdominales",
+            "Oblicuos",
+            "Core profundo"
+        ],
+        "dificultad_tecnica": 3
+    },
+    {
+        "key": "sit_up_balon_medicinal",
+        "ejercicio": "Medicine ball sit-up",
+        "descripcion": "Full trunk flexion with external load for greater abdominal strength stimulus.",
+        "grupo_muscular": [
+            "Abdominales",
+            "Recto abdominal"
+        ],
+        "dificultad_tecnica": 3
     }
 ]

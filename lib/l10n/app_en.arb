@@ -53,7 +53,6 @@
   "@@_ROUTINE_CREATION": "Routine creation flow",
   "routineSelectType": "Routine type",
   "routineMusculacion": "Strength",
-  "routineAbdominales": "Abs",
   "routinePliometricos": "Plyometrics",
   "routineMovilidad": "Mobility",
   "routineHiit": "HIIT",
@@ -147,6 +146,63 @@
   "mobilityGetReady": "Get ready!",
   "mobilityFinishEarly": "Finish",
   "mobilityFinishEarlyConfirm": "Do you want to finish the routine?",
+
+  "@@_HIIT": "HIIT screen",
+  "hiitSelectExercises": "Select exercises",
+  "hiitWarningTooMany": "Selecting more than 6 exercises is not recommended",
+  "hiitConfig": "Configuration",
+  "hiitSets": "Sets",
+  "hiitWorkDuration": "Work time",
+  "hiitRestDuration": "Rest between exercises",
+  "hiitSetRestDuration": "Rest between sets",
+  "hiitTotalDuration": "Total duration",
+  "hiitTimerTitle": "HIIT",
+  "hiitSetOf": "Set {current} / {total}",
+  "@hiitSetOf": {
+    "placeholders": {
+      "current": { "type": "String" },
+      "total": { "type": "String" }
+    }
+  },
+  "hiitExerciseOf": "Exercise {current} / {total}",
+  "@hiitExerciseOf": {
+    "placeholders": {
+      "current": { "type": "String" },
+      "total": { "type": "String" }
+    }
+  },
+  "hiitRest": "Rest",
+  "hiitSetRest": "Rest between sets",
+  "hiitComplete": "Complete!",
+  "hiitGetReady": "Get ready!",
+  "hiitFinishEarly": "Finish",
+  "hiitFinishEarlyConfirm": "Do you want to finish the HIIT?",
+  "hiitSeconds": "{seconds}s",
+  "@hiitSeconds": {
+    "placeholders": {
+      "seconds": { "type": "String" }
+    }
+  },
+  "hiitMinutes": "{minutes} min",
+  "@hiitMinutes": {
+    "placeholders": {
+      "minutes": { "type": "String" }
+    }
+  },
+  "hiitExerciseCount": "{count} exercises",
+  "@hiitExerciseCount": {
+    "placeholders": {
+      "count": { "type": "String" }
+    }
+  },
+  "hiitSetCount": "{count} sets",
+  "@hiitSetCount": {
+    "placeholders": {
+      "count": { "type": "String" }
+    }
+  },
+  "hiitNextExercise": "Next",
+  "hiitSetComplete": "Set complete",
 
   "routineSelectDays": "How many days per week?",
   "routineDayOf": "Day {current} of {total}",

@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gym_tracker/domain/entities/workout_session.dart';
 import 'package:gym_tracker/presentation/screens/workout/exercise_progress_screen.dart';
 
+import '../helpers/scroll_helpers.dart';
 import '../helpers/test_helpers.dart';
 
 void main() {
@@ -189,11 +190,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Scroll down to find the comparison section
-      await tester.scrollUntilVisible(
-        find.text('Comparar días'),
-        200,
-        scrollable: find.byType(Scrollable).first,
-      );
+      await tester.scrollDownTo(find.text('Comparar días'));
 
       expect(find.text('Comparar días'), findsOneWidget);
       expect(find.text('Día 1'), findsOneWidget);
@@ -230,14 +227,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Scroll to comparison section
-      await tester.scrollUntilVisible(
-        find.text('Día 1'),
-        200,
-        scrollable: find.byType(Scrollable).first,
-      );
-
-      // Tap on "Day 1" selector
-      await tester.tap(find.text('Día 1'));
+      await tester.scrollToAndTap(find.text('Día 1'));
       await tester.pumpAndSettle();
 
       // A bottom sheet should appear containing ListTile items with the dates.

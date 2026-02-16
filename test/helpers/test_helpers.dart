@@ -12,6 +12,8 @@ import 'package:gym_tracker/domain/entities/workout_session.dart';
 import 'package:gym_tracker/domain/ports/training_day_port.dart';
 import 'package:gym_tracker/domain/entities/mobility_session.dart';
 import 'package:gym_tracker/domain/ports/mobility_session_port.dart';
+import 'package:gym_tracker/domain/entities/hiit_session.dart';
+import 'package:gym_tracker/domain/ports/hiit_session_port.dart';
 import 'package:gym_tracker/domain/ports/workout_session_port.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
 import 'package:gym_tracker/presentation/theme/app_theme.dart';
@@ -78,6 +80,18 @@ class FakeMobilitySessionPort implements MobilitySessionPort {
 
   @override
   Future<void> saveSessions(List<MobilitySession> sessions) async =>
+      _sessions = List.of(sessions);
+}
+
+/// In-memory implementation of [HiitSessionPort] for testing.
+class FakeHiitSessionPort implements HiitSessionPort {
+  List<HiitSession> _sessions = [];
+
+  @override
+  Future<List<HiitSession>> loadSessions() async => List.of(_sessions);
+
+  @override
+  Future<void> saveSessions(List<HiitSession> sessions) async =>
       _sessions = List.of(sessions);
 }
 

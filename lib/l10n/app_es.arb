@@ -65,7 +65,6 @@
   "@@_ROUTINE_CREATION": "Flujo de creación de rutina",
   "routineSelectType": "Tipo de rutina",
   "routineMusculacion": "Musculación",
-  "routineAbdominales": "Abdominales",
   "routinePliometricos": "Pliométricos",
   "routineMovilidad": "Movilidad",
   "routineHiit": "HIIT",
@@ -159,6 +158,63 @@
   "mobilityGetReady": "¡Prepárate!",
   "mobilityFinishEarly": "Finalizar",
   "mobilityFinishEarlyConfirm": "¿Quieres finalizar la rutina?",
+
+  "@@_HIIT": "Pantalla de HIIT",
+  "hiitSelectExercises": "Selecciona ejercicios",
+  "hiitWarningTooMany": "No se recomienda seleccionar más de 6 ejercicios",
+  "hiitConfig": "Configuración",
+  "hiitSets": "Series",
+  "hiitWorkDuration": "Tiempo de trabajo",
+  "hiitRestDuration": "Descanso entre ejercicios",
+  "hiitSetRestDuration": "Descanso entre series",
+  "hiitTotalDuration": "Duración total",
+  "hiitTimerTitle": "HIIT",
+  "hiitSetOf": "Serie {current} / {total}",
+  "@hiitSetOf": {
+    "placeholders": {
+      "current": { "type": "String" },
+      "total": { "type": "String" }
+    }
+  },
+  "hiitExerciseOf": "Ejercicio {current} / {total}",
+  "@hiitExerciseOf": {
+    "placeholders": {
+      "current": { "type": "String" },
+      "total": { "type": "String" }
+    }
+  },
+  "hiitRest": "Descanso",
+  "hiitSetRest": "Descanso entre series",
+  "hiitComplete": "¡Completado!",
+  "hiitGetReady": "¡Prepárate!",
+  "hiitFinishEarly": "Finalizar",
+  "hiitFinishEarlyConfirm": "¿Quieres finalizar el HIIT?",
+  "hiitSeconds": "{seconds}s",
+  "@hiitSeconds": {
+    "placeholders": {
+      "seconds": { "type": "String" }
+    }
+  },
+  "hiitMinutes": "{minutes} min",
+  "@hiitMinutes": {
+    "placeholders": {
+      "minutes": { "type": "String" }
+    }
+  },
+  "hiitExerciseCount": "{count} ejercicios",
+  "@hiitExerciseCount": {
+    "placeholders": {
+      "count": { "type": "String" }
+    }
+  },
+  "hiitSetCount": "{count} series",
+  "@hiitSetCount": {
+    "placeholders": {
+      "count": { "type": "String" }
+    }
+  },
+  "hiitNextExercise": "Siguiente",
+  "hiitSetComplete": "Serie completada",
 
   "routineSelectDays": "¿Cuántos días por semana?",
   "routineDayOf": "Día {current} de {total}",
