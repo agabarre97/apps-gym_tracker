@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:gym_tracker/domain/entities/hiit_config.dart';
 import 'package:gym_tracker/domain/entities/routine.dart';
 
 void main() {
@@ -238,10 +239,12 @@ void main() {
         days: const [
           RoutineDay(muscleGroups: [], exerciseKeys: ['burpees', 'jump_squats']),
         ],
-        hiitSets: 4,
-        hiitWorkSeconds: 30,
-        hiitRestSeconds: 15,
-        hiitSetRestSeconds: 120,
+        hiitConfig: const HiitConfig(
+          sets: 4,
+          workSeconds: 30,
+          restSeconds: 15,
+          setRestSeconds: 120,
+        ),
       );
 
       final json = routine.toJson();
@@ -271,21 +274,25 @@ void main() {
       expect(routine.hiitSetRestSeconds, isNull);
     });
 
-    test('copyWith overrides HIIT fields', () {
+    test('copyWith overrides HIIT config', () {
       final routine = Routine(
         id: 'hiit1',
         name: 'My HIIT',
         type: 'hiit',
         days: const [],
-        hiitSets: 3,
-        hiitWorkSeconds: 20,
-        hiitRestSeconds: 10,
-        hiitSetRestSeconds: 90,
+        hiitConfig: const HiitConfig(
+          sets: 3,
+          workSeconds: 20,
+          restSeconds: 10,
+          setRestSeconds: 90,
+        ),
       );
 
       final updated = routine.copyWith(
-        hiitSets: 5,
-        hiitWorkSeconds: 40,
+        hiitConfig: routine.hiitConfig!.copyWith(
+          sets: 5,
+          workSeconds: 40,
+        ),
       );
 
       expect(updated.hiitSets, 5);
@@ -302,10 +309,12 @@ void main() {
         days: const [
           RoutineDay(muscleGroups: [], exerciseKeys: ['burpees']),
         ],
-        hiitSets: 4,
-        hiitWorkSeconds: 30,
-        hiitRestSeconds: 15,
-        hiitSetRestSeconds: 120,
+        hiitConfig: const HiitConfig(
+          sets: 4,
+          workSeconds: 30,
+          restSeconds: 15,
+          setRestSeconds: 120,
+        ),
       );
 
       final jsonString = routine.toExportJsonString();

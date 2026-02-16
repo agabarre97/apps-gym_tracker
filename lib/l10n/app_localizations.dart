@@ -335,7 +335,7 @@ abstract class AppLocalizations {
   /// No description provided for @landingViewDetails.
   ///
   /// In es, this message translates to:
-  /// **'Ver detalles'**
+  /// **'Ver entrenamientos'**
   String get landingViewDetails;
 
   /// No description provided for @landingFilterAll.
@@ -343,6 +343,90 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Todos'**
   String get landingFilterAll;
+
+  /// No description provided for @landingMarkTrainingTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Registrar entrenamiento'**
+  String get landingMarkTrainingTitle;
+
+  /// No description provided for @landingMarkTrainingBody.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Registrar {routineName} para este día?'**
+  String landingMarkTrainingBody(String routineName);
+
+  /// No description provided for @landingMarkTrainingConfirm.
+  ///
+  /// In es, this message translates to:
+  /// **'Registrar'**
+  String get landingMarkTrainingConfirm;
+
+  /// No description provided for @landingTrainingMarked.
+  ///
+  /// In es, this message translates to:
+  /// **'Entrenamiento registrado'**
+  String get landingTrainingMarked;
+
+  /// No description provided for @landingDeleteTrainingTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar entrenamiento'**
+  String get landingDeleteTrainingTitle;
+
+  /// No description provided for @landingDeleteTrainingBody.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Eliminar {name} de este día?'**
+  String landingDeleteTrainingBody(String name);
+
+  /// No description provided for @landingDeleteTrainingConfirm.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar'**
+  String get landingDeleteTrainingConfirm;
+
+  /// No description provided for @landingOptionalStartTime.
+  ///
+  /// In es, this message translates to:
+  /// **'Hora de inicio (opcional)'**
+  String get landingOptionalStartTime;
+
+  /// No description provided for @landingOptionalEndTime.
+  ///
+  /// In es, this message translates to:
+  /// **'Hora de fin (opcional)'**
+  String get landingOptionalEndTime;
+
+  /// No description provided for @landingNoTime.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin hora'**
+  String get landingNoTime;
+
+  /// No description provided for @landingTrainingDeleted.
+  ///
+  /// In es, this message translates to:
+  /// **'Entrenamiento eliminado'**
+  String get landingTrainingDeleted;
+
+  /// No description provided for @landingTrainingTypeMobility.
+  ///
+  /// In es, this message translates to:
+  /// **'Movilidad'**
+  String get landingTrainingTypeMobility;
+
+  /// No description provided for @landingTrainingTypeHiit.
+  ///
+  /// In es, this message translates to:
+  /// **'HIIT'**
+  String get landingTrainingTypeHiit;
+
+  /// No description provided for @landingTrainingTypeWorkout.
+  ///
+  /// In es, this message translates to:
+  /// **'Musculación'**
+  String get landingTrainingTypeWorkout;
 
   /// No description provided for @routineSelectType.
   ///
@@ -805,6 +889,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Selecciona ejercicios'**
   String get hiitSelectExercises;
+
+  /// No description provided for @hiitEditExercises.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar ejercicios'**
+  String get hiitEditExercises;
 
   /// No description provided for @hiitWarningTooMany.
   ///

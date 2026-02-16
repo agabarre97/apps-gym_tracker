@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:gym_tracker/domain/entities/hiit_config.dart';
 import 'package:gym_tracker/domain/entities/hiit_exercise.dart';
 import 'package:gym_tracker/domain/entities/routine.dart';
 import 'package:gym_tracker/presentation/screens/hiit/hiit_detail_screen.dart';
@@ -27,10 +29,12 @@ void main() {
           exerciseKeys: ['burpees', 'jump_squats', 'mountain_climbers'],
         ),
       ],
-      hiitSets: 3,
-      hiitWorkSeconds: 20,
-      hiitRestSeconds: 10,
-      hiitSetRestSeconds: 90,
+      hiitConfig: HiitConfig(
+        sets: 3,
+        workSeconds: 20,
+        restSeconds: 10,
+        setRestSeconds: 90,
+      ),
     );
 
     testWidgets('renders routine name in app bar', (tester) async {
@@ -104,6 +108,49 @@ void main() {
       expect(find.text('20s'), findsOneWidget);
       expect(find.text('10s'), findsOneWidget);
       expect(find.text('90s'), findsOneWidget);
+    });
+
+    testWidgets('edit exercises button is visible', (tester) async {
+      await tester.pumpWidget(
+        buildTestableWidget(
+          HiitDetailScreen(
+            routine: hiitRoutine,
+            allRoutines: [hiitRoutine],
+            routinePort: FakeRoutinePort(),
+            hiitSessionPort: FakeHiitSessionPort(),
+            preloadedExercises: _preloadedExercises,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Find the edit icon button by its tooltip
+      expect(find.byTooltip('Editar ejercicios'), findsOneWidget);
+    });
+
+    testWidgets('edit exercises button opens selection screen', (tester) async {
+      await tester.pumpWidget(
+        buildTestableWidget(
+          HiitDetailScreen(
+            routine: hiitRoutine,
+            allRoutines: [hiitRoutine],
+            routinePort: FakeRoutinePort(),
+            hiitSessionPort: FakeHiitSessionPort(),
+            preloadedExercises: _preloadedExercises,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Tap the edit button
+      await tester.tap(find.byTooltip('Editar ejercicios'));
+      await tester.pumpAndSettle();
+
+      // The exercise selection screen should appear
+      expect(find.text('Selecciona ejercicios'), findsWidgets);
+
+      // All 3 exercises should be pre-selected (check marks)
+      expect(find.byIcon(Icons.check_circle), findsNWidgets(3));
     });
 
     testWidgets('settings button opens config bottom sheet', (tester) async {

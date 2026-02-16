@@ -131,10 +131,56 @@ class AppLocalizationsEs extends AppLocalizations {
   String get landingAddTraining => 'Añadir entrenamiento';
 
   @override
-  String get landingViewDetails => 'Ver detalles';
+  String get landingViewDetails => 'Ver entrenamientos';
 
   @override
   String get landingFilterAll => 'Todos';
+
+  @override
+  String get landingMarkTrainingTitle => 'Registrar entrenamiento';
+
+  @override
+  String landingMarkTrainingBody(String routineName) {
+    return '¿Registrar $routineName para este día?';
+  }
+
+  @override
+  String get landingMarkTrainingConfirm => 'Registrar';
+
+  @override
+  String get landingTrainingMarked => 'Entrenamiento registrado';
+
+  @override
+  String get landingDeleteTrainingTitle => 'Eliminar entrenamiento';
+
+  @override
+  String landingDeleteTrainingBody(String name) {
+    return '¿Eliminar $name de este día?';
+  }
+
+  @override
+  String get landingDeleteTrainingConfirm => 'Eliminar';
+
+  @override
+  String get landingOptionalStartTime => 'Hora de inicio (opcional)';
+
+  @override
+  String get landingOptionalEndTime => 'Hora de fin (opcional)';
+
+  @override
+  String get landingNoTime => 'Sin hora';
+
+  @override
+  String get landingTrainingDeleted => 'Entrenamiento eliminado';
+
+  @override
+  String get landingTrainingTypeMobility => 'Movilidad';
+
+  @override
+  String get landingTrainingTypeHiit => 'HIIT';
+
+  @override
+  String get landingTrainingTypeWorkout => 'Musculación';
 
   @override
   String get routineSelectType => 'Tipo de rutina';
@@ -376,6 +422,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get hiitSelectExercises => 'Selecciona ejercicios';
+
+  @override
+  String get hiitEditExercises => 'Editar ejercicios';
 
   @override
   String get hiitWarningTooMany =>

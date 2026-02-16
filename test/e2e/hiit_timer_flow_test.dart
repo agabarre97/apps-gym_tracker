@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:gym_tracker/domain/entities/hiit_config.dart';
 import 'package:gym_tracker/domain/entities/hiit_exercise.dart';
 import 'package:gym_tracker/domain/entities/routine.dart';
 import 'package:gym_tracker/presentation/screens/hiit/hiit_detail_screen.dart';
@@ -24,10 +25,12 @@ void main() {
           exerciseKeys: ['burpees', 'jump_squats'],
         ),
       ],
-      hiitSets: 2,
-      hiitWorkSeconds: 20,
-      hiitRestSeconds: 10,
-      hiitSetRestSeconds: 60,
+      hiitConfig: HiitConfig(
+        sets: 2,
+        workSeconds: 20,
+        restSeconds: 10,
+        setRestSeconds: 60,
+      ),
     );
 
     testWidgets(

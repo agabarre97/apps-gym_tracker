@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gym_tracker/data/datasources/asset_data_loader.dart';
 import 'package:gym_tracker/domain/entities/hiit_exercise.dart';
 import 'package:gym_tracker/domain/entities/routine.dart';
 import 'package:gym_tracker/domain/ports/hiit_session_port.dart';
@@ -7,7 +8,8 @@ import 'package:gym_tracker/l10n/app_localizations.dart';
 import 'package:gym_tracker/presentation/components/delete_routine_dialog.dart';
 import 'package:gym_tracker/presentation/components/export_sheet.dart';
 import 'package:gym_tracker/presentation/components/time_wheel_picker.dart';
-import 'package:gym_tracker/presentation/screens/hiit/hiit_config_screen.dart';
+import 'package:gym_tracker/domain/entities/hiit_config.dart';
+import 'package:gym_tracker/presentation/screens/hiit/hiit_exercise_selection_screen.dart';
 import 'package:gym_tracker/presentation/screens/hiit/hiit_timer_screen.dart';
 import 'package:gym_tracker/presentation/utils/time_formatter.dart';
 
@@ -43,6 +45,9 @@ class _HiitDetailScreenState extends State<HiitDetailScreen> {
   bool _loading = true;
   bool _loadStarted = false;
 
+  /// Mutable copy of the routine so exercise edits can be tracked locally.
+  late Routine _currentRoutine;
+
   // Mutable config that can be adjusted before starting
   late int _sets;
   late int _workSeconds;
@@ -52,11 +57,12 @@ class _HiitDetailScreenState extends State<HiitDetailScreen> {
   @override
   void initState() {
     super.initState();
-    _sets = widget.routine.hiitSets ?? hiitDefaultSets;
-    _workSeconds = widget.routine.hiitWorkSeconds ?? hiitDefaultWorkSeconds;
-    _restSeconds = widget.routine.hiitRestSeconds ?? hiitDefaultRestSeconds;
+    _currentRoutine = widget.routine;
+    _sets = widget.routine.hiitSets ?? HiitConfig.defaultSets;
+    _workSeconds = widget.routine.hiitWorkSeconds ?? HiitConfig.defaultWorkSeconds;
+    _restSeconds = widget.routine.hiitRestSeconds ?? HiitConfig.defaultRestSeconds;
     _setRestSeconds =
-        widget.routine.hiitSetRestSeconds ?? hiitDefaultSetRestSeconds;
+        widget.routine.hiitSetRestSeconds ?? HiitConfig.defaultSetRestSeconds;
   }
 
   @override
@@ -74,7 +80,7 @@ class _HiitDetailScreenState extends State<HiitDetailScreen> {
         _allHiitExercises = widget.preloadedExercises!;
       } else {
         final lang = Localizations.localeOf(context).languageCode;
-        _allHiitExercises = await HiitExercise.loadFromAsset(lang);
+        _allHiitExercises = await AssetDataLoader.loadHiitExercises(lang);
       }
       if (!mounted) return;
       setState(() => _loading = false);
@@ -85,8 +91,8 @@ class _HiitDetailScreenState extends State<HiitDetailScreen> {
   }
 
   List<HiitExercise> get _routineExercises {
-    if (widget.routine.days.isEmpty) return [];
-    final keys = widget.routine.days.first.exerciseKeys;
+    if (_currentRoutine.days.isEmpty) return [];
+    final keys = _currentRoutine.days.first.exerciseKeys;
     return keys
         .map((key) {
           try {
@@ -112,19 +118,61 @@ class _HiitDetailScreenState extends State<HiitDetailScreen> {
 
   void _handleExport() => showExportSheet(
         context,
-        jsonString: widget.routine.toExportJsonString(),
+        jsonString: _currentRoutine.toExportJsonString(),
       );
+
+  /// Opens the exercise selection screen pre-filled with the current
+  /// exercise keys, allowing the user to add or remove exercises.
+  Future<void> _editExercises() async {
+    final currentKeys = _currentRoutine.days.isNotEmpty
+        ? _currentRoutine.days.first.exerciseKeys
+        : <String>[];
+
+    final result = await Navigator.of(context).push<List<String>>(
+      MaterialPageRoute(
+        builder: (_) => HiitExerciseSelectionScreen(
+          exercises: _allHiitExercises,
+          initialSelectedKeys: currentKeys,
+          onConfirmed: (keys) => Navigator.of(context).pop(keys),
+          onBack: () => Navigator.of(context).pop(),
+        ),
+      ),
+    );
+
+    if (result == null || !mounted) return;
+
+    // Build updated routine with new exercise keys
+    final updatedRoutine = _currentRoutine.copyWith(
+      days: [
+        RoutineDay(
+          muscleGroups: const [],
+          exerciseKeys: result,
+        ),
+      ],
+    );
+
+    // Persist the change
+    final updatedList = widget.allRoutines.map((r) {
+      return r.id == updatedRoutine.id ? updatedRoutine : r;
+    }).toList();
+    await widget.routinePort.saveRoutines(updatedList);
+
+    if (!mounted) return;
+    setState(() {
+      _currentRoutine = updatedRoutine;
+    });
+  }
 
   Future<void> _confirmDelete() async {
     final confirmed = await showDeleteRoutineDialog(
       context,
-      routineName: widget.routine.name,
+      routineName: _currentRoutine.name,
     );
 
     if (confirmed != true || !mounted) return;
 
     final updated =
-        widget.allRoutines.where((r) => r.id != widget.routine.id).toList();
+        widget.allRoutines.where((r) => r.id != _currentRoutine.id).toList();
     await widget.routinePort.saveRoutines(updated);
 
     if (!mounted) return;
@@ -173,8 +221,8 @@ class _HiitDetailScreenState extends State<HiitDetailScreen> {
                     _buildSettingsTimeRow(
                       label: l10n.hiitWorkDuration,
                       value: _workSeconds,
-                      min: hiitMinWorkSeconds,
-                      max: hiitMaxWorkSeconds,
+                      min: HiitConfig.minWorkSeconds,
+                      max: HiitConfig.maxWorkSeconds,
                       onChanged: (v) {
                         setSheetState(() => _workSeconds = v);
                         setState(() {});
@@ -185,8 +233,8 @@ class _HiitDetailScreenState extends State<HiitDetailScreen> {
                     _buildSettingsTimeRow(
                       label: l10n.hiitRestDuration,
                       value: _restSeconds,
-                      min: hiitMinRestSeconds,
-                      max: hiitMaxRestSeconds,
+                      min: HiitConfig.minRestSeconds,
+                      max: HiitConfig.maxRestSeconds,
                       onChanged: (v) {
                         setSheetState(() => _restSeconds = v);
                         setState(() {});
@@ -197,8 +245,8 @@ class _HiitDetailScreenState extends State<HiitDetailScreen> {
                     _buildSettingsTimeRow(
                       label: l10n.hiitSetRestDuration,
                       value: _setRestSeconds,
-                      min: hiitMinSetRestSeconds,
-                      max: hiitMaxSetRestSeconds,
+                      min: HiitConfig.minSetRestSeconds,
+                      max: HiitConfig.maxSetRestSeconds,
                       onChanged: (v) {
                         setSheetState(() => _setRestSeconds = v);
                         setState(() {});
@@ -222,7 +270,7 @@ class _HiitDetailScreenState extends State<HiitDetailScreen> {
       MaterialPageRoute(
         builder: (_) => HiitTimerScreen(
           exercises: exercises,
-          routineName: widget.routine.name,
+          routineName: _currentRoutine.name,
           sets: _sets,
           workSeconds: _workSeconds,
           restSeconds: _restSeconds,
@@ -243,7 +291,7 @@ class _HiitDetailScreenState extends State<HiitDetailScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.routine.name),
+        title: Text(_currentRoutine.name),
         actions: [
           IconButton(
             icon: const Icon(Icons.share),
@@ -316,10 +364,32 @@ class _HiitDetailScreenState extends State<HiitDetailScreen> {
         ),
         const Divider(),
 
+        // Exercise header with edit button
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 4, 8, 0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                l10n.hiitSelectExercises,
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      color: Colors.white70,
+                    ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.edit_outlined, size: 20),
+                tooltip: l10n.hiitEditExercises,
+                color: Colors.white54,
+                onPressed: _editExercises,
+              ),
+            ],
+          ),
+        ),
+
         // Exercise cards
         Expanded(
           child: ListView.builder(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
             itemCount: exercises.length,
             itemBuilder: (context, index) {
               final exercise = exercises[index];
@@ -459,7 +529,7 @@ class _HiitDetailScreenState extends State<HiitDetailScreen> {
           TimeWheelPicker(
             minSeconds: min,
             maxSeconds: max,
-            stepSeconds: hiitTimeStepSeconds,
+            stepSeconds: HiitConfig.stepSeconds,
             selectedSeconds: value,
             onChanged: onChanged,
             height: 100,

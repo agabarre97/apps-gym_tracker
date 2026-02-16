@@ -59,8 +59,32 @@
   "landingRoutineName": "Nombre de la rutina",
   "landingDeleteRoutine": "Eliminar",
   "landingAddTraining": "Añadir entrenamiento",
-  "landingViewDetails": "Ver detalles",
+  "landingViewDetails": "Ver entrenamientos",
   "landingFilterAll": "Todos",
+  "landingMarkTrainingTitle": "Registrar entrenamiento",
+  "landingMarkTrainingBody": "¿Registrar {routineName} para este día?",
+  "@landingMarkTrainingBody": {
+    "placeholders": {
+      "routineName": { "type": "String" }
+    }
+  },
+  "landingMarkTrainingConfirm": "Registrar",
+  "landingTrainingMarked": "Entrenamiento registrado",
+  "landingDeleteTrainingTitle": "Eliminar entrenamiento",
+  "landingDeleteTrainingBody": "¿Eliminar {name} de este día?",
+  "@landingDeleteTrainingBody": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "landingDeleteTrainingConfirm": "Eliminar",
+  "landingOptionalStartTime": "Hora de inicio (opcional)",
+  "landingOptionalEndTime": "Hora de fin (opcional)",
+  "landingNoTime": "Sin hora",
+  "landingTrainingDeleted": "Entrenamiento eliminado",
+  "landingTrainingTypeMobility": "Movilidad",
+  "landingTrainingTypeHiit": "HIIT",
+  "landingTrainingTypeWorkout": "Musculación",
 
   "@@_ROUTINE_CREATION": "Flujo de creación de rutina",
   "routineSelectType": "Tipo de rutina",
@@ -161,6 +185,7 @@
 
   "@@_HIIT": "Pantalla de HIIT",
   "hiitSelectExercises": "Selecciona ejercicios",
+  "hiitEditExercises": "Editar ejercicios",
   "hiitWarningTooMany": "No se recomienda seleccionar más de 6 ejercicios",
   "hiitConfig": "Configuración",
   "hiitSets": "Series",

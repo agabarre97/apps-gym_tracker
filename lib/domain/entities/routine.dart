@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:gym_tracker/domain/entities/hiit_config.dart';
+
 /// A single day within a routine.
 class RoutineDay {
   const RoutineDay({
@@ -35,10 +37,7 @@ class Routine {
     required this.type,
     required this.days,
     this.recommendedRoutineKey,
-    this.hiitSets,
-    this.hiitWorkSeconds,
-    this.hiitRestSeconds,
-    this.hiitSetRestSeconds,
+    this.hiitConfig,
   });
 
   final String id;
@@ -53,39 +52,60 @@ class Routine {
   final String? recommendedRoutineKey;
 
   /// HIIT configuration (only populated when [type] == 'hiit').
-  final int? hiitSets;
-  final int? hiitWorkSeconds;
-  final int? hiitRestSeconds;
-  final int? hiitSetRestSeconds;
+  final HiitConfig? hiitConfig;
+
+  // ── Backward-compatible convenience getters ────────────────────
+
+  int? get hiitSets => hiitConfig?.sets;
+  int? get hiitWorkSeconds => hiitConfig?.workSeconds;
+  int? get hiitRestSeconds => hiitConfig?.restSeconds;
+  int? get hiitSetRestSeconds => hiitConfig?.setRestSeconds;
 
   Map<String, dynamic> toJson() => {
         'id': id,
         'name': name,
         'type': type,
         'days': days.map((d) => d.toJson()).toList(),
-        if (recommendedRoutineKey != null) 'recommendedRoutineKey': recommendedRoutineKey,
-        if (hiitSets != null) 'hiitSets': hiitSets,
-        if (hiitWorkSeconds != null) 'hiitWorkSeconds': hiitWorkSeconds,
-        if (hiitRestSeconds != null) 'hiitRestSeconds': hiitRestSeconds,
-        if (hiitSetRestSeconds != null) 'hiitSetRestSeconds': hiitSetRestSeconds,
+        if (recommendedRoutineKey != null)
+          'recommendedRoutineKey': recommendedRoutineKey,
+        if (hiitConfig != null) ...{
+          'hiitSets': hiitConfig!.sets,
+          'hiitWorkSeconds': hiitConfig!.workSeconds,
+          'hiitRestSeconds': hiitConfig!.restSeconds,
+          'hiitSetRestSeconds': hiitConfig!.setRestSeconds,
+        },
       };
 
-  factory Routine.fromJson(Map<String, dynamic> json) => Routine(
-        id: json['id'] as String,
-        name: json['name'] as String,
-        type: json['type'] as String? ?? 'musculacion',
-        days: json['days'] != null
-            ? (json['days'] as List)
-                .cast<Map<String, dynamic>>()
-                .map(RoutineDay.fromJson)
-                .toList()
-            : [],
-        recommendedRoutineKey: json['recommendedRoutineKey'] as String?,
-        hiitSets: json['hiitSets'] as int?,
-        hiitWorkSeconds: json['hiitWorkSeconds'] as int?,
-        hiitRestSeconds: json['hiitRestSeconds'] as int?,
-        hiitSetRestSeconds: json['hiitSetRestSeconds'] as int?,
-      );
+  factory Routine.fromJson(Map<String, dynamic> json) {
+    // Backward-compatible: reconstruct HiitConfig from flat fields
+    final hiitSets = json['hiitSets'] as int?;
+    final hiitWork = json['hiitWorkSeconds'] as int?;
+    final hiitRest = json['hiitRestSeconds'] as int?;
+    final hiitSetRest = json['hiitSetRestSeconds'] as int?;
+    final hasHiitFields =
+        hiitSets != null || hiitWork != null || hiitRest != null || hiitSetRest != null;
+
+    return Routine(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      type: json['type'] as String? ?? 'musculacion',
+      days: json['days'] != null
+          ? (json['days'] as List)
+              .cast<Map<String, dynamic>>()
+              .map(RoutineDay.fromJson)
+              .toList()
+          : [],
+      recommendedRoutineKey: json['recommendedRoutineKey'] as String?,
+      hiitConfig: hasHiitFields
+          ? HiitConfig(
+              sets: hiitSets ?? HiitConfig.defaultSets,
+              workSeconds: hiitWork ?? HiitConfig.defaultWorkSeconds,
+              restSeconds: hiitRest ?? HiitConfig.defaultRestSeconds,
+              setRestSeconds: hiitSetRest ?? HiitConfig.defaultSetRestSeconds,
+            )
+          : null,
+    );
+  }
 
   /// Creates a deep copy with optional field overrides.
   Routine copyWith({
@@ -94,21 +114,16 @@ class Routine {
     String? type,
     List<RoutineDay>? days,
     String? recommendedRoutineKey,
-    int? hiitSets,
-    int? hiitWorkSeconds,
-    int? hiitRestSeconds,
-    int? hiitSetRestSeconds,
+    HiitConfig? hiitConfig,
   }) =>
       Routine(
         id: id ?? this.id,
         name: name ?? this.name,
         type: type ?? this.type,
         days: days ?? this.days,
-        recommendedRoutineKey: recommendedRoutineKey ?? this.recommendedRoutineKey,
-        hiitSets: hiitSets ?? this.hiitSets,
-        hiitWorkSeconds: hiitWorkSeconds ?? this.hiitWorkSeconds,
-        hiitRestSeconds: hiitRestSeconds ?? this.hiitRestSeconds,
-        hiitSetRestSeconds: hiitSetRestSeconds ?? this.hiitSetRestSeconds,
+        recommendedRoutineKey:
+            recommendedRoutineKey ?? this.recommendedRoutineKey,
+        hiitConfig: hiitConfig ?? this.hiitConfig,
       );
 
   /// Current export format version — bump when the schema changes.
@@ -122,10 +137,12 @@ class Routine {
         'days': days.map((d) => d.toJson()).toList(),
         if (recommendedRoutineKey != null)
           'recommendedRoutineKey': recommendedRoutineKey,
-        if (hiitSets != null) 'hiitSets': hiitSets,
-        if (hiitWorkSeconds != null) 'hiitWorkSeconds': hiitWorkSeconds,
-        if (hiitRestSeconds != null) 'hiitRestSeconds': hiitRestSeconds,
-        if (hiitSetRestSeconds != null) 'hiitSetRestSeconds': hiitSetRestSeconds,
+        if (hiitConfig != null) ...{
+          'hiitSets': hiitConfig!.sets,
+          'hiitWorkSeconds': hiitConfig!.workSeconds,
+          'hiitRestSeconds': hiitConfig!.restSeconds,
+          'hiitSetRestSeconds': hiitConfig!.setRestSeconds,
+        },
       };
 
   /// Generates a portable JSON string for export (excludes `id`).
@@ -157,6 +174,14 @@ class Routine {
     if (days is! List || days.isEmpty) {
       throw const FormatException('Missing or empty "days"');
     }
+
+    final hiitSets = decoded['hiitSets'] as int?;
+    final hiitWork = decoded['hiitWorkSeconds'] as int?;
+    final hiitRest = decoded['hiitRestSeconds'] as int?;
+    final hiitSetRest = decoded['hiitSetRestSeconds'] as int?;
+    final hasHiitFields =
+        hiitSets != null || hiitWork != null || hiitRest != null || hiitSetRest != null;
+
     return Routine(
       id: id,
       name: name,
@@ -166,10 +191,14 @@ class Routine {
           .map(RoutineDay.fromJson)
           .toList(),
       recommendedRoutineKey: decoded['recommendedRoutineKey'] as String?,
-      hiitSets: decoded['hiitSets'] as int?,
-      hiitWorkSeconds: decoded['hiitWorkSeconds'] as int?,
-      hiitRestSeconds: decoded['hiitRestSeconds'] as int?,
-      hiitSetRestSeconds: decoded['hiitSetRestSeconds'] as int?,
+      hiitConfig: hasHiitFields
+          ? HiitConfig(
+              sets: hiitSets ?? HiitConfig.defaultSets,
+              workSeconds: hiitWork ?? HiitConfig.defaultWorkSeconds,
+              restSeconds: hiitRest ?? HiitConfig.defaultRestSeconds,
+              setRestSeconds: hiitSetRest ?? HiitConfig.defaultSetRestSeconds,
+            )
+          : null,
     );
   }
 

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
 import 'package:uuid/uuid.dart';
 
+import 'package:gym_tracker/data/datasources/asset_data_loader.dart';
 import 'package:gym_tracker/domain/entities/exercise.dart';
+import 'package:gym_tracker/domain/entities/hiit_config.dart';
 import 'package:gym_tracker/domain/entities/hiit_exercise.dart';
 import 'package:gym_tracker/domain/entities/muscle_group.dart';
 import 'package:gym_tracker/domain/entities/routine.dart';
@@ -96,7 +98,7 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
       _allExercises = widget.preloadedExercises!;
     } else {
       final lang = Localizations.localeOf(context).languageCode;
-      _allExercises = await Exercise.loadFromAsset(lang);
+      _allExercises = await AssetDataLoader.loadExercises(lang);
     }
     _exercisesLoaded = true;
     if (mounted) setState(() {});
@@ -108,7 +110,7 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
       _hiitExercises = widget.preloadedHiitExercises!;
     } else {
       final lang = Localizations.localeOf(context).languageCode;
-      _hiitExercises = await HiitExercise.loadFromAsset(lang);
+      _hiitExercises = await AssetDataLoader.loadHiitExercises(lang);
     }
     _hiitExercisesLoaded = true;
     if (mounted) setState(() {});
@@ -306,10 +308,12 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
           exerciseKeys: _hiitSelectedKeys,
         ),
       ],
-      hiitSets: sets,
-      hiitWorkSeconds: workSeconds,
-      hiitRestSeconds: restSeconds,
-      hiitSetRestSeconds: setRestSeconds,
+      hiitConfig: HiitConfig(
+        sets: sets,
+        workSeconds: workSeconds,
+        restSeconds: restSeconds,
+        setRestSeconds: setRestSeconds,
+      ),
     );
 
     final updated = [...widget.existingRoutines, routine];

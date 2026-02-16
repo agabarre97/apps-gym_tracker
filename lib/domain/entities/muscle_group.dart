@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:gym_tracker/domain/entities/exercise.dart';
 
 /// High-level muscle group categories used in the UI.
@@ -96,20 +95,6 @@ const Map<MuscleGroupCategory, String> muscleGroupLabelEn = {
 /// Returns the localised label map for a given language code.
 Map<MuscleGroupCategory, String> muscleGroupLabels(String languageCode) =>
     languageCode == 'en' ? muscleGroupLabelEn : muscleGroupLabelEs;
-
-/// Icon for each muscle group.
-const Map<MuscleGroupCategory, IconData> muscleGroupIcons = {
-  MuscleGroupCategory.pectoral: Icons.expand,
-  MuscleGroupCategory.espalda: Icons.airline_seat_flat,
-  MuscleGroupCategory.hombro: Icons.accessibility_new,
-  MuscleGroupCategory.triceps: Icons.back_hand,
-  MuscleGroupCategory.biceps: Icons.front_hand,
-  MuscleGroupCategory.cuadriceps: Icons.directions_walk,
-  MuscleGroupCategory.gluteos: Icons.event_seat,
-  MuscleGroupCategory.isquiotibiales: Icons.directions_run,
-  MuscleGroupCategory.gemelos: Icons.do_not_step,
-  MuscleGroupCategory.abdominales: Icons.self_improvement,
-};
 
 /// Filters exercises that have at least one muscle group matching
 /// any of the selected categories.

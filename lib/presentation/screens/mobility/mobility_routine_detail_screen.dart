@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gym_tracker/data/datasources/asset_data_loader.dart';
 import 'package:gym_tracker/domain/entities/mobility_exercise_info.dart';
 import 'package:gym_tracker/domain/entities/mobility_routine.dart';
 import 'package:gym_tracker/domain/entities/routine.dart';
@@ -59,8 +60,8 @@ class _MobilityRoutineDetailScreenState
     try {
       final lang = Localizations.localeOf(context).languageCode;
       final results = await Future.wait([
-        MobilityRoutine.loadFromAsset(key),
-        MobilityExerciseInfo.loadAll(lang),
+        AssetDataLoader.loadMobilityRoutine(key),
+        AssetDataLoader.loadMobilityExerciseInfo(lang),
       ]);
       setState(() {
         _mobilityRoutine = results[0] as MobilityRoutine;

@@ -1,22 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:gym_tracker/domain/entities/hiit_config.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
 import 'package:gym_tracker/presentation/components/time_wheel_picker.dart';
 import 'package:gym_tracker/presentation/utils/time_formatter.dart';
-
-/// Default HIIT configuration values.
-const int hiitDefaultSets = 3;
-const int hiitDefaultWorkSeconds = 20;
-const int hiitDefaultRestSeconds = 10;
-const int hiitDefaultSetRestSeconds = 90;
-
-/// Time wheel range limits.
-const int hiitMinWorkSeconds = 5;
-const int hiitMaxWorkSeconds = 120;
-const int hiitMinRestSeconds = 5;
-const int hiitMaxRestSeconds = 60;
-const int hiitMinSetRestSeconds = 10;
-const int hiitMaxSetRestSeconds = 300;
-const int hiitTimeStepSeconds = 5;
 
 /// Screen for configuring HIIT routine parameters and naming the routine.
 class HiitConfigScreen extends StatefulWidget {
@@ -26,10 +12,10 @@ class HiitConfigScreen extends StatefulWidget {
     required this.onSave,
     required this.onBack,
     this.initialName = '',
-    this.initialSets = hiitDefaultSets,
-    this.initialWorkSeconds = hiitDefaultWorkSeconds,
-    this.initialRestSeconds = hiitDefaultRestSeconds,
-    this.initialSetRestSeconds = hiitDefaultSetRestSeconds,
+    this.initialSets = HiitConfig.defaultSets,
+    this.initialWorkSeconds = HiitConfig.defaultWorkSeconds,
+    this.initialRestSeconds = HiitConfig.defaultRestSeconds,
+    this.initialSetRestSeconds = HiitConfig.defaultSetRestSeconds,
   });
 
   final int exerciseCount;
@@ -127,8 +113,8 @@ class _HiitConfigScreenState extends State<HiitConfigScreen> {
           _buildTimeRow(
             label: l10n.hiitWorkDuration,
             value: _workSeconds,
-            min: hiitMinWorkSeconds,
-            max: hiitMaxWorkSeconds,
+            min: HiitConfig.minWorkSeconds,
+            max: HiitConfig.maxWorkSeconds,
             onChanged: (v) => setState(() => _workSeconds = v),
           ),
 
@@ -136,8 +122,8 @@ class _HiitConfigScreenState extends State<HiitConfigScreen> {
           _buildTimeRow(
             label: l10n.hiitRestDuration,
             value: _restSeconds,
-            min: hiitMinRestSeconds,
-            max: hiitMaxRestSeconds,
+            min: HiitConfig.minRestSeconds,
+            max: HiitConfig.maxRestSeconds,
             onChanged: (v) => setState(() => _restSeconds = v),
           ),
 
@@ -145,8 +131,8 @@ class _HiitConfigScreenState extends State<HiitConfigScreen> {
           _buildTimeRow(
             label: l10n.hiitSetRestDuration,
             value: _setRestSeconds,
-            min: hiitMinSetRestSeconds,
-            max: hiitMaxSetRestSeconds,
+            min: HiitConfig.minSetRestSeconds,
+            max: HiitConfig.maxSetRestSeconds,
             onChanged: (v) => setState(() => _setRestSeconds = v),
           ),
 
@@ -219,7 +205,7 @@ class _HiitConfigScreenState extends State<HiitConfigScreen> {
           TimeWheelPicker(
             minSeconds: min,
             maxSeconds: max,
-            stepSeconds: hiitTimeStepSeconds,
+            stepSeconds: HiitConfig.stepSeconds,
             selectedSeconds: value,
             onChanged: onChanged,
             height: 110,

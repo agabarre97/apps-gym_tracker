@@ -10,7 +10,7 @@ import 'package:gym_tracker/domain/ports/hiit_session_port.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
 import 'package:gym_tracker/presentation/components/circular_timer_painter.dart';
 import 'package:gym_tracker/presentation/components/time_wheel_picker.dart';
-import 'package:gym_tracker/presentation/screens/hiit/hiit_config_screen.dart';
+import 'package:gym_tracker/domain/entities/hiit_config.dart';
 import 'package:gym_tracker/presentation/utils/time_formatter.dart';
 
 /// Full-screen HIIT timer with preview, countdown, exercise/rest phases,
@@ -311,8 +311,8 @@ class _HiitTimerScreenState extends State<HiitTimerScreen>
                       _buildSettingsTimeRow(
                         label: l10n.hiitWorkDuration,
                         value: _workSeconds,
-                        min: hiitMinWorkSeconds,
-                        max: hiitMaxWorkSeconds,
+                        min: HiitConfig.minWorkSeconds,
+                        max: HiitConfig.maxWorkSeconds,
                         onChanged: (v) {
                           setSheetState(() => _workSeconds = v);
                           setState(() {});
@@ -322,8 +322,8 @@ class _HiitTimerScreenState extends State<HiitTimerScreen>
                       _buildSettingsTimeRow(
                         label: l10n.hiitRestDuration,
                         value: _restSeconds,
-                        min: hiitMinRestSeconds,
-                        max: hiitMaxRestSeconds,
+                        min: HiitConfig.minRestSeconds,
+                        max: HiitConfig.maxRestSeconds,
                         onChanged: (v) {
                           setSheetState(() => _restSeconds = v);
                           setState(() {});
@@ -333,8 +333,8 @@ class _HiitTimerScreenState extends State<HiitTimerScreen>
                       _buildSettingsTimeRow(
                         label: l10n.hiitSetRestDuration,
                         value: _setRestSeconds,
-                        min: hiitMinSetRestSeconds,
-                        max: hiitMaxSetRestSeconds,
+                        min: HiitConfig.minSetRestSeconds,
+                        max: HiitConfig.maxSetRestSeconds,
                         onChanged: (v) {
                           setSheetState(() => _setRestSeconds = v);
                           setState(() {});
@@ -747,7 +747,7 @@ class _HiitTimerScreenState extends State<HiitTimerScreen>
           TimeWheelPicker(
             minSeconds: min,
             maxSeconds: max,
-            stepSeconds: hiitTimeStepSeconds,
+            stepSeconds: HiitConfig.stepSeconds,
             selectedSeconds: value,
             onChanged: onChanged,
             height: 100,

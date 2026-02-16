@@ -2,6 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
 import 'package:gym_tracker/domain/entities/muscle_group.dart';
 
+/// Icon for each muscle group (presentation-layer concern).
+const Map<MuscleGroupCategory, IconData> muscleGroupIcons = {
+  MuscleGroupCategory.pectoral: Icons.expand,
+  MuscleGroupCategory.espalda: Icons.airline_seat_flat,
+  MuscleGroupCategory.hombro: Icons.accessibility_new,
+  MuscleGroupCategory.triceps: Icons.back_hand,
+  MuscleGroupCategory.biceps: Icons.front_hand,
+  MuscleGroupCategory.cuadriceps: Icons.directions_walk,
+  MuscleGroupCategory.gluteos: Icons.event_seat,
+  MuscleGroupCategory.isquiotibiales: Icons.directions_run,
+  MuscleGroupCategory.gemelos: Icons.do_not_step,
+  MuscleGroupCategory.abdominales: Icons.self_improvement,
+};
+
 /// Screen for selecting which muscle groups to train on a given day.
 class MuscleGroupSelectionScreen extends StatefulWidget {
   const MuscleGroupSelectionScreen({

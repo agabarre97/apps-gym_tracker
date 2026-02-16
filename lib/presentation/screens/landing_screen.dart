@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import 'package:gym_tracker/data/datasources/asset_data_loader.dart';
 import 'package:gym_tracker/domain/entities/exercise.dart';
+import 'package:gym_tracker/domain/entities/hiit_session.dart';
+import 'package:gym_tracker/domain/entities/mobility_session.dart';
 import 'package:gym_tracker/domain/entities/routine.dart';
+import 'package:gym_tracker/domain/services/workout_session_builder.dart';
 import 'package:gym_tracker/domain/entities/training_day.dart';
 import 'package:gym_tracker/domain/ports/auth_port.dart';
 import 'package:gym_tracker/domain/ports/profile_port.dart';
@@ -29,6 +33,45 @@ import 'package:gym_tracker/presentation/screens/workout/workout_session_screen.
 import 'package:gym_tracker/presentation/screens/mobility/mobility_timer_screen.dart';
 import 'package:gym_tracker/domain/entities/mobility_routine.dart';
 import 'package:uuid/uuid.dart';
+
+// ── Unified training entry for the day view ──────────────────────
+
+enum _TrainingEntryType { workout, mobility, hiit }
+
+class _TrainingEntry {
+  const _TrainingEntry({
+    required this.type,
+    required this.id,
+    required this.displayName,
+    this.subtitle,
+    this.startTime,
+    this.endTime,
+    this.workoutSession,
+    this.mobilitySession,
+    this.hiitSession,
+  });
+
+  final _TrainingEntryType type;
+  final String id;
+  final String displayName;
+  final String? subtitle;
+  final DateTime? startTime;
+  final DateTime? endTime;
+  final WorkoutSession? workoutSession;
+  final MobilitySession? mobilitySession;
+  final HiitSession? hiitSession;
+
+  IconData get icon {
+    switch (type) {
+      case _TrainingEntryType.workout:
+        return Icons.fitness_center;
+      case _TrainingEntryType.mobility:
+        return Icons.self_improvement;
+      case _TrainingEntryType.hiit:
+        return Icons.timer;
+    }
+  }
+}
 
 /// Main landing screen shown after onboarding is complete.
 ///
@@ -67,6 +110,8 @@ class _LandingScreenState extends State<LandingScreen> {
   List<Routine> _routines = [];
   List<Exercise> _allExercises = [];
   List<WorkoutSession> _sessions = [];
+  List<MobilitySession> _mobilitySessions = [];
+  List<HiitSession> _hiitSessions = [];
   Set<DateTime> _trainingDays = {};
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
@@ -83,14 +128,18 @@ class _LandingScreenState extends State<LandingScreen> {
     final routines = await widget.routinePort.loadRoutines();
     final days = await widget.trainingDayPort.loadTrainingDays();
     final sessions = await widget.workoutSessionPort.loadSessions();
+    final mobilitySessions = await widget.mobilitySessionPort.loadSessions();
+    final hiitSessions = await widget.hiitSessionPort.loadSessions();
     if (!mounted) return;
     final lang = Localizations.localeOf(context).languageCode;
-    final exercises = await Exercise.loadFromAsset(lang);
+    final exercises = await AssetDataLoader.loadExercises(lang);
     if (!mounted) return;
     setState(() {
       _routines = routines;
       _allExercises = exercises;
       _sessions = sessions;
+      _mobilitySessions = mobilitySessions;
+      _hiitSessions = hiitSessions;
       _trainingDays = days.map((d) => _normalise(d.date)).toSet();
       _loading = false;
     });
@@ -178,14 +227,23 @@ class _LandingScreenState extends State<LandingScreen> {
     );
     if (routine == null || !mounted) return;
 
+    // ── Mobility / HIIT quick-log (calendar add, no timer) ──
+    final isMobility = routine.recommendedRoutineKey != null;
+    final isHiit = routine.type == 'hiit';
+
+    if (!trackTime && (isMobility || isHiit)) {
+      await _quickLogTraining(routine, date);
+      return;
+    }
+
     // Mobility routine: go straight to timer
-    if (routine.recommendedRoutineKey != null) {
+    if (isMobility) {
       await _startMobilityFlow(routine, date);
       return;
     }
 
     // HIIT routine: open detail screen (which has its own timer entry)
-    if (routine.type == 'hiit') {
+    if (isHiit) {
       final result = await Navigator.of(context).push<bool>(
         MaterialPageRoute(
           builder: (_) => HiitDetailScreen(
@@ -214,12 +272,31 @@ class _LandingScreenState extends State<LandingScreen> {
     );
     if (dayIndex == null || !mounted) return;
 
+    // Step 2b: optional time input for retroactive entries
+    DateTime? retroStartTime;
+    DateTime? retroEndTime;
+    if (!trackTime) {
+      final l10n = AppLocalizations.of(context)!;
+      final times = await _showTimeInputSheet(l10n);
+      if (times == null || !mounted) return;
+      if (times.start != null) {
+        retroStartTime = date.add(
+            Duration(hours: times.start!.hour, minutes: times.start!.minute));
+      }
+      if (times.end != null) {
+        retroEndTime = date
+            .add(Duration(hours: times.end!.hour, minutes: times.end!.minute));
+      }
+    }
+
     // Step 3: build session with auto-complete from previous
     final session = _buildNewSession(
       routine: routine,
       dayIndex: dayIndex,
       date: date,
       trackTime: trackTime,
+      startTime: retroStartTime,
+      endTime: retroEndTime,
     );
 
     // Step 4: navigate to workout screen
@@ -241,12 +318,158 @@ class _LandingScreenState extends State<LandingScreen> {
     }
   }
 
+  /// Shows a time-input bottom sheet, then creates a real session record
+  /// for mobility / HIIT routines added from the calendar.
+  Future<void> _quickLogTraining(Routine routine, DateTime date) async {
+    final l10n = AppLocalizations.of(context)!;
+    final times = await _showTimeInputSheet(l10n);
+    if (times == null || !mounted) return; // user cancelled
+
+    final isMobility = routine.recommendedRoutineKey != null;
+
+    DateTime? toDateTime(TimeOfDay? t) =>
+        t != null ? date.add(Duration(hours: t.hour, minutes: t.minute)) : null;
+
+    final startDt = toDateTime(times.start);
+    final endDt = toDateTime(times.end);
+
+    if (isMobility) {
+      final session = MobilitySession(
+        id: const Uuid().v4(),
+        routineKey: routine.recommendedRoutineKey!,
+        date: date,
+        startTime: startDt,
+        endTime: endDt,
+      );
+      final all = [..._mobilitySessions, session];
+      await widget.mobilitySessionPort.saveSessions(all);
+    } else {
+      final session = HiitSession(
+        id: const Uuid().v4(),
+        routineName: routine.name,
+        date: date,
+        startTime: startDt,
+        endTime: endDt,
+      );
+      final all = [..._hiitSessions, session];
+      await widget.hiitSessionPort.saveSessions(all);
+    }
+
+    await _markDayTrained(date);
+    _loadData();
+
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(l10n.landingTrainingMarked)),
+    );
+  }
+
+  /// Shows a bottom sheet with optional start/end time pickers.
+  /// Returns a record with optional [TimeOfDay] values, or null if cancelled.
+  Future<({TimeOfDay? start, TimeOfDay? end})?> _showTimeInputSheet(
+      AppLocalizations l10n) {
+    TimeOfDay? startTime;
+    TimeOfDay? endTime;
+
+    return showModalBottomSheet<({TimeOfDay? start, TimeOfDay? end})>(
+      context: context,
+      builder: (ctx) {
+        return StatefulBuilder(
+          builder: (ctx, setSheetState) {
+            String formatTime(TimeOfDay t) =>
+                '${t.hour.toString().padLeft(2, '0')}:'
+                '${t.minute.toString().padLeft(2, '0')}';
+
+            return SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(24, 20, 24, 16),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      l10n.landingMarkTrainingTitle,
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 20),
+                    // Start time row
+                    _TimePickerRow(
+                      label: l10n.landingOptionalStartTime,
+                      value: startTime != null
+                          ? formatTime(startTime!)
+                          : l10n.landingNoTime,
+                      hasValue: startTime != null,
+                      onTap: () async {
+                        final picked = await showTimePicker(
+                          context: ctx,
+                          initialTime: startTime ?? TimeOfDay.now(),
+                        );
+                        if (picked != null) {
+                          setSheetState(() => startTime = picked);
+                        }
+                      },
+                      onClear: startTime != null
+                          ? () => setSheetState(() => startTime = null)
+                          : null,
+                    ),
+                    const SizedBox(height: 12),
+                    // End time row
+                    _TimePickerRow(
+                      label: l10n.landingOptionalEndTime,
+                      value: endTime != null
+                          ? formatTime(endTime!)
+                          : l10n.landingNoTime,
+                      hasValue: endTime != null,
+                      onTap: () async {
+                        final picked = await showTimePicker(
+                          context: ctx,
+                          initialTime: endTime ?? startTime ?? TimeOfDay.now(),
+                        );
+                        if (picked != null) {
+                          setSheetState(() => endTime = picked);
+                        }
+                      },
+                      onClear: endTime != null
+                          ? () => setSheetState(() => endTime = null)
+                          : null,
+                    ),
+                    const SizedBox(height: 24),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: () => Navigator.pop(ctx),
+                            child: Text(l10n.sharedCancel),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: FilledButton(
+                            onPressed: () => Navigator.pop(
+                              ctx,
+                              (start: startTime, end: endTime),
+                            ),
+                            child: Text(l10n.landingMarkTrainingConfirm),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
   /// Loads the mobility routine asset and navigates to the timer screen.
   Future<void> _startMobilityFlow(Routine routine, DateTime date) async {
     final l10n = AppLocalizations.of(context)!;
     MobilityRoutine mobilityRoutine;
     try {
-      mobilityRoutine = await MobilityRoutine.loadFromAsset(
+      mobilityRoutine = await AssetDataLoader.loadMobilityRoutine(
         routine.recommendedRoutineKey!,
       );
     } catch (_) {
@@ -274,30 +497,94 @@ class _LandingScreenState extends State<LandingScreen> {
     }
   }
 
-  /// Opens existing workout sessions for the selected day.
-  /// If there is only one session, goes directly to it.
-  /// If multiple, shows a bottom sheet picker.
-  Future<void> _viewSessionsForDay() async {
-    final daySessions = _sessionsForSelectedDay;
-    if (daySessions.isEmpty) return;
+  // ── View / manage sessions for a day ────────────────────────────
 
-    if (daySessions.length == 1) {
-      await _navigateToSession(daySessions.first);
-    } else {
-      await _showSessionPicker(daySessions);
+  /// Opens the unified training list for the selected day.
+  Future<void> _viewSessionsForDay() async {
+    final entries = _entriesForSelectedDay;
+    if (entries.isEmpty) return;
+
+    if (entries.length == 1 &&
+        entries.first.type == _TrainingEntryType.workout) {
+      await _navigateToWorkoutSession(entries.first.workoutSession!);
+      return;
     }
+
+    await _showUnifiedSessionPicker(entries);
   }
 
-  Future<void> _navigateToSession(WorkoutSession session) async {
-    // Find the routine name
-    String routineName = '';
-    for (final r in _routines) {
-      if (r.id == session.routineId) {
-        routineName = r.name;
-        break;
-      }
+  /// Builds a sorted list of [_TrainingEntry] for the selected day, merging
+  /// workout, mobility and HIIT sessions. Entries with startTime come first
+  /// (ascending), entries without startTime are appended at the end.
+  List<_TrainingEntry> get _entriesForSelectedDay {
+    if (_selectedDay == null) return [];
+    final norm = _normalise(_selectedDay!);
+    final l10n = AppLocalizations.of(context)!;
+
+    final entries = <_TrainingEntry>[];
+
+    // Workout sessions
+    for (final s in _sessions) {
+      if (_normalise(s.date) != norm) continue;
+      entries.add(_TrainingEntry(
+        type: _TrainingEntryType.workout,
+        id: s.id,
+        displayName: _routineNameForId(s.routineId),
+        subtitle: l10n.workoutDayLabel('${s.routineDayIndex + 1}'),
+        startTime: s.startTime,
+        endTime: s.endTime,
+        workoutSession: s,
+      ));
     }
-    if (routineName.isEmpty) routineName = session.routineId;
+
+    // Mobility sessions
+    for (final s in _mobilitySessions) {
+      if (_normalise(s.date) != norm) continue;
+      entries.add(_TrainingEntry(
+        type: _TrainingEntryType.mobility,
+        id: s.id,
+        displayName: _mobilityRoutineName(s.routineKey, l10n),
+        startTime: s.startTime,
+        endTime: s.endTime,
+        mobilitySession: s,
+      ));
+    }
+
+    // HIIT sessions
+    for (final s in _hiitSessions) {
+      if (_normalise(s.date) != norm) continue;
+      entries.add(_TrainingEntry(
+        type: _TrainingEntryType.hiit,
+        id: s.id,
+        displayName: s.routineName,
+        startTime: s.startTime,
+        endTime: s.endTime,
+        hiitSession: s,
+      ));
+    }
+
+    // Sort: entries with startTime ascending, then those without
+    entries.sort((a, b) {
+      if (a.startTime != null && b.startTime != null) {
+        return a.startTime!.compareTo(b.startTime!);
+      }
+      if (a.startTime != null) return -1;
+      if (b.startTime != null) return 1;
+      return 0;
+    });
+
+    return entries;
+  }
+
+  String _mobilityRoutineName(String routineKey, AppLocalizations l10n) {
+    for (final r in _routines) {
+      if (r.recommendedRoutineKey == routineKey) return r.name;
+    }
+    return l10n.landingTrainingTypeMobility;
+  }
+
+  Future<void> _navigateToWorkoutSession(WorkoutSession session) async {
+    String routineName = _routineNameForId(session.routineId);
 
     if (!mounted) return;
 
@@ -308,7 +595,7 @@ class _LandingScreenState extends State<LandingScreen> {
           allExercises: _allExercises,
           workoutSessionPort: widget.workoutSessionPort,
           routineName: routineName,
-          trackTime: false, // no time tracking when viewing
+          trackTime: false,
         ),
       ),
     );
@@ -318,57 +605,177 @@ class _LandingScreenState extends State<LandingScreen> {
     }
   }
 
-  /// Shows a bottom sheet listing all sessions for a given day.
-  Future<void> _showSessionPicker(List<WorkoutSession> sessions) async {
+  /// Shows a bottom sheet listing all training entries for the day.
+  Future<void> _showUnifiedSessionPicker(
+      List<_TrainingEntry> entries) async {
     final l10n = AppLocalizations.of(context)!;
 
-    final selected = await showModalBottomSheet<WorkoutSession>(
+    await showModalBottomSheet<void>(
       context: context,
       builder: (ctx) {
-        return SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-                child: Text(
-                  l10n.workoutSessionsForDay,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              const Divider(height: 1),
-              ...sessions.map((session) {
-                final routineName = _routineNameForId(session.routineId);
-                final dayLabel =
-                    l10n.workoutDayLabel('${session.routineDayIndex + 1}');
-                final timeInfo = _sessionTimeInfo(session, l10n);
+        return StatefulBuilder(
+          builder: (ctx, setSheetState) {
+            // Re-compute entries so deletions are reflected immediately
+            final currentEntries = _entriesForSelectedDay;
 
-                return ListTile(
-                  leading: const Icon(Icons.fitness_center,
-                      color: Colors.white70),
-                  title: Text(routineName),
-                  subtitle: Text(
-                    '$dayLabel · $timeInfo',
-                    style: const TextStyle(
-                        fontSize: 12, color: Colors.white54),
+            return SafeArea(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                    child: Text(
+                      l10n.workoutSessionsForDay,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
-                  trailing: const Icon(Icons.chevron_right,
-                      color: Colors.white38),
-                  onTap: () => Navigator.pop(ctx, session),
-                );
-              }),
-              const SizedBox(height: 8),
-            ],
-          ),
+                  const Divider(height: 1),
+                  ...currentEntries.map((entry) {
+                    final timeText = _entryTimeText(entry, l10n);
+                    final subtitleParts = <String>[
+                      _entryTypeLabel(entry, l10n),
+                      if (entry.subtitle != null) entry.subtitle!,
+                      timeText,
+                    ];
+
+                    return ListTile(
+                      leading:
+                          Icon(entry.icon, color: Colors.white70),
+                      title: Text(entry.displayName),
+                      subtitle: Text(
+                        subtitleParts.join(' · '),
+                        style: const TextStyle(
+                            fontSize: 12, color: Colors.white54),
+                      ),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.delete_outline,
+                                color: Colors.redAccent, size: 20),
+                            tooltip: l10n.landingDeleteTrainingConfirm,
+                            onPressed: () async {
+                              await _confirmDeleteEntry(entry, l10n);
+                              if (!mounted) return;
+                              if (_entriesForSelectedDay.isEmpty) {
+                                Navigator.pop(ctx);
+                              } else {
+                                setSheetState(() {});
+                              }
+                            },
+                          ),
+                          if (entry.type == _TrainingEntryType.workout)
+                            const Icon(Icons.chevron_right,
+                                color: Colors.white38),
+                        ],
+                      ),
+                      onTap: entry.type == _TrainingEntryType.workout
+                          ? () {
+                              Navigator.pop(ctx);
+                              _navigateToWorkoutSession(
+                                  entry.workoutSession!);
+                            }
+                          : null,
+                    );
+                  }),
+                  const SizedBox(height: 8),
+                ],
+              ),
+            );
+          },
         );
       },
     );
+  }
 
-    if (selected != null && mounted) {
-      await _navigateToSession(selected);
+  String _entryTypeLabel(_TrainingEntry entry, AppLocalizations l10n) {
+    switch (entry.type) {
+      case _TrainingEntryType.workout:
+        return l10n.landingTrainingTypeWorkout;
+      case _TrainingEntryType.mobility:
+        return l10n.landingTrainingTypeMobility;
+      case _TrainingEntryType.hiit:
+        return l10n.landingTrainingTypeHiit;
+    }
+  }
+
+  String _entryTimeText(_TrainingEntry entry, AppLocalizations l10n) {
+    if (entry.startTime == null) return l10n.landingNoTime;
+    final start = _formatTime(entry.startTime!);
+    final end = entry.endTime != null ? _formatTime(entry.endTime!) : '...';
+    return l10n.workoutSessionTime(start, end);
+  }
+
+  /// Confirms and deletes a training entry for the selected day.
+  Future<void> _confirmDeleteEntry(
+      _TrainingEntry entry, AppLocalizations l10n) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(l10n.landingDeleteTrainingTitle),
+        content: Text(l10n.landingDeleteTrainingBody(entry.displayName)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(l10n.sharedCancel),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(backgroundColor: Colors.redAccent),
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text(l10n.landingDeleteTrainingConfirm),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true || !mounted) return;
+
+    switch (entry.type) {
+      case _TrainingEntryType.workout:
+        final updated = _sessions.where((s) => s.id != entry.id).toList();
+        await widget.workoutSessionPort.saveSessions(updated);
+        break;
+      case _TrainingEntryType.mobility:
+        final updated =
+            _mobilitySessions.where((s) => s.id != entry.id).toList();
+        await widget.mobilitySessionPort.saveSessions(updated);
+        break;
+      case _TrainingEntryType.hiit:
+        final updated =
+            _hiitSessions.where((s) => s.id != entry.id).toList();
+        await widget.hiitSessionPort.saveSessions(updated);
+        break;
+    }
+
+    // Remove TrainingDay mark if no sessions remain for this day
+    await _removeTrainingDayIfEmpty();
+
+    await _loadData();
+
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(l10n.landingTrainingDeleted)),
+    );
+  }
+
+  /// Removes the TrainingDay marker for the selected day if no session records
+  /// exist for it (across all three session types).
+  Future<void> _removeTrainingDayIfEmpty() async {
+    if (_selectedDay == null) return;
+    final norm = _normalise(_selectedDay!);
+
+    final hasWorkout = _sessions.any((s) => _normalise(s.date) == norm);
+    final hasMobility =
+        _mobilitySessions.any((s) => _normalise(s.date) == norm);
+    final hasHiit = _hiitSessions.any((s) => _normalise(s.date) == norm);
+
+    if (!hasWorkout && !hasMobility && !hasHiit) {
+      _trainingDays.remove(norm);
+      final list = _trainingDays.map((d) => TrainingDay(date: d)).toList();
+      await widget.trainingDayPort.saveTrainingDays(list);
     }
   }
 
@@ -377,15 +784,6 @@ class _LandingScreenState extends State<LandingScreen> {
       if (r.id == routineId) return r.name;
     }
     return routineId;
-  }
-
-  String _sessionTimeInfo(WorkoutSession session, AppLocalizations l10n) {
-    if (session.startTime == null) return l10n.workoutSessionNoTime;
-    final start = _formatTime(session.startTime!);
-    final end = session.endTime != null
-        ? _formatTime(session.endTime!)
-        : '...';
-    return l10n.workoutSessionTime(start, end);
   }
 
   String _formatTime(DateTime dt) {
@@ -400,55 +798,22 @@ class _LandingScreenState extends State<LandingScreen> {
     required int dayIndex,
     required DateTime date,
     required bool trackTime,
-  }) {
-    final day = routine.days[dayIndex];
+    DateTime? startTime,
+    DateTime? endTime,
+  }) =>
+      WorkoutSessionBuilder.build(
+        id: const Uuid().v4(),
+        routine: routine,
+        dayIndex: dayIndex,
+        date: date,
+        trackTime: trackTime,
+        previousSessions: _sessions,
+        overrideStartTime: startTime,
+        overrideEndTime: endTime,
+      );
 
-    // Find previous session for same routine + day
-    final previous = _sessions
-        .where((s) =>
-            s.routineId == routine.id && s.routineDayIndex == dayIndex)
-        .toList()
-      ..sort((a, b) => b.date.compareTo(a.date));
-
-    final prevSession = previous.isNotEmpty ? previous.first : null;
-
-    // Build exercise list
-    final exercises = day.exerciseKeys.map((key) {
-      // Try to auto-fill from previous session
-      if (prevSession != null) {
-        final prevEx = prevSession.exercises
-            .where((e) => e.exerciseKey == key)
-            .toList();
-        if (prevEx.isNotEmpty) {
-          return WorkoutExercise(
-            exerciseKey: key,
-            sets: prevEx.first.sets
-                .map((s) => ExerciseSet(reps: s.reps, weight: s.weight))
-                .toList(),
-            notes: '',
-            completed: false,
-          );
-        }
-      }
-      return WorkoutExercise.empty(key);
-    }).toList();
-
-    return WorkoutSession(
-      id: const Uuid().v4(),
-      routineId: routine.id,
-      routineDayIndex: dayIndex,
-      date: date,
-      startTime: trackTime ? DateTime.now() : null,
-      exercises: exercises,
-    );
-  }
-
-  /// Returns all workout sessions for the selected day.
-  List<WorkoutSession> get _sessionsForSelectedDay {
-    if (_selectedDay == null) return [];
-    final norm = _normalise(_selectedDay!);
-    return _sessions.where((s) => _normalise(s.date) == norm).toList();
-  }
+  /// Whether any training entry exists for the selected day.
+  bool get _hasEntriesForSelectedDay => _entriesForSelectedDay.isNotEmpty;
 
   Future<void> _openRoutineDetail(Routine routine) async {
     final bool? result;
@@ -616,8 +981,8 @@ class _LandingScreenState extends State<LandingScreen> {
                         onPressed: _startAddTrainingFlow,
                       ),
                     ),
-                    // Show "View details" if there are sessions for this day
-                    if (_sessionsForSelectedDay.isNotEmpty) ...[
+                    // Show "View workouts" if there are sessions for this day
+                    if (_hasEntriesForSelectedDay) ...[
                       const SizedBox(height: 8),
                       SizedBox(
                         width: double.infinity,
@@ -792,10 +1157,15 @@ class _LandingScreenState extends State<LandingScreen> {
       ),
       eventLoader: (day) {
         final norm = _normalise(day);
-        // Merge: consider both TrainingDay marks and actual workout sessions
         final hasTrainingDay = _trainingDays.contains(norm);
-        final hasSession = _sessions.any((s) => _normalise(s.date) == norm);
-        return (hasTrainingDay || hasSession) ? ['trained'] : [];
+        final hasWorkout = _sessions.any((s) => _normalise(s.date) == norm);
+        final hasMobility =
+            _mobilitySessions.any((s) => _normalise(s.date) == norm);
+        final hasHiit =
+            _hiitSessions.any((s) => _normalise(s.date) == norm);
+        return (hasTrainingDay || hasWorkout || hasMobility || hasHiit)
+            ? ['trained']
+            : [];
       },
       calendarBuilders: CalendarBuilders(
         markerBuilder: (context, day, events) {
@@ -845,6 +1215,70 @@ class _RoutineTile extends StatelessWidget {
             : null,
         trailing: const Icon(Icons.chevron_right, color: Colors.white38),
         onTap: onTap,
+      ),
+    );
+  }
+}
+
+// ── Time picker row for the time-input bottom sheet ──────────────
+
+class _TimePickerRow extends StatelessWidget {
+  const _TimePickerRow({
+    required this.label,
+    required this.value,
+    required this.hasValue,
+    required this.onTap,
+    this.onClear,
+  });
+
+  final String label;
+  final String value;
+  final bool hasValue;
+  final VoidCallback onTap;
+  final VoidCallback? onClear;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.white24),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(label,
+                      style: const TextStyle(
+                          fontSize: 12, color: Colors.white54)),
+                  const SizedBox(height: 2),
+                  Text(
+                    value,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: hasValue ? Colors.white : Colors.white38,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (onClear != null)
+              IconButton(
+                icon: const Icon(Icons.clear, size: 18, color: Colors.white38),
+                onPressed: onClear,
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+              )
+            else
+              const Icon(Icons.access_time, size: 20, color: Colors.white38),
+          ],
+        ),
       ),
     );
   }

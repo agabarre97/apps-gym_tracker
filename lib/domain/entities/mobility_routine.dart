@@ -1,7 +1,3 @@
-import 'dart:convert';
-
-import 'package:flutter/services.dart';
-
 /// A single exercise within a mobility routine.
 class MobilityExercise {
   const MobilityExercise({
@@ -58,13 +54,4 @@ class MobilityRoutine {
             .map(MobilityExercise.fromJson)
             .toList(),
       );
-
-  /// Load a mobility routine from assets by key (e.g. 'feet_ankles_2').
-  static Future<MobilityRoutine> loadFromAsset(String assetKey) async {
-    final json = await rootBundle.loadString(
-      'assets/data/mobility_routines/$assetKey.json',
-    );
-    final map = jsonDecode(json) as Map<String, dynamic>;
-    return MobilityRoutine.fromJson(map);
-  }
 }

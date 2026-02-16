@@ -47,8 +47,32 @@
   "landingRoutineName": "Routine name",
   "landingDeleteRoutine": "Delete",
   "landingAddTraining": "Add training",
-  "landingViewDetails": "View details",
+  "landingViewDetails": "View workouts",
   "landingFilterAll": "All",
+  "landingMarkTrainingTitle": "Log training",
+  "landingMarkTrainingBody": "Log {routineName} for this day?",
+  "@landingMarkTrainingBody": {
+    "placeholders": {
+      "routineName": { "type": "String" }
+    }
+  },
+  "landingMarkTrainingConfirm": "Log",
+  "landingTrainingMarked": "Training logged",
+  "landingDeleteTrainingTitle": "Delete training",
+  "landingDeleteTrainingBody": "Delete {name} from this day?",
+  "@landingDeleteTrainingBody": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "landingDeleteTrainingConfirm": "Delete",
+  "landingOptionalStartTime": "Start time (optional)",
+  "landingOptionalEndTime": "End time (optional)",
+  "landingNoTime": "No time",
+  "landingTrainingDeleted": "Training deleted",
+  "landingTrainingTypeMobility": "Mobility",
+  "landingTrainingTypeHiit": "HIIT",
+  "landingTrainingTypeWorkout": "Strength",
 
   "@@_ROUTINE_CREATION": "Routine creation flow",
   "routineSelectType": "Routine type",
@@ -149,6 +173,7 @@
 
   "@@_HIIT": "HIIT screen",
   "hiitSelectExercises": "Select exercises",
+  "hiitEditExercises": "Edit exercises",
   "hiitWarningTooMany": "Selecting more than 6 exercises is not recommended",
   "hiitConfig": "Configuration",
   "hiitSets": "Sets",

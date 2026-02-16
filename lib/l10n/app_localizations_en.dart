@@ -130,10 +130,56 @@ class AppLocalizationsEn extends AppLocalizations {
   String get landingAddTraining => 'Add training';
 
   @override
-  String get landingViewDetails => 'View details';
+  String get landingViewDetails => 'View workouts';
 
   @override
   String get landingFilterAll => 'All';
+
+  @override
+  String get landingMarkTrainingTitle => 'Log training';
+
+  @override
+  String landingMarkTrainingBody(String routineName) {
+    return 'Log $routineName for this day?';
+  }
+
+  @override
+  String get landingMarkTrainingConfirm => 'Log';
+
+  @override
+  String get landingTrainingMarked => 'Training logged';
+
+  @override
+  String get landingDeleteTrainingTitle => 'Delete training';
+
+  @override
+  String landingDeleteTrainingBody(String name) {
+    return 'Delete $name from this day?';
+  }
+
+  @override
+  String get landingDeleteTrainingConfirm => 'Delete';
+
+  @override
+  String get landingOptionalStartTime => 'Start time (optional)';
+
+  @override
+  String get landingOptionalEndTime => 'End time (optional)';
+
+  @override
+  String get landingNoTime => 'No time';
+
+  @override
+  String get landingTrainingDeleted => 'Training deleted';
+
+  @override
+  String get landingTrainingTypeMobility => 'Mobility';
+
+  @override
+  String get landingTrainingTypeHiit => 'HIIT';
+
+  @override
+  String get landingTrainingTypeWorkout => 'Strength';
 
   @override
   String get routineSelectType => 'Routine type';
@@ -373,6 +419,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get hiitSelectExercises => 'Select exercises';
+
+  @override
+  String get hiitEditExercises => 'Edit exercises';
 
   @override
   String get hiitWarningTooMany =>
