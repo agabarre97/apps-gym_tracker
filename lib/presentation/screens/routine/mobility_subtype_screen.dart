@@ -30,6 +30,12 @@ class MobilitySubTypeScreen extends StatelessWidget {
         icon: Icons.directions_walk,
         enabled: true,
       ),
+      SelectableOption(
+        key: 'relajacion',
+        label: l10n.mobilityRelajacion,
+        icon: Icons.bedtime,
+        enabled: true,
+      ),
     ];
 
     return Scaffold(

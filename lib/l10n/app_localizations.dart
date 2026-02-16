@@ -63,7 +63,7 @@ import 'app_localizations_es.dart';
 /// property.
 abstract class AppLocalizations {
   AppLocalizations(String locale)
-    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -86,16 +86,16 @@ abstract class AppLocalizations {
   /// of delegates is preferred or required.
   static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
       <LocalizationsDelegate<dynamic>>[
-        delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ];
+    delegate,
+    GlobalMaterialLocalizations.delegate,
+    GlobalCupertinoLocalizations.delegate,
+    GlobalWidgetsLocalizations.delegate,
+  ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
-    Locale('es'),
+    Locale('es')
   ];
 
   /// No description provided for @sharedAppTitle.
@@ -434,6 +434,18 @@ abstract class AppLocalizations {
   /// **'Caderas'**
   String get mobilityHips;
 
+  /// No description provided for @mobilityRelajacion.
+  ///
+  /// In es, this message translates to:
+  /// **'Relajación'**
+  String get mobilityRelajacion;
+
+  /// No description provided for @mobilitySleep.
+  ///
+  /// In es, this message translates to:
+  /// **'Sueño'**
+  String get mobilitySleep;
+
   /// No description provided for @mobilityTimerTitle.
   ///
   /// In es, this message translates to:
@@ -505,6 +517,30 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Ajustes'**
   String get mobilitySettings;
+
+  /// No description provided for @mobilityInfoInstructions.
+  ///
+  /// In es, this message translates to:
+  /// **'Instrucciones'**
+  String get mobilityInfoInstructions;
+
+  /// No description provided for @mobilityInfoTips.
+  ///
+  /// In es, this message translates to:
+  /// **'Consejos'**
+  String get mobilityInfoTips;
+
+  /// No description provided for @mobilityInfoModifications.
+  ///
+  /// In es, this message translates to:
+  /// **'Modificaciones'**
+  String get mobilityInfoModifications;
+
+  /// No description provided for @mobilityInfoBenefits.
+  ///
+  /// In es, this message translates to:
+  /// **'Beneficios'**
+  String get mobilityInfoBenefits;
 
   /// No description provided for @mobilitySingleLegStand.
   ///
@@ -691,6 +727,42 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Mariposa reclinada'**
   String get mobilityReclinedButterfly;
+
+  /// No description provided for @mobilityRagDoll.
+  ///
+  /// In es, this message translates to:
+  /// **'Muñeca de trapo'**
+  String get mobilityRagDoll;
+
+  /// No description provided for @mobilityUpwardDog.
+  ///
+  /// In es, this message translates to:
+  /// **'Perro boca arriba'**
+  String get mobilityUpwardDog;
+
+  /// No description provided for @mobilityChildsPose.
+  ///
+  /// In es, this message translates to:
+  /// **'Postura del niño'**
+  String get mobilityChildsPose;
+
+  /// No description provided for @mobilitySpinalTwist.
+  ///
+  /// In es, this message translates to:
+  /// **'Torsión espinal'**
+  String get mobilitySpinalTwist;
+
+  /// No description provided for @mobilityQuadStretch.
+  ///
+  /// In es, this message translates to:
+  /// **'Estiramiento de cuádriceps'**
+  String get mobilityQuadStretch;
+
+  /// No description provided for @mobilityLegsUpWall.
+  ///
+  /// In es, this message translates to:
+  /// **'Piernas en la pared'**
+  String get mobilityLegsUpWall;
 
   /// No description provided for @mobilityRoutineNotFound.
   ///
@@ -1368,9 +1440,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
   }
 
   throw FlutterError(
-    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-    'an issue with the localizations generation tool. Please file an issue '
-    'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.',
-  );
+      'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+      'an issue with the localizations generation tool. Please file an issue '
+      'on GitHub with a reproducible sample app and the gen-l10n configuration '
+      'that was used.');
 }

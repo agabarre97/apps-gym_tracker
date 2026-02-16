@@ -1,0 +1,575 @@
+{
+  "single_leg_stand": {
+    "instructions": [
+      "Start from a standing position with your feet hip-width apart and your hands on your hips.",
+      "Engage your core to lift one foot off the floor and extend it out in front of you.",
+      "Balance on your standing leg and hold the position."
+    ],
+    "tips": [
+      "Keep your standing leg slightly bent, not locked."
+    ],
+    "modifications": [
+      "Place your hands on a wall or chair for support."
+    ],
+    "benefits": ["Feet", "Ankles"]
+  },
+  "ankle_circles": {
+    "instructions": [
+      "Start from a standing position with your feet hip-width apart and your hands at your sides or on your hips.",
+      "Lift one foot slightly off the floor and point your toes downward.",
+      "Rotate your foot in a circular motion, moving through your ankle.",
+      "Complete several circles in one direction, then reverse the direction."
+    ],
+    "tips": [
+      "Engage your core to maintain balance and stability.",
+      "Move slowly and with control to avoid losing balance.",
+      "Keep your standing leg slightly bent to avoid locking your knee."
+    ],
+    "modifications": [
+      "Use a wall or chair for support if balancing is difficult.",
+      "If rotating your foot fully is uncomfortable, make smaller circles.",
+      "Perform the movement seated if standing feels unstable."
+    ],
+    "benefits": ["Calves", "Feet", "Shins", "Ankles"]
+  },
+  "heel_to_toe_rocks": {
+    "instructions": [
+      "Start from a standing position with your feet hip-width apart and your hands at your sides.",
+      "Shift your weight forward onto your toes, lifting your heels off the floor.",
+      "Slowly shift your weight back onto your heels, lifting your toes off the floor.",
+      "Continue rocking back and forth in a controlled, smooth motion."
+    ],
+    "tips": [
+      "Engage your core to maintain balance.",
+      "Keep your movements steady and avoid abrupt shifts.",
+      "Focus on keeping your posture upright throughout the exercise."
+    ],
+    "modifications": [
+      "Hold onto a wall or chair for added balance support.",
+      "Reduce the range of motion if the stretch feels too intense.",
+      "Perform the movement more slowly for better control."
+    ],
+    "benefits": ["Calves", "Feet", "Shins", "Ankles"]
+  },
+  "lateral_foot_rocks": {
+    "instructions": [
+      "Start from a standing position with your feet hip-width apart and your hands at your sides.",
+      "Shift your weight onto the outer edges of your feet, lifting the inner edges.",
+      "Slowly shift your weight onto the inner edges of your feet, lifting the outer edges.",
+      "Continue rocking side to side in a controlled and steady motion."
+    ],
+    "tips": [
+      "Engage your core to help with balance.",
+      "Move smoothly to avoid jerking motions.",
+      "Keep your knees slightly bent and relaxed."
+    ],
+    "modifications": [
+      "Use a wall or chair for extra balance support.",
+      "Perform smaller lateral movements if a full range feels uncomfortable.",
+      "Do the exercise seated if standing is challenging."
+    ],
+    "benefits": ["Calves", "Feet", "Ankles"]
+  },
+  "knee_circles": {
+    "instructions": [
+      "Start from a standing position with your feet hip-width apart and your hands on your knees.",
+      "Bend your knees slightly and make small circles with your knees, moving them together in a circular motion.",
+      "Reverse the movement at the halfway point."
+    ],
+    "tips": [
+      "Keep your movements smooth and controlled to avoid straining your knees."
+    ],
+    "modifications": [
+      "Perform the exercise at a slower pace if needed to maintain control."
+    ],
+    "benefits": ["Knees", "Calves", "Feet", "Shins", "Ankles"]
+  },
+  "soleus_stretch": {
+    "instructions": [
+      "Start from a standing position with your feet hip-width apart and your arms at your sides.",
+      "Step forward with one foot, then bend both knees to slowly lower your hips downward.",
+      "Keep both of your feet flat on the floor and lean forward slightly to feel a stretch in your lower calf."
+    ],
+    "tips": [
+      "Keep your back heel pressed firmly into the floor.",
+      "Keep your back straight and your feet pointing forward."
+    ],
+    "modifications": [
+      "Place your hands on a wall or chair for additional support."
+    ],
+    "benefits": ["Calves", "Feet", "Ankles"]
+  },
+  "leaning_calf": {
+    "instructions": [
+      "Start from a standing position facing a wall, about an arm's length away.",
+      "Place your hands on the wall at shoulder height and shoulder-width apart.",
+      "Step one foot back, keeping your toes pointing forward and your heel on the ground.",
+      "Bend your front knee while keeping your back leg straight and push into the wall to deepen the stretch."
+    ],
+    "tips": [],
+    "modifications": [
+      "If the stretch is too intense, move your back foot slightly closer to the wall."
+    ],
+    "benefits": ["Calves", "Feet", "Hamstrings", "Ankles"]
+  },
+  "toe_to_wall": {
+    "instructions": [
+      "Start from a standing position facing a wall, about an arm's length away.",
+      "Place your hands on the wall at shoulder height for support.",
+      "Place one foot against the wall, with your toes pointing upward and your heel on the floor.",
+      "Keeping both legs straight, lean forward and lift your back heel off the floor."
+    ],
+    "tips": [
+      "Keep both feet pointing straight ahead."
+    ],
+    "modifications": [],
+    "benefits": ["Calves", "Feet", "Ankles", "Toes"]
+  },
+  "standing_quad": {
+    "instructions": [
+      "Start from a standing position with your feet hip-width apart.",
+      "Bend one knee and bring your heel towards your glutes.",
+      "Reach behind you with both hands to hold your ankle and gently pull your heel closer to your glutes.",
+      "Keep your knees together and your hips aligned."
+    ],
+    "tips": [
+      "Engage your core to maintain balance.",
+      "Keep your standing leg slightly bent to avoid locking the knee.",
+      "Avoid arching your back or leaning forward."
+    ],
+    "modifications": [
+      "Use a wall or chair for balance support if needed.",
+      "If reaching your ankle is difficult, use a strap or towel looped around your foot for assistance.",
+      "Keep your other hand on your hip or extend it out to the side for added balance."
+    ],
+    "benefits": ["Knees", "Feet", "Psoas", "Shins", "Hips", "Quadriceps", "Lower Back", "Ankles", "Abdomen"]
+  },
+  "single_leg_calf_stretch": {
+    "instructions": [
+      "Start on your hands and knees in a tabletop position.",
+      "Tuck your toes under and lift your hips up and back, straightening your arms and legs.",
+      "Lift one foot off the floor, crossing it over to rest on your opposite heel, then straighten your standing leg."
+    ],
+    "tips": [
+      "Distribute your weight evenly between your hands and foot.",
+      "Keep your standing heel pressed into the floor."
+    ],
+    "modifications": [],
+    "benefits": ["Calves", "Feet", "Hamstrings", "Ankles"]
+  },
+  "single_leg_shin_stretch": {
+    "instructions": [
+      "Start from a kneeling position with your knees hip-width apart and your arms at your sides.",
+      "Step forward with one foot, placing it flat on the floor next to your opposite knee.",
+      "Slowly lower your hips back and down to sit on your back heel.",
+      "Place your hands on the floor behind you, fingers pointing toward your feet, and lean back."
+    ],
+    "tips": [
+      "Keep your back straight and your chest lifted."
+    ],
+    "modifications": [],
+    "benefits": ["Feet", "Shins", "Ankles"]
+  },
+  "toe_stretch": {
+    "instructions": [
+      "Start on your hands and knees in a tabletop position, with the tops of your feet flat on the floor.",
+      "Tuck your toes under on one foot, then slowly lean back and lower your hips towards your heels, while keeping your hands pressed into the floor."
+    ],
+    "tips": [
+      "Distribute your weight evenly across both hands."
+    ],
+    "modifications": [],
+    "benefits": ["Feet", "Toes"]
+  },
+  "thunderbolt": {
+    "instructions": [
+      "Start from a kneeling position with your knees together and the tops of your feet on the floor.",
+      "Sit back on your heels with your big toes touching and your heels separated.",
+      "Place your hands on your thighs with your palms facing down.",
+      "Sit up tall with your back straight and your shoulders relaxed."
+    ],
+    "tips": [
+      "Engage your core to support your lower back."
+    ],
+    "modifications": [
+      "If sitting on your heels is uncomfortable, place a cushion or folded blanket between your heels and hips for added support.",
+      "Place a folded blanket under your knees if you feel any discomfort."
+    ],
+    "benefits": ["Knees", "Feet", "Shins", "Quadriceps", "Ankles"]
+  },
+  "toe_squat": {
+    "instructions": [
+      "Start from a kneeling position with the tops of your feet on the floor.",
+      "Tuck your toes under and slowly sit back on your heels, putting weight on your toes.",
+      "Sit up tall with your back straight, relax your shoulders and place your hands on your thighs."
+    ],
+    "tips": [
+      "Focus on distributing your weight evenly across all your toes."
+    ],
+    "modifications": [
+      "If the stretch is too intense, keep your hands on the floor in front of you."
+    ],
+    "benefits": ["Calves", "Feet", "Ankles", "Toes"]
+  },
+  "pelvic_tilt": {
+    "instructions": [
+      "Start lying on your back with your knees bent and your feet flat on the floor.",
+      "Engage your core to tilt your pelvis up and press your lower back into the floor.",
+      "Keep your arms at your sides with your palms on the floor and hold the position."
+    ],
+    "tips": [
+      "Imagine drawing your navel down towards your spine.",
+      "Keep your glutes relaxed; the movement should come from your core."
+    ],
+    "modifications": [
+      "If it's uncomfortable to lie on the floor, perform the exercise against a wall."
+    ],
+    "benefits": ["Lower Back"]
+  },
+  "glute_bridge": {
+    "instructions": [
+      "Start lying on your back with your knees bent and your feet flat on the floor.",
+      "Engage your core and glutes to lift your hips off the floor, forming a straight line from your knees to your shoulders.",
+      "Keep your palms and shoulders pressed into the floor and hold the position."
+    ],
+    "tips": [
+      "Squeeze your glutes at the top of the movement.",
+      "Avoid arching your lower back; the movement should come from your hips and glutes."
+    ],
+    "modifications": [
+      "For less intensity, lift your hips only partially off the ground.",
+      "If you feel any neck strain, try placing a small, folded towel under your head for support."
+    ],
+    "benefits": ["Hamstrings", "Lower Back", "Glutes"]
+  },
+  "knees_to_chest": {
+    "instructions": [
+      "Start lying on your back with your legs extended and your arms at your sides.",
+      "Bend your knees and draw them towards your chest.",
+      "Wrap your arms around your shins and gently pull them closer to your chest."
+    ],
+    "tips": [
+      "Relax your head and neck on the floor.",
+      "Keep your lower back pressed into the floor."
+    ],
+    "modifications": [
+      "If you can't reach your shins, wrap your arms behind your thighs."
+    ],
+    "benefits": ["Hips", "Hamstrings", "Lower Back", "Glutes"]
+  },
+  "single_knee_to_chest": {
+    "instructions": [
+      "Start lying on your back with your legs extended and your arms at your sides.",
+      "Bend one knee and draw it towards your chest, holding your shin with both hands.",
+      "Gently pull your knee closer to your chest while keeping your other leg straight."
+    ],
+    "tips": [
+      "Relax your head and neck on the floor.",
+      "Keep your hips square and your lower back pressed into the floor."
+    ],
+    "modifications": [
+      "If you can't reach your shin, pull on your thigh or use a towel around your knee."
+    ],
+    "benefits": ["Hips", "Hamstrings", "Lower Back", "Glutes"]
+  },
+  "lying_quad_stretch": {
+    "instructions": [
+      "Start lying on your side with your legs extended and your feet stacked on top of each other.",
+      "Bend your top knee to bring your heel towards your glutes, holding your ankle with your hand.",
+      "Pull your heel closer to your glutes while keeping your thighs aligned."
+    ],
+    "tips": [
+      "Push your hips forward slightly to deepen the stretch.",
+      "Keep a slight bend in your bottom leg for added stability."
+    ],
+    "modifications": [
+      "If reaching your ankle is difficult, use a strap or towel looped around your foot for assistance."
+    ],
+    "benefits": ["Knees", "Shins", "Hips", "Quadriceps", "Ankles"]
+  },
+  "kneeling_hip_flexor": {
+    "instructions": [
+      "Start from a kneeling position with your arms at your sides.",
+      "Step forward with one leg, placing your foot flat on the floor in front of you.",
+      "Push your hips forward and raise your arms overhead.",
+      "Lift your chest and reach toward the ceiling."
+    ],
+    "tips": [
+      "Keep your front knee stable and align it directly above your ankle.",
+      "Engage your back leg, pressing the top of your foot into the floor.",
+      "Keep your torso upright and avoid arching your lower back."
+    ],
+    "modifications": [
+      "For less intensity, keep your hands on your front thigh.",
+      "Place a towel or cushion under your back knee for support.",
+      "Hold onto a wall or chair for balance if needed."
+    ],
+    "benefits": ["Psoas", "Hips", "Quadriceps", "Lower Back", "Abdomen"]
+  },
+  "cat_cow": {
+    "instructions": [
+      "Start on your hands and knees in the tabletop position.",
+      "Align your wrists under your shoulders and your knees under your hips.",
+      "Inhale, dropping your belly towards the floor and arching your back, lifting your chin and chest to look up toward the ceiling.",
+      "Exhale, drawing your belly up toward your spine and rounding your back, tucking your chin to your chest."
+    ],
+    "tips": [
+      "Move slowly between the poses, coordinating each movement with your breath."
+    ],
+    "modifications": [
+      "If you have neck issues, keep your head in a neutral position rather than lifting and tucking your chin."
+    ],
+    "benefits": ["Spine", "Neck", "Upper Back", "Lower Back", "Abdomen"]
+  },
+  "seated_butterfly": {
+    "instructions": [
+      "Start on the floor in a seated position with your legs extended in front of you.",
+      "Bend your knees and bring the soles of your feet together, letting your knees fall out to the sides.",
+      "Hold your feet with your hands and gently press your knees towards the floor."
+    ],
+    "tips": [
+      "Pull your feet up and push your knees down with your elbows to deepen the stretch.",
+      "Keep your back straight and avoid rounding your spine."
+    ],
+    "modifications": [
+      "If your knees are high off the ground, place cushions under your thighs for support.",
+      "Sit on a folded blanket to raise your hips and improve comfort."
+    ],
+    "benefits": ["Groin", "Hips"]
+  },
+  "lying_figure_four": {
+    "instructions": [
+      "Start lying on your back with your knees bent and feet flat on the floor.",
+      "Cross one ankle over the opposite thigh, just above the knee.",
+      "Lift your bottom leg off the floor, bringing your knee towards your chest.",
+      "Reach forward and clasp your hands behind the thigh of your bottom leg.",
+      "Gently pull your leg towards your chest."
+    ],
+    "tips": [
+      "Keep your head and shoulders relaxed on the floor.",
+      "Keep your lower back pressed into the floor."
+    ],
+    "modifications": [
+      "If reaching behind your thigh is difficult, use a strap or towel to assist.",
+      "For a gentler stretch, keep your bottom foot on the floor."
+    ],
+    "benefits": ["IT Band", "Hips", "Lower Back", "Glutes"]
+  },
+  "lizard_pose": {
+    "instructions": [
+      "Start on your hands and knees in a tabletop position.",
+      "Step one foot forward, placing it outside your hand, and lower your hips towards the floor.",
+      "Extend your back leg straight behind you, keeping your knee and the top of your foot on the floor."
+    ],
+    "tips": [
+      "Keep your chest lifted and your back straight.",
+      "Relax your hips and allow them to sink towards the floor.",
+      "For a deeper stretch, lift your back knee and lower your forearms to the floor."
+    ],
+    "modifications": [],
+    "benefits": ["Groin", "Hips", "Hamstrings", "Quadriceps", "Glutes"]
+  },
+  "pigeon": {
+    "instructions": [
+      "Start on your hands and knees in a tabletop position.",
+      "Bring one knee forward and place it behind your wrist on the same side, then slide your ankle towards your opposite hip.",
+      "Extend your other leg straight back behind you while keeping your hips square to the floor.",
+      "Gently lower your torso over your front leg and rest your forearms on the ground in front of you."
+    ],
+    "tips": [
+      "Keep your hips level and avoid leaning to one side."
+    ],
+    "modifications": [
+      "Place a folded blanket or block under the hip of the bent leg for support.",
+      "If folding forward is uncomfortable, stay upright and support yourself with your hands on the floor."
+    ],
+    "benefits": ["Groin", "Psoas", "IT Band", "Hips", "Hamstrings", "Lower Back", "Glutes"]
+  },
+  "folded_butterfly": {
+    "instructions": [
+      "Start on the floor in a seated position with your legs extended in front of you.",
+      "Bend your knees and bring the soles of your feet together, letting your knees fall out to the sides.",
+      "Place your hands on the floor in front of you and hinge at your hips, folding forward over your feet."
+    ],
+    "tips": [
+      "Allow your head to relax towards your feet."
+    ],
+    "modifications": [
+      "If your hips are tight, sit on a folded blanket to elevate your hips.",
+      "For a gentler stretch, keep your torso more upright."
+    ],
+    "benefits": ["Knees", "Groin", "Hips", "Lower Back"]
+  },
+  "happy_baby": {
+    "instructions": [
+      "Start lying on your back with your knees bent and feet flat on the floor.",
+      "Lift your feet off the floor to bring your knees towards your armpits.",
+      "Grasp the outer edges of your feet with your hands and gently pull your knees towards the floor."
+    ],
+    "tips": [
+      "Keep your lower back pressed into the floor.",
+      "Relax your shoulders and neck."
+    ],
+    "modifications": [
+      "If you can't reach your feet, hold onto your ankles or calves instead."
+    ],
+    "benefits": ["Groin", "Hips", "Hamstrings", "Lower Back", "Glutes"]
+  },
+  "frog_pose": {
+    "instructions": [
+      "Start on your hands and knees in a tabletop position.",
+      "Lower your forearms to the ground and widen your knees out to sides, keeping your hips in line with your knees and your toes pointed outward.",
+      "Gently press your hips back towards your heels."
+    ],
+    "tips": [
+      "Keep your chest lifted and your gaze forward."
+    ],
+    "modifications": [
+      "Bring your knees closer together to reduce the intensity."
+    ],
+    "benefits": ["Groin", "Hips", "Lower Back"]
+  },
+  "squat_stretch": {
+    "instructions": [
+      "Start from a standing position with your feet shoulder-width apart and your toes pointed slightly outward.",
+      "Lower your hips down into a squat position, keeping your heels on the ground.",
+      "Place your elbows on the inside of your knees and press your palms together."
+    ],
+    "tips": [
+      "Keep your chest lifted and your back straight.",
+      "Gently push your knees outward with your elbows."
+    ],
+    "modifications": [
+      "If your heels lift, place a folded towel under them for support.",
+      "Hold onto a chair or wall for balance if needed."
+    ],
+    "benefits": ["Knees", "Groin", "Calves", "Hips", "Hamstrings", "Quadriceps", "Lower Back", "Glutes"]
+  },
+  "double_pigeon": {
+    "instructions": [
+      "Start on the floor in a seated position with your legs extended in front of you.",
+      "Bend one knee and bring your shin parallel to your shoulders.",
+      "Bend the opposite knee, stacking your shin on top of the other, and aligning your ankle over your bottom knee.",
+      "Sit up tall and rest your hands on the floor to your sides."
+    ],
+    "tips": [
+      "Keep your back straight and avoid rounding your spine.",
+      "Flex both feet to protect your knees."
+    ],
+    "modifications": [
+      "Perform the movement with one leg extended if necessary."
+    ],
+    "benefits": ["Groin", "IT Band", "Hips", "Hamstrings", "Glutes"]
+  },
+  "reclined_butterfly": {
+    "instructions": [
+      "Start lying on your back with your knees bent and your feet flat on the floor.",
+      "Bring the soles of your feet together and let your knees fall out to the sides.",
+      "Place your arms alongside your body with your palms facing up."
+    ],
+    "tips": [
+      "Allow gravity to gently open your hips without forcing them."
+    ],
+    "modifications": [
+      "Place cushions or blocks under your outer thighs for support."
+    ],
+    "benefits": ["Groin", "Spine", "Hips"]
+  },
+  "rag_doll": {
+    "instructions": [
+      "Start from a standing position with your feet hip-width apart and your knees slightly bent.",
+      "Inhale and extend your arms overhead, lengthening your spine.",
+      "Exhale and slowly bend forward at the hips, letting your upper body hang down.",
+      "Grab your opposite elbows and let your head and arms hang heavy."
+    ],
+    "tips": [
+      "Keep your weight evenly distributed between your heels and the balls of your feet.",
+      "Focus on lengthening your spine rather than reaching for the floor."
+    ],
+    "modifications": [
+      "Bend your knees more to avoid straining your back.",
+      "Use a block or chair to rest your elbows on if reaching the floor is difficult."
+    ],
+    "benefits": ["Calves", "Shoulders", "Hips", "Hamstrings", "Lower Back", "Glutes"]
+  },
+  "upward_dog": {
+    "instructions": [
+      "Start lying on your stomach with your legs extended and your hands under your shoulders.",
+      "Press your palms into the floor, straightening your arms to lift your upper body and legs off the floor.",
+      "Lift your chest, relax your shoulders, and look slightly upward."
+    ],
+    "tips": [
+      "Only the tops of your feet and your palms should be touching the floor.",
+      "Keep your arms straight but avoid locking your elbows."
+    ],
+    "modifications": [
+      "For less intensity, keep your thighs on the floor."
+    ],
+    "benefits": ["Psoas", "Spine", "Chest", "Abdomen"]
+  },
+  "childs_pose": {
+    "instructions": [
+      "Start on your hands and knees in a tabletop position.",
+      "Widen your knees and bring your big toes together so they're touching.",
+      "Sit back on your heels, then reach forward with your hands and lower your chest toward the floor.",
+      "Relax your hips and rest your forehead on the floor."
+    ],
+    "tips": [
+      "Walk your fingertips forward to increase the stretch.",
+      "Allow your chest to sink towards the floor."
+    ],
+    "modifications": [
+      "For less intensity, don't spread your knees as wide.",
+      "If your forehead doesn't reach the floor, rest it on a block or folded blanket."
+    ],
+    "benefits": ["Feet", "Shins", "Shoulders", "Hips", "Lower Back", "Ankles"]
+  },
+  "spinal_twist": {
+    "instructions": [
+      "Start lying on your back with your legs extended and your arms at your sides.",
+      "Bend one knee and place your foot flat on the floor.",
+      "Gently lower your bent knee across your body towards the opposite side, allowing your torso and hips to twist.",
+      "Place your opposite hand on the outside of your bent knee and extend your other arm out to the side."
+    ],
+    "tips": [
+      "Keep your shoulders flat on the floor."
+    ],
+    "modifications": [
+      "If the twist is too intense, place a cushion or block under your bent knee for support."
+    ],
+    "benefits": ["Spine", "IT Band", "Upper Back", "Obliques", "Chest", "Lower Back", "Glutes"]
+  },
+  "quad_stretch": {
+    "instructions": [
+      "Start on the floor in a seated position with your legs extended in front of you.",
+      "Bend one knee and bring your heel back towards your glutes.",
+      "Grab your ankle with your hand and gently pull your foot back so it's directly beneath your glute.",
+      "Slowly lean back to rest on your elbows."
+    ],
+    "tips": [
+      "Keep your hips, knees, and ankles aligned.",
+      "Make sure your foot stays underneath your glute and isn't out to the side."
+    ],
+    "modifications": [
+      "If reaching your ankle is difficult, use a strap or towel looped around your foot for assistance.",
+      "If you experience discomfort in your knee, try performing the exercise while lying on your side."
+    ],
+    "benefits": ["Knees", "Shins", "Hips", "Quadriceps", "Lower Back", "Ankles"]
+  },
+  "legs_up_wall": {
+    "instructions": [
+      "Start on the floor in a seated position with the side of your hip touching the wall.",
+      "Lie back and swing your legs up onto the wall in one motion.",
+      "Scoot your hips as close to the wall as comfortable and extend your legs straight up the wall.",
+      "Rest your arms by your sides with your palms facing up."
+    ],
+    "tips": [
+      "Keep your legs relatively relaxed and avoid locking your knees."
+    ],
+    "modifications": [
+      "If your hamstrings are tight, move your hips slightly away from the wall.",
+      "Place a cushion or folded blanket under your hips for extra support."
+    ],
+    "benefits": ["Hips", "Hamstrings", "Lower Back", "Glutes"]
+  }
+}

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gym_tracker/domain/entities/mobility_exercise_info.dart';
 import 'package:gym_tracker/domain/entities/mobility_routine.dart';
 import 'package:gym_tracker/domain/entities/routine.dart';
 import 'package:gym_tracker/domain/ports/mobility_session_port.dart';
@@ -6,6 +7,7 @@ import 'package:gym_tracker/domain/ports/routine_port.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
 import 'package:gym_tracker/presentation/components/delete_routine_dialog.dart';
 import 'package:gym_tracker/presentation/components/export_sheet.dart';
+import 'package:gym_tracker/presentation/components/mobility_exercise_detail_sheet.dart';
 import 'package:gym_tracker/presentation/components/mobility_exercise_tile.dart';
 import 'package:gym_tracker/presentation/screens/mobility/mobility_timer_screen.dart';
 
@@ -35,12 +37,17 @@ class MobilityRoutineDetailScreen extends StatefulWidget {
 class _MobilityRoutineDetailScreenState
     extends State<MobilityRoutineDetailScreen> {
   MobilityRoutine? _mobilityRoutine;
+  Map<String, MobilityExerciseInfo> _exerciseInfoMap = const {};
   bool _loading = true;
+  bool _loadStarted = false;
 
   @override
-  void initState() {
-    super.initState();
-    _loadRoutine();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_loadStarted) {
+      _loadStarted = true;
+      _loadRoutine();
+    }
   }
 
   Future<void> _loadRoutine() async {
@@ -50,9 +57,15 @@ class _MobilityRoutineDetailScreenState
       return;
     }
     try {
-      final mr = await MobilityRoutine.loadFromAsset(key);
+      final lang = Localizations.localeOf(context).languageCode;
+      final results = await Future.wait([
+        MobilityRoutine.loadFromAsset(key),
+        MobilityExerciseInfo.loadAll(lang),
+      ]);
       setState(() {
-        _mobilityRoutine = mr;
+        _mobilityRoutine = results[0] as MobilityRoutine;
+        _exerciseInfoMap =
+            results[1] as Map<String, MobilityExerciseInfo>;
         _loading = false;
       });
     } catch (_) {
@@ -159,12 +172,23 @@ class _MobilityRoutineDetailScreenState
           child: ListView.builder(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
             itemCount: mr.exercises.length,
-            itemBuilder: (context, index) => MobilityExerciseTile(
-              exercise: mr.exercises[index],
-              index: index,
-              l10n: l10n,
-              variant: MobilityExerciseTileVariant.detailed,
-            ),
+            itemBuilder: (context, index) {
+              final exercise = mr.exercises[index];
+              final info = _exerciseInfoMap[exercise.key];
+              return MobilityExerciseTile(
+                exercise: exercise,
+                index: index,
+                l10n: l10n,
+                variant: MobilityExerciseTileVariant.detailed,
+                onTap: info != null
+                    ? () => showMobilityExerciseDetailSheet(
+                          context,
+                          exercise: exercise,
+                          info: info,
+                        )
+                    : null,
+              );
+            },
           ),
         ),
 

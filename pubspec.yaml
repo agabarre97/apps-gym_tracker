@@ -34,3 +34,4 @@ flutter:
     - assets/images/
     - assets/data/
     - assets/data/mobility_routines/
+    - assets/data/mobility_exercises_info/

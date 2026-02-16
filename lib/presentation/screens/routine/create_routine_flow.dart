@@ -46,12 +46,14 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
     'feet_ankles_2': (l) => l.mobilityFeetAnkles2,
     'pelvic_tilt': (l) => l.mobilityPelvicTilt,
     'hips': (l) => l.mobilityHips,
+    'sleep': (l) => l.mobilitySleep,
   };
 
   /// Available recommended routines per mobility subtype.
   static const _routinesBySubType = <String, List<String>>{
     'tobillos': ['feet_ankles_2'],
     'cadera': ['pelvic_tilt', 'hips'],
+    'relajacion': ['sleep'],
   };
 
   // Accumulated state

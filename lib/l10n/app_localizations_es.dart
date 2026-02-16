@@ -182,6 +182,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get mobilityHips => 'Caderas';
 
   @override
+  String get mobilityRelajacion => 'Relajación';
+
+  @override
+  String get mobilitySleep => 'Sueño';
+
+  @override
   String get mobilityTimerTitle => 'Movilidad';
 
   @override
@@ -220,6 +226,18 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get mobilitySettings => 'Ajustes';
+
+  @override
+  String get mobilityInfoInstructions => 'Instrucciones';
+
+  @override
+  String get mobilityInfoTips => 'Consejos';
+
+  @override
+  String get mobilityInfoModifications => 'Modificaciones';
+
+  @override
+  String get mobilityInfoBenefits => 'Beneficios';
 
   @override
   String get mobilitySingleLegStand => 'Apoyo a una pierna';
@@ -315,6 +333,24 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get mobilityReclinedButterfly => 'Mariposa reclinada';
+
+  @override
+  String get mobilityRagDoll => 'Muñeca de trapo';
+
+  @override
+  String get mobilityUpwardDog => 'Perro boca arriba';
+
+  @override
+  String get mobilityChildsPose => 'Postura del niño';
+
+  @override
+  String get mobilitySpinalTwist => 'Torsión espinal';
+
+  @override
+  String get mobilityQuadStretch => 'Estiramiento de cuádriceps';
+
+  @override
+  String get mobilityLegsUpWall => 'Piernas en la pared';
 
   @override
   String get mobilityRoutineNotFound => 'No se encontró la rutina de movilidad';

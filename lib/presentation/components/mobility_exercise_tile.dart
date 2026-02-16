@@ -41,6 +41,13 @@ final Map<String, String Function(AppLocalizations)>
   'squat_stretch': (l) => l.mobilitySquatStretch,
   'double_pigeon': (l) => l.mobilityDoublePigeon,
   'reclined_butterfly': (l) => l.mobilityReclinedButterfly,
+  // Sleep routine
+  'rag_doll': (l) => l.mobilityRagDoll,
+  'upward_dog': (l) => l.mobilityUpwardDog,
+  'childs_pose': (l) => l.mobilityChildsPose,
+  'spinal_twist': (l) => l.mobilitySpinalTwist,
+  'quad_stretch': (l) => l.mobilityQuadStretch,
+  'legs_up_wall': (l) => l.mobilityLegsUpWall,
 };
 
 /// Returns the localized display name for a mobility exercise key.
@@ -68,12 +75,16 @@ class MobilityExerciseTile extends StatelessWidget {
     required this.index,
     required this.l10n,
     this.variant = MobilityExerciseTileVariant.detailed,
+    this.onTap,
   });
 
   final MobilityExercise exercise;
   final int index;
   final AppLocalizations l10n;
   final MobilityExerciseTileVariant variant;
+
+  /// Optional tap handler — used in the detail screen to show exercise info.
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -102,58 +113,62 @@ class MobilityExerciseTile extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        child: Row(
-          children: [
-            CircleAvatar(
-              radius: 16,
-              backgroundColor: Colors.greenAccent.withAlpha(30),
-              child: Text(
-                '${index + 1}',
-                style: const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.greenAccent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: Row(
+            children: [
+              CircleAvatar(
+                radius: 16,
+                backgroundColor: Colors.greenAccent.withAlpha(30),
+                child: Text(
+                  '${index + 1}',
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.greenAccent,
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    name,
-                    style: const TextStyle(
-                        fontSize: 14, fontWeight: FontWeight.w500),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    sideLabel,
-                    style:
-                        const TextStyle(fontSize: 11, color: Colors.white54),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-              decoration: BoxDecoration(
-                color: Colors.greenAccent.withAlpha(20),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Text(
-                duration,
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: Colors.greenAccent,
-                  fontWeight: FontWeight.w600,
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      name,
+                      style: const TextStyle(
+                          fontSize: 14, fontWeight: FontWeight.w500),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      sideLabel,
+                      style:
+                          const TextStyle(fontSize: 11, color: Colors.white54),
+                    ),
+                  ],
                 ),
               ),
-            ),
-          ],
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.greenAccent.withAlpha(20),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  duration,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.greenAccent,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

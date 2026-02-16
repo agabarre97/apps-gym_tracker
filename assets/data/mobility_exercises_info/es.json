@@ -1,0 +1,575 @@
+{
+  "single_leg_stand": {
+    "instructions": [
+      "Comienza de pie con los pies separados a la anchura de las caderas y las manos en las caderas.",
+      "Activa tu core para levantar un pie del suelo y extenderlo hacia delante.",
+      "Mantén el equilibrio sobre la pierna de apoyo y sostén la posición."
+    ],
+    "tips": [
+      "Mantén la pierna de apoyo ligeramente flexionada, no bloqueada."
+    ],
+    "modifications": [
+      "Apóyate en una pared o silla para mayor estabilidad."
+    ],
+    "benefits": ["Pies", "Tobillos"]
+  },
+  "ankle_circles": {
+    "instructions": [
+      "Comienza de pie con los pies separados a la anchura de las caderas y las manos a los lados o en las caderas.",
+      "Levanta ligeramente un pie del suelo y apunta los dedos hacia abajo.",
+      "Rota el pie en un movimiento circular, moviendo el tobillo.",
+      "Completa varios círculos en una dirección y luego invierte la dirección."
+    ],
+    "tips": [
+      "Activa tu core para mantener el equilibrio y la estabilidad.",
+      "Muévete lenta y controladamente para evitar perder el equilibrio.",
+      "Mantén la pierna de apoyo ligeramente flexionada para evitar bloquear la rodilla."
+    ],
+    "modifications": [
+      "Usa una pared o silla como apoyo si te cuesta mantener el equilibrio.",
+      "Si rotar el pie completamente es incómodo, haz círculos más pequeños.",
+      "Realiza el movimiento sentado si estar de pie resulta inestable."
+    ],
+    "benefits": ["Gemelos", "Pies", "Tibiales", "Tobillos"]
+  },
+  "heel_to_toe_rocks": {
+    "instructions": [
+      "Comienza de pie con los pies separados a la anchura de las caderas y los brazos a los lados.",
+      "Desplaza tu peso hacia delante sobre los dedos de los pies, levantando los talones del suelo.",
+      "Desplaza lentamente tu peso hacia atrás sobre los talones, levantando los dedos del suelo.",
+      "Continúa balanceándote de adelante hacia atrás con un movimiento controlado y suave."
+    ],
+    "tips": [
+      "Activa tu core para mantener el equilibrio.",
+      "Mantén los movimientos estables y evita cambios bruscos.",
+      "Concéntrate en mantener la postura erguida durante todo el ejercicio."
+    ],
+    "modifications": [
+      "Agárrate a una pared o silla para mayor apoyo.",
+      "Reduce el rango de movimiento si el estiramiento resulta demasiado intenso.",
+      "Realiza el movimiento más lentamente para un mejor control."
+    ],
+    "benefits": ["Gemelos", "Pies", "Tibiales", "Tobillos"]
+  },
+  "lateral_foot_rocks": {
+    "instructions": [
+      "Comienza de pie con los pies separados a la anchura de las caderas y los brazos a los lados.",
+      "Desplaza tu peso hacia los bordes exteriores de los pies, levantando los bordes interiores.",
+      "Desplaza lentamente tu peso hacia los bordes interiores de los pies, levantando los bordes exteriores.",
+      "Continúa balanceándote de lado a lado con un movimiento controlado y estable."
+    ],
+    "tips": [
+      "Activa tu core para ayudar con el equilibrio.",
+      "Muévete suavemente para evitar movimientos bruscos.",
+      "Mantén las rodillas ligeramente flexionadas y relajadas."
+    ],
+    "modifications": [
+      "Usa una pared o silla para mayor apoyo.",
+      "Realiza movimientos laterales más pequeños si el rango completo es incómodo.",
+      "Haz el ejercicio sentado si estar de pie resulta difícil."
+    ],
+    "benefits": ["Gemelos", "Pies", "Tobillos"]
+  },
+  "knee_circles": {
+    "instructions": [
+      "Comienza de pie con los pies separados a la anchura de las caderas y las manos en las rodillas.",
+      "Flexiona ligeramente las rodillas y haz pequeños círculos con ellas, moviéndolas juntas en un movimiento circular.",
+      "Invierte el movimiento en el punto medio."
+    ],
+    "tips": [
+      "Mantén los movimientos suaves y controlados para evitar forzar las rodillas."
+    ],
+    "modifications": [
+      "Realiza el ejercicio a un ritmo más lento si es necesario para mantener el control."
+    ],
+    "benefits": ["Rodillas", "Gemelos", "Pies", "Tibiales", "Tobillos"]
+  },
+  "soleus_stretch": {
+    "instructions": [
+      "Comienza de pie con los pies separados a la anchura de las caderas y los brazos a los lados.",
+      "Da un paso adelante con un pie, luego flexiona ambas rodillas para bajar lentamente las caderas.",
+      "Mantén ambos pies planos en el suelo e inclínate ligeramente hacia delante para sentir el estiramiento en la parte baja de la pantorrilla."
+    ],
+    "tips": [
+      "Mantén el talón trasero firmemente presionado contra el suelo.",
+      "Mantén la espalda recta y los pies apuntando hacia delante."
+    ],
+    "modifications": [
+      "Coloca las manos en una pared o silla para apoyo adicional."
+    ],
+    "benefits": ["Gemelos", "Pies", "Tobillos"]
+  },
+  "leaning_calf": {
+    "instructions": [
+      "Comienza de pie frente a una pared, aproximadamente a un brazo de distancia.",
+      "Coloca las manos en la pared a la altura de los hombros y separadas a la anchura de los hombros.",
+      "Da un paso atrás con un pie, manteniendo los dedos apuntando hacia delante y el talón en el suelo.",
+      "Flexiona la rodilla delantera manteniendo la pierna trasera recta y empuja contra la pared para profundizar el estiramiento."
+    ],
+    "tips": [],
+    "modifications": [
+      "Si el estiramiento es demasiado intenso, acerca ligeramente el pie trasero a la pared."
+    ],
+    "benefits": ["Gemelos", "Pies", "Isquiotibiales", "Tobillos"]
+  },
+  "toe_to_wall": {
+    "instructions": [
+      "Comienza de pie frente a una pared, aproximadamente a un brazo de distancia.",
+      "Coloca las manos en la pared a la altura de los hombros para apoyarte.",
+      "Coloca un pie contra la pared, con los dedos apuntando hacia arriba y el talón en el suelo.",
+      "Manteniendo ambas piernas rectas, inclínate hacia delante y levanta el talón trasero del suelo."
+    ],
+    "tips": [
+      "Mantén ambos pies apuntando hacia delante."
+    ],
+    "modifications": [],
+    "benefits": ["Gemelos", "Pies", "Tobillos", "Dedos de los pies"]
+  },
+  "standing_quad": {
+    "instructions": [
+      "Comienza de pie con los pies separados a la anchura de las caderas.",
+      "Flexiona una rodilla y lleva el talón hacia los glúteos.",
+      "Agarra el tobillo con ambas manos por detrás y tira suavemente del talón hacia los glúteos.",
+      "Mantén las rodillas juntas y las caderas alineadas."
+    ],
+    "tips": [
+      "Activa tu core para mantener el equilibrio.",
+      "Mantén la pierna de apoyo ligeramente flexionada para evitar bloquear la rodilla.",
+      "Evita arquear la espalda o inclinarte hacia delante."
+    ],
+    "modifications": [
+      "Usa una pared o silla para apoyarte si es necesario.",
+      "Si te cuesta agarrar el tobillo, usa una cinta o toalla alrededor del pie.",
+      "Mantén la otra mano en la cadera o extiéndela hacia un lado para mayor equilibrio."
+    ],
+    "benefits": ["Rodillas", "Pies", "Psoas", "Tibiales", "Caderas", "Cuádriceps", "Zona lumbar", "Tobillos", "Abdomen"]
+  },
+  "single_leg_calf_stretch": {
+    "instructions": [
+      "Comienza a cuatro patas en posición de mesa.",
+      "Mete los dedos de los pies y levanta las caderas hacia arriba y atrás, estirando los brazos y las piernas.",
+      "Levanta un pie del suelo, cruzándolo sobre el talón opuesto, y estira la pierna de apoyo."
+    ],
+    "tips": [
+      "Distribuye tu peso uniformemente entre las manos y el pie.",
+      "Mantén el talón de la pierna de apoyo presionado contra el suelo."
+    ],
+    "modifications": [],
+    "benefits": ["Gemelos", "Pies", "Isquiotibiales", "Tobillos"]
+  },
+  "single_leg_shin_stretch": {
+    "instructions": [
+      "Comienza en posición de rodillas con las rodillas separadas a la anchura de las caderas y los brazos a los lados.",
+      "Da un paso adelante con un pie, colocándolo plano en el suelo junto a la rodilla opuesta.",
+      "Baja lentamente las caderas hacia atrás y abajo para sentarte sobre el talón trasero.",
+      "Coloca las manos en el suelo detrás de ti, con los dedos apuntando hacia los pies, e inclínate hacia atrás."
+    ],
+    "tips": [
+      "Mantén la espalda recta y el pecho levantado."
+    ],
+    "modifications": [],
+    "benefits": ["Pies", "Tibiales", "Tobillos"]
+  },
+  "toe_stretch": {
+    "instructions": [
+      "Comienza a cuatro patas en posición de mesa, con los empeines planos en el suelo.",
+      "Mete los dedos de un pie, luego inclínate lentamente hacia atrás y baja las caderas hacia los talones, manteniendo las manos presionadas contra el suelo."
+    ],
+    "tips": [
+      "Distribuye tu peso uniformemente entre ambas manos."
+    ],
+    "modifications": [],
+    "benefits": ["Pies", "Dedos de los pies"]
+  },
+  "thunderbolt": {
+    "instructions": [
+      "Comienza en posición de rodillas con las rodillas juntas y los empeines planos en el suelo.",
+      "Siéntate sobre los talones con los dedos gordos tocándose y los talones separados.",
+      "Coloca las manos sobre los muslos con las palmas hacia abajo.",
+      "Siéntate erguido con la espalda recta y los hombros relajados."
+    ],
+    "tips": [
+      "Activa tu core para sostener la zona lumbar."
+    ],
+    "modifications": [
+      "Si sentarte sobre los talones es incómodo, coloca un cojín o manta doblada entre los talones y las caderas.",
+      "Coloca una manta doblada bajo las rodillas si sientes molestias."
+    ],
+    "benefits": ["Rodillas", "Pies", "Tibiales", "Cuádriceps", "Tobillos"]
+  },
+  "toe_squat": {
+    "instructions": [
+      "Comienza en posición de rodillas con los empeines planos en el suelo.",
+      "Mete los dedos de los pies y siéntate lentamente sobre los talones, poniendo peso sobre los dedos.",
+      "Siéntate erguido con la espalda recta, relaja los hombros y coloca las manos sobre los muslos."
+    ],
+    "tips": [
+      "Concéntrate en distribuir tu peso uniformemente entre todos los dedos de los pies."
+    ],
+    "modifications": [
+      "Si el estiramiento es demasiado intenso, mantén las manos en el suelo frente a ti."
+    ],
+    "benefits": ["Gemelos", "Pies", "Tobillos", "Dedos de los pies"]
+  },
+  "pelvic_tilt": {
+    "instructions": [
+      "Comienza tumbado boca arriba con las rodillas flexionadas y los pies planos en el suelo.",
+      "Activa tu core para inclinar la pelvis hacia arriba y presionar la zona lumbar contra el suelo.",
+      "Mantén los brazos a los lados con las palmas en el suelo y sostén la posición."
+    ],
+    "tips": [
+      "Imagina que llevas el ombligo hacia la columna.",
+      "Mantén los glúteos relajados; el movimiento debe venir del core."
+    ],
+    "modifications": [
+      "Si resulta incómodo tumbarse en el suelo, realiza el ejercicio contra una pared."
+    ],
+    "benefits": ["Zona lumbar"]
+  },
+  "glute_bridge": {
+    "instructions": [
+      "Comienza tumbado boca arriba con las rodillas flexionadas y los pies planos en el suelo.",
+      "Activa tu core y glúteos para levantar las caderas del suelo, formando una línea recta desde las rodillas hasta los hombros.",
+      "Mantén las palmas y los hombros presionados contra el suelo y sostén la posición."
+    ],
+    "tips": [
+      "Aprieta los glúteos en la parte superior del movimiento.",
+      "Evita arquear la zona lumbar; el movimiento debe venir de las caderas y los glúteos."
+    ],
+    "modifications": [
+      "Para menor intensidad, levanta las caderas solo parcialmente.",
+      "Si sientes tensión en el cuello, coloca una toalla pequeña doblada bajo la cabeza."
+    ],
+    "benefits": ["Isquiotibiales", "Zona lumbar", "Glúteos"]
+  },
+  "knees_to_chest": {
+    "instructions": [
+      "Comienza tumbado boca arriba con las piernas extendidas y los brazos a los lados.",
+      "Flexiona las rodillas y llévalas hacia el pecho.",
+      "Rodea las espinillas con los brazos y tira suavemente de ellas hacia el pecho."
+    ],
+    "tips": [
+      "Relaja la cabeza y el cuello en el suelo.",
+      "Mantén la zona lumbar presionada contra el suelo."
+    ],
+    "modifications": [
+      "Si no llegas a las espinillas, rodea los muslos con los brazos."
+    ],
+    "benefits": ["Caderas", "Isquiotibiales", "Zona lumbar", "Glúteos"]
+  },
+  "single_knee_to_chest": {
+    "instructions": [
+      "Comienza tumbado boca arriba con las piernas extendidas y los brazos a los lados.",
+      "Flexiona una rodilla y llévala hacia el pecho, sujetando la espinilla con ambas manos.",
+      "Tira suavemente de la rodilla hacia el pecho mientras mantienes la otra pierna recta."
+    ],
+    "tips": [
+      "Relaja la cabeza y el cuello en el suelo.",
+      "Mantén las caderas alineadas y la zona lumbar presionada contra el suelo."
+    ],
+    "modifications": [
+      "Si no llegas a la espinilla, tira del muslo o usa una toalla alrededor de la rodilla."
+    ],
+    "benefits": ["Caderas", "Isquiotibiales", "Zona lumbar", "Glúteos"]
+  },
+  "lying_quad_stretch": {
+    "instructions": [
+      "Comienza tumbado de lado con las piernas extendidas y los pies apilados.",
+      "Flexiona la rodilla superior para llevar el talón hacia los glúteos, sujetando el tobillo con la mano.",
+      "Tira del talón hacia los glúteos manteniendo los muslos alineados."
+    ],
+    "tips": [
+      "Empuja ligeramente las caderas hacia delante para profundizar el estiramiento.",
+      "Mantén una ligera flexión en la pierna inferior para mayor estabilidad."
+    ],
+    "modifications": [
+      "Si te cuesta agarrar el tobillo, usa una cinta o toalla alrededor del pie."
+    ],
+    "benefits": ["Rodillas", "Tibiales", "Caderas", "Cuádriceps", "Tobillos"]
+  },
+  "kneeling_hip_flexor": {
+    "instructions": [
+      "Comienza en posición de rodillas con los brazos a los lados.",
+      "Da un paso adelante con una pierna, colocando el pie plano en el suelo frente a ti.",
+      "Empuja las caderas hacia delante y levanta los brazos por encima de la cabeza.",
+      "Levanta el pecho y estírate hacia el techo."
+    ],
+    "tips": [
+      "Mantén la rodilla delantera estable y alineada directamente sobre el tobillo.",
+      "Activa la pierna trasera, presionando el empeine contra el suelo.",
+      "Mantén el torso erguido y evita arquear la zona lumbar."
+    ],
+    "modifications": [
+      "Para menor intensidad, mantén las manos sobre el muslo delantero.",
+      "Coloca una toalla o cojín bajo la rodilla trasera para mayor comodidad.",
+      "Agárrate a una pared o silla para mantener el equilibrio si es necesario."
+    ],
+    "benefits": ["Psoas", "Caderas", "Cuádriceps", "Zona lumbar", "Abdomen"]
+  },
+  "cat_cow": {
+    "instructions": [
+      "Comienza a cuatro patas en posición de mesa.",
+      "Alinea las muñecas bajo los hombros y las rodillas bajo las caderas.",
+      "Inhala, dejando caer el vientre hacia el suelo y arqueando la espalda, levantando la barbilla y el pecho para mirar hacia el techo.",
+      "Exhala, llevando el vientre hacia la columna y redondeando la espalda, metiendo la barbilla hacia el pecho."
+    ],
+    "tips": [
+      "Muévete lentamente entre las posturas, coordinando cada movimiento con la respiración."
+    ],
+    "modifications": [
+      "Si tienes problemas cervicales, mantén la cabeza en posición neutral en lugar de levantar y meter la barbilla."
+    ],
+    "benefits": ["Columna", "Cuello", "Espalda superior", "Zona lumbar", "Abdomen"]
+  },
+  "seated_butterfly": {
+    "instructions": [
+      "Comienza sentado en el suelo con las piernas extendidas frente a ti.",
+      "Flexiona las rodillas y junta las plantas de los pies, dejando que las rodillas caigan hacia los lados.",
+      "Sujeta los pies con las manos y presiona suavemente las rodillas hacia el suelo."
+    ],
+    "tips": [
+      "Tira de los pies hacia ti y empuja las rodillas hacia abajo con los codos para profundizar el estiramiento.",
+      "Mantén la espalda recta y evita redondear la columna."
+    ],
+    "modifications": [
+      "Si las rodillas quedan muy separadas del suelo, coloca cojines bajo los muslos.",
+      "Siéntate sobre una manta doblada para elevar las caderas y mejorar la comodidad."
+    ],
+    "benefits": ["Ingle", "Caderas"]
+  },
+  "lying_figure_four": {
+    "instructions": [
+      "Comienza tumbado boca arriba con las rodillas flexionadas y los pies planos en el suelo.",
+      "Cruza un tobillo sobre el muslo opuesto, justo encima de la rodilla.",
+      "Levanta la pierna inferior del suelo, llevando la rodilla hacia el pecho.",
+      "Estira los brazos y entrelaza las manos detrás del muslo de la pierna inferior.",
+      "Tira suavemente de la pierna hacia el pecho."
+    ],
+    "tips": [
+      "Mantén la cabeza y los hombros relajados en el suelo.",
+      "Mantén la zona lumbar presionada contra el suelo."
+    ],
+    "modifications": [
+      "Si te cuesta llegar detrás del muslo, usa una cinta o toalla para ayudarte.",
+      "Para un estiramiento más suave, mantén el pie inferior en el suelo."
+    ],
+    "benefits": ["Banda iliotibial", "Caderas", "Zona lumbar", "Glúteos"]
+  },
+  "lizard_pose": {
+    "instructions": [
+      "Comienza a cuatro patas en posición de mesa.",
+      "Da un paso adelante con un pie, colocándolo por fuera de la mano, y baja las caderas hacia el suelo.",
+      "Extiende la pierna trasera recta hacia atrás, manteniendo la rodilla y el empeine en el suelo."
+    ],
+    "tips": [
+      "Mantén el pecho levantado y la espalda recta.",
+      "Relaja las caderas y permite que desciendan hacia el suelo.",
+      "Para un estiramiento más profundo, levanta la rodilla trasera y baja los antebrazos al suelo."
+    ],
+    "modifications": [],
+    "benefits": ["Ingle", "Caderas", "Isquiotibiales", "Cuádriceps", "Glúteos"]
+  },
+  "pigeon": {
+    "instructions": [
+      "Comienza a cuatro patas en posición de mesa.",
+      "Lleva una rodilla hacia delante y colócala detrás de la muñeca del mismo lado, deslizando el tobillo hacia la cadera opuesta.",
+      "Extiende la otra pierna recta hacia atrás manteniendo las caderas alineadas con el suelo.",
+      "Baja suavemente el torso sobre la pierna delantera y apoya los antebrazos en el suelo."
+    ],
+    "tips": [
+      "Mantén las caderas niveladas y evita inclinarte hacia un lado."
+    ],
+    "modifications": [
+      "Coloca una manta doblada o bloque bajo la cadera de la pierna flexionada para apoyarte.",
+      "Si inclinarte hacia delante es incómodo, mantente erguido apoyándote con las manos en el suelo."
+    ],
+    "benefits": ["Ingle", "Psoas", "Banda iliotibial", "Caderas", "Isquiotibiales", "Zona lumbar", "Glúteos"]
+  },
+  "folded_butterfly": {
+    "instructions": [
+      "Comienza sentado en el suelo con las piernas extendidas frente a ti.",
+      "Flexiona las rodillas y junta las plantas de los pies, dejando que las rodillas caigan hacia los lados.",
+      "Coloca las manos en el suelo frente a ti y flexiona las caderas, plegándote hacia delante sobre los pies."
+    ],
+    "tips": [
+      "Permite que la cabeza se relaje hacia los pies."
+    ],
+    "modifications": [
+      "Si tus caderas están tensas, siéntate sobre una manta doblada para elevarlas.",
+      "Para un estiramiento más suave, mantén el torso más erguido."
+    ],
+    "benefits": ["Rodillas", "Ingle", "Caderas", "Zona lumbar"]
+  },
+  "happy_baby": {
+    "instructions": [
+      "Comienza tumbado boca arriba con las rodillas flexionadas y los pies planos en el suelo.",
+      "Levanta los pies del suelo para llevar las rodillas hacia las axilas.",
+      "Agarra los bordes exteriores de los pies con las manos y tira suavemente de las rodillas hacia el suelo."
+    ],
+    "tips": [
+      "Mantén la zona lumbar presionada contra el suelo.",
+      "Relaja los hombros y el cuello."
+    ],
+    "modifications": [
+      "Si no llegas a los pies, sujétate de los tobillos o las pantorrillas."
+    ],
+    "benefits": ["Ingle", "Caderas", "Isquiotibiales", "Zona lumbar", "Glúteos"]
+  },
+  "frog_pose": {
+    "instructions": [
+      "Comienza a cuatro patas en posición de mesa.",
+      "Baja los antebrazos al suelo y separa las rodillas hacia los lados, manteniendo las caderas alineadas con las rodillas y los dedos de los pies apuntando hacia fuera.",
+      "Presiona suavemente las caderas hacia atrás en dirección a los talones."
+    ],
+    "tips": [
+      "Mantén el pecho levantado y la mirada hacia delante."
+    ],
+    "modifications": [
+      "Acerca las rodillas para reducir la intensidad."
+    ],
+    "benefits": ["Ingle", "Caderas", "Zona lumbar"]
+  },
+  "squat_stretch": {
+    "instructions": [
+      "Comienza de pie con los pies separados a la anchura de los hombros y los dedos apuntando ligeramente hacia fuera.",
+      "Baja las caderas en posición de sentadilla, manteniendo los talones en el suelo.",
+      "Coloca los codos en el interior de las rodillas y junta las palmas de las manos."
+    ],
+    "tips": [
+      "Mantén el pecho levantado y la espalda recta.",
+      "Empuja suavemente las rodillas hacia fuera con los codos."
+    ],
+    "modifications": [
+      "Si los talones se levantan, coloca una toalla doblada debajo para apoyarte.",
+      "Agárrate a una silla o pared para mantener el equilibrio si es necesario."
+    ],
+    "benefits": ["Rodillas", "Ingle", "Gemelos", "Caderas", "Isquiotibiales", "Cuádriceps", "Zona lumbar", "Glúteos"]
+  },
+  "double_pigeon": {
+    "instructions": [
+      "Comienza sentado en el suelo con las piernas extendidas frente a ti.",
+      "Flexiona una rodilla y coloca la espinilla paralela a los hombros.",
+      "Flexiona la rodilla opuesta, apilando la espinilla sobre la otra y alineando el tobillo sobre la rodilla inferior.",
+      "Siéntate erguido y apoya las manos en el suelo a los lados."
+    ],
+    "tips": [
+      "Mantén la espalda recta y evita redondear la columna.",
+      "Flexiona ambos pies para proteger las rodillas."
+    ],
+    "modifications": [
+      "Realiza el movimiento con una pierna extendida si es necesario."
+    ],
+    "benefits": ["Ingle", "Banda iliotibial", "Caderas", "Isquiotibiales", "Glúteos"]
+  },
+  "reclined_butterfly": {
+    "instructions": [
+      "Comienza tumbado boca arriba con las rodillas flexionadas y los pies planos en el suelo.",
+      "Junta las plantas de los pies y deja que las rodillas caigan hacia los lados.",
+      "Coloca los brazos a lo largo del cuerpo con las palmas hacia arriba."
+    ],
+    "tips": [
+      "Permite que la gravedad abra suavemente las caderas sin forzarlas."
+    ],
+    "modifications": [
+      "Coloca cojines o bloques bajo los muslos exteriores para apoyo."
+    ],
+    "benefits": ["Ingle", "Columna", "Caderas"]
+  },
+  "rag_doll": {
+    "instructions": [
+      "Comienza de pie con los pies separados a la anchura de las caderas y las rodillas ligeramente flexionadas.",
+      "Inhala y extiende los brazos por encima de la cabeza, alargando la columna.",
+      "Exhala y flexiona lentamente hacia delante desde las caderas, dejando que la parte superior del cuerpo cuelgue.",
+      "Agarra los codos opuestos y deja que la cabeza y los brazos cuelguen pesados."
+    ],
+    "tips": [
+      "Mantén el peso distribuido uniformemente entre los talones y la parte delantera de los pies.",
+      "Concéntrate en alargar la columna en lugar de intentar tocar el suelo."
+    ],
+    "modifications": [
+      "Flexiona más las rodillas para evitar forzar la espalda.",
+      "Usa un bloque o silla para apoyar los codos si no llegas al suelo."
+    ],
+    "benefits": ["Gemelos", "Hombros", "Caderas", "Isquiotibiales", "Zona lumbar", "Glúteos"]
+  },
+  "upward_dog": {
+    "instructions": [
+      "Comienza tumbado boca abajo con las piernas extendidas y las manos bajo los hombros.",
+      "Presiona las palmas contra el suelo, estirando los brazos para levantar la parte superior del cuerpo y las piernas del suelo.",
+      "Levanta el pecho, relaja los hombros y mira ligeramente hacia arriba."
+    ],
+    "tips": [
+      "Solo los empeines y las palmas deben tocar el suelo.",
+      "Mantén los brazos rectos pero evita bloquear los codos."
+    ],
+    "modifications": [
+      "Para menor intensidad, mantén los muslos en el suelo."
+    ],
+    "benefits": ["Psoas", "Columna", "Pecho", "Abdomen"]
+  },
+  "childs_pose": {
+    "instructions": [
+      "Comienza a cuatro patas en posición de mesa.",
+      "Separa las rodillas y junta los dedos gordos de los pies.",
+      "Siéntate sobre los talones, estira las manos hacia delante y baja el pecho hacia el suelo.",
+      "Relaja las caderas y apoya la frente en el suelo."
+    ],
+    "tips": [
+      "Camina con las yemas de los dedos hacia delante para aumentar el estiramiento.",
+      "Permite que el pecho descienda hacia el suelo."
+    ],
+    "modifications": [
+      "Para menor intensidad, no separes tanto las rodillas.",
+      "Si la frente no llega al suelo, apóyala sobre un bloque o manta doblada."
+    ],
+    "benefits": ["Pies", "Tibiales", "Hombros", "Caderas", "Zona lumbar", "Tobillos"]
+  },
+  "spinal_twist": {
+    "instructions": [
+      "Comienza tumbado boca arriba con las piernas extendidas y los brazos a los lados.",
+      "Flexiona una rodilla y coloca el pie plano en el suelo.",
+      "Baja suavemente la rodilla flexionada cruzando el cuerpo hacia el lado opuesto, permitiendo que el torso y las caderas giren.",
+      "Coloca la mano opuesta en el exterior de la rodilla flexionada y extiende el otro brazo hacia un lado."
+    ],
+    "tips": [
+      "Mantén los hombros planos en el suelo."
+    ],
+    "modifications": [
+      "Si la torsión es demasiado intensa, coloca un cojín o bloque bajo la rodilla flexionada."
+    ],
+    "benefits": ["Columna", "Banda iliotibial", "Espalda superior", "Oblicuos", "Pecho", "Zona lumbar", "Glúteos"]
+  },
+  "quad_stretch": {
+    "instructions": [
+      "Comienza sentado en el suelo con las piernas extendidas frente a ti.",
+      "Flexiona una rodilla y lleva el talón hacia los glúteos.",
+      "Agarra el tobillo con la mano y tira suavemente del pie para que quede directamente bajo el glúteo.",
+      "Inclínate lentamente hacia atrás para apoyarte sobre los codos."
+    ],
+    "tips": [
+      "Mantén las caderas, rodillas y tobillos alineados.",
+      "Asegúrate de que el pie quede debajo del glúteo y no hacia un lado."
+    ],
+    "modifications": [
+      "Si te cuesta agarrar el tobillo, usa una cinta o toalla alrededor del pie.",
+      "Si sientes molestias en la rodilla, prueba a realizar el ejercicio tumbado de lado."
+    ],
+    "benefits": ["Rodillas", "Tibiales", "Caderas", "Cuádriceps", "Zona lumbar", "Tobillos"]
+  },
+  "legs_up_wall": {
+    "instructions": [
+      "Comienza sentado en el suelo con un lateral de la cadera tocando la pared.",
+      "Túmbate hacia atrás y sube las piernas a la pared en un solo movimiento.",
+      "Acerca las caderas a la pared tanto como sea cómodo y extiende las piernas rectas hacia arriba por la pared.",
+      "Apoya los brazos a los lados con las palmas hacia arriba."
+    ],
+    "tips": [
+      "Mantén las piernas relativamente relajadas y evita bloquear las rodillas."
+    ],
+    "modifications": [
+      "Si los isquiotibiales están tensos, aleja ligeramente las caderas de la pared.",
+      "Coloca un cojín o manta doblada bajo las caderas para mayor comodidad."
+    ],
+    "benefits": ["Caderas", "Isquiotibiales", "Zona lumbar", "Glúteos"]
+  }
+}

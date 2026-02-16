@@ -1,0 +1,16 @@
+{
+  "key": "sleep",
+  "name_key": "mobility_sleep",
+  "total_duration_minutes": 10,
+  "exercises": [
+    {"key": "rag_doll",            "duration_seconds": 60,  "bilateral": true},
+    {"key": "upward_dog",          "duration_seconds": 60,  "bilateral": true},
+    {"key": "childs_pose",         "duration_seconds": 60,  "bilateral": true},
+    {"key": "knees_to_chest",      "duration_seconds": 60,  "bilateral": true},
+    {"key": "happy_baby",          "duration_seconds": 60,  "bilateral": true},
+    {"key": "reclined_butterfly",  "duration_seconds": 60,  "bilateral": true},
+    {"key": "spinal_twist",        "duration_seconds": 30,  "bilateral": false},
+    {"key": "quad_stretch",        "duration_seconds": 30,  "bilateral": false},
+    {"key": "legs_up_wall",        "duration_seconds": 120, "bilateral": true}
+  ]
+}
