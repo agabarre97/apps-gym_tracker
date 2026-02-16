@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
+import 'package:gym_tracker/presentation/components/export_sheet.dart';
 import 'package:gym_tracker/domain/entities/exercise.dart';
 import 'package:gym_tracker/domain/entities/muscle_group.dart';
 import 'package:gym_tracker/domain/entities/routine.dart';
@@ -62,6 +63,13 @@ class _RoutineDetailScreenState extends State<RoutineDetailScreen> {
         .whereType<MuscleGroupCategory>()
         .toList();
   }
+
+  // ── Export ──────────────────────────────────────────────────────
+
+  void _handleExport() => showExportSheet(
+        context,
+        jsonString: _routine.toExportJsonString(),
+      );
 
   // ── Delete ───────────────────────────────────────────────────────
 
@@ -146,6 +154,13 @@ class _RoutineDetailScreenState extends State<RoutineDetailScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_routine.name),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.share),
+            tooltip: l10n.routineExport,
+            onPressed: _handleExport,
+          ),
+        ],
       ),
       body: Column(
         children: [

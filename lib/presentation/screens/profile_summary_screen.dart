@@ -11,10 +11,17 @@ class ProfileSummaryScreen extends StatelessWidget {
     super.key,
     required this.profile,
     required this.storage,
+    this.email,
+    this.onSignOut,
   });
 
   final UserProfile profile;
   final StoragePort storage;
+  final String? email;
+
+  /// If non-null, a sign-out link is shown at the bottom.
+  /// The callback should return true; ProfileSummaryScreen pops with that value.
+  final bool Function()? onSignOut;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +33,31 @@ class ProfileSummaryScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
+          // ── Account email ──
+          if (email != null) ...[
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    const Icon(Icons.email_outlined,
+                        size: 20, color: Colors.white54),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        email!,
+                        style: const TextStyle(
+                          fontSize: 15,
+                          color: Colors.white70,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+          ],
           _SectionCard(
             title: l10n.basicInfoTitle,
             rows: [
@@ -81,6 +113,46 @@ class ProfileSummaryScreen extends StatelessWidget {
                 ),
             ],
           ),
+          // ── Sign out link ──
+          if (onSignOut != null) ...[
+            const SizedBox(height: 32),
+            Center(
+              child: GestureDetector(
+                onTap: () async {
+                  final confirmed = await showDialog<bool>(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                      title: Text(l10n.authSignOut),
+                      content: Text(l10n.authSignOutConfirm),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(ctx).pop(false),
+                          child: Text(l10n.sharedCancel),
+                        ),
+                        FilledButton(
+                          onPressed: () => Navigator.of(ctx).pop(true),
+                          child: Text(l10n.authSignOut),
+                        ),
+                      ],
+                    ),
+                  );
+                  if (confirmed == true && context.mounted) {
+                    Navigator.of(context).pop(onSignOut!());
+                  }
+                },
+                child: Text(
+                  l10n.authSignOut,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: Colors.white38,
+                    decoration: TextDecoration.underline,
+                    decorationColor: Colors.white38,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+          ],
         ],
       ),
     );

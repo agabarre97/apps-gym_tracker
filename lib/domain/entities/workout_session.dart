@@ -1,30 +1,47 @@
 import 'dart:convert';
 
-/// A single set within an exercise: reps and weight (kg, decimals allowed).
+/// A single set within an exercise: reps, weight, and optional rest estimate.
 class ExerciseSet {
   const ExerciseSet({
     required this.reps,
     required this.weight,
+    this.estimatedRestSeconds,
   });
 
   final int reps;
 
-  /// Weight in kilograms (decimals allowed, e.g. 2.5).
+  /// Weight in kilograms (decimals allowed, max 2 decimal places).
   final double weight;
+
+  /// Estimated rest time in seconds before this set was started.
+  /// Computed from the time between the last edit of the previous set and
+  /// the first edit of this set. `null` for the first set or when unavailable.
+  final int? estimatedRestSeconds;
 
   Map<String, dynamic> toJson() => {
         'reps': reps,
         'weight': weight,
+        if (estimatedRestSeconds != null)
+          'estimatedRestSeconds': estimatedRestSeconds,
       };
 
   factory ExerciseSet.fromJson(Map<String, dynamic> json) => ExerciseSet(
         reps: json['reps'] as int,
         weight: (json['weight'] as num).toDouble(),
+        estimatedRestSeconds: json['estimatedRestSeconds'] as int?,
       );
 
-  ExerciseSet copyWith({int? reps, double? weight}) => ExerciseSet(
+  ExerciseSet copyWith({
+    int? reps,
+    double? weight,
+    int? estimatedRestSeconds,
+    bool clearRest = false,
+  }) =>
+      ExerciseSet(
         reps: reps ?? this.reps,
         weight: weight ?? this.weight,
+        estimatedRestSeconds:
+            clearRest ? null : (estimatedRestSeconds ?? this.estimatedRestSeconds),
       );
 }
 

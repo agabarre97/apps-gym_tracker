@@ -104,4 +104,126 @@ void main() {
       expect(copy.type, 'musculacion');
     });
   });
+
+  group('Routine export', () {
+    test('toExportJson excludes id', () {
+      const routine = Routine(
+        id: 'r1',
+        name: 'Push day',
+        type: 'musculacion',
+        days: [
+          RoutineDay(
+            muscleGroups: ['pectoral', 'triceps'],
+            exerciseKeys: ['press_banca', 'fondos'],
+          ),
+        ],
+      );
+
+      final export = routine.toExportJson();
+      expect(export.containsKey('id'), isFalse);
+      expect(export['version'], Routine.exportVersion);
+      expect(export['name'], 'Push day');
+      expect(export['type'], 'musculacion');
+      expect((export['days'] as List).length, 1);
+    });
+
+    test('toExportJson includes recommendedRoutineKey when set', () {
+      const routine = Routine(
+        id: 'r1',
+        name: 'Mobility',
+        type: 'movilidad',
+        days: [],
+        recommendedRoutineKey: 'feet_ankles_2',
+      );
+
+      final export = routine.toExportJson();
+      expect(export.containsKey('id'), isFalse);
+      expect(export['recommendedRoutineKey'], 'feet_ankles_2');
+    });
+
+    test('toExportJsonString produces valid parseable JSON', () {
+      const routine = Routine(
+        id: 'r1',
+        name: 'Test',
+        type: 'musculacion',
+        days: [
+          RoutineDay(muscleGroups: ['espalda'], exerciseKeys: ['dominadas']),
+        ],
+      );
+
+      final jsonStr = routine.toExportJsonString();
+      final restored = Routine.fromImportJsonString(jsonStr, id: 'new-id');
+      expect(restored.id, 'new-id');
+      expect(restored.name, 'Test');
+      expect(restored.type, 'musculacion');
+      expect(restored.days.length, 1);
+      expect(restored.days[0].exerciseKeys, ['dominadas']);
+    });
+  });
+
+  group('Routine import', () {
+    test('fromImportJsonString parses valid export JSON', () {
+      const json = '{"name":"Push","type":"musculacion","days":'
+          '[{"muscleGroups":["pectoral"],"exerciseKeys":["press_banca"]}]}';
+
+      final routine = Routine.fromImportJsonString(json, id: 'abc');
+      expect(routine.id, 'abc');
+      expect(routine.name, 'Push');
+      expect(routine.type, 'musculacion');
+      expect(routine.days.length, 1);
+    });
+
+    test('fromImportJsonString throws on invalid JSON', () {
+      expect(
+        () => Routine.fromImportJsonString('not json', id: 'x'),
+        throwsFormatException,
+      );
+    });
+
+    test('fromImportJsonString throws on non-object JSON', () {
+      expect(
+        () => Routine.fromImportJsonString('[1,2]', id: 'x'),
+        throwsFormatException,
+      );
+    });
+
+    test('fromImportJsonString throws when name is missing', () {
+      expect(
+        () => Routine.fromImportJsonString(
+          '{"type":"musculacion","days":[]}',
+          id: 'x',
+        ),
+        throwsFormatException,
+      );
+    });
+
+    test('fromImportJsonString throws when type is missing', () {
+      expect(
+        () => Routine.fromImportJsonString(
+          '{"name":"Test","days":[]}',
+          id: 'x',
+        ),
+        throwsFormatException,
+      );
+    });
+
+    test('fromImportJsonString throws when days is empty list', () {
+      expect(
+        () => Routine.fromImportJsonString(
+          '{"name":"Test","type":"musculacion","days":[]}',
+          id: 'x',
+        ),
+        throwsFormatException,
+      );
+    });
+
+    test('fromImportJsonString preserves recommendedRoutineKey', () {
+      const json = '{"name":"Mob","type":"movilidad","days":'
+          '[{"muscleGroups":[],"exerciseKeys":[]}],'
+          '"recommendedRoutineKey":"feet_ankles_2"}';
+
+      final routine = Routine.fromImportJsonString(json, id: 'abc');
+      expect(routine.recommendedRoutineKey, 'feet_ankles_2');
+    });
+  });
 }

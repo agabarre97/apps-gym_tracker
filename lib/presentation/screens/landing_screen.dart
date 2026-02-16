@@ -5,7 +5,9 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:gym_tracker/domain/entities/exercise.dart';
 import 'package:gym_tracker/domain/entities/routine.dart';
 import 'package:gym_tracker/domain/entities/training_day.dart';
+import 'package:gym_tracker/domain/ports/auth_port.dart';
 import 'package:gym_tracker/domain/ports/profile_port.dart';
+import 'package:gym_tracker/domain/ports/sync_port.dart';
 import 'package:gym_tracker/domain/ports/routine_port.dart';
 import 'package:gym_tracker/domain/ports/storage_port.dart';
 import 'package:gym_tracker/domain/ports/training_day_port.dart';
@@ -14,6 +16,7 @@ import 'package:gym_tracker/domain/ports/mobility_session_port.dart';
 import 'package:gym_tracker/domain/entities/workout_session.dart';
 import 'package:gym_tracker/presentation/components/language_selector.dart';
 import 'package:gym_tracker/presentation/components/routine_type_helper.dart';
+import 'package:gym_tracker/presentation/screens/auth/auth_screen.dart';
 import 'package:gym_tracker/presentation/screens/profile_summary_screen.dart';
 import 'package:gym_tracker/presentation/screens/routine/create_routine_flow.dart';
 import 'package:gym_tracker/presentation/screens/routine/routine_detail_screen.dart';
@@ -38,6 +41,8 @@ class LandingScreen extends StatefulWidget {
     required this.workoutSessionPort,
     required this.mobilitySessionPort,
     required this.onLocaleChanged,
+    this.authPort,
+    this.syncedStorage,
   });
 
   final StoragePort storage;
@@ -47,6 +52,8 @@ class LandingScreen extends StatefulWidget {
   final WorkoutSessionPort workoutSessionPort;
   final MobilitySessionPort mobilitySessionPort;
   final ValueChanged<Locale> onLocaleChanged;
+  final AuthPort? authPort;
+  final SyncPort? syncedStorage;
 
   @override
   State<LandingScreen> createState() => _LandingScreenState();
@@ -453,20 +460,54 @@ class _LandingScreenState extends State<LandingScreen> {
     }
   }
 
+  // ── Sign out ───────────────────────────────────────────────────
+
+  Future<void> _executeSignOut() async {
+    final authPort = widget.authPort;
+    if (authPort == null) return;
+
+    await authPort.signOut();
+    widget.syncedStorage?.setUserId(null);
+
+    if (!mounted) return;
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(
+        builder: (_) => _SignedOutRedirect(
+          authPort: authPort,
+          syncedStorage: widget.syncedStorage!,
+          profilePort: widget.profilePort,
+          storage: widget.storage,
+          routinePort: widget.routinePort,
+          trainingDayPort: widget.trainingDayPort,
+          workoutSessionPort: widget.workoutSessionPort,
+          mobilitySessionPort: widget.mobilitySessionPort,
+          onLocaleChanged: widget.onLocaleChanged,
+        ),
+      ),
+      (_) => false,
+    );
+  }
+
   // ── Navigation ─────────────────────────────────────────────────
 
   Future<void> _goToProfile() async {
     final profile = await widget.profilePort.loadProfile();
     if (!mounted || profile == null) return;
 
-    Navigator.of(context).push(
+    final signedOut = await Navigator.of(context).push<bool>(
       MaterialPageRoute(
         builder: (_) => ProfileSummaryScreen(
           profile: profile,
           storage: widget.storage,
+          email: widget.authPort?.currentUser?.email,
+          onSignOut: widget.authPort != null ? () => true : null,
         ),
       ),
     );
+
+    if (signedOut == true && mounted) {
+      await _executeSignOut();
+    }
   }
 
   // ── Build ──────────────────────────────────────────────────────
@@ -499,9 +540,14 @@ class _LandingScreenState extends State<LandingScreen> {
                     ),
                     onPressed: _goToProfile,
                   ),
-                  // Language toggle
-                  LanguageSelector(
-                    onLocaleChanged: widget.onLocaleChanged,
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Language toggle
+                      LanguageSelector(
+                        onLocaleChanged: widget.onLocaleChanged,
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -765,6 +811,56 @@ class _RoutineTile extends StatelessWidget {
         trailing: const Icon(Icons.chevron_right, color: Colors.white38),
         onTap: onTap,
       ),
+    );
+  }
+}
+
+/// Helper widget that re-shows the AuthScreen after sign-out.
+class _SignedOutRedirect extends StatelessWidget {
+  const _SignedOutRedirect({
+    required this.authPort,
+    required this.syncedStorage,
+    required this.profilePort,
+    required this.storage,
+    required this.routinePort,
+    required this.trainingDayPort,
+    required this.workoutSessionPort,
+    required this.mobilitySessionPort,
+    required this.onLocaleChanged,
+  });
+
+  final AuthPort authPort;
+  final SyncPort syncedStorage;
+  final ProfilePort profilePort;
+  final StoragePort storage;
+  final RoutinePort routinePort;
+  final TrainingDayPort trainingDayPort;
+  final WorkoutSessionPort workoutSessionPort;
+  final MobilitySessionPort mobilitySessionPort;
+  final ValueChanged<Locale> onLocaleChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return AuthScreen(
+      authPort: authPort,
+      syncedStorage: syncedStorage,
+      onAuthenticated: (authContext) {
+        Navigator.of(authContext).pushReplacement(
+          MaterialPageRoute(
+            builder: (_) => LandingScreen(
+              storage: storage,
+              profilePort: profilePort,
+              routinePort: routinePort,
+              trainingDayPort: trainingDayPort,
+              workoutSessionPort: workoutSessionPort,
+              mobilitySessionPort: mobilitySessionPort,
+              onLocaleChanged: onLocaleChanged,
+              authPort: authPort,
+              syncedStorage: syncedStorage,
+            ),
+          ),
+        );
+      },
     );
   }
 }

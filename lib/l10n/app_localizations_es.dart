@@ -61,6 +61,52 @@ class AppLocalizationsEs extends AppLocalizations {
   String get sharedSave => 'Guardar';
 
   @override
+  String get authSignIn => 'Iniciar sesión';
+
+  @override
+  String get authSignUp => 'Crear cuenta';
+
+  @override
+  String get authEmail => 'Correo electrónico';
+
+  @override
+  String get authPassword => 'Contraseña';
+
+  @override
+  String get authSignInWithGoogle => 'Continuar con Google';
+
+  @override
+  String get authSignOut => 'Cerrar sesión';
+
+  @override
+  String get authSignOutConfirm => '¿Quieres cerrar sesión?';
+
+  @override
+  String get authErrorWrongPassword => 'Contraseña incorrecta';
+
+  @override
+  String get authErrorEmailInUse => 'Este correo ya está registrado';
+
+  @override
+  String get authErrorInvalidEmail => 'Correo electrónico no válido';
+
+  @override
+  String get authErrorWeakPassword =>
+      'La contraseña debe tener al menos 6 caracteres';
+
+  @override
+  String get authErrorUserNotFound => 'No existe una cuenta con este correo';
+
+  @override
+  String get authErrorGeneric => 'Error de autenticación. Inténtalo de nuevo';
+
+  @override
+  String get authSyncing => 'Sincronizando datos...';
+
+  @override
+  String get authOr => 'O';
+
+  @override
   String get loadingMotto => 'Improve yourself';
 
   @override
@@ -312,6 +358,30 @@ class AppLocalizationsEs extends AppLocalizations {
   String get routineViewProgress => 'Ver progreso';
 
   @override
+  String get routineExport => 'Exportar';
+
+  @override
+  String get routineExportCopy => 'Copiar al portapapeles';
+
+  @override
+  String get routineExportShare => 'Compartir';
+
+  @override
+  String get routineExportCopied => 'Rutina copiada al portapapeles';
+
+  @override
+  String get routineImport => 'Importar rutina';
+
+  @override
+  String get routineImportHint => 'Pega aquí el JSON de la rutina';
+
+  @override
+  String get routineImportSuccess => 'Rutina importada correctamente';
+
+  @override
+  String get routineImportError => 'JSON no válido o formato incorrecto';
+
+  @override
   String get progressTitle => 'Progreso';
 
   @override
@@ -349,6 +419,24 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get progressNoData => 'No hay datos en este periodo';
+
+  @override
+  String get progressHeaviestSet => 'Serie más pesada';
+
+  @override
+  String get progressCompareTitle => 'Comparar días';
+
+  @override
+  String get progressDay1 => 'Día 1';
+
+  @override
+  String get progressDay2 => 'Día 2';
+
+  @override
+  String get progressCompareXLabel => 'Peso (kg)';
+
+  @override
+  String get progressCompareYLabel => 'Repeticiones';
 
   @override
   String get workoutPickRoutine => 'Elige una rutina';
@@ -402,6 +490,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get workoutSaveChanges => 'Guardar cambios';
+
+  @override
+  String workoutAvgRest(String rest) {
+    return 'Descanso medio: $rest';
+  }
 
   @override
   String get workoutSessionsForDay => 'Entrenamientos del día';

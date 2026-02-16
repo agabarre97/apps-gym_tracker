@@ -1,11 +1,14 @@
 plugins {
     id "com.android.application"
+    // START: FlutterFire Configuration
+    id 'com.google.gms.google-services'
+    // END: FlutterFire Configuration
     id "kotlin-android"
     id "dev.flutter.flutter-gradle-plugin"
 }
 
 android {
-    namespace = "com.example.gym_tracker"
+    namespace = "com.agabarre.gymtracker"
     compileSdk = 34
     ndkVersion = flutter.ndkVersion
 
@@ -19,8 +22,8 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.gym_tracker"
-        minSdk = 21
+        applicationId = "com.agabarre.gymtracker"
+        minSdk = 23
         targetSdk = 34
         versionCode = 1
         versionName = "1.0.0"

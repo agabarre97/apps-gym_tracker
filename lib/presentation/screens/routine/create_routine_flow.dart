@@ -69,6 +69,76 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
     _exercisesLoaded = true;
   }
 
+  // ── Import ────────────────────────────────────────────────────
+
+  Future<void> _onImport() async {
+    final l10n = AppLocalizations.of(context)!;
+    final controller = TextEditingController();
+
+    final jsonString = await showModalBottomSheet<String>(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (ctx) => Padding(
+        padding: EdgeInsets.fromLTRB(
+          24,
+          24,
+          24,
+          24 + MediaQuery.of(ctx).viewInsets.bottom,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              l10n.routineImport,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: controller,
+              maxLines: 8,
+              decoration: InputDecoration(
+                hintText: l10n.routineImportHint,
+                border: const OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 16),
+            FilledButton(
+              onPressed: () => Navigator.of(ctx).pop(controller.text),
+              child: Text(l10n.routineImport),
+            ),
+            const SizedBox(height: 8),
+          ],
+        ),
+      ),
+    );
+
+    if (jsonString == null || jsonString.trim().isEmpty || !mounted) return;
+
+    try {
+      final routine = Routine.fromImportJsonString(
+        jsonString,
+        id: _uuid.v4(),
+      );
+      final updated = [...widget.existingRoutines, routine];
+      await widget.routinePort.saveRoutines(updated);
+
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.routineImportSuccess)),
+      );
+      Navigator.of(context).pop(true);
+    } on FormatException {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.routineImportError)),
+      );
+    }
+  }
+
   // ── Forward navigation ────────────────────────────────────────
 
   void _onTypeSelected(String type) {
@@ -272,6 +342,7 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
         return RoutineTypeScreen(
           onTypeSelected: _onTypeSelected,
           onBack: () => Navigator.of(context).pop(),
+          onImport: _onImport,
         );
       case _Step.mobilitySubType:
         return MobilitySubTypeScreen(

@@ -162,5 +162,91 @@ void main() {
 
       expect(find.text('No hay datos en este periodo'), findsOneWidget);
     });
+
+    testWidgets('heaviest set card is shown when data exists', (tester) async {
+      await seedSessions();
+      await tester.pumpWidget(buildScreen());
+      await tester.pumpAndSettle();
+
+      // Should display the heaviest set label
+      expect(find.text('Serie más pesada'), findsOneWidget);
+
+      // Heaviest set is 65kg x 8 reps from the 2nd session
+      expect(find.textContaining('65kg'), findsOneWidget);
+    });
+
+    testWidgets('heaviest set card hidden when no data', (tester) async {
+      await tester.pumpWidget(buildScreen());
+      await tester.pumpAndSettle();
+
+      expect(find.text('Serie más pesada'), findsNothing);
+    });
+
+    testWidgets('compare days section shown when 2+ dates available',
+        (tester) async {
+      await seedSessions();
+      await tester.pumpWidget(buildScreen());
+      await tester.pumpAndSettle();
+
+      // Scroll down to find the comparison section
+      await tester.scrollUntilVisible(
+        find.text('Comparar días'),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+
+      expect(find.text('Comparar días'), findsOneWidget);
+      expect(find.text('Día 1'), findsOneWidget);
+      expect(find.text('Día 2'), findsOneWidget);
+    });
+
+    testWidgets('compare days section hidden when <2 dates', (tester) async {
+      // Only 1 session → can't compare
+      await fakePort.saveSessions([
+        WorkoutSession(
+          id: 's1',
+          routineId: 'r1',
+          routineDayIndex: 0,
+          date: DateTime(2026, 1, 10),
+          exercises: [
+            const WorkoutExercise(
+              exerciseKey: 'bench_press',
+              sets: [ExerciseSet(reps: 10, weight: 50)],
+              completed: true,
+            ),
+          ],
+        ),
+      ]);
+
+      await tester.pumpWidget(buildScreen());
+      await tester.pumpAndSettle();
+
+      expect(find.text('Comparar días'), findsNothing);
+    });
+
+    testWidgets('day selector opens bottom sheet with dates', (tester) async {
+      await seedSessions();
+      await tester.pumpWidget(buildScreen());
+      await tester.pumpAndSettle();
+
+      // Scroll to comparison section
+      await tester.scrollUntilVisible(
+        find.text('Día 1'),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+
+      // Tap on "Day 1" selector
+      await tester.tap(find.text('Día 1'));
+      await tester.pumpAndSettle();
+
+      // A bottom sheet should appear containing ListTile items with the dates.
+      // The dates also appear in the selector button and chart legend,
+      // so we look for ListTile widgets inside the sheet.
+      expect(find.byType(ListTile), findsAtLeast(2));
+      // Both dates should appear somewhere (selector + legend + sheet)
+      expect(find.text('05/02/2026'), findsAtLeast(1));
+      expect(find.text('10/01/2026'), findsAtLeast(1));
+    });
   });
 }

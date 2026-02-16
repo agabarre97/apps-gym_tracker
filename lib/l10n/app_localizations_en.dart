@@ -61,6 +61,51 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sharedSave => 'Save';
 
   @override
+  String get authSignIn => 'Sign in';
+
+  @override
+  String get authSignUp => 'Create account';
+
+  @override
+  String get authEmail => 'Email';
+
+  @override
+  String get authPassword => 'Password';
+
+  @override
+  String get authSignInWithGoogle => 'Continue with Google';
+
+  @override
+  String get authSignOut => 'Sign out';
+
+  @override
+  String get authSignOutConfirm => 'Do you want to sign out?';
+
+  @override
+  String get authErrorWrongPassword => 'Wrong password';
+
+  @override
+  String get authErrorEmailInUse => 'This email is already registered';
+
+  @override
+  String get authErrorInvalidEmail => 'Invalid email address';
+
+  @override
+  String get authErrorWeakPassword => 'Password must be at least 6 characters';
+
+  @override
+  String get authErrorUserNotFound => 'No account found with this email';
+
+  @override
+  String get authErrorGeneric => 'Authentication error. Please try again';
+
+  @override
+  String get authSyncing => 'Syncing data...';
+
+  @override
+  String get authOr => 'OR';
+
+  @override
   String get loadingMotto => 'Improve yourself';
 
   @override
@@ -310,6 +355,30 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routineViewProgress => 'View progress';
 
   @override
+  String get routineExport => 'Export';
+
+  @override
+  String get routineExportCopy => 'Copy to clipboard';
+
+  @override
+  String get routineExportShare => 'Share';
+
+  @override
+  String get routineExportCopied => 'Routine copied to clipboard';
+
+  @override
+  String get routineImport => 'Import routine';
+
+  @override
+  String get routineImportHint => 'Paste routine JSON here';
+
+  @override
+  String get routineImportSuccess => 'Routine imported successfully';
+
+  @override
+  String get routineImportError => 'Invalid JSON or wrong format';
+
+  @override
   String get progressTitle => 'Progress';
 
   @override
@@ -347,6 +416,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get progressNoData => 'No data for this period';
+
+  @override
+  String get progressHeaviestSet => 'Heaviest set';
+
+  @override
+  String get progressCompareTitle => 'Compare days';
+
+  @override
+  String get progressDay1 => 'Day 1';
+
+  @override
+  String get progressDay2 => 'Day 2';
+
+  @override
+  String get progressCompareXLabel => 'Weight (kg)';
+
+  @override
+  String get progressCompareYLabel => 'Reps';
 
   @override
   String get workoutPickRoutine => 'Choose a routine';
@@ -400,6 +487,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get workoutSaveChanges => 'Save changes';
+
+  @override
+  String workoutAvgRest(String rest) {
+    return 'Avg rest: $rest';
+  }
 
   @override
   String get workoutSessionsForDay => 'Sessions for this day';

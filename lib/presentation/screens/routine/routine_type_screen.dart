@@ -9,10 +9,12 @@ class RoutineTypeScreen extends StatelessWidget {
     super.key,
     required this.onTypeSelected,
     required this.onBack,
+    this.onImport,
   });
 
   final ValueChanged<String> onTypeSelected;
   final VoidCallback onBack;
+  final VoidCallback? onImport;
 
   @override
   Widget build(BuildContext context) {
@@ -43,21 +45,49 @@ class RoutineTypeScreen extends StatelessWidget {
           onPressed: onBack,
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: GridView.count(
-          crossAxisCount: 2,
-          mainAxisSpacing: 16,
-          crossAxisSpacing: 16,
-          childAspectRatio: 1.1,
-          children: types
-              .map((t) => SelectableOptionGridCard(
-                    option: t,
-                    comingSoonLabel: l10n.routineComingSoon,
-                    onTap: t.enabled ? () => onTypeSelected(t.key) : null,
-                  ))
-              .toList(),
-        ),
+      body: Column(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: GridView.count(
+                crossAxisCount: 2,
+                mainAxisSpacing: 16,
+                crossAxisSpacing: 16,
+                childAspectRatio: 1.1,
+                children: types
+                    .map((t) => SelectableOptionGridCard(
+                          option: t,
+                          comingSoonLabel: l10n.routineComingSoon,
+                          onTap:
+                              t.enabled ? () => onTypeSelected(t.key) : null,
+                        ))
+                    .toList(),
+              ),
+            ),
+          ),
+          if (onImport != null)
+            SafeArea(
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: OutlinedButton.icon(
+                    icon: const Icon(Icons.file_download_outlined),
+                    label: Text(l10n.routineImport),
+                    style: OutlinedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    onPressed: onImport,
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }

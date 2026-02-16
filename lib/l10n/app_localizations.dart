@@ -194,6 +194,96 @@ abstract class AppLocalizations {
   /// **'Guardar'**
   String get sharedSave;
 
+  /// No description provided for @authSignIn.
+  ///
+  /// In es, this message translates to:
+  /// **'Iniciar sesión'**
+  String get authSignIn;
+
+  /// No description provided for @authSignUp.
+  ///
+  /// In es, this message translates to:
+  /// **'Crear cuenta'**
+  String get authSignUp;
+
+  /// No description provided for @authEmail.
+  ///
+  /// In es, this message translates to:
+  /// **'Correo electrónico'**
+  String get authEmail;
+
+  /// No description provided for @authPassword.
+  ///
+  /// In es, this message translates to:
+  /// **'Contraseña'**
+  String get authPassword;
+
+  /// No description provided for @authSignInWithGoogle.
+  ///
+  /// In es, this message translates to:
+  /// **'Continuar con Google'**
+  String get authSignInWithGoogle;
+
+  /// No description provided for @authSignOut.
+  ///
+  /// In es, this message translates to:
+  /// **'Cerrar sesión'**
+  String get authSignOut;
+
+  /// No description provided for @authSignOutConfirm.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Quieres cerrar sesión?'**
+  String get authSignOutConfirm;
+
+  /// No description provided for @authErrorWrongPassword.
+  ///
+  /// In es, this message translates to:
+  /// **'Contraseña incorrecta'**
+  String get authErrorWrongPassword;
+
+  /// No description provided for @authErrorEmailInUse.
+  ///
+  /// In es, this message translates to:
+  /// **'Este correo ya está registrado'**
+  String get authErrorEmailInUse;
+
+  /// No description provided for @authErrorInvalidEmail.
+  ///
+  /// In es, this message translates to:
+  /// **'Correo electrónico no válido'**
+  String get authErrorInvalidEmail;
+
+  /// No description provided for @authErrorWeakPassword.
+  ///
+  /// In es, this message translates to:
+  /// **'La contraseña debe tener al menos 6 caracteres'**
+  String get authErrorWeakPassword;
+
+  /// No description provided for @authErrorUserNotFound.
+  ///
+  /// In es, this message translates to:
+  /// **'No existe una cuenta con este correo'**
+  String get authErrorUserNotFound;
+
+  /// No description provided for @authErrorGeneric.
+  ///
+  /// In es, this message translates to:
+  /// **'Error de autenticación. Inténtalo de nuevo'**
+  String get authErrorGeneric;
+
+  /// No description provided for @authSyncing.
+  ///
+  /// In es, this message translates to:
+  /// **'Sincronizando datos...'**
+  String get authSyncing;
+
+  /// No description provided for @authOr.
+  ///
+  /// In es, this message translates to:
+  /// **'O'**
+  String get authOr;
+
   /// No description provided for @loadingMotto.
   ///
   /// In es, this message translates to:
@@ -656,6 +746,54 @@ abstract class AppLocalizations {
   /// **'Ver progreso'**
   String get routineViewProgress;
 
+  /// No description provided for @routineExport.
+  ///
+  /// In es, this message translates to:
+  /// **'Exportar'**
+  String get routineExport;
+
+  /// No description provided for @routineExportCopy.
+  ///
+  /// In es, this message translates to:
+  /// **'Copiar al portapapeles'**
+  String get routineExportCopy;
+
+  /// No description provided for @routineExportShare.
+  ///
+  /// In es, this message translates to:
+  /// **'Compartir'**
+  String get routineExportShare;
+
+  /// No description provided for @routineExportCopied.
+  ///
+  /// In es, this message translates to:
+  /// **'Rutina copiada al portapapeles'**
+  String get routineExportCopied;
+
+  /// No description provided for @routineImport.
+  ///
+  /// In es, this message translates to:
+  /// **'Importar rutina'**
+  String get routineImport;
+
+  /// No description provided for @routineImportHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Pega aquí el JSON de la rutina'**
+  String get routineImportHint;
+
+  /// No description provided for @routineImportSuccess.
+  ///
+  /// In es, this message translates to:
+  /// **'Rutina importada correctamente'**
+  String get routineImportSuccess;
+
+  /// No description provided for @routineImportError.
+  ///
+  /// In es, this message translates to:
+  /// **'JSON no válido o formato incorrecto'**
+  String get routineImportError;
+
   /// No description provided for @progressTitle.
   ///
   /// In es, this message translates to:
@@ -733,6 +871,42 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'No hay datos en este periodo'**
   String get progressNoData;
+
+  /// No description provided for @progressHeaviestSet.
+  ///
+  /// In es, this message translates to:
+  /// **'Serie más pesada'**
+  String get progressHeaviestSet;
+
+  /// No description provided for @progressCompareTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Comparar días'**
+  String get progressCompareTitle;
+
+  /// No description provided for @progressDay1.
+  ///
+  /// In es, this message translates to:
+  /// **'Día 1'**
+  String get progressDay1;
+
+  /// No description provided for @progressDay2.
+  ///
+  /// In es, this message translates to:
+  /// **'Día 2'**
+  String get progressDay2;
+
+  /// No description provided for @progressCompareXLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Peso (kg)'**
+  String get progressCompareXLabel;
+
+  /// No description provided for @progressCompareYLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Repeticiones'**
+  String get progressCompareYLabel;
 
   /// No description provided for @workoutPickRoutine.
   ///
@@ -835,6 +1009,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Guardar cambios'**
   String get workoutSaveChanges;
+
+  /// No description provided for @workoutAvgRest.
+  ///
+  /// In es, this message translates to:
+  /// **'Descanso medio: {rest}'**
+  String workoutAvgRest(String rest);
 
   /// No description provided for @workoutSessionsForDay.
   ///

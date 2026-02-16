@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-
 import 'package:gym_tracker/domain/entities/mobility_routine.dart';
 import 'package:gym_tracker/domain/entities/routine.dart';
 import 'package:gym_tracker/domain/ports/mobility_session_port.dart';
 import 'package:gym_tracker/domain/ports/routine_port.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
 import 'package:gym_tracker/presentation/components/delete_routine_dialog.dart';
+import 'package:gym_tracker/presentation/components/export_sheet.dart';
 import 'package:gym_tracker/presentation/components/mobility_exercise_tile.dart';
 import 'package:gym_tracker/presentation/screens/mobility/mobility_timer_screen.dart';
 
@@ -60,6 +60,11 @@ class _MobilityRoutineDetailScreenState
     }
   }
 
+  void _handleExport() => showExportSheet(
+        context,
+        jsonString: widget.routine.toExportJsonString(),
+      );
+
   Future<void> _confirmDelete() async {
     final confirmed = await showDeleteRoutineDialog(
       context,
@@ -96,7 +101,16 @@ class _MobilityRoutineDetailScreenState
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBar(title: Text(widget.routine.name)),
+      appBar: AppBar(
+        title: Text(widget.routine.name),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.share),
+            tooltip: l10n.routineExport,
+            onPressed: _handleExport,
+          ),
+        ],
+      ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : _mobilityRoutine == null

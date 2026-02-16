@@ -85,6 +85,60 @@ class Routine {
         recommendedRoutineKey: recommendedRoutineKey ?? this.recommendedRoutineKey,
       );
 
+  /// Current export format version — bump when the schema changes.
+  static const int exportVersion = 1;
+
+  /// Generates a portable JSON map for export (excludes `id`).
+  Map<String, dynamic> toExportJson() => {
+        'version': exportVersion,
+        'name': name,
+        'type': type,
+        'days': days.map((d) => d.toJson()).toList(),
+        if (recommendedRoutineKey != null)
+          'recommendedRoutineKey': recommendedRoutineKey,
+      };
+
+  /// Generates a portable JSON string for export (excludes `id`).
+  String toExportJsonString() =>
+      const JsonEncoder.withIndent('  ').convert(toExportJson());
+
+  /// Parses a portable export JSON string and returns a [Routine] with the
+  /// given [id]. Throws [FormatException] if the JSON is invalid or missing
+  /// required fields.
+  static Routine fromImportJsonString(String source, {required String id}) {
+    final dynamic decoded;
+    try {
+      decoded = jsonDecode(source);
+    } catch (_) {
+      throw const FormatException('Invalid JSON');
+    }
+    if (decoded is! Map<String, dynamic>) {
+      throw const FormatException('Expected a JSON object');
+    }
+    final name = decoded['name'];
+    final type = decoded['type'];
+    final days = decoded['days'];
+    if (name is! String || name.isEmpty) {
+      throw const FormatException('Missing or empty "name"');
+    }
+    if (type is! String || type.isEmpty) {
+      throw const FormatException('Missing or empty "type"');
+    }
+    if (days is! List || days.isEmpty) {
+      throw const FormatException('Missing or empty "days"');
+    }
+    return Routine(
+      id: id,
+      name: name,
+      type: type,
+      days: days
+          .cast<Map<String, dynamic>>()
+          .map(RoutineDay.fromJson)
+          .toList(),
+      recommendedRoutineKey: decoded['recommendedRoutineKey'] as String?,
+    );
+  }
+
   static List<Routine> listFromJsonString(String source) =>
       (jsonDecode(source) as List)
           .cast<Map<String, dynamic>>()

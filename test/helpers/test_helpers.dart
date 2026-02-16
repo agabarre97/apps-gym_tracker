@@ -3,15 +3,18 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:gym_tracker/domain/entities/routine.dart';
 import 'package:gym_tracker/domain/entities/training_day.dart';
 import 'package:gym_tracker/domain/entities/user_profile.dart';
+import 'package:gym_tracker/domain/ports/auth_port.dart';
 import 'package:gym_tracker/domain/ports/profile_port.dart';
 import 'package:gym_tracker/domain/ports/routine_port.dart';
 import 'package:gym_tracker/domain/ports/storage_port.dart';
+import 'package:gym_tracker/domain/ports/sync_port.dart';
 import 'package:gym_tracker/domain/entities/workout_session.dart';
 import 'package:gym_tracker/domain/ports/training_day_port.dart';
 import 'package:gym_tracker/domain/entities/mobility_session.dart';
 import 'package:gym_tracker/domain/ports/mobility_session_port.dart';
 import 'package:gym_tracker/domain/ports/workout_session_port.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
+import 'package:gym_tracker/presentation/theme/app_theme.dart';
 
 /// In-memory implementation of [StoragePort] for testing.
 class FakeStoragePort implements StoragePort {
@@ -100,6 +103,83 @@ class FakeProfilePort implements ProfilePort {
   Future<bool> isProfileCompleted() async => _completed;
 }
 
+/// In-memory implementation of [AuthPort] for testing.
+///
+/// Set [simulatedUser] to simulate an authenticated state at construction
+/// or call [signInWithEmail] / [signOut] to change state dynamically.
+///
+/// Set [shouldThrow] to a code string to make sign-in/sign-up methods
+/// throw an [AuthException] with that code (simulates auth errors).
+class FakeAuthPort implements AuthPort {
+  FakeAuthPort({this.simulatedUser});
+
+  AuthUser? simulatedUser;
+  String? shouldThrow;
+
+  @override
+  AuthUser? get currentUser => simulatedUser;
+
+  @override
+  Stream<AuthUser?> get authStateChanges => Stream.value(simulatedUser);
+
+  void _throwIfNeeded() {
+    if (shouldThrow != null) {
+      throw AuthException(code: shouldThrow!);
+    }
+  }
+
+  @override
+  Future<AuthUser> signInWithEmail(String email, String password) async {
+    _throwIfNeeded();
+    final user = AuthUser(uid: 'fake-uid', email: email);
+    simulatedUser = user;
+    return user;
+  }
+
+  @override
+  Future<AuthUser> signUpWithEmail(String email, String password) async {
+    _throwIfNeeded();
+    final user = AuthUser(uid: 'fake-uid', email: email);
+    simulatedUser = user;
+    return user;
+  }
+
+  @override
+  Future<AuthUser> signInWithGoogle() async {
+    _throwIfNeeded();
+    final user = AuthUser(uid: 'google-uid', email: 'test@gmail.com');
+    simulatedUser = user;
+    return user;
+  }
+
+  @override
+  Future<void> signOut() async {
+    simulatedUser = null;
+  }
+}
+
+/// In-memory no-op implementation of [SyncPort] for testing.
+class FakeSyncPort implements SyncPort {
+  String? userId;
+  int pullCount = 0;
+  int pushCount = 0;
+  List<String> lastPushedKeys = [];
+
+  @override
+  void setUserId(String? uid) => userId = uid;
+
+  @override
+  Future<void> pullFromCloud({Duration timeout = const Duration(seconds: 10)}) async {
+    pullCount++;
+  }
+
+  @override
+  Future<void> pushToCloud(List<String> keys) async {
+    pushCount++;
+    lastPushedKeys = keys;
+  }
+}
+
 /// Wraps a widget with MaterialApp and localization support for widget tests.
 Widget buildTestableWidget(
   Widget child, {
@@ -114,16 +194,7 @@ Widget buildTestableWidget(
       GlobalWidgetsLocalizations.delegate,
       GlobalCupertinoLocalizations.delegate,
     ],
-    theme: ThemeData(
-      useMaterial3: true,
-      brightness: Brightness.dark,
-      scaffoldBackgroundColor: const Color(0xFF1C1C1E),
-      colorScheme: const ColorScheme.dark(
-        surface: Color(0xFF2C2C2E),
-        primary: Colors.white,
-        onSurface: Colors.white,
-      ),
-    ),
+    theme: buildAppTheme(),
     home: child,
   );
 }

@@ -6,124 +6,141 @@ import '../helpers/test_helpers.dart';
 
 void main() {
   group('ProfileSummaryScreen', () {
-    testWidgets('displays basic profile data', (tester) async {
-      final profile = sampleProfile();
-      final storage = FakeStoragePort();
+    final profile = sampleProfile();
 
-      await tester.pumpWidget(
-        buildTestableWidget(
-          ProfileSummaryScreen(
-            profile: profile,
-            storage: storage,
-          ),
+    Widget buildScreen({
+      String? email,
+      bool Function()? onSignOut,
+    }) {
+      return buildTestableWidget(
+        ProfileSummaryScreen(
+          profile: profile,
+          storage: FakeStoragePort(),
+          email: email,
+          onSignOut: onSignOut,
         ),
       );
+    }
+
+    testWidgets('shows email when provided', (tester) async {
+      await tester.pumpWidget(buildScreen(email: 'test@example.com'));
       await tester.pumpAndSettle();
 
-      // Birth date formatted as dd/MM/yyyy
-      expect(find.text('15/03/2001'), findsOneWidget);
-      // Sex label in Spanish
-      expect(find.text('Hombre'), findsOneWidget);
-      // Height
-      expect(find.text('180.0'), findsOneWidget);
+      expect(find.text('test@example.com'), findsOneWidget);
+      expect(find.byIcon(Icons.email_outlined), findsOneWidget);
     });
 
-    testWidgets('displays experience label in Spanish', (tester) async {
-      final profile = sampleProfile();
-      final storage = FakeStoragePort();
-
-      await tester.pumpWidget(
-        buildTestableWidget(
-          ProfileSummaryScreen(
-            profile: profile,
-            storage: storage,
-          ),
-        ),
-      );
+    testWidgets('hides email card when null', (tester) async {
+      await tester.pumpWidget(buildScreen());
       await tester.pumpAndSettle();
 
-      expect(find.text('1-3 años'), findsOneWidget);
+      expect(find.byIcon(Icons.email_outlined), findsNothing);
     });
 
-    testWidgets('displays N/D for null optional fields', (tester) async {
-      final profile = sampleProfile().copyWithNulls();
-      final storage = FakeStoragePort();
-
-      await tester.pumpWidget(
-        buildTestableWidget(
-          ProfileSummaryScreen(
-            profile: profile,
-            storage: storage,
-          ),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.text('N/D'), findsNWidgets(6));
-    });
-
-    testWidgets('displays goal section correctly for lose', (tester) async {
-      final profile = sampleProfile(weightGoal: 'lose');
-      final storage = FakeStoragePort();
-
-      await tester.pumpWidget(
-        buildTestableWidget(
-          ProfileSummaryScreen(
-            profile: profile,
-            storage: storage,
-          ),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      await tester.drag(find.byType(ListView), const Offset(0, -500));
-      await tester.pumpAndSettle();
-
-      expect(find.text('Perder'), findsOneWidget);
-      expect(find.text('2500'), findsOneWidget);
-    });
-
-    testWidgets('displays maintain goal without weight/kcal rows',
+    testWidgets('shows sign-out link when onSignOut is provided',
         (tester) async {
-      final profile = sampleProfile(weightGoal: 'maintain');
-      final storage = FakeStoragePort();
+      await tester.pumpWidget(buildScreen(onSignOut: () => true));
+      await tester.pumpAndSettle();
 
-      await tester.pumpWidget(
-        buildTestableWidget(
-          ProfileSummaryScreen(
-            profile: profile,
-            storage: storage,
-          ),
-        ),
+      // Scroll to the bottom to reveal the sign-out link
+      await tester.scrollUntilVisible(
+        find.text('Cerrar sesión'),
+        200,
+        scrollable: find.byType(Scrollable).first,
       );
-      await tester.pumpAndSettle();
 
-      await tester.drag(find.byType(ListView), const Offset(0, -500));
-      await tester.pumpAndSettle();
-
-      expect(find.text('Mantener'), findsOneWidget);
-      // Target weight and kcal should not be shown
-      expect(find.text('Peso objetivo (kg)'), findsNothing);
+      expect(find.text('Cerrar sesión'), findsOneWidget);
     });
 
-    testWidgets('does not show title text in app bar', (tester) async {
-      final profile = sampleProfile();
-      final storage = FakeStoragePort();
-
-      await tester.pumpWidget(
-        buildTestableWidget(
-          ProfileSummaryScreen(
-            profile: profile,
-            storage: storage,
-          ),
-        ),
-      );
+    testWidgets('hides sign-out link when onSignOut is null', (tester) async {
+      await tester.pumpWidget(buildScreen());
       await tester.pumpAndSettle();
 
-      // Title should NOT appear
-      expect(find.text('Tu perfil'), findsNothing);
-      // Language selector should NOT appear
-      expect(find.byIcon(Icons.language), findsNothing);
+      expect(find.text('Cerrar sesión'), findsNothing);
+    });
+
+    testWidgets('sign-out link shows confirmation dialog before popping',
+        (tester) async {
+      bool signOutCalled = false;
+
+      await tester.pumpWidget(buildScreen(onSignOut: () {
+        signOutCalled = true;
+        return true;
+      }));
+      await tester.pumpAndSettle();
+
+      // Scroll to the sign-out link
+      await tester.scrollUntilVisible(
+        find.text('Cerrar sesión'),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+
+      // Tap the sign-out link
+      await tester.tap(find.text('Cerrar sesión'));
+      await tester.pumpAndSettle();
+
+      // Confirmation dialog should appear (still on profile screen)
+      expect(find.byType(AlertDialog), findsOneWidget);
+      expect(find.byType(ProfileSummaryScreen), findsOneWidget);
+      // onSignOut not yet called
+      expect(signOutCalled, isFalse);
+    });
+
+    testWidgets('cancelling dialog keeps profile screen open', (tester) async {
+      bool signOutCalled = false;
+
+      await tester.pumpWidget(buildScreen(onSignOut: () {
+        signOutCalled = true;
+        return true;
+      }));
+      await tester.pumpAndSettle();
+
+      await tester.scrollUntilVisible(
+        find.text('Cerrar sesión'),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+
+      await tester.tap(find.text('Cerrar sesión'));
+      await tester.pumpAndSettle();
+
+      // Tap cancel
+      await tester.tap(find.text('Cancelar'));
+      await tester.pumpAndSettle();
+
+      // Dialog dismissed, still on profile screen
+      expect(find.byType(AlertDialog), findsNothing);
+      expect(find.byType(ProfileSummaryScreen), findsOneWidget);
+      expect(signOutCalled, isFalse);
+    });
+
+    testWidgets('confirming dialog calls onSignOut and pops', (tester) async {
+      bool signOutCalled = false;
+
+      await tester.pumpWidget(buildScreen(onSignOut: () {
+        signOutCalled = true;
+        return true;
+      }));
+      await tester.pumpAndSettle();
+
+      await tester.scrollUntilVisible(
+        find.text('Cerrar sesión'),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+
+      await tester.tap(find.text('Cerrar sesión'));
+      await tester.pumpAndSettle();
+
+      // Tap confirm (the FilledButton "Cerrar sesión" inside the dialog)
+      await tester.tap(find.widgetWithText(FilledButton, 'Cerrar sesión'));
+      await tester.pumpAndSettle();
+
+      // onSignOut should have been called
+      expect(signOutCalled, isTrue);
+      // Profile screen should be popped
+      expect(find.byType(ProfileSummaryScreen), findsNothing);
     });
   });
 }

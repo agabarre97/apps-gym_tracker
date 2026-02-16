@@ -1,4 +1,4 @@
-.PHONY: help run format test analyze clean gen-l10n build-apk build-ios pub-get lint fix
+.PHONY: help run format test analyze clean gen-l10n build-apk build-ios pub-get lint fix fix-snap
 
 ## ─── Default ────────────────────────────────────────────────────────────────
 
@@ -8,10 +8,13 @@ help: ## Show this help message
 
 ## ─── Development ────────────────────────────────────────────────────────────
 
-run: ## Run the app in debug mode (auto-detects device)
+fix-snap: ## Patch Flutter snap with missing native tools (requires sudo, idempotent)
+	@./scripts/fix-flutter-snap.sh
+
+run: fix-snap ## Run the app in debug mode (auto-detects device)
 	flutter run
 
-run-linux: ## Run the app on Linux desktop
+run-linux: fix-snap ## Run the app on Linux desktop
 	flutter run -d linux
 
 run-chrome: ## Run the app on Chrome (web)

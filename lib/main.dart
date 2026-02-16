@@ -1,27 +1,74 @@
+import 'dart:developer' as dev;
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart' show kIsWeb, defaultTargetPlatform, TargetPlatform;
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:gym_tracker/data/datasources/firebase_auth_datasource.dart';
 import 'package:gym_tracker/data/datasources/local_storage_datasource.dart';
 import 'package:gym_tracker/data/datasources/profile_datasource.dart';
 import 'package:gym_tracker/data/datasources/routine_datasource.dart';
+import 'package:gym_tracker/data/datasources/synced_storage_datasource.dart';
 import 'package:gym_tracker/data/datasources/training_day_datasource.dart';
+import 'package:gym_tracker/domain/ports/sync_port.dart';
 import 'package:gym_tracker/data/datasources/workout_session_datasource.dart';
 import 'package:gym_tracker/data/datasources/mobility_session_datasource.dart';
+import 'package:gym_tracker/domain/ports/auth_port.dart';
 import 'package:gym_tracker/domain/ports/profile_port.dart';
 import 'package:gym_tracker/domain/ports/routine_port.dart';
 import 'package:gym_tracker/domain/ports/storage_port.dart';
 import 'package:gym_tracker/domain/ports/training_day_port.dart';
 import 'package:gym_tracker/domain/ports/workout_session_port.dart';
 import 'package:gym_tracker/domain/ports/mobility_session_port.dart';
+import 'package:gym_tracker/firebase_options.dart';
 import 'package:gym_tracker/presentation/components/language_selector.dart';
 import 'package:gym_tracker/presentation/screens/loading_screen.dart';
+import 'package:gym_tracker/presentation/theme/app_theme.dart';
+
+/// Returns true if the current platform supports Firebase (Android, iOS, web).
+bool get _firebaseSupported {
+  if (kIsWeb) return true;
+  return defaultTargetPlatform == TargetPlatform.android ||
+      defaultTargetPlatform == TargetPlatform.iOS;
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   final prefs = await SharedPreferences.getInstance();
-  final StoragePort storage = LocalStorageDatasource(prefs);
+  final localStorage = LocalStorageDatasource(prefs);
+
+  AuthPort? authPort;
+  SyncedStorageDatasource? syncedStorage;
+  StoragePort storage = localStorage;
+
+  if (_firebaseSupported) {
+    try {
+      await Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform);
+
+      authPort = FirebaseAuthDatasource();
+      syncedStorage = SyncedStorageDatasource(
+        local: localStorage,
+        firestore: FirebaseFirestore.instance,
+      );
+
+      if (authPort.currentUser != null) {
+        syncedStorage.setUserId(authPort.currentUser!.uid);
+      }
+
+      storage = syncedStorage;
+    } catch (e) {
+      dev.log('Firebase init failed, falling back to local-only: $e');
+    }
+  } else {
+    dev.log('Firebase not supported on this platform, using local storage');
+  }
+
   final ProfilePort profilePort = ProfileDatasource(storage);
   final RoutinePort routinePort = RoutineDatasource(storage);
   final TrainingDayPort trainingDayPort = TrainingDayDatasource(storage);
@@ -29,8 +76,11 @@ void main() async {
       WorkoutSessionDatasource(storage);
   final MobilitySessionPort mobilitySessionPort =
       MobilitySessionDatasource(storage);
+
   runApp(GymTrackerApp(
     storage: storage,
+    syncedStorage: syncedStorage,
+    authPort: authPort,
     profilePort: profilePort,
     routinePort: routinePort,
     trainingDayPort: trainingDayPort,
@@ -43,6 +93,8 @@ class GymTrackerApp extends StatefulWidget {
   const GymTrackerApp({
     super.key,
     required this.storage,
+    this.syncedStorage,
+    this.authPort,
     required this.profilePort,
     required this.routinePort,
     required this.trainingDayPort,
@@ -51,6 +103,8 @@ class GymTrackerApp extends StatefulWidget {
   });
 
   final StoragePort storage;
+  final SyncPort? syncedStorage;
+  final AuthPort? authPort;
   final ProfilePort profilePort;
   final RoutinePort routinePort;
   final TrainingDayPort trainingDayPort;
@@ -64,11 +118,6 @@ class GymTrackerApp extends StatefulWidget {
 class _GymTrackerAppState extends State<GymTrackerApp> {
   late final LocaleStorage _localeStorage;
   Locale _locale = const Locale('es');
-
-  // App-wide color constants
-  static const _scaffoldBg = Color(0xFF1C1C1E);
-  static const _surfaceColor = Color(0xFF2C2C2E);
-  static const _cardColor = Color(0xFF3A3A3C);
 
   @override
   void initState() {
@@ -92,23 +141,7 @@ class _GymTrackerAppState extends State<GymTrackerApp> {
     return MaterialApp(
       title: 'Gym Tracker',
       debugShowCheckedModeBanner: false,
-      // Dark gray theme — friendlier than pure black
-      theme: ThemeData(
-        useMaterial3: true,
-        brightness: Brightness.dark,
-        scaffoldBackgroundColor: _scaffoldBg,
-        cardColor: _cardColor,
-        colorScheme: const ColorScheme.dark(
-          surface: _surfaceColor,
-          primary: Colors.white,
-          onSurface: Colors.white,
-        ),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: _surfaceColor,
-          foregroundColor: Colors.white,
-        ),
-        cardTheme: const CardThemeData(color: _cardColor),
-      ),
+      theme: buildAppTheme(),
       // i18n
       locale: _locale,
       supportedLocales: AppLocalizations.supportedLocales,
@@ -119,6 +152,8 @@ class _GymTrackerAppState extends State<GymTrackerApp> {
         GlobalCupertinoLocalizations.delegate,
       ],
       home: LoadingScreen(
+        authPort: widget.authPort,
+        syncedStorage: widget.syncedStorage,
         profilePort: widget.profilePort,
         storage: widget.storage,
         routinePort: widget.routinePort,

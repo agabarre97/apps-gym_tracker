@@ -17,6 +17,40 @@ void main() {
       expect(updated.reps, 12);
       expect(updated.weight, 60);
     });
+
+    test('JSON round-trip with estimatedRestSeconds', () {
+      const set = ExerciseSet(reps: 10, weight: 60, estimatedRestSeconds: 90);
+      final json = set.toJson();
+      expect(json['estimatedRestSeconds'], 90);
+      final restored = ExerciseSet.fromJson(json);
+      expect(restored.estimatedRestSeconds, 90);
+    });
+
+    test('backward compatibility: JSON without estimatedRestSeconds', () {
+      final json = {'reps': 8, 'weight': 55.0};
+      final restored = ExerciseSet.fromJson(json);
+      expect(restored.reps, 8);
+      expect(restored.weight, 55.0);
+      expect(restored.estimatedRestSeconds, isNull);
+    });
+
+    test('estimatedRestSeconds omitted from JSON when null', () {
+      const set = ExerciseSet(reps: 10, weight: 60);
+      final json = set.toJson();
+      expect(json.containsKey('estimatedRestSeconds'), isFalse);
+    });
+
+    test('copyWith clearRest sets estimatedRestSeconds to null', () {
+      const set = ExerciseSet(reps: 10, weight: 60, estimatedRestSeconds: 45);
+      final cleared = set.copyWith(clearRest: true);
+      expect(cleared.estimatedRestSeconds, isNull);
+    });
+
+    test('copyWith preserves estimatedRestSeconds when not cleared', () {
+      const set = ExerciseSet(reps: 10, weight: 60, estimatedRestSeconds: 45);
+      final updated = set.copyWith(reps: 12);
+      expect(updated.estimatedRestSeconds, 45);
+    });
   });
 
   group('WorkoutExercise', () {

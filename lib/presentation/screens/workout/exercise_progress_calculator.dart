@@ -60,20 +60,36 @@ class ProgressResult {
   );
 }
 
+/// The heaviest single set recorded for an exercise (nullable for no-data).
+class HeaviestSet {
+  const HeaviestSet({
+    required this.weight,
+    required this.reps,
+    required this.date,
+  });
+
+  final double weight;
+  final int reps;
+  final DateTime date;
+}
+
+/// Data for comparing sets between two training days.
+class DayComparisonData {
+  const DayComparisonData({
+    required this.date,
+    required this.sets,
+  });
+
+  final DateTime date;
+  final List<ExerciseSet> sets;
+}
+
 /// Computes exercise progress from workout session history.
 class ExerciseProgressCalculator {
   const ExerciseProgressCalculator._();
 
   /// Computes progress for a specific exercise within a routine + day,
   /// filtered to the given period and metric.
-  ///
-  /// - [sessions]: all workout sessions.
-  /// - [routineId]: the routine to filter by.
-  /// - [routineDayIndex]: the day index (0-based) to filter by.
-  /// - [exerciseKey]: the exercise to track.
-  /// - [periodMonths]: how many months back from [now] to include.
-  /// - [metric]: which metric to compute.
-  /// - [now]: current date (injectable for testing).
   static ProgressResult compute({
     required List<WorkoutSession> sessions,
     required String routineId,
@@ -86,14 +102,12 @@ class ExerciseProgressCalculator {
     final today = now ?? DateTime.now();
     final cutoff = DateTime(today.year, today.month - periodMonths, today.day);
 
-    // 1. Filter sessions by routine + day + date range
     final filtered = sessions.where((s) =>
         s.routineId == routineId &&
         s.routineDayIndex == routineDayIndex &&
         !s.date.isBefore(cutoff) &&
         !s.date.isAfter(today));
 
-    // 2. For each session, extract the exercise and compute the metric
     final Map<DateTime, List<double>> byDate = {};
     for (final session in filtered) {
       final matches =
@@ -107,8 +121,6 @@ class ExerciseProgressCalculator {
 
     if (byDate.isEmpty) return ProgressResult.empty;
 
-    // 3. Aggregate multiple sessions on the same date
-    //    volume / totalReps → sum; maxWeight → max
     final points = <ProgressDataPoint>[];
     final sortedDates = byDate.keys.toList()..sort();
 
@@ -129,6 +141,91 @@ class ExerciseProgressCalculator {
       minValue: allValues.reduce(math.min),
       maxValue: allValues.reduce(math.max),
     );
+  }
+
+  /// Finds the heaviest single set across ALL sessions for this exercise
+  /// (regardless of period filter).
+  static HeaviestSet? computeHeaviestSet({
+    required List<WorkoutSession> sessions,
+    required String routineId,
+    required int routineDayIndex,
+    required String exerciseKey,
+  }) {
+    double maxWeight = -1;
+    int maxReps = 0;
+    DateTime? maxDate;
+
+    for (final session in sessions) {
+      if (session.routineId != routineId ||
+          session.routineDayIndex != routineDayIndex) {
+        continue;
+      }
+      for (final ex in session.exercises) {
+        if (ex.exerciseKey != exerciseKey) continue;
+        for (final s in ex.sets) {
+          if (s.weight > maxWeight ||
+              (s.weight == maxWeight && s.reps > maxReps)) {
+            maxWeight = s.weight;
+            maxReps = s.reps;
+            maxDate = session.date;
+          }
+        }
+      }
+    }
+
+    if (maxDate == null || maxWeight <= 0) return null;
+    return HeaviestSet(weight: maxWeight, reps: maxReps, date: maxDate);
+  }
+
+  /// Returns the list of unique training dates for this exercise
+  /// (sorted descending, newest first).
+  static List<DateTime> availableDates({
+    required List<WorkoutSession> sessions,
+    required String routineId,
+    required int routineDayIndex,
+    required String exerciseKey,
+  }) {
+    final dates = <DateTime>{};
+    for (final session in sessions) {
+      if (session.routineId != routineId ||
+          session.routineDayIndex != routineDayIndex) {
+        continue;
+      }
+      final hasExercise =
+          session.exercises.any((e) => e.exerciseKey == exerciseKey);
+      if (hasExercise) {
+        dates.add(DateTime(
+            session.date.year, session.date.month, session.date.day));
+      }
+    }
+    final sorted = dates.toList()..sort((a, b) => b.compareTo(a));
+    return sorted;
+  }
+
+  /// Returns the sets for a specific exercise on a specific date.
+  static DayComparisonData? setsForDate({
+    required List<WorkoutSession> sessions,
+    required String routineId,
+    required int routineDayIndex,
+    required String exerciseKey,
+    required DateTime date,
+  }) {
+    final norm = DateTime(date.year, date.month, date.day);
+    for (final session in sessions) {
+      if (session.routineId != routineId ||
+          session.routineDayIndex != routineDayIndex) {
+        continue;
+      }
+      final sessionDate = DateTime(
+          session.date.year, session.date.month, session.date.day);
+      if (sessionDate != norm) continue;
+      for (final ex in session.exercises) {
+        if (ex.exerciseKey == exerciseKey) {
+          return DayComparisonData(date: norm, sets: ex.sets);
+        }
+      }
+    }
+    return null;
   }
 
   static double _computeMetric(WorkoutExercise ex, ProgressMetric metric) {

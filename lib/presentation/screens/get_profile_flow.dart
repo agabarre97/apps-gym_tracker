@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
 
 import 'package:gym_tracker/domain/entities/user_profile.dart';
+import 'package:gym_tracker/domain/ports/auth_port.dart';
+import 'package:gym_tracker/domain/ports/sync_port.dart';
 import 'package:gym_tracker/domain/ports/profile_port.dart';
 import 'package:gym_tracker/domain/ports/routine_port.dart';
 import 'package:gym_tracker/domain/ports/storage_port.dart';
@@ -27,6 +29,8 @@ class GetProfileFlow extends StatefulWidget {
     required this.workoutSessionPort,
     required this.mobilitySessionPort,
     required this.onLocaleChanged,
+    this.authPort,
+    this.syncedStorage,
   });
 
   final ProfilePort profilePort;
@@ -36,6 +40,8 @@ class GetProfileFlow extends StatefulWidget {
   final WorkoutSessionPort workoutSessionPort;
   final MobilitySessionPort mobilitySessionPort;
   final ValueChanged<Locale> onLocaleChanged;
+  final AuthPort? authPort;
+  final SyncPort? syncedStorage;
 
   @override
   State<GetProfileFlow> createState() => _GetProfileFlowState();
@@ -144,6 +150,8 @@ class _GetProfileFlowState extends State<GetProfileFlow> {
           workoutSessionPort: widget.workoutSessionPort,
           mobilitySessionPort: widget.mobilitySessionPort,
           onLocaleChanged: widget.onLocaleChanged,
+          authPort: widget.authPort,
+          syncedStorage: widget.syncedStorage,
         ),
       ),
     );

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "333040356574",
+    "firebase_url": "https://agabarre-gym-tracker-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "agabarre-gym-tracker",
+    "storage_bucket": "agabarre-gym-tracker.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:333040356574:android:d983093173c006181f064f",
+        "android_client_info": {
+          "package_name": "com.agabarre.gymtracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "333040356574-puouf83lklv3cmv8ar2av9hn7le7r32i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzNDC8AsddzqUTFHIkKoUbnrsbpQWBDU4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "333040356574-puouf83lklv3cmv8ar2av9hn7le7r32i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

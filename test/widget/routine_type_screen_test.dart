@@ -55,5 +55,54 @@ void main() {
       await tester.tap(find.text('Musculación'));
       expect(selectedType, 'musculacion');
     });
+
+    testWidgets('import button is shown when onImport is provided',
+        (tester) async {
+      await tester.pumpWidget(
+        buildTestableWidget(
+          RoutineTypeScreen(
+            onTypeSelected: (_) {},
+            onBack: () {},
+            onImport: () {},
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Importar rutina'), findsOneWidget);
+    });
+
+    testWidgets('import button is hidden when onImport is null',
+        (tester) async {
+      await tester.pumpWidget(
+        buildTestableWidget(
+          RoutineTypeScreen(
+            onTypeSelected: (_) {},
+            onBack: () {},
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Importar rutina'), findsNothing);
+    });
+
+    testWidgets('tapping import button calls onImport', (tester) async {
+      bool importCalled = false;
+
+      await tester.pumpWidget(
+        buildTestableWidget(
+          RoutineTypeScreen(
+            onTypeSelected: (_) {},
+            onBack: () {},
+            onImport: () => importCalled = true,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Importar rutina'));
+      expect(importCalled, isTrue);
+    });
   });
 }

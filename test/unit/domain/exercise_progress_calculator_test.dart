@@ -388,4 +388,230 @@ void main() {
       expect(result.firstValue, 0);
     });
   });
+
+  group('computeHeaviestSet', () {
+    test('returns null when no matching sessions', () {
+      final result = ExerciseProgressCalculator.computeHeaviestSet(
+        sessions: [],
+        routineId: 'r1',
+        routineDayIndex: 0,
+        exerciseKey: 'bench_press',
+      );
+      expect(result, isNull);
+    });
+
+    test('finds the heaviest single set across all sessions', () {
+      final sessions = [
+        makeSession(
+          date: DateTime(2026, 1, 5),
+          exercises: [
+            makeExercise(sets: [
+              const ExerciseSet(reps: 10, weight: 50),
+              const ExerciseSet(reps: 8, weight: 70),
+            ]),
+          ],
+        ),
+        makeSession(
+          date: DateTime(2026, 1, 20),
+          exercises: [
+            makeExercise(sets: [
+              const ExerciseSet(reps: 6, weight: 80),
+              const ExerciseSet(reps: 4, weight: 75),
+            ]),
+          ],
+        ),
+      ];
+
+      final result = ExerciseProgressCalculator.computeHeaviestSet(
+        sessions: sessions,
+        routineId: 'r1',
+        routineDayIndex: 0,
+        exerciseKey: 'bench_press',
+      );
+
+      expect(result, isNotNull);
+      expect(result!.weight, 80);
+      expect(result.reps, 6);
+      expect(result.date, DateTime(2026, 1, 20));
+    });
+
+    test('when same weight, picks the one with more reps', () {
+      final sessions = [
+        makeSession(
+          date: DateTime(2026, 1, 5),
+          exercises: [
+            makeExercise(sets: [
+              const ExerciseSet(reps: 8, weight: 80),
+            ]),
+          ],
+        ),
+        makeSession(
+          date: DateTime(2026, 1, 20),
+          exercises: [
+            makeExercise(sets: [
+              const ExerciseSet(reps: 10, weight: 80),
+            ]),
+          ],
+        ),
+      ];
+
+      final result = ExerciseProgressCalculator.computeHeaviestSet(
+        sessions: sessions,
+        routineId: 'r1',
+        routineDayIndex: 0,
+        exerciseKey: 'bench_press',
+      );
+
+      expect(result!.weight, 80);
+      expect(result.reps, 10);
+    });
+
+    test('filters by routine and day', () {
+      final sessions = [
+        makeSession(
+          date: DateTime(2026, 1, 5),
+          routineId: 'r2',
+          exercises: [
+            makeExercise(sets: [
+              const ExerciseSet(reps: 5, weight: 200),
+            ]),
+          ],
+        ),
+        makeSession(
+          date: DateTime(2026, 1, 10),
+          routineId: 'r1',
+          dayIndex: 0,
+          exercises: [
+            makeExercise(sets: [
+              const ExerciseSet(reps: 10, weight: 60),
+            ]),
+          ],
+        ),
+      ];
+
+      final result = ExerciseProgressCalculator.computeHeaviestSet(
+        sessions: sessions,
+        routineId: 'r1',
+        routineDayIndex: 0,
+        exerciseKey: 'bench_press',
+      );
+
+      expect(result!.weight, 60);
+    });
+  });
+
+  group('availableDates', () {
+    test('returns dates sorted descending (newest first)', () {
+      final sessions = [
+        makeSession(
+          date: DateTime(2026, 1, 5),
+          exercises: [
+            makeExercise(sets: [const ExerciseSet(reps: 10, weight: 50)]),
+          ],
+        ),
+        makeSession(
+          date: DateTime(2026, 2, 10),
+          exercises: [
+            makeExercise(sets: [const ExerciseSet(reps: 10, weight: 60)]),
+          ],
+        ),
+        makeSession(
+          date: DateTime(2026, 1, 20),
+          exercises: [
+            makeExercise(sets: [const ExerciseSet(reps: 10, weight: 55)]),
+          ],
+        ),
+      ];
+
+      final dates = ExerciseProgressCalculator.availableDates(
+        sessions: sessions,
+        routineId: 'r1',
+        routineDayIndex: 0,
+        exerciseKey: 'bench_press',
+      );
+
+      expect(dates.length, 3);
+      expect(dates[0], DateTime(2026, 2, 10));
+      expect(dates[1], DateTime(2026, 1, 20));
+      expect(dates[2], DateTime(2026, 1, 5));
+    });
+
+    test('filters by routine, day, and exercise', () {
+      final sessions = [
+        makeSession(
+          date: DateTime(2026, 1, 5),
+          routineId: 'r1',
+          dayIndex: 0,
+          exercises: [
+            makeExercise(
+              key: 'bench_press',
+              sets: [const ExerciseSet(reps: 10, weight: 50)],
+            ),
+          ],
+        ),
+        makeSession(
+          date: DateTime(2026, 1, 10),
+          routineId: 'r2',
+          dayIndex: 0,
+          exercises: [
+            makeExercise(
+              key: 'bench_press',
+              sets: [const ExerciseSet(reps: 10, weight: 50)],
+            ),
+          ],
+        ),
+      ];
+
+      final dates = ExerciseProgressCalculator.availableDates(
+        sessions: sessions,
+        routineId: 'r1',
+        routineDayIndex: 0,
+        exerciseKey: 'bench_press',
+      );
+
+      expect(dates.length, 1);
+      expect(dates[0], DateTime(2026, 1, 5));
+    });
+  });
+
+  group('setsForDate', () {
+    test('returns sets for matching date', () {
+      final sessions = [
+        makeSession(
+          date: DateTime(2026, 1, 10),
+          exercises: [
+            makeExercise(sets: [
+              const ExerciseSet(reps: 10, weight: 50),
+              const ExerciseSet(reps: 8, weight: 55),
+            ]),
+          ],
+        ),
+      ];
+
+      final result = ExerciseProgressCalculator.setsForDate(
+        sessions: sessions,
+        routineId: 'r1',
+        routineDayIndex: 0,
+        exerciseKey: 'bench_press',
+        date: DateTime(2026, 1, 10),
+      );
+
+      expect(result, isNotNull);
+      expect(result!.sets.length, 2);
+      expect(result.sets[0].weight, 50);
+      expect(result.sets[1].weight, 55);
+    });
+
+    test('returns null when no matching date', () {
+      final result = ExerciseProgressCalculator.setsForDate(
+        sessions: [],
+        routineId: 'r1',
+        routineDayIndex: 0,
+        exerciseKey: 'bench_press',
+        date: DateTime(2026, 1, 10),
+      );
+
+      expect(result, isNull);
+    });
+  });
 }

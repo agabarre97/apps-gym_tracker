@@ -31,6 +31,23 @@
   "sharedCancel": "Cancelar",
   "sharedSave": "Guardar",
 
+  "@@_AUTH": "Pantalla de autenticación",
+  "authSignIn": "Iniciar sesión",
+  "authSignUp": "Crear cuenta",
+  "authEmail": "Correo electrónico",
+  "authPassword": "Contraseña",
+  "authSignInWithGoogle": "Continuar con Google",
+  "authSignOut": "Cerrar sesión",
+  "authSignOutConfirm": "¿Quieres cerrar sesión?",
+  "authErrorWrongPassword": "Contraseña incorrecta",
+  "authErrorEmailInUse": "Este correo ya está registrado",
+  "authErrorInvalidEmail": "Correo electrónico no válido",
+  "authErrorWeakPassword": "La contraseña debe tener al menos 6 caracteres",
+  "authErrorUserNotFound": "No existe una cuenta con este correo",
+  "authErrorGeneric": "Error de autenticación. Inténtalo de nuevo",
+  "authSyncing": "Sincronizando datos...",
+  "authOr": "O",
+
   "@@_LOADING": "Pantalla de carga",
   "loadingMotto": "Improve yourself",
 
@@ -152,6 +169,14 @@
   "routineDelete": "Eliminar",
   "routineEditDay": "Editar",
   "routineViewProgress": "Ver progreso",
+  "routineExport": "Exportar",
+  "routineExportCopy": "Copiar al portapapeles",
+  "routineExportShare": "Compartir",
+  "routineExportCopied": "Rutina copiada al portapapeles",
+  "routineImport": "Importar rutina",
+  "routineImportHint": "Pega aquí el JSON de la rutina",
+  "routineImportSuccess": "Rutina importada correctamente",
+  "routineImportError": "JSON no válido o formato incorrecto",
 
   "@@_PROGRESS": "Pantalla de progreso de ejercicio",
   "progressTitle": "Progreso",
@@ -167,6 +192,12 @@
   "progressMinValue": "Mínimo",
   "progressMaxValue": "Máximo",
   "progressNoData": "No hay datos en este periodo",
+  "progressHeaviestSet": "Serie más pesada",
+  "progressCompareTitle": "Comparar días",
+  "progressDay1": "Día 1",
+  "progressDay2": "Día 2",
+  "progressCompareXLabel": "Peso (kg)",
+  "progressCompareYLabel": "Repeticiones",
 
   "@@_WORKOUT": "Flujo de entrenamiento",
   "workoutPickRoutine": "Elige una rutina",
@@ -191,6 +222,12 @@
   "workoutElapsed": "Tiempo",
   "workoutNoRoutines": "Crea una rutina primero",
   "workoutSaveChanges": "Guardar cambios",
+  "workoutAvgRest": "Descanso medio: {rest}",
+  "@workoutAvgRest": {
+    "placeholders": {
+      "rest": { "type": "String" }
+    }
+  },
   "workoutSessionsForDay": "Entrenamientos del día",
   "workoutSessionTime": "{start} - {end}",
   "@workoutSessionTime": {
