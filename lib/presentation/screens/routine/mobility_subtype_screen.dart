@@ -22,7 +22,7 @@ class MobilitySubTypeScreen extends StatelessWidget {
         key: 'cadera',
         label: l10n.mobilityCadera,
         icon: Icons.accessibility_new,
-        enabled: false,
+        enabled: true,
       ),
       SelectableOption(
         key: 'tobillos',

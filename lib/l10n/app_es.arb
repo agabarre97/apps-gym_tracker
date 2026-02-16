@@ -76,6 +76,8 @@
   "mobilityRecommendedRoutine": "Rutina recomendada",
   "mobilityChooseOption": "Elige una opción",
   "mobilityFeetAnkles2": "Pies y tobillos 2",
+  "mobilityPelvicTilt": "Inclinación Pélvica",
+  "mobilityHips": "Caderas",
 
   "@@_MOBILITY_TIMER": "Pantalla de temporizador de movilidad",
   "mobilityTimerTitle": "Movilidad",
@@ -104,6 +106,28 @@
   "mobilityToeStretch": "Estiramiento de dedos",
   "mobilityThunderbolt": "Postura del rayo",
   "mobilityToeSquat": "Sentadilla de dedos",
+
+  "@@_MOBILITY_EXERCISES_PELVIC_TILT": "Ejercicios de la rutina Inclinación Pélvica",
+  "mobilityPelvicTiltExercise": "Inclinación pélvica",
+  "mobilityGluteBridge": "Puente de glúteos",
+  "mobilityKneesToChest": "Rodillas al pecho",
+  "mobilitySingleKneeToChest": "Rodilla al pecho",
+  "mobilityLyingQuadStretch": "Estiramiento de cuádriceps tumbado",
+  "mobilityKneelingHipFlexor": "Flexor de cadera de rodillas",
+  "mobilityCatCow": "Gato-Vaca",
+  "mobilitySeatedButterfly": "Mariposa sentada",
+  "mobilityLyingFigureFour": "Figura cuatro tumbado",
+
+  "@@_MOBILITY_EXERCISES_HIPS": "Ejercicios de la rutina Caderas",
+  "mobilityLizardPose": "Postura del lagarto",
+  "mobilityPigeon": "Paloma",
+  "mobilityFoldedButterfly": "Mariposa plegada",
+  "mobilityHappyBaby": "Bebé feliz",
+  "mobilityFrogPose": "Postura de la rana",
+  "mobilitySquatStretch": "Estiramiento en sentadilla",
+  "mobilityDoublePigeon": "Doble paloma",
+  "mobilityReclinedButterfly": "Mariposa reclinada",
+
   "mobilityRoutineNotFound": "No se encontró la rutina de movilidad",
   "mobilityRoutineDuration": "{minutes} min",
   "@mobilityRoutineDuration": {

@@ -1,0 +1,16 @@
+{
+  "key": "hips",
+  "name_key": "mobility_hips",
+  "total_duration_minutes": 13,
+  "exercises": [
+    {"key": "lizard_pose",        "duration_seconds": 60, "bilateral": false},
+    {"key": "pigeon",             "duration_seconds": 60, "bilateral": false},
+    {"key": "folded_butterfly",   "duration_seconds": 60, "bilateral": true},
+    {"key": "happy_baby",         "duration_seconds": 60, "bilateral": true},
+    {"key": "lying_figure_four",  "duration_seconds": 60, "bilateral": false},
+    {"key": "frog_pose",          "duration_seconds": 60, "bilateral": true},
+    {"key": "squat_stretch",      "duration_seconds": 60, "bilateral": true},
+    {"key": "double_pigeon",      "duration_seconds": 60, "bilateral": false},
+    {"key": "reclined_butterfly", "duration_seconds": 60, "bilateral": true}
+  ]
+}

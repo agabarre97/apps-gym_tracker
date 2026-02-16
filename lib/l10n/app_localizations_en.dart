@@ -175,6 +175,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get mobilityFeetAnkles2 => 'Feet & Ankles 2';
 
   @override
+  String get mobilityPelvicTilt => 'Pelvic Tilt';
+
+  @override
+  String get mobilityHips => 'Hips';
+
+  @override
   String get mobilityTimerTitle => 'Mobility';
 
   @override
@@ -255,6 +261,57 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get mobilityToeSquat => 'Toe squat';
+
+  @override
+  String get mobilityPelvicTiltExercise => 'Pelvic Tilt';
+
+  @override
+  String get mobilityGluteBridge => 'Glute Bridge';
+
+  @override
+  String get mobilityKneesToChest => 'Knees to Chest';
+
+  @override
+  String get mobilitySingleKneeToChest => 'Single Knee to Chest';
+
+  @override
+  String get mobilityLyingQuadStretch => 'Lying Quad Stretch';
+
+  @override
+  String get mobilityKneelingHipFlexor => 'Kneeling Hip Flexor';
+
+  @override
+  String get mobilityCatCow => 'Cat-Cow';
+
+  @override
+  String get mobilitySeatedButterfly => 'Seated Butterfly';
+
+  @override
+  String get mobilityLyingFigureFour => 'Lying Figure Four';
+
+  @override
+  String get mobilityLizardPose => 'Lizard Pose';
+
+  @override
+  String get mobilityPigeon => 'Pigeon';
+
+  @override
+  String get mobilityFoldedButterfly => 'Folded Butterfly';
+
+  @override
+  String get mobilityHappyBaby => 'Happy Baby';
+
+  @override
+  String get mobilityFrogPose => 'Frog Pose';
+
+  @override
+  String get mobilitySquatStretch => 'Squat Stretch';
+
+  @override
+  String get mobilityDoublePigeon => 'Double Pigeon';
+
+  @override
+  String get mobilityReclinedButterfly => 'Reclined Butterfly';
 
   @override
   String get mobilityRoutineNotFound => 'Mobility routine not found';

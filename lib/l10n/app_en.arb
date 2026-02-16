@@ -64,6 +64,8 @@
   "mobilityRecommendedRoutine": "Recommended routine",
   "mobilityChooseOption": "Choose an option",
   "mobilityFeetAnkles2": "Feet & Ankles 2",
+  "mobilityPelvicTilt": "Pelvic Tilt",
+  "mobilityHips": "Hips",
 
   "@@_MOBILITY_TIMER": "Mobility timer screen",
   "mobilityTimerTitle": "Mobility",
@@ -92,6 +94,28 @@
   "mobilityToeStretch": "Toe stretch",
   "mobilityThunderbolt": "Thunderbolt pose",
   "mobilityToeSquat": "Toe squat",
+
+  "@@_MOBILITY_EXERCISES_PELVIC_TILT": "Pelvic Tilt routine exercises",
+  "mobilityPelvicTiltExercise": "Pelvic Tilt",
+  "mobilityGluteBridge": "Glute Bridge",
+  "mobilityKneesToChest": "Knees to Chest",
+  "mobilitySingleKneeToChest": "Single Knee to Chest",
+  "mobilityLyingQuadStretch": "Lying Quad Stretch",
+  "mobilityKneelingHipFlexor": "Kneeling Hip Flexor",
+  "mobilityCatCow": "Cat-Cow",
+  "mobilitySeatedButterfly": "Seated Butterfly",
+  "mobilityLyingFigureFour": "Lying Figure Four",
+
+  "@@_MOBILITY_EXERCISES_HIPS": "Hips routine exercises",
+  "mobilityLizardPose": "Lizard Pose",
+  "mobilityPigeon": "Pigeon",
+  "mobilityFoldedButterfly": "Folded Butterfly",
+  "mobilityHappyBaby": "Happy Baby",
+  "mobilityFrogPose": "Frog Pose",
+  "mobilitySquatStretch": "Squat Stretch",
+  "mobilityDoublePigeon": "Double Pigeon",
+  "mobilityReclinedButterfly": "Reclined Butterfly",
+
   "mobilityRoutineNotFound": "Mobility routine not found",
   "mobilityRoutineDuration": "{minutes} min",
   "@mobilityRoutineDuration": {

@@ -63,7 +63,7 @@ import 'app_localizations_es.dart';
 /// property.
 abstract class AppLocalizations {
   AppLocalizations(String locale)
-      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -86,16 +86,16 @@ abstract class AppLocalizations {
   /// of delegates is preferred or required.
   static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
       <LocalizationsDelegate<dynamic>>[
-    delegate,
-    GlobalMaterialLocalizations.delegate,
-    GlobalCupertinoLocalizations.delegate,
-    GlobalWidgetsLocalizations.delegate,
-  ];
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
-    Locale('es')
+    Locale('es'),
   ];
 
   /// No description provided for @sharedAppTitle.
@@ -422,6 +422,18 @@ abstract class AppLocalizations {
   /// **'Pies y tobillos 2'**
   String get mobilityFeetAnkles2;
 
+  /// No description provided for @mobilityPelvicTilt.
+  ///
+  /// In es, this message translates to:
+  /// **'Inclinación Pélvica'**
+  String get mobilityPelvicTilt;
+
+  /// No description provided for @mobilityHips.
+  ///
+  /// In es, this message translates to:
+  /// **'Caderas'**
+  String get mobilityHips;
+
   /// No description provided for @mobilityTimerTitle.
   ///
   /// In es, this message translates to:
@@ -577,6 +589,108 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Sentadilla de dedos'**
   String get mobilityToeSquat;
+
+  /// No description provided for @mobilityPelvicTiltExercise.
+  ///
+  /// In es, this message translates to:
+  /// **'Inclinación pélvica'**
+  String get mobilityPelvicTiltExercise;
+
+  /// No description provided for @mobilityGluteBridge.
+  ///
+  /// In es, this message translates to:
+  /// **'Puente de glúteos'**
+  String get mobilityGluteBridge;
+
+  /// No description provided for @mobilityKneesToChest.
+  ///
+  /// In es, this message translates to:
+  /// **'Rodillas al pecho'**
+  String get mobilityKneesToChest;
+
+  /// No description provided for @mobilitySingleKneeToChest.
+  ///
+  /// In es, this message translates to:
+  /// **'Rodilla al pecho'**
+  String get mobilitySingleKneeToChest;
+
+  /// No description provided for @mobilityLyingQuadStretch.
+  ///
+  /// In es, this message translates to:
+  /// **'Estiramiento de cuádriceps tumbado'**
+  String get mobilityLyingQuadStretch;
+
+  /// No description provided for @mobilityKneelingHipFlexor.
+  ///
+  /// In es, this message translates to:
+  /// **'Flexor de cadera de rodillas'**
+  String get mobilityKneelingHipFlexor;
+
+  /// No description provided for @mobilityCatCow.
+  ///
+  /// In es, this message translates to:
+  /// **'Gato-Vaca'**
+  String get mobilityCatCow;
+
+  /// No description provided for @mobilitySeatedButterfly.
+  ///
+  /// In es, this message translates to:
+  /// **'Mariposa sentada'**
+  String get mobilitySeatedButterfly;
+
+  /// No description provided for @mobilityLyingFigureFour.
+  ///
+  /// In es, this message translates to:
+  /// **'Figura cuatro tumbado'**
+  String get mobilityLyingFigureFour;
+
+  /// No description provided for @mobilityLizardPose.
+  ///
+  /// In es, this message translates to:
+  /// **'Postura del lagarto'**
+  String get mobilityLizardPose;
+
+  /// No description provided for @mobilityPigeon.
+  ///
+  /// In es, this message translates to:
+  /// **'Paloma'**
+  String get mobilityPigeon;
+
+  /// No description provided for @mobilityFoldedButterfly.
+  ///
+  /// In es, this message translates to:
+  /// **'Mariposa plegada'**
+  String get mobilityFoldedButterfly;
+
+  /// No description provided for @mobilityHappyBaby.
+  ///
+  /// In es, this message translates to:
+  /// **'Bebé feliz'**
+  String get mobilityHappyBaby;
+
+  /// No description provided for @mobilityFrogPose.
+  ///
+  /// In es, this message translates to:
+  /// **'Postura de la rana'**
+  String get mobilityFrogPose;
+
+  /// No description provided for @mobilitySquatStretch.
+  ///
+  /// In es, this message translates to:
+  /// **'Estiramiento en sentadilla'**
+  String get mobilitySquatStretch;
+
+  /// No description provided for @mobilityDoublePigeon.
+  ///
+  /// In es, this message translates to:
+  /// **'Doble paloma'**
+  String get mobilityDoublePigeon;
+
+  /// No description provided for @mobilityReclinedButterfly.
+  ///
+  /// In es, this message translates to:
+  /// **'Mariposa reclinada'**
+  String get mobilityReclinedButterfly;
 
   /// No description provided for @mobilityRoutineNotFound.
   ///
@@ -1254,8 +1368,9 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
   }
 
   throw FlutterError(
-      'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-      'an issue with the localizations generation tool. Please file an issue '
-      'on GitHub with a reproducible sample app and the gen-l10n configuration '
-      'that was used.');
+    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+    'an issue with the localizations generation tool. Please file an issue '
+    'on GitHub with a reproducible sample app and the gen-l10n configuration '
+    'that was used.',
+  );
 }

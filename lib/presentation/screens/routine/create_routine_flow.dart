@@ -13,6 +13,7 @@ import 'package:gym_tracker/presentation/screens/routine/exercise_selection_scre
 import 'package:gym_tracker/presentation/screens/routine/routine_summary_screen.dart';
 import 'package:gym_tracker/presentation/screens/routine/mobility_subtype_screen.dart';
 import 'package:gym_tracker/presentation/screens/routine/mobility_option_screen.dart';
+import 'package:gym_tracker/presentation/screens/routine/mobility_routine_selection_screen.dart';
 
 /// Orchestrates the multi-step routine creation wizard.
 class CreateRoutineFlow extends StatefulWidget {
@@ -36,6 +37,22 @@ class CreateRoutineFlow extends StatefulWidget {
 
 class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
   static const _uuid = Uuid();
+
+  // ── Mobility routine registry ──────────────────────────────────
+
+  /// Localized display name for each recommended mobility routine key.
+  static final Map<String, String Function(AppLocalizations)>
+      _routineNameGetters = {
+    'feet_ankles_2': (l) => l.mobilityFeetAnkles2,
+    'pelvic_tilt': (l) => l.mobilityPelvicTilt,
+    'hips': (l) => l.mobilityHips,
+  };
+
+  /// Available recommended routines per mobility subtype.
+  static const _routinesBySubType = <String, List<String>>{
+    'tobillos': ['feet_ankles_2'],
+    'cadera': ['pelvic_tilt', 'hips'],
+  };
 
   // Accumulated state
   String? _selectedType;
@@ -160,8 +177,14 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
   }
 
   Future<void> _onMobilityOptionSelected(String option) async {
-    if (option == 'recommended' && _selectedMobilitySubType == 'tobillos') {
-      await _saveRecommendedMobilityRoutine('feet_ankles_2');
+    if (option == 'recommended') {
+      final routines =
+          _routinesBySubType[_selectedMobilitySubType] ?? const [];
+      if (routines.length == 1) {
+        await _saveRecommendedMobilityRoutine(routines.first);
+      } else if (routines.isNotEmpty) {
+        setState(() => _step = _Step.mobilityRoutineSelection);
+      }
       return;
     }
     // Custom: not implemented yet
@@ -173,7 +196,8 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
 
   Future<void> _saveRecommendedMobilityRoutine(String routineKey) async {
     final l10n = AppLocalizations.of(context)!;
-    final name = routineKey == 'feet_ankles_2' ? l10n.mobilityFeetAnkles2 : routineKey;
+    final nameGetter = _routineNameGetters[routineKey];
+    final name = nameGetter != null ? nameGetter(l10n) : routineKey;
 
     final routine = Routine(
       id: _uuid.v4(),
@@ -292,6 +316,10 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
           _step = _Step.mobilitySubType;
           return;
 
+        case _Step.mobilityRoutineSelection:
+          _step = _Step.mobilityOption;
+          return;
+
         case _Step.days:
           _step = _Step.type;
 
@@ -353,8 +381,19 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
         return MobilityOptionScreen(
           subType: _selectedMobilitySubType!,
           customEnabled: false,
-          recommendedEnabled: _selectedMobilitySubType == 'tobillos',
+          recommendedEnabled:
+              (_routinesBySubType[_selectedMobilitySubType]?.isNotEmpty ??
+                  false),
           onOptionSelected: _onMobilityOptionSelected,
+          onBack: _goBack,
+        );
+      case _Step.mobilityRoutineSelection:
+        final routines =
+            _routinesBySubType[_selectedMobilitySubType] ?? const [];
+        return MobilityRoutineSelectionScreen(
+          routineKeys: routines,
+          routineNameGetters: _routineNameGetters,
+          onRoutineSelected: _saveRecommendedMobilityRoutine,
           onBack: _goBack,
         );
       case _Step.days:
@@ -398,4 +437,4 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
   }
 }
 
-enum _Step { type, mobilitySubType, mobilityOption, days, muscleGroups, exercises, summary }
+enum _Step { type, mobilitySubType, mobilityOption, mobilityRoutineSelection, days, muscleGroups, exercises, summary }

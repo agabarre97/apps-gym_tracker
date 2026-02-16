@@ -22,6 +22,25 @@ final Map<String, String Function(AppLocalizations)>
   'toe_stretch': (l) => l.mobilityToeStretch,
   'thunderbolt': (l) => l.mobilityThunderbolt,
   'toe_squat': (l) => l.mobilityToeSquat,
+  // Pelvic Tilt routine
+  'pelvic_tilt': (l) => l.mobilityPelvicTiltExercise,
+  'glute_bridge': (l) => l.mobilityGluteBridge,
+  'knees_to_chest': (l) => l.mobilityKneesToChest,
+  'single_knee_to_chest': (l) => l.mobilitySingleKneeToChest,
+  'lying_quad_stretch': (l) => l.mobilityLyingQuadStretch,
+  'kneeling_hip_flexor': (l) => l.mobilityKneelingHipFlexor,
+  'cat_cow': (l) => l.mobilityCatCow,
+  'seated_butterfly': (l) => l.mobilitySeatedButterfly,
+  'lying_figure_four': (l) => l.mobilityLyingFigureFour,
+  // Hips routine
+  'lizard_pose': (l) => l.mobilityLizardPose,
+  'pigeon': (l) => l.mobilityPigeon,
+  'folded_butterfly': (l) => l.mobilityFoldedButterfly,
+  'happy_baby': (l) => l.mobilityHappyBaby,
+  'frog_pose': (l) => l.mobilityFrogPose,
+  'squat_stretch': (l) => l.mobilitySquatStretch,
+  'double_pigeon': (l) => l.mobilityDoublePigeon,
+  'reclined_butterfly': (l) => l.mobilityReclinedButterfly,
 };
 
 /// Returns the localized display name for a mobility exercise key.

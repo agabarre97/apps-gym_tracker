@@ -1,0 +1,16 @@
+{
+  "key": "pelvic_tilt",
+  "name_key": "mobility_pelvic_tilt",
+  "total_duration_minutes": 7,
+  "exercises": [
+    {"key": "pelvic_tilt",          "duration_seconds": 30, "bilateral": true},
+    {"key": "glute_bridge",         "duration_seconds": 30, "bilateral": true},
+    {"key": "knees_to_chest",       "duration_seconds": 30, "bilateral": true},
+    {"key": "single_knee_to_chest", "duration_seconds": 30, "bilateral": false},
+    {"key": "lying_quad_stretch",   "duration_seconds": 30, "bilateral": false},
+    {"key": "kneeling_hip_flexor",  "duration_seconds": 30, "bilateral": false},
+    {"key": "cat_cow",              "duration_seconds": 30, "bilateral": true},
+    {"key": "seated_butterfly",     "duration_seconds": 30, "bilateral": true},
+    {"key": "lying_figure_four",    "duration_seconds": 30, "bilateral": false}
+  ]
+}

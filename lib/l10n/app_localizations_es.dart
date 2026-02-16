@@ -176,6 +176,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get mobilityFeetAnkles2 => 'Pies y tobillos 2';
 
   @override
+  String get mobilityPelvicTilt => 'Inclinación Pélvica';
+
+  @override
+  String get mobilityHips => 'Caderas';
+
+  @override
   String get mobilityTimerTitle => 'Movilidad';
 
   @override
@@ -258,6 +264,57 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get mobilityToeSquat => 'Sentadilla de dedos';
+
+  @override
+  String get mobilityPelvicTiltExercise => 'Inclinación pélvica';
+
+  @override
+  String get mobilityGluteBridge => 'Puente de glúteos';
+
+  @override
+  String get mobilityKneesToChest => 'Rodillas al pecho';
+
+  @override
+  String get mobilitySingleKneeToChest => 'Rodilla al pecho';
+
+  @override
+  String get mobilityLyingQuadStretch => 'Estiramiento de cuádriceps tumbado';
+
+  @override
+  String get mobilityKneelingHipFlexor => 'Flexor de cadera de rodillas';
+
+  @override
+  String get mobilityCatCow => 'Gato-Vaca';
+
+  @override
+  String get mobilitySeatedButterfly => 'Mariposa sentada';
+
+  @override
+  String get mobilityLyingFigureFour => 'Figura cuatro tumbado';
+
+  @override
+  String get mobilityLizardPose => 'Postura del lagarto';
+
+  @override
+  String get mobilityPigeon => 'Paloma';
+
+  @override
+  String get mobilityFoldedButterfly => 'Mariposa plegada';
+
+  @override
+  String get mobilityHappyBaby => 'Bebé feliz';
+
+  @override
+  String get mobilityFrogPose => 'Postura de la rana';
+
+  @override
+  String get mobilitySquatStretch => 'Estiramiento en sentadilla';
+
+  @override
+  String get mobilityDoublePigeon => 'Doble paloma';
+
+  @override
+  String get mobilityReclinedButterfly => 'Mariposa reclinada';
 
   @override
   String get mobilityRoutineNotFound => 'No se encontró la rutina de movilidad';
