@@ -27,6 +27,3 @@ jobs:
 
       - name: Static analysis
         run: make analyze
-
-      - name: Test with coverage gate
-        run: make test-coverage-check

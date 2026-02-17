@@ -150,14 +150,17 @@ class _LandingScreenState extends State<LandingScreen> {
   String _typeLabelFor(String type, AppLocalizations l10n) =>
       RoutineTypeHelper.labelFor(type, l10n);
 
+  /// Active (non-archived) routines, optionally filtered by type.
   List<Routine> get _filteredRoutines {
-    if (_routineTypeFilter == null) return _routines;
-    return _routines.where((r) => r.type == _routineTypeFilter).toList();
+    final active = _routines.where((r) => !r.isArchived);
+    if (_routineTypeFilter == null) return active.toList();
+    return active.where((r) => r.type == _routineTypeFilter).toList();
   }
 
-  /// Unique routine types present in the saved routines.
+  /// Unique routine types present in the active (non-archived) routines.
   List<String> get _availableTypes {
-    final types = _routines.map((r) => r.type).toSet().toList();
+    final types =
+        _routines.where((r) => !r.isArchived).map((r) => r.type).toSet().toList();
     types.sort();
     return types;
   }
@@ -219,7 +222,7 @@ class _LandingScreenState extends State<LandingScreen> {
     final routine = await Navigator.of(context).push<Routine>(
       MaterialPageRoute(
         builder: (_) => RoutinePickerScreen(
-          routines: _routines,
+          routines: _routines.where((r) => !r.isArchived).toList(),
           onRoutineSelected: (r) => Navigator.of(context).pop(r),
         ),
       ),
@@ -404,6 +407,7 @@ class _LandingScreenState extends State<LandingScreen> {
           routine: mobilityRoutine,
           mobilitySessionPort: widget.mobilitySessionPort,
           routineName: routine.name,
+          autoStart: true,
         ),
       ),
     );

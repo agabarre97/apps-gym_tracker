@@ -216,7 +216,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get mobilityChooseOption => 'Elige una opción';
 
   @override
-  String get mobilityFeetAnkles2 => 'Pies y tobillos 2';
+  String get mobilityFeetAnkles2 => 'Movilidad de tobillo';
 
   @override
   String get mobilityPelvicTilt => 'Inclinación Pélvica';
@@ -520,6 +520,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get routineSelectMuscleGroups => 'Grupos musculares';
+
+  @override
+  String get exerciseSearchHint => 'Buscar ejercicio...';
 
   @override
   String get routineSelectExercises => 'Selecciona ejercicios';

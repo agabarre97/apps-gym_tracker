@@ -38,6 +38,7 @@ class Routine {
     required this.days,
     this.recommendedRoutineKey,
     this.hiitConfig,
+    this.isArchived = false,
   });
 
   final String id;
@@ -53,6 +54,10 @@ class Routine {
 
   /// HIIT configuration (only populated when [type] == 'hiit').
   final HiitConfig? hiitConfig;
+
+  /// Soft-delete flag. Archived routines are hidden from the active list
+  /// but remain in storage so historical sessions can still resolve their name.
+  final bool isArchived;
 
   // ── Backward-compatible convenience getters ────────────────────
 
@@ -74,6 +79,7 @@ class Routine {
           'hiitRestSeconds': hiitConfig!.restSeconds,
           'hiitSetRestSeconds': hiitConfig!.setRestSeconds,
         },
+        if (isArchived) 'isArchived': true,
       };
 
   factory Routine.fromJson(Map<String, dynamic> json) {
@@ -106,6 +112,7 @@ class Routine {
               setRestSeconds: hiitSetRest ?? HiitConfig.defaultSetRestSeconds,
             )
           : null,
+      isArchived: json['isArchived'] as bool? ?? false,
     );
   }
 
@@ -117,6 +124,7 @@ class Routine {
     List<RoutineDay>? days,
     String? recommendedRoutineKey,
     HiitConfig? hiitConfig,
+    bool? isArchived,
   }) =>
       Routine(
         id: id ?? this.id,
@@ -126,6 +134,7 @@ class Routine {
         recommendedRoutineKey:
             recommendedRoutineKey ?? this.recommendedRoutineKey,
         hiitConfig: hiitConfig ?? this.hiitConfig,
+        isArchived: isArchived ?? this.isArchived,
       );
 
   /// Current export format version — bump when the schema changes.

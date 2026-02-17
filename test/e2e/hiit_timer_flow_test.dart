@@ -119,6 +119,38 @@ void main() {
       expect(find.text('¡Prepárate!'), findsOneWidget);
     });
 
+    testWidgets(
+        'HiitTimerScreen with autoStart skips preview and enters countdown',
+        (tester) async {
+      await tester.pumpWidget(
+        buildTestableWidget(
+          HiitTimerScreen(
+            exercises: const [
+              HiitExercise(
+                  key: 'burpees', name: 'Burpees', description: 'Full body'),
+            ],
+            routineName: 'Test HIIT',
+            sets: 1,
+            workSeconds: 20,
+            restSeconds: 10,
+            setRestSeconds: 60,
+            hiitSessionPort: FakeHiitSessionPort(),
+            autoStart: true,
+          ),
+        ),
+      );
+
+      // After first frame, autoStart triggers the countdown
+      await tester.pump();
+      await tester.pump();
+
+      // Countdown phase: "¡Prepárate!" (Spanish) — no manual tap needed
+      expect(find.text('¡Prepárate!'), findsOneWidget);
+
+      // The preview "Comenzar" button should no longer be visible
+      expect(find.text('Comenzar'), findsNothing);
+    });
+
     testWidgets('back navigation from detail screen works correctly',
         (tester) async {
       bool popped = false;

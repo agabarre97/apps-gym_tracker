@@ -20,11 +20,16 @@ class MobilityTimerScreen extends StatefulWidget {
     required this.routine,
     required this.mobilitySessionPort,
     required this.routineName,
+    this.autoStart = false,
   });
 
   final MobilityRoutine routine;
   final MobilitySessionPort mobilitySessionPort;
   final String routineName;
+
+  /// When true, the countdown starts automatically on first frame,
+  /// skipping the manual "Comenzar" tap in the preview phase.
+  final bool autoStart;
 
   @override
   State<MobilityTimerScreen> createState() => _MobilityTimerScreenState();
@@ -61,6 +66,12 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
     _animController = AnimationController(vsync: this);
     _progressAnim =
         Tween<double>(begin: 1.0, end: 0.0).animate(_animController);
+
+    if (widget.autoStart) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _onStartPressed();
+      });
+    }
   }
 
   @override

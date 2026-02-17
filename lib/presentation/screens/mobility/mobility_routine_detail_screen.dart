@@ -86,8 +86,9 @@ class _MobilityRoutineDetailScreenState
 
     if (confirmed != true || !mounted) return;
 
-    final updated =
-        widget.allRoutines.where((r) => r.id != widget.routine.id).toList();
+    final updated = widget.allRoutines.map((r) {
+      return r.id == widget.routine.id ? r.copyWith(isArchived: true) : r;
+    }).toList();
     await widget.routinePort.saveRoutines(updated);
 
     if (!mounted) return;
@@ -104,6 +105,7 @@ class _MobilityRoutineDetailScreenState
           routine: mr,
           mobilitySessionPort: widget.mobilitySessionPort,
           routineName: widget.routine.name,
+          autoStart: true,
         ),
       ),
     );

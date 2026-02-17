@@ -171,8 +171,9 @@ class _HiitDetailScreenState extends State<HiitDetailScreen> {
 
     if (confirmed != true || !mounted) return;
 
-    final updated =
-        widget.allRoutines.where((r) => r.id != _currentRoutine.id).toList();
+    final updated = widget.allRoutines.map((r) {
+      return r.id == _currentRoutine.id ? r.copyWith(isArchived: true) : r;
+    }).toList();
     await widget.routinePort.saveRoutines(updated);
 
     if (!mounted) return;
@@ -276,6 +277,7 @@ class _HiitDetailScreenState extends State<HiitDetailScreen> {
           restSeconds: _restSeconds,
           setRestSeconds: _setRestSeconds,
           hiitSessionPort: widget.hiitSessionPort,
+          autoStart: true,
         ),
       ),
     );

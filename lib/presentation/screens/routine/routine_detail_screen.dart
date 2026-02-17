@@ -81,8 +81,9 @@ class _RoutineDetailScreenState extends State<RoutineDetailScreen> {
 
     if (confirmed != true || !mounted) return;
 
-    final updated =
-        widget.allRoutines.where((r) => r.id != _routine.id).toList();
+    final updated = widget.allRoutines.map((r) {
+      return r.id == _routine.id ? r.copyWith(isArchived: true) : r;
+    }).toList();
     await widget.routinePort.saveRoutines(updated);
 
     if (!mounted) return;

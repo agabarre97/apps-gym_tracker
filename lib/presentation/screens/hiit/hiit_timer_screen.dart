@@ -25,6 +25,7 @@ class HiitTimerScreen extends StatefulWidget {
     required this.restSeconds,
     required this.setRestSeconds,
     required this.hiitSessionPort,
+    this.autoStart = false,
   });
 
   final List<HiitExercise> exercises;
@@ -34,6 +35,10 @@ class HiitTimerScreen extends StatefulWidget {
   final int restSeconds;
   final int setRestSeconds;
   final HiitSessionPort hiitSessionPort;
+
+  /// When true, the countdown starts automatically on first frame,
+  /// skipping the manual "Comenzar" tap in the preview phase.
+  final bool autoStart;
 
   @override
   State<HiitTimerScreen> createState() => _HiitTimerScreenState();
@@ -77,6 +82,12 @@ class _HiitTimerScreenState extends State<HiitTimerScreen>
     _animController = AnimationController(vsync: this);
     _progressAnim =
         Tween<double>(begin: 1.0, end: 0.0).animate(_animController);
+
+    if (widget.autoStart) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _onStartPressed();
+      });
+    }
   }
 
   @override
