@@ -80,6 +80,16 @@ class ExerciseDetailSheet extends StatelessWidget {
                     ))
                 .toList(),
           ),
+          if (exercise.muscleImage != null) ...[
+            const SizedBox(height: 16),
+            Center(
+              child: Image.asset(
+                exercise.muscleImage!,
+                height: 160,
+                fit: BoxFit.contain,
+              ),
+            ),
+          ],
           const SizedBox(height: 16),
 
           // Difficulty

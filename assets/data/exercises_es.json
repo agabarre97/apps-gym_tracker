@@ -8,7 +8,8 @@
             "Deltoide anterior",
             "Tríceps"
         ],
-        "dificultad_tecnica": 6
+        "dificultad_tecnica": 6,
+        "muscle_image": "assets/images/muscles/anterior_deltoid-triceps_brachii-upper_pectoralis_major.png"
     },
     {
         "key": "press_declinado_en_multipower",
@@ -19,7 +20,8 @@
             "Tríceps",
             "Deltoide anterior"
         ],
-        "dificultad_tecnica": 5
+        "dificultad_tecnica": 5,
+        "muscle_image": "assets/images/muscles/anterior_deltoid-lower_pectoralis_major-triceps_brachii.png"
     },
     {
         "key": "press_sentado_guiado",
@@ -30,7 +32,8 @@
             "Tríceps",
             "Deltoide anterior"
         ],
-        "dificultad_tecnica": 4
+        "dificultad_tecnica": 4,
+        "muscle_image": "assets/images/muscles/anterior_deltoid-pectoralis_major-triceps_brachii.png"
     },
     {
         "key": "cruce_de_poleas",
@@ -39,7 +42,8 @@
         "grupo_muscular": [
             "Pectoral mayor"
         ],
-        "dificultad_tecnica": 5
+        "dificultad_tecnica": 5,
+        "muscle_image": "assets/images/muscles/pectoralis_major.png"
     },
     {
         "key": "elevaciones_laterales_en_banco_inclinado",
@@ -48,7 +52,8 @@
         "grupo_muscular": [
             "Deltoide medio"
         ],
-        "dificultad_tecnica": 6
+        "dificultad_tecnica": 6,
+        "muscle_image": "assets/images/muscles/lateral_deltoid.png"
     },
     {
         "key": "elevaciones_laterales_con_mancuerna",
@@ -57,7 +62,8 @@
         "grupo_muscular": [
             "Deltoide medio"
         ],
-        "dificultad_tecnica": 5
+        "dificultad_tecnica": 5,
+        "muscle_image": "assets/images/muscles/lateral_deltoid.png"
     },
     {
         "key": "elevaciones_laterales_en_polea_baja",
@@ -66,7 +72,8 @@
         "grupo_muscular": [
             "Deltoide medio"
         ],
-        "dificultad_tecnica": 6
+        "dificultad_tecnica": 6,
+        "muscle_image": "assets/images/muscles/lateral_deltoid.png"
     },
     {
         "key": "extension_de_triceps_a_una_mano",
@@ -75,7 +82,8 @@
         "grupo_muscular": [
             "Tríceps"
         ],
-        "dificultad_tecnica": 5
+        "dificultad_tecnica": 5,
+        "muscle_image": "assets/images/muscles/triceps_brachii.png"
     },
     {
         "key": "extension_trasnuca_en_polea",
@@ -84,7 +92,8 @@
         "grupo_muscular": [
             "Tríceps (porción larga)"
         ],
-        "dificultad_tecnica": 6
+        "dificultad_tecnica": 6,
+        "muscle_image": "assets/images/muscles/triceps_brachii_long_head.png"
     },
     {
         "key": "remo_con_pectoral_apoyado_en_maquina",
@@ -95,7 +104,8 @@
             "Romboides",
             "Trapecio medio"
         ],
-        "dificultad_tecnica": 5
+        "dificultad_tecnica": 5,
+        "muscle_image": "assets/images/muscles/latissimus_dorsi-middle_trapezius-rhomboids.png"
     },
     {
         "key": "jalon_abierto",
@@ -105,7 +115,8 @@
             "Dorsal ancho",
             "Bíceps"
         ],
-        "dificultad_tecnica": 5
+        "dificultad_tecnica": 5,
+        "muscle_image": "assets/images/muscles/biceps_brachii-latissimus_dorsi.png"
     },
     {
         "key": "jalon_agarre_cerrado",
@@ -115,7 +126,8 @@
             "Dorsal ancho",
             "Bíceps"
         ],
-        "dificultad_tecnica": 5
+        "dificultad_tecnica": 5,
+        "muscle_image": "assets/images/muscles/biceps_brachii-latissimus_dorsi.png"
     },
     {
         "key": "remo_en_polea_baja",
@@ -127,7 +139,8 @@
             "Trapecio medio",
             "Bíceps"
         ],
-        "dificultad_tecnica": 5
+        "dificultad_tecnica": 5,
+        "muscle_image": "assets/images/muscles/biceps_brachii-latissimus_dorsi-middle_trapezius-rhomboids.png"
     },
     {
         "key": "hiperextensiones_con_lastre",
@@ -138,7 +151,8 @@
             "Glúteos",
             "Isquiotibiales"
         ],
-        "dificultad_tecnica": 6
+        "dificultad_tecnica": 6,
+        "muscle_image": "assets/images/muscles/erector_spinae-gluteus-hamstrings.png"
     },
     {
         "key": "facepull",
@@ -149,7 +163,8 @@
             "Trapecio medio",
             "Romboides"
         ],
-        "dificultad_tecnica": 6
+        "dificultad_tecnica": 6,
+        "muscle_image": "assets/images/muscles/middle_trapezius-posterior_deltoid-rhomboids.png"
     },
     {
         "key": "pajaros",
@@ -158,7 +173,8 @@
         "grupo_muscular": [
             "Deltoide posterior"
         ],
-        "dificultad_tecnica": 5
+        "dificultad_tecnica": 5,
+        "muscle_image": "assets/images/muscles/posterior_deltoid.png"
     },
     {
         "key": "curl_de_biceps_con_codos_adelantados_en_polea_baja",
@@ -167,7 +183,8 @@
         "grupo_muscular": [
             "Bíceps braquial"
         ],
-        "dificultad_tecnica": 6
+        "dificultad_tecnica": 6,
+        "muscle_image": "assets/images/muscles/biceps_brachii.png"
     },
     {
         "key": "spider_curl",
@@ -176,7 +193,8 @@
         "grupo_muscular": [
             "Bíceps braquial"
         ],
-        "dificultad_tecnica": 6
+        "dificultad_tecnica": 6,
+        "muscle_image": "assets/images/muscles/biceps_brachii.png"
     },
     {
         "key": "prensa",
@@ -186,7 +204,8 @@
             "Cuádriceps",
             "Glúteos"
         ],
-        "dificultad_tecnica": 4
+        "dificultad_tecnica": 4,
+        "muscle_image": "assets/images/muscles/gluteus-quadriceps.png"
     },
     {
         "key": "sentadilla_en_multipower",
@@ -197,7 +216,8 @@
             "Glúteos",
             "Isquiotibiales"
         ],
-        "dificultad_tecnica": 6
+        "dificultad_tecnica": 6,
+        "muscle_image": "assets/images/muscles/gluteus-hamstrings-quadriceps.png"
     },
     {
         "key": "peso_muerto_rumano_con_mancuerna",
@@ -208,7 +228,8 @@
             "Glúteos",
             "Erectores espinales"
         ],
-        "dificultad_tecnica": 7
+        "dificultad_tecnica": 7,
+        "muscle_image": "assets/images/muscles/erector_spinae-gluteus-hamstrings.png"
     },
     {
         "key": "extension_de_cuadriceps",
@@ -217,7 +238,8 @@
         "grupo_muscular": [
             "Cuádriceps"
         ],
-        "dificultad_tecnica": 3
+        "dificultad_tecnica": 3,
+        "muscle_image": "assets/images/muscles/quadriceps.png"
     },
     {
         "key": "sentadilla_bulgara",
@@ -228,7 +250,8 @@
             "Glúteos",
             "Isquiotibiales"
         ],
-        "dificultad_tecnica": 8
+        "dificultad_tecnica": 8,
+        "muscle_image": "assets/images/muscles/gluteus-hamstrings-quadriceps.png"
     },
     {
         "key": "femoral_sentado",
@@ -237,7 +260,8 @@
         "grupo_muscular": [
             "Isquiotibiales"
         ],
-        "dificultad_tecnica": 3
+        "dificultad_tecnica": 3,
+        "muscle_image": "assets/images/muscles/hamstrings.png"
     },
     {
         "key": "femoral_tumbado",
@@ -246,7 +270,8 @@
         "grupo_muscular": [
             "Isquiotibiales"
         ],
-        "dificultad_tecnica": 3
+        "dificultad_tecnica": 3,
+        "muscle_image": "assets/images/muscles/hamstrings.png"
     },
     {
         "key": "gemelo_en_prensa",
@@ -256,7 +281,8 @@
             "Gemelos",
             "Sóleo"
         ],
-        "dificultad_tecnica": 3
+        "dificultad_tecnica": 3,
+        "muscle_image": "assets/images/muscles/gastrocnemius-soleus.png"
     },
     {
         "key": "press_tumbado_con_mancuernas",
@@ -267,7 +293,8 @@
             "Tríceps",
             "Deltoide anterior"
         ],
-        "dificultad_tecnica": 7
+        "dificultad_tecnica": 7,
+        "muscle_image": "assets/images/muscles/anterior_deltoid-pectoralis_major-triceps_brachii.png"
     },
     {
         "key": "press_sentado_en_maquina",
@@ -278,7 +305,8 @@
             "Deltoide anterior",
             "Tríceps"
         ],
-        "dificultad_tecnica": 4
+        "dificultad_tecnica": 4,
+        "muscle_image": "assets/images/muscles/anterior_deltoid-pectoralis_major-triceps_brachii.png"
     },
     {
         "key": "aperturas_con_mancuerna",
@@ -287,7 +315,8 @@
         "grupo_muscular": [
             "Pectoral mayor"
         ],
-        "dificultad_tecnica": 6
+        "dificultad_tecnica": 6,
+        "muscle_image": "assets/images/muscles/pectoralis_major.png"
     },
     {
         "key": "press_para_hombros",
@@ -298,7 +327,8 @@
             "Deltoide medio",
             "Tríceps"
         ],
-        "dificultad_tecnica": 6
+        "dificultad_tecnica": 6,
+        "muscle_image": "assets/images/muscles/anterior_deltoid-lateral_deltoid-triceps_brachii.png"
     },
     {
         "key": "pullover",
@@ -308,7 +338,8 @@
             "Dorsal ancho",
             "Pectoral mayor"
         ],
-        "dificultad_tecnica": 6
+        "dificultad_tecnica": 6,
+        "muscle_image": "assets/images/muscles/latissimus_dorsi-pectoralis_major.png"
     },
     {
         "key": "curl_a_la_sien",
@@ -317,7 +348,8 @@
         "grupo_muscular": [
             "Bíceps braquial"
         ],
-        "dificultad_tecnica": 6
+        "dificultad_tecnica": 6,
+        "muscle_image": "assets/images/muscles/biceps_brachii.png"
     },
     {
         "key": "extension_de_triceps_con_cuerda",
@@ -326,7 +358,8 @@
         "grupo_muscular": [
             "Tríceps"
         ],
-        "dificultad_tecnica": 4
+        "dificultad_tecnica": 4,
+        "muscle_image": "assets/images/muscles/triceps_brachii.png"
     },
     {
         "key": "curl_en_polea_baja",
@@ -335,7 +368,8 @@
         "grupo_muscular": [
             "Bíceps braquial"
         ],
-        "dificultad_tecnica": 6
+        "dificultad_tecnica": 6,
+        "muscle_image": "assets/images/muscles/biceps_brachii.png"
     },
     {
         "key": "extension_en_cruz",
@@ -344,7 +378,8 @@
         "grupo_muscular": [
             "Tríceps"
         ],
-        "dificultad_tecnica": 6
+        "dificultad_tecnica": 6,
+        "muscle_image": "assets/images/muscles/triceps_brachii.png"
     },
     {
         "key": "biceps_en_maquina",
@@ -353,7 +388,8 @@
         "grupo_muscular": [
             "Bíceps braquial"
         ],
-        "dificultad_tecnica": 3
+        "dificultad_tecnica": 3,
+        "muscle_image": "assets/images/muscles/biceps_brachii.png"
     },
     {
         "key": "extension_unilateral_en_polea_alta",
@@ -362,7 +398,8 @@
         "grupo_muscular": [
             "Tríceps"
         ],
-        "dificultad_tecnica": 5
+        "dificultad_tecnica": 5,
+        "muscle_image": "assets/images/muscles/triceps_brachii.png"
     },
     {
         "key": "kazz_press",
@@ -371,7 +408,8 @@
         "grupo_muscular": [
             "Tríceps"
         ],
-        "dificultad_tecnica": 4
+        "dificultad_tecnica": 4,
+        "muscle_image": "assets/images/muscles/triceps_brachii.png"
     },
     {
         "key": "curl_bayesian_con_banco",
@@ -380,7 +418,8 @@
         "grupo_muscular": [
             "Bíceps braquial"
         ],
-        "dificultad_tecnica": 4
+        "dificultad_tecnica": 4,
+        "muscle_image": "assets/images/muscles/biceps_brachii.png"
     },
     {
         "key": "press_katana_unilateral",
@@ -389,7 +428,8 @@
         "grupo_muscular": [
             "Tríceps"
         ],
-        "dificultad_tecnica": 5
+        "dificultad_tecnica": 5,
+        "muscle_image": "assets/images/muscles/triceps_brachii.png"
     },
     {
         "key": "pullover_unilateral",
@@ -399,7 +439,8 @@
             "Dorsal ancho",
             "Serrato anterior"
         ],
-        "dificultad_tecnica": 4
+        "dificultad_tecnica": 4,
+        "muscle_image": "assets/images/muscles/latissimus_dorsi-serratus_anterior.png"
     },
     {
         "key": "rueda_abdominal",
@@ -410,7 +451,8 @@
             "Recto abdominal",
             "Core profundo"
         ],
-        "dificultad_tecnica": 5
+        "dificultad_tecnica": 5,
+        "muscle_image": "assets/images/muscles/abdominals-deep_core_muscles-rectus_abdominis.png"
     },
     {
         "key": "dragon_fly",
@@ -420,7 +462,8 @@
             "Abdominales",
             "Recto abdominal inferior"
         ],
-        "dificultad_tecnica": 5
+        "dificultad_tecnica": 5,
+        "muscle_image": "assets/images/muscles/abdominals-lower_rectus_abdominis.png"
     },
     {
         "key": "plancha_abdominal",
@@ -430,7 +473,8 @@
             "Abdominales",
             "Core profundo"
         ],
-        "dificultad_tecnica": 3
+        "dificultad_tecnica": 3,
+        "muscle_image": "assets/images/muscles/abdominals-deep_core_muscles.png"
     },
     {
         "key": "laterales_unilateral",
@@ -440,7 +484,8 @@
             "Abdominales",
             "Oblicuos"
         ],
-        "dificultad_tecnica": 3
+        "dificultad_tecnica": 3,
+        "muscle_image": "assets/images/muscles/abdominals-obliques.png"
     },
     {
         "key": "crunch_rodillas_polea_alta",
@@ -450,7 +495,8 @@
             "Abdominales",
             "Recto abdominal"
         ],
-        "dificultad_tecnica": 4
+        "dificultad_tecnica": 4,
+        "muscle_image": "assets/images/muscles/abdominals-rectus_abdominis.png"
     },
     {
         "key": "cable_woodchop",
@@ -460,7 +506,8 @@
             "Abdominales",
             "Oblicuos"
         ],
-        "dificultad_tecnica": 4
+        "dificultad_tecnica": 4,
+        "muscle_image": "assets/images/muscles/abdominals-obliques.png"
     },
     {
         "key": "elevacion_piernas_colgado",
@@ -470,7 +517,8 @@
             "Abdominales",
             "Recto abdominal inferior"
         ],
-        "dificultad_tecnica": 4
+        "dificultad_tecnica": 4,
+        "muscle_image": "assets/images/muscles/abdominals-lower_rectus_abdominis.png"
     },
     {
         "key": "crunch_banco_declinado",
@@ -480,7 +528,8 @@
             "Abdominales",
             "Recto abdominal"
         ],
-        "dificultad_tecnica": 3
+        "dificultad_tecnica": 3,
+        "muscle_image": "assets/images/muscles/abdominals-rectus_abdominis.png"
     },
     {
         "key": "dead_bug",
@@ -490,7 +539,8 @@
             "Abdominales",
             "Core profundo"
         ],
-        "dificultad_tecnica": 2
+        "dificultad_tecnica": 2,
+        "muscle_image": "assets/images/muscles/abdominals-deep_core_muscles.png"
     },
     {
         "key": "hollow_body_hold",
@@ -501,7 +551,8 @@
             "Recto abdominal",
             "Core profundo"
         ],
-        "dificultad_tecnica": 4
+        "dificultad_tecnica": 4,
+        "muscle_image": "assets/images/muscles/abdominals-deep_core_muscles-rectus_abdominis.png"
     },
     {
         "key": "crunch_bicicleta",
@@ -512,7 +563,8 @@
             "Oblicuos",
             "Recto abdominal"
         ],
-        "dificultad_tecnica": 3
+        "dificultad_tecnica": 3,
+        "muscle_image": "assets/images/muscles/abdominals-obliques-rectus_abdominis.png"
     },
     {
         "key": "farmer_carry_unilateral",
@@ -523,7 +575,8 @@
             "Oblicuos",
             "Core profundo"
         ],
-        "dificultad_tecnica": 3
+        "dificultad_tecnica": 3,
+        "muscle_image": "assets/images/muscles/abdominals-deep_core_muscles-obliques.png"
     },
     {
         "key": "sit_up_balon_medicinal",
@@ -533,6 +586,7 @@
             "Abdominales",
             "Recto abdominal"
         ],
-        "dificultad_tecnica": 3
+        "dificultad_tecnica": 3,
+        "muscle_image": "assets/images/muscles/abdominals-rectus_abdominis.png"
     }
 ]

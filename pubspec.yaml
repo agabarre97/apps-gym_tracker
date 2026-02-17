@@ -32,6 +32,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/images/muscles/
     - assets/data/
     - assets/data/mobility_routines/
     - assets/data/mobility_exercises_info/
