@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:gym_tracker/data/datasources/asset_data_loader.dart';
 import 'package:gym_tracker/domain/entities/hiit_exercise.dart';
+import 'package:gym_tracker/domain/entities/hiit_session.dart';
 import 'package:gym_tracker/domain/entities/routine.dart';
 import 'package:gym_tracker/domain/ports/hiit_session_port.dart';
 import 'package:gym_tracker/domain/ports/routine_port.dart';
+import 'package:gym_tracker/domain/services/routine_pdf_export_service.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
 import 'package:gym_tracker/presentation/components/delete_routine_dialog.dart';
 import 'package:gym_tracker/presentation/components/export_sheet.dart';
+import 'package:gym_tracker/presentation/components/pdf_share_helper.dart';
 import 'package:gym_tracker/presentation/components/time_wheel_picker.dart';
 import 'package:gym_tracker/domain/entities/hiit_config.dart';
 import 'package:gym_tracker/presentation/screens/hiit/hiit_exercise_selection_screen.dart';
@@ -119,7 +122,51 @@ class _HiitDetailScreenState extends State<HiitDetailScreen> {
   void _handleExport() => showExportSheet(
         context,
         jsonString: _currentRoutine.toExportJsonString(),
+        onExportPdf: _exportPdf,
       );
+
+  Future<void> _exportPdf() async {
+    final l10n = AppLocalizations.of(context)!;
+    try {
+      final sessions = await widget.hiitSessionPort.loadSessions();
+      final routineSessions = sessions
+          .where((session) => session.routineName == _currentRoutine.name)
+          .toList()
+        ..sort(_compareSessionDesc);
+      final latestSession =
+          routineSessions.isEmpty ? null : routineSessions.first;
+
+      final bytes = await RoutinePdfExportService.buildHiitRoutinePdf(
+        routine: _currentRoutine,
+        routineExercises: _routineExercises,
+        lastSession: latestSession,
+        generatedAt: DateTime.now(),
+      );
+
+      await sharePdfBytes(
+        pdfBytes: bytes,
+        fileName: 'rutina_hiit_${_currentRoutine.name}_export.pdf',
+      );
+    } catch (error, stackTrace) {
+      debugPrint('HIIT PDF export failed: $error');
+      debugPrintStack(stackTrace: stackTrace);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.routineExportPdfError)),
+      );
+    }
+  }
+
+  int _compareSessionDesc(HiitSession a, HiitSession b) {
+    final byDate = b.date.compareTo(a.date);
+    if (byDate != 0) return byDate;
+    final aStart = a.startTime;
+    final bStart = b.startTime;
+    if (aStart == null && bStart == null) return 0;
+    if (aStart == null) return 1;
+    if (bStart == null) return -1;
+    return bStart.compareTo(aStart);
+  }
 
   /// Opens the exercise selection screen pre-filled with the current
   /// exercise keys, allowing the user to add or remove exercises.

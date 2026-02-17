@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:gym_tracker/data/datasources/asset_data_loader.dart';
 import 'package:gym_tracker/domain/entities/mobility_exercise_info.dart';
 import 'package:gym_tracker/domain/entities/mobility_routine.dart';
+import 'package:gym_tracker/domain/entities/mobility_session.dart';
 import 'package:gym_tracker/domain/entities/routine.dart';
 import 'package:gym_tracker/domain/ports/mobility_session_port.dart';
 import 'package:gym_tracker/domain/ports/routine_port.dart';
+import 'package:gym_tracker/domain/services/routine_pdf_export_service.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
 import 'package:gym_tracker/presentation/components/delete_routine_dialog.dart';
 import 'package:gym_tracker/presentation/components/export_sheet.dart';
 import 'package:gym_tracker/presentation/components/mobility_exercise_detail_sheet.dart';
 import 'package:gym_tracker/presentation/components/mobility_exercise_tile.dart';
+import 'package:gym_tracker/presentation/components/pdf_share_helper.dart';
 import 'package:gym_tracker/presentation/screens/mobility/mobility_timer_screen.dart';
 
 /// Detail screen for a mobility routine.
@@ -76,7 +79,52 @@ class _MobilityRoutineDetailScreenState
   void _handleExport() => showExportSheet(
         context,
         jsonString: widget.routine.toExportJsonString(),
+        onExportPdf: _exportPdf,
       );
+
+  Future<void> _exportPdf() async {
+    final l10n = AppLocalizations.of(context)!;
+    try {
+      final sessions = await widget.mobilitySessionPort.loadSessions();
+      final routineSessions = sessions
+          .where((session) =>
+              session.routineKey == widget.routine.recommendedRoutineKey)
+          .toList()
+        ..sort(_compareSessionDesc);
+      final latestSession =
+          routineSessions.isEmpty ? null : routineSessions.first;
+
+      final bytes = await RoutinePdfExportService.buildMobilityRoutinePdf(
+        routine: widget.routine,
+        mobilityRoutine: _mobilityRoutine,
+        lastSession: latestSession,
+        generatedAt: DateTime.now(),
+      );
+
+      await sharePdfBytes(
+        pdfBytes: bytes,
+        fileName: 'rutina_movilidad_${widget.routine.name}_export.pdf',
+      );
+    } catch (error, stackTrace) {
+      debugPrint('Mobility PDF export failed: $error');
+      debugPrintStack(stackTrace: stackTrace);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.routineExportPdfError)),
+      );
+    }
+  }
+
+  int _compareSessionDesc(MobilitySession a, MobilitySession b) {
+    final byDate = b.date.compareTo(a.date);
+    if (byDate != 0) return byDate;
+    final aStart = a.startTime;
+    final bStart = b.startTime;
+    if (aStart == null && bStart == null) return 0;
+    if (aStart == null) return 1;
+    if (bStart == null) return -1;
+    return bStart.compareTo(aStart);
+  }
 
   Future<void> _confirmDelete() async {
     final confirmed = await showDeleteRoutineDialog(

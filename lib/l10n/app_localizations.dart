@@ -1178,6 +1178,18 @@ abstract class AppLocalizations {
   /// **'Compartir'**
   String get routineExportShare;
 
+  /// No description provided for @routineExportPdf.
+  ///
+  /// In es, this message translates to:
+  /// **'Exportar PDF'**
+  String get routineExportPdf;
+
+  /// No description provided for @routineExportPdfError.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo exportar la rutina en PDF'**
+  String get routineExportPdfError;
+
   /// No description provided for @routineExportCopied.
   ///
   /// In es, this message translates to:

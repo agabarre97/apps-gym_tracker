@@ -8,7 +8,11 @@ import 'package:gym_tracker/l10n/app_localizations.dart';
 ///
 /// Shared between routine detail and mobility routine detail screens
 /// to avoid duplicating the export UI.
-void showExportSheet(BuildContext context, {required String jsonString}) {
+void showExportSheet(
+  BuildContext context, {
+  required String jsonString,
+  Future<void> Function()? onExportPdf,
+}) {
   final l10n = AppLocalizations.of(context)!;
 
   showModalBottomSheet<void>(
@@ -38,9 +42,20 @@ void showExportSheet(BuildContext context, {required String jsonString}) {
               title: Text(l10n.routineExportShare),
               onTap: () {
                 Navigator.of(ctx).pop();
-                Share.share(jsonString);
+                SharePlus.instance.share(
+                  ShareParams(text: jsonString),
+                );
               },
             ),
+            if (onExportPdf != null)
+              ListTile(
+                leading: const Icon(Icons.picture_as_pdf_outlined),
+                title: Text(l10n.routineExportPdf),
+                onTap: () async {
+                  Navigator.of(ctx).pop();
+                  await onExportPdf();
+                },
+              ),
           ],
         ),
       ),

@@ -259,6 +259,8 @@
   "routineExport": "Export",
   "routineExportCopy": "Copy to clipboard",
   "routineExportShare": "Share",
+  "routineExportPdf": "Export PDF",
+  "routineExportPdfError": "Could not export routine as PDF",
   "routineExportCopied": "Routine copied to clipboard",
   "routineImport": "Import routine",
   "routineImportHint": "Paste routine JSON here",

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
+import 'package:gym_tracker/domain/entities/workout_session.dart';
+import 'package:gym_tracker/domain/services/routine_pdf_export_service.dart';
 import 'package:gym_tracker/presentation/components/export_sheet.dart';
+import 'package:gym_tracker/presentation/components/pdf_share_helper.dart';
 import 'package:gym_tracker/domain/entities/exercise.dart';
 import 'package:gym_tracker/domain/entities/muscle_group.dart';
 import 'package:gym_tracker/domain/entities/routine.dart';
@@ -69,7 +72,53 @@ class _RoutineDetailScreenState extends State<RoutineDetailScreen> {
   void _handleExport() => showExportSheet(
         context,
         jsonString: _routine.toExportJsonString(),
+        onExportPdf: _exportPdf,
       );
+
+  Future<void> _exportPdf() async {
+    final l10n = AppLocalizations.of(context)!;
+
+    try {
+      final sessions = await widget.workoutSessionPort.loadSessions();
+      final routineSessions = sessions
+          .where((session) => session.routineId == _routine.id)
+          .toList()
+        ..sort(_compareSessionDesc);
+      final latestSession =
+          routineSessions.isEmpty ? null : routineSessions.first;
+
+      final bytes = await RoutinePdfExportService.buildWorkoutRoutinePdf(
+        routine: _routine,
+        allExercises: widget.allExercises,
+        lastSession: latestSession,
+        generatedAt: DateTime.now(),
+      );
+
+      await sharePdfBytes(
+        pdfBytes: bytes,
+        fileName: 'rutina_${_routine.name}_export.pdf',
+      );
+    } catch (error, stackTrace) {
+      debugPrint('Routine PDF export failed: $error');
+      debugPrintStack(stackTrace: stackTrace);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.routineExportPdfError)),
+      );
+    }
+  }
+
+  int _compareSessionDesc(WorkoutSession a, WorkoutSession b) {
+    final byDate = b.date.compareTo(a.date);
+    if (byDate != 0) return byDate;
+
+    final aStart = a.startTime;
+    final bStart = b.startTime;
+    if (aStart == null && bStart == null) return 0;
+    if (aStart == null) return 1;
+    if (bStart == null) return -1;
+    return bStart.compareTo(aStart);
+  }
 
   // ── Delete ───────────────────────────────────────────────────────
 

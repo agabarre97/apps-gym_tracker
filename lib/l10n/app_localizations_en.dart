@@ -588,6 +588,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routineExportShare => 'Share';
 
   @override
+  String get routineExportPdf => 'Export PDF';
+
+  @override
+  String get routineExportPdfError => 'Could not export routine as PDF';
+
+  @override
   String get routineExportCopied => 'Routine copied to clipboard';
 
   @override

@@ -292,6 +292,8 @@
   "routineExport": "Exportar",
   "routineExportCopy": "Copiar al portapapeles",
   "routineExportShare": "Compartir",
+  "routineExportPdf": "Exportar PDF",
+  "routineExportPdfError": "No se pudo exportar la rutina en PDF",
   "routineExportCopied": "Rutina copiada al portapapeles",
   "routineImport": "Importar rutina",
   "routineImportHint": "Pega aquí el JSON de la rutina",

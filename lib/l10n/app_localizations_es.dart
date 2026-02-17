@@ -591,6 +591,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get routineExportShare => 'Compartir';
 
   @override
+  String get routineExportPdf => 'Exportar PDF';
+
+  @override
+  String get routineExportPdfError => 'No se pudo exportar la rutina en PDF';
+
+  @override
   String get routineExportCopied => 'Rutina copiada al portapapeles';
 
   @override
