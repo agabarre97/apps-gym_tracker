@@ -90,8 +90,7 @@ void main() {
       expect(find.byType(Slider), findsNothing);
     });
 
-    testWidgets('back from muscle groups (day 1) returns to days',
-        (tester) async {
+    testWidgets('back from exercises (day 1) returns to days', (tester) async {
       await tester.pumpWidget(_buildFlowApp(routinePort));
       await tester.pumpAndSettle();
 
@@ -103,8 +102,8 @@ void main() {
       await tester.tap(find.text('Siguiente'));
       await tester.pumpAndSettle();
 
-      // On muscle groups for day 1
-      expect(find.text('Grupos musculares'), findsOneWidget);
+      // On unified exercises screen for day 1
+      expect(find.text('Selecciona ejercicios'), findsOneWidget);
 
       // Tap back → should return to days
       await tester.tap(find.byIcon(Icons.arrow_back));
@@ -114,7 +113,7 @@ void main() {
     });
 
     testWidgets(
-        'back from exercises returns to muscle groups with chips selected',
+        'back from day 2 restores day 1 filters and selection',
         (tester) async {
       await tester.pumpWidget(_buildFlowApp(routinePort));
       await tester.pumpAndSettle();
@@ -127,31 +126,30 @@ void main() {
       await tester.tap(find.text('Siguiente'));
       await tester.pumpAndSettle();
 
-      // On muscle groups day 1: select Pectoral
+      // Day 1 exercises: select Pectoral filter
       await tester.tap(find.text('Pectoral'));
       await tester.pump();
 
-      // Confirm muscle groups → exercises
-      await tester.tap(find.text('Siguiente'));
+      // Select one exercise and confirm day 1
+      await tester.tap(find.byIcon(Icons.radio_button_unchecked).first);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Confirmar'));
       await tester.pumpAndSettle();
 
-      // Now on exercise selection
-      expect(find.text('Selecciona ejercicios'), findsOneWidget);
-
-      // Tap back
+      // Now on day 2 exercises. Tap back -> should restore day 1 state
       await tester.tap(find.byIcon(Icons.arrow_back));
       await tester.pumpAndSettle();
 
-      // Back on muscle groups — Pectoral should still be selected
-      expect(find.text('Grupos musculares'), findsOneWidget);
+      expect(find.text('Selecciona ejercicios'), findsOneWidget);
       final pectoralChip = tester.widget<FilterChip>(
         find.widgetWithText(FilterChip, 'Pectoral'),
       );
       expect(pectoralChip.selected, isTrue);
+      expect(find.byIcon(Icons.check_circle), findsOneWidget);
     });
 
     testWidgets(
-        'back from day 2 muscle groups restores day 1 exercise selection',
+        'day 1 to day 2 flow keeps selected exercise count visible',
         (tester) async {
       await tester.pumpWidget(_buildFlowApp(routinePort));
       await tester.pumpAndSettle();
@@ -166,14 +164,9 @@ void main() {
       await tester.tap(find.text('Siguiente'));
       await tester.pumpAndSettle();
 
-      // Muscle groups day 1: select Pectoral
+      // Select filter + exercise on day 1
       await tester.tap(find.text('Pectoral'));
       await tester.pump();
-      await tester.tap(find.text('Siguiente'));
-      await tester.pumpAndSettle();
-
-      // Exercises day 1: select "Press de Banca" via the checkbox icon
-      expect(find.text('Press de Banca'), findsOneWidget);
       await tester.tap(find.byIcon(Icons.radio_button_unchecked).first);
       await tester.pump();
 
@@ -184,17 +177,9 @@ void main() {
       await tester.tap(find.text('Confirmar'));
       await tester.pumpAndSettle();
 
-      // ── Now on Day 2 muscle groups ──
-      expect(find.text('Grupos musculares'), findsOneWidget);
-
-      // Tap back → should return to day 1 exercise selection
-      await tester.tap(find.byIcon(Icons.arrow_back));
-      await tester.pumpAndSettle();
-
-      // Day 1 exercises should show with "Press de Banca" still selected
+      // Day 2 unified screen is shown
       expect(find.text('Selecciona ejercicios'), findsOneWidget);
-      expect(find.text('Press de Banca'), findsOneWidget);
-      expect(find.byIcon(Icons.check_circle), findsOneWidget);
+      expect(find.byIcon(Icons.check_circle), findsNothing);
     });
   });
 }

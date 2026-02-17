@@ -39,8 +39,8 @@ void main() {
           ExerciseSelectionScreen(
             currentDay: 1,
             totalDays: 3,
-            selectedCategories: [MuscleGroupCategory.pectoral],
             allExercises: exercises,
+            initialSelectedCategories: const [MuscleGroupCategory.pectoral],
             onConfirmed: (_) {},
             onBack: () {},
           ),
@@ -62,8 +62,8 @@ void main() {
           ExerciseSelectionScreen(
             currentDay: 1,
             totalDays: 1,
-            selectedCategories: [MuscleGroupCategory.pectoral],
             allExercises: exercises,
+            initialSelectedCategories: const [MuscleGroupCategory.pectoral],
             onConfirmed: (_) {},
             onBack: () {},
           ),
@@ -82,8 +82,8 @@ void main() {
           ExerciseSelectionScreen(
             currentDay: 1,
             totalDays: 1,
-            selectedCategories: [MuscleGroupCategory.pectoral],
             allExercises: exercises,
+            initialSelectedCategories: const [MuscleGroupCategory.pectoral],
             onConfirmed: (_) {},
             onBack: () {},
           ),
@@ -107,8 +107,8 @@ void main() {
           ExerciseSelectionScreen(
             currentDay: 1,
             totalDays: 1,
-            selectedCategories: [MuscleGroupCategory.pectoral],
             allExercises: exercises,
+            initialSelectedCategories: const [MuscleGroupCategory.pectoral],
             onConfirmed: (_) {},
             onBack: () {},
           ),
@@ -139,8 +139,8 @@ void main() {
           ExerciseSelectionScreen(
             currentDay: 1,
             totalDays: 1,
-            selectedCategories: [MuscleGroupCategory.pectoral],
             allExercises: exercises,
+            initialSelectedCategories: const [MuscleGroupCategory.pectoral],
             initialSelectedKeys: const ['press_multipower'],
             onConfirmed: (_) {},
             onBack: () {},
@@ -155,6 +155,47 @@ void main() {
       // Confirm button should be enabled
       final button = tester.widget<FilledButton>(find.byType(FilledButton));
       expect(button.onPressed, isNotNull);
+    });
+
+    testWidgets('orders exercises by category priority for selected muscle group',
+        (tester) async {
+      final prioritizedExercises = const [
+        Exercise(
+          key: 'biceps_multi',
+          name: 'Curl multi',
+          description: 'desc',
+          muscleGroups: ['Dorsal ancho', 'Bíceps'],
+          difficulty: 5,
+          muscleCategoryPriority: {'biceps': 2, 'espalda': 1},
+        ),
+        Exercise(
+          key: 'biceps_only',
+          name: 'Curl bíceps',
+          description: 'desc',
+          muscleGroups: ['Bíceps braquial'],
+          difficulty: 5,
+          muscleCategoryPriority: {'biceps': 1},
+        ),
+      ];
+
+      await tester.pumpWidget(
+        buildTestableWidget(
+          ExerciseSelectionScreen(
+            currentDay: 1,
+            totalDays: 1,
+            allExercises: prioritizedExercises,
+            initialSelectedCategories: const [MuscleGroupCategory.biceps],
+            onConfirmed: (_) {},
+            onBack: () {},
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final bicepsOnlyY = tester.getTopLeft(find.text('Curl bíceps')).dy;
+      final bicepsMultiY = tester.getTopLeft(find.text('Curl multi')).dy;
+
+      expect(bicepsOnlyY, lessThan(bicepsMultiY));
     });
   });
 }

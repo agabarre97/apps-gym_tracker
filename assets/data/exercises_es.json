@@ -9,7 +9,12 @@
             "Tríceps"
         ],
         "dificultad_tecnica": 6,
-        "muscle_image": "assets/images/muscles/anterior_deltoid-triceps_brachii-upper_pectoralis_major.png"
+        "muscle_image": "assets/images/muscles/anterior_deltoid-triceps_brachii-upper_pectoralis_major.png",
+        "muscle_category_priority": {
+            "pectoral": 1,
+            "hombro": 2,
+            "triceps": 3
+        }
     },
     {
         "key": "press_declinado_en_multipower",
@@ -21,7 +26,12 @@
             "Deltoide anterior"
         ],
         "dificultad_tecnica": 5,
-        "muscle_image": "assets/images/muscles/anterior_deltoid-lower_pectoralis_major-triceps_brachii.png"
+        "muscle_image": "assets/images/muscles/anterior_deltoid-lower_pectoralis_major-triceps_brachii.png",
+        "muscle_category_priority": {
+            "pectoral": 1,
+            "triceps": 2,
+            "hombro": 3
+        }
     },
     {
         "key": "press_sentado_guiado",
@@ -33,7 +43,12 @@
             "Deltoide anterior"
         ],
         "dificultad_tecnica": 4,
-        "muscle_image": "assets/images/muscles/anterior_deltoid-pectoralis_major-triceps_brachii.png"
+        "muscle_image": "assets/images/muscles/anterior_deltoid-pectoralis_major-triceps_brachii.png",
+        "muscle_category_priority": {
+            "pectoral": 1,
+            "triceps": 2,
+            "hombro": 3
+        }
     },
     {
         "key": "cruce_de_poleas",
@@ -43,7 +58,10 @@
             "Pectoral mayor"
         ],
         "dificultad_tecnica": 5,
-        "muscle_image": "assets/images/muscles/pectoralis_major.png"
+        "muscle_image": "assets/images/muscles/pectoralis_major.png",
+        "muscle_category_priority": {
+            "pectoral": 1
+        }
     },
     {
         "key": "elevaciones_laterales_en_banco_inclinado",
@@ -116,7 +134,11 @@
             "Bíceps"
         ],
         "dificultad_tecnica": 5,
-        "muscle_image": "assets/images/muscles/biceps_brachii-latissimus_dorsi.png"
+        "muscle_image": "assets/images/muscles/biceps_brachii-latissimus_dorsi.png",
+        "muscle_category_priority": {
+            "espalda": 1,
+            "biceps": 2
+        }
     },
     {
         "key": "jalon_agarre_cerrado",
@@ -127,7 +149,11 @@
             "Bíceps"
         ],
         "dificultad_tecnica": 5,
-        "muscle_image": "assets/images/muscles/biceps_brachii-latissimus_dorsi.png"
+        "muscle_image": "assets/images/muscles/biceps_brachii-latissimus_dorsi.png",
+        "muscle_category_priority": {
+            "espalda": 1,
+            "biceps": 2
+        }
     },
     {
         "key": "remo_en_polea_baja",
@@ -140,7 +166,11 @@
             "Bíceps"
         ],
         "dificultad_tecnica": 5,
-        "muscle_image": "assets/images/muscles/biceps_brachii-latissimus_dorsi-middle_trapezius-rhomboids.png"
+        "muscle_image": "assets/images/muscles/biceps_brachii-latissimus_dorsi-middle_trapezius-rhomboids.png",
+        "muscle_category_priority": {
+            "espalda": 1,
+            "biceps": 2
+        }
     },
     {
         "key": "hiperextensiones_con_lastre",
@@ -184,7 +214,10 @@
             "Bíceps braquial"
         ],
         "dificultad_tecnica": 6,
-        "muscle_image": "assets/images/muscles/biceps_brachii.png"
+        "muscle_image": "assets/images/muscles/biceps_brachii.png",
+        "muscle_category_priority": {
+            "biceps": 1
+        }
     },
     {
         "key": "spider_curl",
@@ -194,7 +227,10 @@
             "Bíceps braquial"
         ],
         "dificultad_tecnica": 6,
-        "muscle_image": "assets/images/muscles/biceps_brachii.png"
+        "muscle_image": "assets/images/muscles/biceps_brachii.png",
+        "muscle_category_priority": {
+            "biceps": 1
+        }
     },
     {
         "key": "prensa",
@@ -349,7 +385,10 @@
             "Bíceps braquial"
         ],
         "dificultad_tecnica": 6,
-        "muscle_image": "assets/images/muscles/biceps_brachii.png"
+        "muscle_image": "assets/images/muscles/biceps_brachii.png",
+        "muscle_category_priority": {
+            "biceps": 1
+        }
     },
     {
         "key": "extension_de_triceps_con_cuerda",
@@ -369,7 +408,10 @@
             "Bíceps braquial"
         ],
         "dificultad_tecnica": 6,
-        "muscle_image": "assets/images/muscles/biceps_brachii.png"
+        "muscle_image": "assets/images/muscles/biceps_brachii.png",
+        "muscle_category_priority": {
+            "biceps": 1
+        }
     },
     {
         "key": "extension_en_cruz",
@@ -389,7 +431,10 @@
             "Bíceps braquial"
         ],
         "dificultad_tecnica": 3,
-        "muscle_image": "assets/images/muscles/biceps_brachii.png"
+        "muscle_image": "assets/images/muscles/biceps_brachii.png",
+        "muscle_category_priority": {
+            "biceps": 1
+        }
     },
     {
         "key": "extension_unilateral_en_polea_alta",
@@ -419,7 +464,10 @@
             "Bíceps braquial"
         ],
         "dificultad_tecnica": 4,
-        "muscle_image": "assets/images/muscles/biceps_brachii.png"
+        "muscle_image": "assets/images/muscles/biceps_brachii.png",
+        "muscle_category_priority": {
+            "biceps": 1
+        }
     },
     {
         "key": "press_katana_unilateral",

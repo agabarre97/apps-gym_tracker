@@ -102,11 +102,46 @@ List<Exercise> exercisesForCategories(
   List<MuscleGroupCategory> selected,
   List<Exercise> all,
 ) {
+  if (selected.isEmpty) return const [];
+
   final matchingRaw = <String>{};
   for (final cat in selected) {
     matchingRaw.addAll(muscleGroupMapping[cat]!);
   }
-  return all
+  final filtered = all
       .where((e) => e.muscleGroups.any(matchingRaw.contains))
       .toList();
+
+  int priorityForCategory(Exercise exercise, MuscleGroupCategory category) {
+    final categoryKey = category.name;
+    final explicitPriority = exercise.muscleCategoryPriority[categoryKey];
+    if (explicitPriority != null) return explicitPriority;
+
+    // Backward-compatible fallback for entries without explicit JSON priority:
+    // infer from the first matching muscle-group position.
+    final rawNames = muscleGroupMapping[category]!;
+    for (var index = 0; index < exercise.muscleGroups.length; index++) {
+      if (rawNames.contains(exercise.muscleGroups[index])) {
+        return index + 1;
+      }
+    }
+    return 999;
+  }
+
+  filtered.sort((a, b) {
+    final aBest =
+        selected.map((cat) => priorityForCategory(a, cat)).reduce((x, y) => x < y ? x : y);
+    final bBest =
+        selected.map((cat) => priorityForCategory(b, cat)).reduce((x, y) => x < y ? x : y);
+
+    if (aBest != bBest) return aBest.compareTo(bBest);
+
+    if (a.muscleGroups.length != b.muscleGroups.length) {
+      return a.muscleGroups.length.compareTo(b.muscleGroups.length);
+    }
+
+    return a.name.compareTo(b.name);
+  });
+
+  return filtered;
 }

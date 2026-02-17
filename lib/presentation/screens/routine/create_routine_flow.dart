@@ -11,7 +11,6 @@ import 'package:gym_tracker/domain/entities/routine.dart';
 import 'package:gym_tracker/domain/ports/routine_port.dart';
 import 'package:gym_tracker/presentation/screens/routine/routine_type_screen.dart';
 import 'package:gym_tracker/presentation/screens/routine/days_selection_screen.dart';
-import 'package:gym_tracker/presentation/screens/routine/muscle_group_selection_screen.dart';
 import 'package:gym_tracker/presentation/screens/routine/exercise_selection_screen.dart';
 import 'package:gym_tracker/presentation/screens/routine/routine_summary_screen.dart';
 import 'package:gym_tracker/presentation/screens/routine/mobility_subtype_screen.dart';
@@ -254,22 +253,15 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
       _dayExerciseKeys.clear();
       _currentMuscleSelection = [];
       _currentExerciseSelection = [];
-      _step = _Step.muscleGroups;
-    });
-  }
-
-  void _onMuscleGroupsConfirmed(List<MuscleGroupCategory> groups) {
-    setState(() {
-      _currentMuscleSelection = groups;
       _step = _Step.exercises;
     });
   }
 
-  void _onExercisesConfirmed(List<String> exerciseKeys) {
+  void _onExercisesConfirmed(ExerciseSelectionResult result) {
     setState(() {
       // Save completed day
-      _dayMuscleGroups.add(List.of(_currentMuscleSelection));
-      _dayExerciseKeys.add(List.of(exerciseKeys));
+      _dayMuscleGroups.add(List.of(result.selectedCategories));
+      _dayExerciseKeys.add(List.of(result.selectedExerciseKeys));
 
       // Clear current-day state
       _currentMuscleSelection = [];
@@ -277,7 +269,7 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
 
       if (_currentDayIndex < _numDays - 1) {
         _currentDayIndex++;
-        _step = _Step.muscleGroups;
+        _step = _Step.exercises;
       } else {
         _step = _Step.summary;
       }
@@ -327,15 +319,16 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
     final categories = _dayMuscleGroups[dayIndex];
     final currentKeys = _dayExerciseKeys[dayIndex];
 
-    final result = await Navigator.of(context).push<List<String>>(
+    final result = await Navigator.of(context).push<ExerciseSelectionResult>(
       MaterialPageRoute(
         builder: (_) => ExerciseSelectionScreen(
           currentDay: dayIndex + 1,
           totalDays: _numDays,
-          selectedCategories: categories,
           allExercises: _allExercises,
+          initialSelectedCategories: categories,
           initialSelectedKeys: currentKeys,
-          onConfirmed: (keys) => Navigator.of(context).pop(keys),
+          onConfirmed: (selectionResult) =>
+              Navigator.of(context).pop(selectionResult),
           onBack: () => Navigator.of(context).pop(),
         ),
       ),
@@ -343,7 +336,8 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
 
     if (result == null) return;
     setState(() {
-      _dayExerciseKeys[dayIndex] = result;
+      _dayMuscleGroups[dayIndex] = result.selectedCategories;
+      _dayExerciseKeys[dayIndex] = result.selectedExerciseKeys;
     });
   }
 
@@ -402,23 +396,15 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
         case _Step.days:
           _step = _Step.type;
 
-        case _Step.muscleGroups:
-          if (_currentDayIndex > 0) {
-            // Go back to previous day's exercise selection.
-            // Restore the completed day data as current-day state.
+        case _Step.exercises:
+          if (_currentDayIndex > 0 && _dayExerciseKeys.isNotEmpty) {
             _currentDayIndex--;
             _currentMuscleSelection = _dayMuscleGroups.removeLast();
             _currentExerciseSelection = _dayExerciseKeys.removeLast();
             _step = _Step.exercises;
           } else {
-            // First day — go back to days slider
             _step = _Step.days;
           }
-
-        case _Step.exercises:
-          // Go back to muscle group selection for the same day.
-          // _currentMuscleSelection is already set.
-          _step = _Step.muscleGroups;
 
         case _Step.summary:
           // Go back to last day's exercise selection.
@@ -481,23 +467,14 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
           onConfirmed: _onDaysConfirmed,
           onBack: _goBack,
         );
-      case _Step.muscleGroups:
-        _loadExercises();
-        return MuscleGroupSelectionScreen(
-          key: ValueKey('muscleGroups_$_currentDayIndex'),
-          currentDay: _currentDayIndex + 1,
-          totalDays: _numDays,
-          initialSelection: _currentMuscleSelection,
-          onConfirmed: _onMuscleGroupsConfirmed,
-          onBack: _goBack,
-        );
       case _Step.exercises:
+        _loadExercises();
         return ExerciseSelectionScreen(
           key: ValueKey('exercises_$_currentDayIndex'),
           currentDay: _currentDayIndex + 1,
           totalDays: _numDays,
-          selectedCategories: _currentMuscleSelection,
           allExercises: _allExercises,
+          initialSelectedCategories: _currentMuscleSelection,
           initialSelectedKeys: _currentExerciseSelection,
           onConfirmed: _onExercisesConfirmed,
           onBack: _goBack,
@@ -539,7 +516,6 @@ enum _Step {
   hiitExercises,
   hiitConfig,
   days,
-  muscleGroups,
   exercises,
   summary,
 }

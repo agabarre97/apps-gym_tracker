@@ -7,6 +7,7 @@ class Exercise {
     required this.muscleGroups,
     required this.difficulty,
     this.muscleImage,
+    this.muscleCategoryPriority = const {},
   });
 
   /// Locale-independent identifier (same in ES and EN JSON files).
@@ -16,6 +17,7 @@ class Exercise {
   final List<String> muscleGroups;
   final int difficulty;
   final String? muscleImage;
+  final Map<String, int> muscleCategoryPriority;
 
   factory Exercise.fromJson(Map<String, dynamic> json) => Exercise(
         key: json['key'] as String,
@@ -25,6 +27,10 @@ class Exercise {
             (json['grupo_muscular'] as List).cast<String>(),
         difficulty: json['dificultad_tecnica'] as int,
         muscleImage: json['muscle_image'] as String?,
+        muscleCategoryPriority:
+            ((json['muscle_category_priority'] as Map<String, dynamic>?) ??
+                    const {})
+                .map((key, value) => MapEntry(key, value as int)),
       );
 
   /// Resolves an exercise key to its localized display name.

@@ -159,5 +159,108 @@ void main() {
       );
       expect(result.length, 4);
     });
+
+    test('orders by explicit category priority and favors specific exercises', () {
+      final orderedExercises = [
+        const Exercise(
+          key: 'multi_first',
+          name: 'Multi primero',
+          description: '',
+          muscleGroups: ['Espalda', 'Bíceps'],
+          difficulty: 1,
+          muscleCategoryPriority: {'biceps': 2, 'espalda': 1},
+        ),
+        const Exercise(
+          key: 'single_biceps',
+          name: 'Solo bíceps',
+          description: '',
+          muscleGroups: ['Bíceps braquial'],
+          difficulty: 1,
+          muscleCategoryPriority: {'biceps': 1},
+        ),
+        const Exercise(
+          key: 'multi_same_priority',
+          name: 'Multi misma prioridad',
+          description: '',
+          muscleGroups: ['Bíceps', 'Tríceps'],
+          difficulty: 1,
+          muscleCategoryPriority: {'biceps': 1, 'triceps': 2},
+        ),
+      ];
+
+      final result = exercisesForCategories(
+        [MuscleGroupCategory.biceps],
+        orderedExercises,
+      );
+
+      expect(result.map((e) => e.key).toList(), [
+        'single_biceps',
+        'multi_same_priority',
+        'multi_first',
+      ]);
+    });
+
+    test('uses best any match when multiple categories are selected', () {
+      final exercises = [
+        const Exercise(
+          key: 'back_focus',
+          name: 'Back focus',
+          description: '',
+          muscleGroups: ['Dorsal ancho', 'Bíceps'],
+          difficulty: 1,
+          muscleCategoryPriority: {'espalda': 1, 'biceps': 2},
+        ),
+        const Exercise(
+          key: 'biceps_focus',
+          name: 'Biceps focus',
+          description: '',
+          muscleGroups: ['Bíceps', 'Dorsal ancho'],
+          difficulty: 1,
+          muscleCategoryPriority: {'biceps': 1, 'espalda': 2},
+        ),
+        const Exercise(
+          key: 'secondary',
+          name: 'Secondary',
+          description: '',
+          muscleGroups: ['Pectoral', 'Tríceps'],
+          difficulty: 1,
+          muscleCategoryPriority: {'pectoral': 2, 'triceps': 3},
+        ),
+      ];
+
+      final result = exercisesForCategories(
+        [MuscleGroupCategory.biceps, MuscleGroupCategory.espalda],
+        exercises,
+      );
+
+      expect(result.map((e) => e.key).toList(), [
+        'back_focus',
+        'biceps_focus',
+      ]);
+    });
+
+    test('falls back to muscleGroups order when explicit priority is missing', () {
+      final result = exercisesForCategories(
+        [MuscleGroupCategory.biceps],
+        const [
+          Exercise(
+            key: 'biceps_second',
+            name: 'Biceps second',
+            description: '',
+            muscleGroups: ['Dorsal ancho', 'Bíceps'],
+            difficulty: 1,
+          ),
+          Exercise(
+            key: 'biceps_first',
+            name: 'Biceps first',
+            description: '',
+            muscleGroups: ['Bíceps', 'Dorsal ancho'],
+            difficulty: 1,
+          ),
+        ],
+      );
+
+      expect(result.map((e) => e.key).toList(), ['biceps_first', 'biceps_second']);
+    });
   });
 }

@@ -4,6 +4,31 @@ import 'package:gym_tracker/domain/entities/exercise.dart';
 import 'package:gym_tracker/domain/entities/muscle_group.dart';
 import 'package:gym_tracker/presentation/screens/routine/exercise_detail_sheet.dart';
 
+/// Icon for each muscle group (presentation-layer concern).
+const Map<MuscleGroupCategory, IconData> _muscleGroupIcons = {
+  MuscleGroupCategory.pectoral: Icons.expand,
+  MuscleGroupCategory.espalda: Icons.airline_seat_flat,
+  MuscleGroupCategory.hombro: Icons.accessibility_new,
+  MuscleGroupCategory.triceps: Icons.back_hand,
+  MuscleGroupCategory.biceps: Icons.front_hand,
+  MuscleGroupCategory.cuadriceps: Icons.directions_walk,
+  MuscleGroupCategory.gluteos: Icons.event_seat,
+  MuscleGroupCategory.isquiotibiales: Icons.directions_run,
+  MuscleGroupCategory.gemelos: Icons.do_not_step,
+  MuscleGroupCategory.abdominales: Icons.self_improvement,
+};
+
+/// Combined output of the unified category+exercise selection screen.
+class ExerciseSelectionResult {
+  const ExerciseSelectionResult({
+    required this.selectedCategories,
+    required this.selectedExerciseKeys,
+  });
+
+  final List<MuscleGroupCategory> selectedCategories;
+  final List<String> selectedExerciseKeys;
+}
+
 /// Screen for selecting exercises for a given day.
 ///
 /// Selection is tracked by exercise **key** (locale-independent).
@@ -13,21 +38,25 @@ class ExerciseSelectionScreen extends StatefulWidget {
     super.key,
     required this.currentDay,
     required this.totalDays,
-    required this.selectedCategories,
     required this.allExercises,
     required this.onConfirmed,
     required this.onBack,
+    this.showDayProgress = true,
+    this.titleOverride,
+    this.initialSelectedCategories = const [],
     this.initialSelectedKeys = const [],
   });
 
   final int currentDay;
   final int totalDays;
-  final List<MuscleGroupCategory> selectedCategories;
   final List<Exercise> allExercises;
 
-  /// Returns a list of **exercise keys**.
-  final ValueChanged<List<String>> onConfirmed;
+  /// Returns categories + exercise keys in a single result.
+  final ValueChanged<ExerciseSelectionResult> onConfirmed;
   final VoidCallback onBack;
+  final bool showDayProgress;
+  final String? titleOverride;
+  final List<MuscleGroupCategory> initialSelectedCategories;
 
   /// Pre-selected exercise keys (used when navigating back or editing).
   final List<String> initialSelectedKeys;
@@ -38,17 +67,34 @@ class ExerciseSelectionScreen extends StatefulWidget {
 }
 
 class _ExerciseSelectionScreenState extends State<ExerciseSelectionScreen> {
+  late final Set<MuscleGroupCategory> _selectedCategories;
   late final Set<String> _selectedKeys;
-  late final List<Exercise> _filteredExercises;
+  late List<Exercise> _filteredExercises;
 
   @override
   void initState() {
     super.initState();
+    _selectedCategories = {...widget.initialSelectedCategories};
     _selectedKeys = {...widget.initialSelectedKeys};
+    _recomputeFilteredExercises();
+  }
+
+  void _recomputeFilteredExercises() {
     _filteredExercises = exercisesForCategories(
-      widget.selectedCategories,
+      _selectedCategories.toList(),
       widget.allExercises,
     );
+  }
+
+  void _toggleCategory(MuscleGroupCategory category, bool selected) {
+    setState(() {
+      if (selected) {
+        _selectedCategories.add(category);
+      } else {
+        _selectedCategories.remove(category);
+      }
+      _recomputeFilteredExercises();
+    });
   }
 
   void _toggleExercise(String key) {
@@ -84,13 +130,18 @@ class _ExerciseSelectionScreenState extends State<ExerciseSelectionScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final lang = Localizations.localeOf(context).languageCode;
+    final labels = muscleGroupLabels(lang);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(l10n.routineDayOf(
-          '${widget.currentDay}',
-          '${widget.totalDays}',
-        )),
+        title: Text(
+          widget.titleOverride ??
+              l10n.routineDayOf(
+                '${widget.currentDay}',
+                '${widget.totalDays}',
+              ),
+        ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: widget.onBack,
@@ -98,10 +149,12 @@ class _ExerciseSelectionScreenState extends State<ExerciseSelectionScreen> {
       ),
       body: Column(
         children: [
-          LinearProgressIndicator(
-            value: widget.currentDay / widget.totalDays,
-          ),
-          const SizedBox(height: 8),
+          if (widget.showDayProgress) ...[
+            LinearProgressIndicator(
+              value: widget.currentDay / widget.totalDays,
+            ),
+            const SizedBox(height: 8),
+          ],
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
@@ -119,86 +172,124 @@ class _ExerciseSelectionScreenState extends State<ExerciseSelectionScreen> {
             ),
           ),
           const SizedBox(height: 8),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              children: MuscleGroupCategory.values.map((category) {
+                final isSelected = _selectedCategories.contains(category);
+                return FilterChip(
+                  avatar: Icon(
+                    _muscleGroupIcons[category],
+                    size: 18,
+                    color: isSelected ? Colors.black : Colors.white70,
+                  ),
+                  label: Text(labels[category]!),
+                  selected: isSelected,
+                  selectedColor: Colors.white,
+                  checkmarkColor: Colors.black,
+                  labelStyle: TextStyle(
+                    color: isSelected ? Colors.black : Colors.white,
+                  ),
+                  backgroundColor: Colors.white12,
+                  onSelected: (selected) =>
+                      _toggleCategory(category, selected),
+                );
+              }).toList(),
+            ),
+          ),
+          const SizedBox(height: 8),
           Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              itemCount: _filteredExercises.length,
-              itemBuilder: (context, index) {
-                final exercise = _filteredExercises[index];
-                final isSelected = _selectedKeys.contains(exercise.key);
-
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 6),
-                  child: Card(
-                    color: isSelected
-                        ? Colors.white.withValues(alpha: 0.15)
-                        : null,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      side: isSelected
-                          ? const BorderSide(color: Colors.white38)
-                          : BorderSide.none,
+            child: _selectedCategories.isEmpty
+                ? Center(
+                    child: Text(
+                      l10n.routineSelectMuscleGroups,
+                      style:
+                          const TextStyle(fontSize: 14, color: Colors.white54),
                     ),
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(12),
-                      onTap: () => _showDetail(exercise),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 14),
-                        child: Row(
-                          children: [
-                            // Checkbox — toggles selection directly
-                            GestureDetector(
-                              behavior: HitTestBehavior.opaque,
-                              onTap: () => _toggleExercise(exercise.key),
-                              child: Padding(
-                                padding: const EdgeInsets.only(right: 12),
-                                child: Icon(
-                                  isSelected
-                                      ? Icons.check_circle
-                                      : Icons.radio_button_unchecked,
-                                  color: isSelected
-                                      ? Colors.greenAccent
-                                      : Colors.white38,
-                                ),
-                              ),
-                            ),
-                            // Exercise info — shows detail
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                  )
+                : ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    itemCount: _filteredExercises.length,
+                    itemBuilder: (context, index) {
+                      final exercise = _filteredExercises[index];
+                      final isSelected = _selectedKeys.contains(exercise.key);
+
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 6),
+                        child: Card(
+                          color: isSelected
+                              ? Colors.white.withValues(alpha: 0.15)
+                              : null,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            side: isSelected
+                                ? const BorderSide(color: Colors.white38)
+                                : BorderSide.none,
+                          ),
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(12),
+                            onTap: () => _showDetail(exercise),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 14),
+                              child: Row(
                                 children: [
-                                  Text(
-                                    exercise.name,
-                                    style: TextStyle(
-                                      fontWeight: isSelected
-                                          ? FontWeight.bold
-                                          : FontWeight.normal,
-                                      color: Colors.white,
+                                  // Checkbox — toggles selection directly
+                                  GestureDetector(
+                                    behavior: HitTestBehavior.opaque,
+                                    onTap: () => _toggleExercise(exercise.key),
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 12),
+                                      child: Icon(
+                                        isSelected
+                                            ? Icons.check_circle
+                                            : Icons.radio_button_unchecked,
+                                        color: isSelected
+                                            ? Colors.greenAccent
+                                            : Colors.white38,
+                                      ),
                                     ),
                                   ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    exercise.muscleGroups.join(' · '),
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.white54,
+                                  // Exercise info — shows detail
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          exercise.name,
+                                          style: TextStyle(
+                                            fontWeight: isSelected
+                                                ? FontWeight.bold
+                                                : FontWeight.normal,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          exercise.muscleGroups.join(' · '),
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.white54,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
+                                  // Difficulty dots
+                                  _DifficultyIndicator(
+                                      difficulty: exercise.difficulty),
                                 ],
                               ),
                             ),
-                            // Difficulty dots
-                            _DifficultyIndicator(
-                                difficulty: exercise.difficulty),
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
           ),
           // Bottom bar
           SafeArea(
@@ -210,7 +301,12 @@ class _ExerciseSelectionScreenState extends State<ExerciseSelectionScreen> {
                 height: 52,
                 child: FilledButton(
                   onPressed: _selectedKeys.isNotEmpty
-                      ? () => widget.onConfirmed(_selectedKeys.toList())
+                      ? () => widget.onConfirmed(
+                            ExerciseSelectionResult(
+                              selectedCategories: _selectedCategories.toList(),
+                              selectedExerciseKeys: _selectedKeys.toList(),
+                            ),
+                          )
                       : null,
                   child: Text(l10n.sharedConfirm),
                 ),

@@ -955,37 +955,65 @@ class _LandingScreenState extends State<LandingScreen> {
                     ],
                   ),
 
-                  // ── Type filter chips ──
+                  // ── Type filter dropdown ──
                   if (_availableTypes.length > 1) ...[
                     const SizedBox(height: 4),
-                    SizedBox(
-                      height: 38,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(right: 8),
-                            child: FilterChip(
-                              label: Text(l10n.landingFilterAll),
-                              selected: _routineTypeFilter == null,
-                              onSelected: (_) => setState(
-                                  () => _routineTypeFilter = null),
-                              visualDensity: VisualDensity.compact,
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: SizedBox(
+                        width: 220,
+                        child: DropdownButtonFormField<String?>(
+                          value: _routineTypeFilter,
+                          decoration: InputDecoration(
+                            isDense: true,
+                            filled: true,
+                            fillColor: Colors.white.withValues(alpha: 0.08),
+                            prefixIcon: const Icon(Icons.tune,
+                                size: 18, color: Colors.white54),
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 10),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(color: Colors.white24),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide:
+                                  const BorderSide(color: Colors.greenAccent),
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          ..._availableTypes.map(
-                            (type) => Padding(
-                              padding: const EdgeInsets.only(right: 8),
-                              child: FilterChip(
-                                label: Text(_typeLabelFor(type, l10n)),
-                                selected: _routineTypeFilter == type,
-                                onSelected: (_) => setState(
-                                    () => _routineTypeFilter = type),
-                                visualDensity: VisualDensity.compact,
+                          dropdownColor: const Color(0xFF2C2C2E),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          iconEnabledColor: Colors.white70,
+                          items: [
+                            DropdownMenuItem<String?>(
+                              value: null,
+                              child: Text(
+                                l10n.landingFilterAll,
+                                style: const TextStyle(color: Colors.white),
                               ),
                             ),
-                          ),
-                        ],
+                            ..._availableTypes.map(
+                              (type) => DropdownMenuItem<String?>(
+                                value: type,
+                                child: Text(
+                                  _typeLabelFor(type, l10n),
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          ],
+                          onChanged: (value) {
+                            setState(() => _routineTypeFilter = value);
+                          },
+                        ),
                       ),
                     ),
                   ],

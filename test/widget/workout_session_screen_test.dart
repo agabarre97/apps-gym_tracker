@@ -30,6 +30,13 @@ void main() {
           muscleGroups: ['Bíceps'],
           difficulty: 3,
         ),
+        Exercise(
+          key: 'extension_triceps',
+          name: 'Extensión tríceps',
+          description: 'Extensión en polea',
+          muscleGroups: ['Tríceps'],
+          difficulty: 4,
+        ),
       ];
 
       session = WorkoutSession(
@@ -277,6 +284,38 @@ void main() {
       final controller =
           (tester.widget<TextField>(repsField)).controller;
       expect(controller?.text, '6');
+    });
+
+    testWidgets(
+        'add exercise picker filters by category and appends new exercise',
+        (tester) async {
+      await tester.pumpWidget(
+        buildTestableWidget(
+          WorkoutSessionScreen(
+            session: session,
+            allExercises: exercises,
+            workoutSessionPort: port,
+            routineName: 'Test Routine',
+            trackTime: false,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byIcon(Icons.add).first);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Selecciona ejercicios'), findsWidgets);
+      await tester.tap(find.text('Tríceps'));
+      await tester.pumpAndSettle();
+      expect(find.text('Extensión tríceps'), findsOneWidget);
+
+      await tester.tap(find.byIcon(Icons.radio_button_unchecked).first);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Confirmar'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Extensión tríceps'), findsOneWidget);
     });
   });
 }

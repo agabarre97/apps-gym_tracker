@@ -8,6 +8,7 @@ import 'package:gym_tracker/l10n/app_localizations.dart';
 import 'package:gym_tracker/domain/entities/exercise.dart';
 import 'package:gym_tracker/domain/entities/workout_session.dart';
 import 'package:gym_tracker/domain/ports/workout_session_port.dart';
+import 'package:gym_tracker/presentation/screens/routine/exercise_selection_screen.dart';
 
 /// Main workout screen showing exercise cards with sets/reps/weight editing.
 class WorkoutSessionScreen extends StatefulWidget {
@@ -176,6 +177,48 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
     _updateExerciseSets(exIndex, newSets);
   }
 
+  Future<void> _openAddExercisePicker() async {
+    final l10n = AppLocalizations.of(context)!;
+    final initialKeys = _session.exercises.map((e) => e.exerciseKey).toList();
+
+    final result = await Navigator.of(context).push<ExerciseSelectionResult>(
+      MaterialPageRoute(
+        builder: (_) => ExerciseSelectionScreen(
+          currentDay: 1,
+          totalDays: 1,
+          allExercises: widget.allExercises,
+          initialSelectedCategories: const [],
+          initialSelectedKeys: initialKeys,
+          showDayProgress: false,
+          titleOverride: l10n.routineSelectExercises,
+          onConfirmed: (selectionResult) =>
+              Navigator.of(context).pop(selectionResult),
+          onBack: () => Navigator.of(context).pop(),
+        ),
+      ),
+    );
+
+    if (result == null) return;
+
+    final existingByKey = {
+      for (final exercise in _session.exercises) exercise.exerciseKey: exercise,
+    };
+    final updatedExercises = List<WorkoutExercise>.from(_session.exercises);
+
+    for (final key in result.selectedExerciseKeys) {
+      if (!existingByKey.containsKey(key)) {
+        updatedExercises.add(WorkoutExercise.empty(key));
+      }
+    }
+
+    if (updatedExercises.length == _session.exercises.length) return;
+
+    setState(() {
+      _session = _session.copyWith(exercises: updatedExercises);
+    });
+    await _persistSession();
+  }
+
   // ── Finish / Save ───────────────────────────────────────────────
 
   /// Live workout mode: confirm before finishing.
@@ -284,6 +327,11 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
         appBar: AppBar(
           title: Text(widget.routineName),
           actions: [
+            IconButton(
+              onPressed: _openAddExercisePicker,
+              icon: const Icon(Icons.add),
+              tooltip: l10n.workoutAddSet,
+            ),
             if (widget.trackTime)
               Padding(
                 padding: const EdgeInsets.only(right: 16),

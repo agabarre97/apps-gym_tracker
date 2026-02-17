@@ -308,10 +308,11 @@ class _EditDayExercisesScreen extends StatelessWidget {
     return ExerciseSelectionScreen(
       currentDay: dayIndex + 1,
       totalDays: totalDays,
-      selectedCategories: selectedCategories,
       allExercises: allExercises,
+      initialSelectedCategories: selectedCategories,
       initialSelectedKeys: initialSelectedKeys,
-      onConfirmed: (keys) => Navigator.of(context).pop(keys),
+      onConfirmed: (result) =>
+          Navigator.of(context).pop(result.selectedExerciseKeys),
       onBack: () => Navigator.of(context).pop(),
     );
   }
