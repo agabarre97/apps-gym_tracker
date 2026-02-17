@@ -25,8 +25,7 @@ class ProfileDatasource implements ProfilePort {
   }
 
   @override
-  Future<void> markProfileCompleted() =>
-      _storage.set(_completedKey, 'true');
+  Future<void> markProfileCompleted() => _storage.set(_completedKey, 'true');
 
   @override
   Future<bool> isProfileCompleted() async {

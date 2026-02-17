@@ -160,7 +160,8 @@ void main() {
       expect(result.length, 4);
     });
 
-    test('orders by explicit category priority and favors specific exercises', () {
+    test('orders by explicit category priority and favors specific exercises',
+        () {
       final orderedExercises = [
         const Exercise(
           key: 'multi_first',
@@ -239,7 +240,8 @@ void main() {
       ]);
     });
 
-    test('falls back to muscleGroups order when explicit priority is missing', () {
+    test('falls back to muscleGroups order when explicit priority is missing',
+        () {
       final result = exercisesForCategories(
         [MuscleGroupCategory.biceps],
         const [
@@ -260,7 +262,8 @@ void main() {
         ],
       );
 
-      expect(result.map((e) => e.key).toList(), ['biceps_first', 'biceps_second']);
+      expect(
+          result.map((e) => e.key).toList(), ['biceps_first', 'biceps_second']);
     });
   });
 }

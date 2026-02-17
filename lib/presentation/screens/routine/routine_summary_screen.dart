@@ -169,16 +169,14 @@ class _RoutineSummaryScreenState extends State<RoutineSummaryScreen> {
           // Save button
           SafeArea(
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               child: SizedBox(
                 width: double.infinity,
                 height: 52,
                 child: FilledButton(
-                  onPressed:
-                      _nameController.text.trim().isNotEmpty && !_saving
-                          ? _handleSave
-                          : null,
+                  onPressed: _nameController.text.trim().isNotEmpty && !_saving
+                      ? _handleSave
+                      : null,
                   child: _saving
                       ? const SizedBox(
                           width: 22,

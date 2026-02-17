@@ -133,7 +133,8 @@ class _AuthScreenState extends State<AuthScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.fitness_center, size: 64, color: Colors.white70),
+                  const Icon(Icons.fitness_center,
+                      size: 64, color: Colors.white70),
                   const SizedBox(height: 12),
                   Text(
                     l10n.sharedAppTitle,
@@ -182,8 +183,8 @@ class _AuthScreenState extends State<AuthScreen> {
                               ? Icons.visibility_off
                               : Icons.visibility,
                         ),
-                        onPressed: () =>
-                            setState(() => _obscurePassword = !_obscurePassword),
+                        onPressed: () => setState(
+                            () => _obscurePassword = !_obscurePassword),
                       ),
                     ),
                     validator: (v) {
@@ -240,7 +241,8 @@ class _AuthScreenState extends State<AuthScreen> {
                       const Expanded(child: Divider(color: Colors.white24)),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Text(l10n.authOr, style: const TextStyle(color: Colors.white38)),
+                        child: Text(l10n.authOr,
+                            style: const TextStyle(color: Colors.white38)),
                       ),
                       const Expanded(child: Divider(color: Colors.white24)),
                     ],

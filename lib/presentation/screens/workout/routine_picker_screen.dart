@@ -36,8 +36,7 @@ class RoutinePickerScreen extends StatelessWidget {
                 return Card(
                   margin: const EdgeInsets.only(bottom: 8),
                   child: ListTile(
-                    leading: Icon(
-                        RoutineTypeHelper.iconFor(routine.type),
+                    leading: Icon(RoutineTypeHelper.iconFor(routine.type),
                         color: Colors.white70),
                     title: Text(routine.name),
                     subtitle: routine.days.isNotEmpty
@@ -47,8 +46,8 @@ class RoutinePickerScreen extends StatelessWidget {
                                 fontSize: 12, color: Colors.white38),
                           )
                         : null,
-                    trailing: const Icon(Icons.chevron_right,
-                        color: Colors.white38),
+                    trailing:
+                        const Icon(Icons.chevron_right, color: Colors.white38),
                     onTap: () => onRoutineSelected(routine),
                   ),
                 );

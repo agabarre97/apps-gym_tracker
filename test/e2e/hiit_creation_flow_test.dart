@@ -13,9 +13,7 @@ const _mockHiitExercises = [
   HiitExercise(key: 'burpees', name: 'Burpees', description: 'Full body'),
   HiitExercise(key: 'jump_squats', name: 'Jump squats', description: 'Legs'),
   HiitExercise(
-      key: 'mountain_climbers',
-      name: 'Mountain climbers',
-      description: 'Core'),
+      key: 'mountain_climbers', name: 'Mountain climbers', description: 'Core'),
 ];
 
 Widget _buildFlowApp(FakeRoutinePort routinePort) {
@@ -45,8 +43,7 @@ void main() {
       routinePort = FakeRoutinePort();
     });
 
-    testWidgets(
-        'type selection → tap HIIT → exercise selection screen appears',
+    testWidgets('type selection → tap HIIT → exercise selection screen appears',
         (tester) async {
       await tester.pumpWidget(_buildFlowApp(routinePort));
       await tester.pumpAndSettle();
@@ -69,8 +66,7 @@ void main() {
       expect(find.text('Mountain climbers'), findsOneWidget);
     });
 
-    testWidgets(
-        'select 2 exercises → confirm → config screen appears',
+    testWidgets('select 2 exercises → confirm → config screen appears',
         (tester) async {
       await tester.pumpWidget(_buildFlowApp(routinePort));
       await tester.pumpAndSettle();
@@ -98,8 +94,7 @@ void main() {
       expect(find.text('Guardar'), findsOneWidget);
     });
 
-    testWidgets(
-        'enter name → save → routine is saved via FakeRoutinePort',
+    testWidgets('enter name → save → routine is saved via FakeRoutinePort',
         (tester) async {
       await tester.pumpWidget(_buildFlowApp(routinePort));
       await tester.pumpAndSettle();
@@ -139,8 +134,7 @@ void main() {
       expect(routines.first.days.first.exerciseKeys.length, 2);
     });
 
-    testWidgets(
-        'back navigation: config → exercises (selection preserved)',
+    testWidgets('back navigation: config → exercises (selection preserved)',
         (tester) async {
       await tester.pumpWidget(_buildFlowApp(routinePort));
       await tester.pumpAndSettle();
@@ -172,9 +166,7 @@ void main() {
       expect(find.textContaining('1'), findsWidgets);
     });
 
-    testWidgets(
-        'back navigation: exercises → type selection',
-        (tester) async {
+    testWidgets('back navigation: exercises → type selection', (tester) async {
       await tester.pumpWidget(_buildFlowApp(routinePort));
       await tester.pumpAndSettle();
 
@@ -195,8 +187,7 @@ void main() {
       expect(find.text('HIIT'), findsOneWidget);
     });
 
-    testWidgets(
-        'exercises load on first HIIT selection (async asset path)',
+    testWidgets('exercises load on first HIIT selection (async asset path)',
         (tester) async {
       // Build WITHOUT preloadedHiitExercises to test real async loading
       await tester.pumpWidget(

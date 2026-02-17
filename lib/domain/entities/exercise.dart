@@ -23,8 +23,7 @@ class Exercise {
         key: json['key'] as String,
         name: json['ejercicio'] as String,
         description: json['descripcion'] as String,
-        muscleGroups:
-            (json['grupo_muscular'] as List).cast<String>(),
+        muscleGroups: (json['grupo_muscular'] as List).cast<String>(),
         difficulty: json['dificultad_tecnica'] as int,
         muscleImage: json['muscle_image'] as String?,
         muscleCategoryPriority:

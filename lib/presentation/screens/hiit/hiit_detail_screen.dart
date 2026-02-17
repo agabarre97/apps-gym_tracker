@@ -59,8 +59,10 @@ class _HiitDetailScreenState extends State<HiitDetailScreen> {
     super.initState();
     _currentRoutine = widget.routine;
     _sets = widget.routine.hiitSets ?? HiitConfig.defaultSets;
-    _workSeconds = widget.routine.hiitWorkSeconds ?? HiitConfig.defaultWorkSeconds;
-    _restSeconds = widget.routine.hiitRestSeconds ?? HiitConfig.defaultRestSeconds;
+    _workSeconds =
+        widget.routine.hiitWorkSeconds ?? HiitConfig.defaultWorkSeconds;
+    _restSeconds =
+        widget.routine.hiitRestSeconds ?? HiitConfig.defaultRestSeconds;
     _setRestSeconds =
         widget.routine.hiitSetRestSeconds ?? HiitConfig.defaultSetRestSeconds;
   }
@@ -93,15 +95,13 @@ class _HiitDetailScreenState extends State<HiitDetailScreen> {
   List<HiitExercise> get _routineExercises {
     if (_currentRoutine.days.isEmpty) return [];
     final keys = _currentRoutine.days.first.exerciseKeys;
-    return keys
-        .map((key) {
-          try {
-            return _allHiitExercises.firstWhere((e) => e.key == key);
-          } catch (_) {
-            return HiitExercise(key: key, name: key, description: '');
-          }
-        })
-        .toList();
+    return keys.map((key) {
+      try {
+        return _allHiitExercises.firstWhere((e) => e.key == key);
+      } catch (_) {
+        return HiitExercise(key: key, name: key, description: '');
+      }
+    }).toList();
   }
 
   int get _totalDurationSeconds {
@@ -171,8 +171,9 @@ class _HiitDetailScreenState extends State<HiitDetailScreen> {
 
     if (confirmed != true || !mounted) return;
 
-    final updated =
-        widget.allRoutines.where((r) => r.id != _currentRoutine.id).toList();
+    final updated = widget.allRoutines.map((r) {
+      return r.id == _currentRoutine.id ? r.copyWith(isArchived: true) : r;
+    }).toList();
     await widget.routinePort.saveRoutines(updated);
 
     if (!mounted) return;
@@ -276,6 +277,7 @@ class _HiitDetailScreenState extends State<HiitDetailScreen> {
           restSeconds: _restSeconds,
           setRestSeconds: _setRestSeconds,
           hiitSessionPort: widget.hiitSessionPort,
+          autoStart: true,
         ),
       ),
     );

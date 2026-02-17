@@ -4,8 +4,8 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:gym_tracker/domain/entities/workout_session.dart';
 import 'package:gym_tracker/domain/ports/workout_session_port.dart';
+import 'package:gym_tracker/domain/services/exercise_progress_calculator.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
-import 'package:gym_tracker/presentation/screens/workout/exercise_progress_calculator.dart';
 
 /// Displays historical progress for a single exercise within a specific
 /// routine + day.
@@ -71,9 +71,8 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
     );
     setState(() {
       _sessions = sessions;
-      _comparedDates = dates.length >= 2
-          ? [dates[0], dates[1]]
-          : List.of(dates);
+      _comparedDates =
+          dates.length >= 2 ? [dates[0], dates[1]] : List.of(dates);
     });
   }
 
@@ -192,19 +191,20 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
 
     final weightStr = heaviest.weight == heaviest.weight.truncateToDouble()
         ? heaviest.weight.toInt().toString()
-        : heaviest.weight.toStringAsFixed(2)
+        : heaviest.weight
+            .toStringAsFixed(2)
             .replaceAll(RegExp(r'0+$'), '')
             .replaceAll(RegExp(r'\.$'), '');
 
     return Card(
-      color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3),
+      color:
+          Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Row(
           children: [
-            Icon(Icons.emoji_events,
-                color: Colors.amber.shade400, size: 28),
+            Icon(Icons.emoji_events, color: Colors.amber.shade400, size: 28),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
@@ -212,8 +212,7 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
                 children: [
                   Text(
                     l10n.progressHeaviestSet,
-                    style: const TextStyle(
-                        fontSize: 12, color: Colors.white54),
+                    style: const TextStyle(fontSize: 12, color: Colors.white54),
                   ),
                   const SizedBox(height: 2),
                   Text(
@@ -313,15 +312,18 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
             ),
           ),
           titlesData: FlTitlesData(
-            topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            topTitles:
+                const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            rightTitles:
+                const AxisTitles(sideTitles: SideTitles(showTitles: false)),
             leftTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
                 reservedSize: 52,
                 interval: _calculateYInterval(result),
                 getTitlesWidget: (value, meta) {
-                  if (value < (result.minValue > 0 ? result.minValue * 0.9 : 0) ||
+                  if (value <
+                          (result.minValue > 0 ? result.minValue * 0.9 : 0) ||
                       value > result.maxValue * 1.1) {
                     return const SizedBox.shrink();
                   }
@@ -329,7 +331,8 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
                     padding: const EdgeInsets.only(right: 4),
                     child: Text(
                       _formatValue(value),
-                      style: const TextStyle(fontSize: 11, color: Colors.white54),
+                      style:
+                          const TextStyle(fontSize: 11, color: Colors.white54),
                     ),
                   );
                 },
@@ -349,7 +352,8 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
                     padding: const EdgeInsets.only(top: 6),
                     child: Text(
                       dateLabels[idx] ?? '',
-                      style: const TextStyle(fontSize: 9, color: Colors.white54),
+                      style:
+                          const TextStyle(fontSize: 9, color: Colors.white54),
                     ),
                   );
                 },
@@ -374,7 +378,10 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
               ),
               belowBarData: BarAreaData(
                 show: true,
-                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
+                color: Theme.of(context)
+                    .colorScheme
+                    .primary
+                    .withValues(alpha: 0.15),
               ),
             ),
           ],
@@ -407,7 +414,22 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
 
     final raw = range / 3;
 
-    const steps = [1, 2, 5, 10, 20, 25, 50, 100, 200, 250, 500, 1000, 2000, 5000];
+    const steps = [
+      1,
+      2,
+      5,
+      10,
+      20,
+      25,
+      50,
+      100,
+      200,
+      250,
+      500,
+      1000,
+      2000,
+      5000
+    ];
     for (final s in steps) {
       if (s >= raw) return s.toDouble();
     }
@@ -593,9 +615,8 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
     final day1ByWeight = _groupSetsByWeight(sets1);
     final day2ByWeight = _groupSetsByWeight(sets2);
 
-    final allWeights = <double>{...day1ByWeight.keys, ...day2ByWeight.keys}
-        .toList()
-      ..sort();
+    final allWeights =
+        <double>{...day1ByWeight.keys, ...day2ByWeight.keys}.toList()..sort();
     if (allWeights.isEmpty) return const SizedBox.shrink();
 
     final primaryColor = Theme.of(context).colorScheme.primary;
@@ -636,10 +657,9 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
         BarChartGroupData(
           x: i,
           barsSpace: barsSpace,
-          showingTooltipIndicators:
-              _touchedGroupIdx == i && _touchedRodIdx >= 0
-                  ? [_touchedRodIdx]
-                  : [],
+          showingTooltipIndicators: _touchedGroupIdx == i && _touchedRodIdx >= 0
+              ? [_touchedRodIdx]
+              : [],
           barRods: [
             _buildStackedRod(setsD1, primaryColor, alpha1, widthDay1),
             _buildStackedRod(setsD2, secondaryColor, alpha2, widthDay2),
@@ -676,15 +696,14 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
                 ),
               ),
               titlesData: FlTitlesData(
-                topTitles: const AxisTitles(
-                    sideTitles: SideTitles(showTitles: false)),
-                rightTitles: const AxisTitles(
-                    sideTitles: SideTitles(showTitles: false)),
+                topTitles:
+                    const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                rightTitles:
+                    const AxisTitles(sideTitles: SideTitles(showTitles: false)),
                 leftTitles: AxisTitles(
                   axisNameWidget: Text(
                     l10n.progressCompareYLabel,
-                    style:
-                        const TextStyle(fontSize: 10, color: Colors.white38),
+                    style: const TextStyle(fontSize: 10, color: Colors.white38),
                   ),
                   axisNameSize: 20,
                   sideTitles: SideTitles(
@@ -704,8 +723,7 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
                 bottomTitles: AxisTitles(
                   axisNameWidget: Text(
                     l10n.progressCompareXLabel,
-                    style:
-                        const TextStyle(fontSize: 10, color: Colors.white38),
+                    style: const TextStyle(fontSize: 10, color: Colors.white38),
                   ),
                   axisNameSize: 20,
                   sideTitles: SideTitles(
@@ -757,16 +775,14 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
                     final date = rodIdx == 0
                         ? _formatDate(_comparedDates[0])
                         : _formatDate(_comparedDates[1]);
-                    final total =
-                        sets.fold<int>(0, (sum, s) => sum + s.reps);
+                    final total = sets.fold<int>(0, (sum, s) => sum + s.reps);
                     if (sets.length == 1) {
                       return BarTooltipItem(
                         '$date\n${sets[0].reps} reps',
                         const TextStyle(fontSize: 11, color: Colors.white),
                       );
                     }
-                    final breakdown =
-                        sets.map((s) => '${s.reps}').join(' + ');
+                    final breakdown = sets.map((s) => '${s.reps}').join(' + ');
                     return BarTooltipItem(
                       '$date\n$breakdown = $total reps',
                       const TextStyle(fontSize: 11, color: Colors.white),
@@ -836,7 +852,8 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
   /// Formats weight as a clean string (no trailing zeros).
   String _formatWeight(double w) {
     if (w == w.truncateToDouble()) return w.toInt().toString();
-    return w.toStringAsFixed(2)
+    return w
+        .toStringAsFixed(2)
         .replaceAll(RegExp(r'0+$'), '')
         .replaceAll(RegExp(r'\.$'), '');
   }
@@ -864,7 +881,8 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
           ),
         ),
         const SizedBox(width: 4),
-        Text(label, style: const TextStyle(fontSize: 11, color: Colors.white70)),
+        Text(label,
+            style: const TextStyle(fontSize: 11, color: Colors.white70)),
       ],
     );
   }
@@ -910,7 +928,8 @@ class _DaySelector extends StatelessWidget {
       child: Column(
         children: [
           Text(label,
-              style: TextStyle(fontSize: 10, color: color.withValues(alpha: 0.7))),
+              style:
+                  TextStyle(fontSize: 10, color: color.withValues(alpha: 0.7))),
           const SizedBox(height: 2),
           Text(
             selected != null ? formatDate(selected!) : '–',
@@ -956,8 +975,7 @@ class _DatePickerSheet extends StatelessWidget {
               itemCount: dates.length,
               itemBuilder: (ctx, i) {
                 final d = dates[i];
-                final isSelected =
-                    selected != null && _sameDay(d, selected!);
+                final isSelected = selected != null && _sameDay(d, selected!);
                 return ListTile(
                   title: Text(formatDate(d)),
                   trailing:

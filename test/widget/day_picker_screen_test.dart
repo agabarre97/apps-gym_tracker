@@ -7,13 +7,17 @@ import '../helpers/test_helpers.dart';
 
 void main() {
   group('DayPickerScreen', () {
-    final routine = const Routine(
+    const routine = Routine(
       id: 'r1',
       name: 'Push Pull',
       type: 'musculacion',
       days: [
-        RoutineDay(muscleGroups: ['pectoral', 'triceps'], exerciseKeys: ['press_banca', 'fondos']),
-        RoutineDay(muscleGroups: ['espalda', 'biceps'], exerciseKeys: ['remo', 'curl']),
+        RoutineDay(
+            muscleGroups: ['pectoral', 'triceps'],
+            exerciseKeys: ['press_banca', 'fondos']),
+        RoutineDay(
+            muscleGroups: ['espalda', 'biceps'],
+            exerciseKeys: ['remo', 'curl']),
       ],
     );
 

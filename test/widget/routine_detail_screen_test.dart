@@ -19,7 +19,7 @@ void main() {
     ],
   );
 
-  final exercises = const [
+  const exercises = [
     Exercise(
       key: 'press_banca',
       name: 'Press banca',

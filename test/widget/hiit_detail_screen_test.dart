@@ -9,12 +9,9 @@ import '../helpers/test_helpers.dart';
 
 const _preloadedExercises = [
   HiitExercise(key: 'burpees', name: 'Burpees', description: 'Full body'),
+  HiitExercise(key: 'jump_squats', name: 'Jump squats', description: 'Legs'),
   HiitExercise(
-      key: 'jump_squats', name: 'Jump squats', description: 'Legs'),
-  HiitExercise(
-      key: 'mountain_climbers',
-      name: 'Mountain climbers',
-      description: 'Core'),
+      key: 'mountain_climbers', name: 'Mountain climbers', description: 'Core'),
 ];
 
 void main() {
@@ -42,7 +39,7 @@ void main() {
         buildTestableWidget(
           HiitDetailScreen(
             routine: hiitRoutine,
-            allRoutines: [hiitRoutine],
+            allRoutines: const [hiitRoutine],
             routinePort: FakeRoutinePort(),
             hiitSessionPort: FakeHiitSessionPort(),
             preloadedExercises: _preloadedExercises,
@@ -59,7 +56,7 @@ void main() {
         buildTestableWidget(
           HiitDetailScreen(
             routine: hiitRoutine,
-            allRoutines: [hiitRoutine],
+            allRoutines: const [hiitRoutine],
             routinePort: FakeRoutinePort(),
             hiitSessionPort: FakeHiitSessionPort(),
             preloadedExercises: _preloadedExercises,
@@ -77,7 +74,7 @@ void main() {
         buildTestableWidget(
           HiitDetailScreen(
             routine: hiitRoutine,
-            allRoutines: [hiitRoutine],
+            allRoutines: const [hiitRoutine],
             routinePort: FakeRoutinePort(),
             hiitSessionPort: FakeHiitSessionPort(),
             preloadedExercises: _preloadedExercises,
@@ -95,7 +92,7 @@ void main() {
         buildTestableWidget(
           HiitDetailScreen(
             routine: hiitRoutine,
-            allRoutines: [hiitRoutine],
+            allRoutines: const [hiitRoutine],
             routinePort: FakeRoutinePort(),
             hiitSessionPort: FakeHiitSessionPort(),
             preloadedExercises: _preloadedExercises,
@@ -115,7 +112,7 @@ void main() {
         buildTestableWidget(
           HiitDetailScreen(
             routine: hiitRoutine,
-            allRoutines: [hiitRoutine],
+            allRoutines: const [hiitRoutine],
             routinePort: FakeRoutinePort(),
             hiitSessionPort: FakeHiitSessionPort(),
             preloadedExercises: _preloadedExercises,
@@ -133,7 +130,7 @@ void main() {
         buildTestableWidget(
           HiitDetailScreen(
             routine: hiitRoutine,
-            allRoutines: [hiitRoutine],
+            allRoutines: const [hiitRoutine],
             routinePort: FakeRoutinePort(),
             hiitSessionPort: FakeHiitSessionPort(),
             preloadedExercises: _preloadedExercises,
@@ -158,7 +155,7 @@ void main() {
         buildTestableWidget(
           HiitDetailScreen(
             routine: hiitRoutine,
-            allRoutines: [hiitRoutine],
+            allRoutines: const [hiitRoutine],
             routinePort: FakeRoutinePort(),
             hiitSessionPort: FakeHiitSessionPort(),
             preloadedExercises: _preloadedExercises,

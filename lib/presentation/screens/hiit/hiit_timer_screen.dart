@@ -25,6 +25,7 @@ class HiitTimerScreen extends StatefulWidget {
     required this.restSeconds,
     required this.setRestSeconds,
     required this.hiitSessionPort,
+    this.autoStart = false,
   });
 
   final List<HiitExercise> exercises;
@@ -34,6 +35,10 @@ class HiitTimerScreen extends StatefulWidget {
   final int restSeconds;
   final int setRestSeconds;
   final HiitSessionPort hiitSessionPort;
+
+  /// When true, the countdown starts automatically on first frame,
+  /// skipping the manual "Comenzar" tap in the preview phase.
+  final bool autoStart;
 
   @override
   State<HiitTimerScreen> createState() => _HiitTimerScreenState();
@@ -77,6 +82,12 @@ class _HiitTimerScreenState extends State<HiitTimerScreen>
     _animController = AnimationController(vsync: this);
     _progressAnim =
         Tween<double>(begin: 1.0, end: 0.0).animate(_animController);
+
+    if (widget.autoStart) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _onStartPressed();
+      });
+    }
   }
 
   @override
@@ -280,9 +291,8 @@ class _HiitTimerScreenState extends State<HiitTimerScreen>
     if (_paused) {
       _animController.stop();
     } else {
-      final fraction = _totalPhaseSeconds > 0
-          ? _remainingSeconds / _totalPhaseSeconds
-          : 0.0;
+      final fraction =
+          _totalPhaseSeconds > 0 ? _remainingSeconds / _totalPhaseSeconds : 0.0;
       _animController.duration = Duration(seconds: _remainingSeconds);
       _animController.forward(from: 1.0 - fraction);
     }
@@ -455,14 +465,16 @@ class _HiitTimerScreenState extends State<HiitTimerScreen>
                   radius: 14,
                   backgroundColor: Colors.white12,
                   child: Text('${index + 1}',
-                      style: const TextStyle(fontSize: 12, color: Colors.white70)),
+                      style:
+                          const TextStyle(fontSize: 12, color: Colors.white70)),
                 ),
                 title: Text(exercise.name,
                     style: const TextStyle(color: Colors.white)),
                 subtitle: Text(exercise.description,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 12, color: Colors.white38)),
+                    style:
+                        const TextStyle(fontSize: 12, color: Colors.white38)),
               );
             },
           ),
@@ -598,8 +610,7 @@ class _HiitTimerScreenState extends State<HiitTimerScreen>
           const SizedBox(height: 8),
           if (isExercise)
             Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
               decoration: BoxDecoration(
                 color: Colors.white12,
                 borderRadius: BorderRadius.circular(20),
@@ -646,11 +657,8 @@ class _HiitTimerScreenState extends State<HiitTimerScreen>
                         ),
                         if (!isExercise)
                           Text(
-                            isExerciseRest
-                                ? l10n.hiitRest
-                                : l10n.hiitSetRest,
-                            style: TextStyle(
-                                fontSize: 14, color: timerColor),
+                            isExerciseRest ? l10n.hiitRest : l10n.hiitSetRest,
+                            style: TextStyle(fontSize: 14, color: timerColor),
                           ),
                       ],
                     ),
@@ -705,8 +713,7 @@ class _HiitTimerScreenState extends State<HiitTimerScreen>
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.check_circle,
-                size: 80, color: Colors.greenAccent),
+            const Icon(Icons.check_circle, size: 80, color: Colors.greenAccent),
             const SizedBox(height: 24),
             Text(l10n.hiitComplete,
                 style: const TextStyle(

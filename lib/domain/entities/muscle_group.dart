@@ -108,9 +108,8 @@ List<Exercise> exercisesForCategories(
   for (final cat in selected) {
     matchingRaw.addAll(muscleGroupMapping[cat]!);
   }
-  final filtered = all
-      .where((e) => e.muscleGroups.any(matchingRaw.contains))
-      .toList();
+  final filtered =
+      all.where((e) => e.muscleGroups.any(matchingRaw.contains)).toList();
 
   int priorityForCategory(Exercise exercise, MuscleGroupCategory category) {
     final categoryKey = category.name;
@@ -129,10 +128,12 @@ List<Exercise> exercisesForCategories(
   }
 
   filtered.sort((a, b) {
-    final aBest =
-        selected.map((cat) => priorityForCategory(a, cat)).reduce((x, y) => x < y ? x : y);
-    final bBest =
-        selected.map((cat) => priorityForCategory(b, cat)).reduce((x, y) => x < y ? x : y);
+    final aBest = selected
+        .map((cat) => priorityForCategory(a, cat))
+        .reduce((x, y) => x < y ? x : y);
+    final bBest = selected
+        .map((cat) => priorityForCategory(b, cat))
+        .reduce((x, y) => x < y ? x : y);
 
     if (aBest != bBest) return aBest.compareTo(bBest);
 

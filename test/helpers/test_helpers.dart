@@ -161,7 +161,7 @@ class FakeAuthPort implements AuthPort {
   @override
   Future<AuthUser> signInWithGoogle() async {
     _throwIfNeeded();
-    final user = AuthUser(uid: 'google-uid', email: 'test@gmail.com');
+    const user = AuthUser(uid: 'google-uid', email: 'test@gmail.com');
     simulatedUser = user;
     return user;
   }
@@ -183,7 +183,8 @@ class FakeSyncPort implements SyncPort {
   void setUserId(String? uid) => userId = uid;
 
   @override
-  Future<void> pullFromCloud({Duration timeout = const Duration(seconds: 10)}) async {
+  Future<void> pullFromCloud(
+      {Duration timeout = const Duration(seconds: 10)}) async {
     pullCount++;
   }
 

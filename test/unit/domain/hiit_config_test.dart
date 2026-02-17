@@ -52,9 +52,12 @@ void main() {
     });
 
     test('equality and hashCode', () {
-      const a = HiitConfig(sets: 3, workSeconds: 20, restSeconds: 10, setRestSeconds: 90);
-      const b = HiitConfig(sets: 3, workSeconds: 20, restSeconds: 10, setRestSeconds: 90);
-      const c = HiitConfig(sets: 4, workSeconds: 20, restSeconds: 10, setRestSeconds: 90);
+      const a = HiitConfig(
+          sets: 3, workSeconds: 20, restSeconds: 10, setRestSeconds: 90);
+      const b = HiitConfig(
+          sets: 3, workSeconds: 20, restSeconds: 10, setRestSeconds: 90);
+      const c = HiitConfig(
+          sets: 4, workSeconds: 20, restSeconds: 10, setRestSeconds: 90);
 
       expect(a, b);
       expect(a.hashCode, b.hashCode);
@@ -62,7 +65,8 @@ void main() {
     });
 
     test('toString contains all fields', () {
-      const config = HiitConfig(sets: 2, workSeconds: 30, restSeconds: 15, setRestSeconds: 60);
+      const config = HiitConfig(
+          sets: 2, workSeconds: 30, restSeconds: 15, setRestSeconds: 60);
       final str = config.toString();
       expect(str, contains('sets: 2'));
       expect(str, contains('work: 30s'));

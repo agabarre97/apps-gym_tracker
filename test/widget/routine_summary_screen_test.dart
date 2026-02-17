@@ -7,10 +7,30 @@ import 'package:gym_tracker/presentation/screens/routine/routine_summary_screen.
 import '../helpers/test_helpers.dart';
 
 const _mockExercises = [
-  Exercise(key: 'press_multipower', name: 'Press en multipower', description: '', muscleGroups: ['Pectoral superior'], difficulty: 5),
-  Exercise(key: 'extension_triceps', name: 'Extensión de tríceps', description: '', muscleGroups: ['Tríceps'], difficulty: 4),
-  Exercise(key: 'jalon_abierto', name: 'Jalón abierto', description: '', muscleGroups: ['Dorsal ancho'], difficulty: 5),
-  Exercise(key: 'remo_polea', name: 'Remo en polea baja', description: '', muscleGroups: ['Dorsal ancho'], difficulty: 5),
+  Exercise(
+      key: 'press_multipower',
+      name: 'Press en multipower',
+      description: '',
+      muscleGroups: ['Pectoral superior'],
+      difficulty: 5),
+  Exercise(
+      key: 'extension_triceps',
+      name: 'Extensión de tríceps',
+      description: '',
+      muscleGroups: ['Tríceps'],
+      difficulty: 4),
+  Exercise(
+      key: 'jalon_abierto',
+      name: 'Jalón abierto',
+      description: '',
+      muscleGroups: ['Dorsal ancho'],
+      difficulty: 5),
+  Exercise(
+      key: 'remo_polea',
+      name: 'Remo en polea baja',
+      description: '',
+      muscleGroups: ['Dorsal ancho'],
+      difficulty: 5),
 ];
 
 void main() {
@@ -20,11 +40,11 @@ void main() {
         buildTestableWidget(
           RoutineSummaryScreen(
             type: 'musculacion',
-            dayMuscleGroups: [
+            dayMuscleGroups: const [
               [MuscleGroupCategory.pectoral, MuscleGroupCategory.triceps],
               [MuscleGroupCategory.espalda, MuscleGroupCategory.biceps],
             ],
-            dayExerciseKeys: [
+            dayExerciseKeys: const [
               ['press_multipower', 'extension_triceps'],
               ['jalon_abierto', 'remo_polea'],
             ],
@@ -52,10 +72,10 @@ void main() {
         buildTestableWidget(
           RoutineSummaryScreen(
             type: 'musculacion',
-            dayMuscleGroups: [
+            dayMuscleGroups: const [
               [MuscleGroupCategory.pectoral],
             ],
-            dayExerciseKeys: [
+            dayExerciseKeys: const [
               ['press_multipower'],
             ],
             allExercises: _mockExercises,
@@ -75,10 +95,10 @@ void main() {
         buildTestableWidget(
           RoutineSummaryScreen(
             type: 'musculacion',
-            dayMuscleGroups: [
+            dayMuscleGroups: const [
               [MuscleGroupCategory.pectoral],
             ],
-            dayExerciseKeys: [
+            dayExerciseKeys: const [
               ['press_multipower'],
             ],
             allExercises: _mockExercises,

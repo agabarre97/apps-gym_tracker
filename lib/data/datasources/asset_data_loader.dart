@@ -19,10 +19,7 @@ abstract final class AssetDataLoader {
         : 'assets/data/exercises_es.json';
     final raw = await rootBundle.loadString(file);
     final list = jsonDecode(raw) as List;
-    return list
-        .cast<Map<String, dynamic>>()
-        .map(Exercise.fromJson)
-        .toList();
+    return list.cast<Map<String, dynamic>>().map(Exercise.fromJson).toList();
   }
 
   /// Loads all HIIT exercises for the given [languageCode].

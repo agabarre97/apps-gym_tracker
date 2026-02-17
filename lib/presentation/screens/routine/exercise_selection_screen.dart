@@ -71,6 +71,9 @@ class _ExerciseSelectionScreenState extends State<ExerciseSelectionScreen> {
   late final Set<String> _selectedKeys;
   late List<Exercise> _filteredExercises;
 
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
+
   @override
   void initState() {
     super.initState();
@@ -79,11 +82,26 @@ class _ExerciseSelectionScreenState extends State<ExerciseSelectionScreen> {
     _recomputeFilteredExercises();
   }
 
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
   void _recomputeFilteredExercises() {
     _filteredExercises = exercisesForCategories(
       _selectedCategories.toList(),
       widget.allExercises,
     );
+  }
+
+  /// Exercises filtered by both category and search query.
+  List<Exercise> get _displayedExercises {
+    if (_searchQuery.isEmpty) return _filteredExercises;
+    final query = _searchQuery.toLowerCase();
+    return _filteredExercises
+        .where((e) => e.name.toLowerCase().contains(query))
+        .toList();
   }
 
   void _toggleCategory(MuscleGroupCategory category, bool selected) {
@@ -193,13 +211,44 @@ class _ExerciseSelectionScreenState extends State<ExerciseSelectionScreen> {
                     color: isSelected ? Colors.black : Colors.white,
                   ),
                   backgroundColor: Colors.white12,
-                  onSelected: (selected) =>
-                      _toggleCategory(category, selected),
+                  onSelected: (selected) => _toggleCategory(category, selected),
                 );
               }).toList(),
             ),
           ),
           const SizedBox(height: 8),
+          if (_selectedCategories.isNotEmpty) ...[
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  hintText: l10n.exerciseSearchHint,
+                  hintStyle: const TextStyle(color: Colors.white38),
+                  prefixIcon: const Icon(Icons.search, color: Colors.white54),
+                  suffixIcon: _searchQuery.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.clear, color: Colors.white54),
+                          onPressed: () {
+                            _searchController.clear();
+                            setState(() => _searchQuery = '');
+                          },
+                        )
+                      : null,
+                  filled: true,
+                  fillColor: Colors.white.withValues(alpha: 0.08),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 10),
+                ),
+                style: const TextStyle(color: Colors.white),
+                onChanged: (value) => setState(() => _searchQuery = value),
+              ),
+            ),
+            const SizedBox(height: 8),
+          ],
           Expanded(
             child: _selectedCategories.isEmpty
                 ? Center(
@@ -211,9 +260,9 @@ class _ExerciseSelectionScreenState extends State<ExerciseSelectionScreen> {
                   )
                 : ListView.builder(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
-                    itemCount: _filteredExercises.length,
+                    itemCount: _displayedExercises.length,
                     itemBuilder: (context, index) {
-                      final exercise = _filteredExercises[index];
+                      final exercise = _displayedExercises[index];
                       final isSelected = _selectedKeys.contains(exercise.key);
 
                       return Padding(
@@ -241,8 +290,7 @@ class _ExerciseSelectionScreenState extends State<ExerciseSelectionScreen> {
                                     behavior: HitTestBehavior.opaque,
                                     onTap: () => _toggleExercise(exercise.key),
                                     child: Padding(
-                                      padding:
-                                          const EdgeInsets.only(right: 12),
+                                      padding: const EdgeInsets.only(right: 12),
                                       child: Icon(
                                         isSelected
                                             ? Icons.check_circle
@@ -294,8 +342,7 @@ class _ExerciseSelectionScreenState extends State<ExerciseSelectionScreen> {
           // Bottom bar
           SafeArea(
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               child: SizedBox(
                 width: double.infinity,
                 height: 52,

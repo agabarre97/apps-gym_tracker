@@ -73,8 +73,7 @@ class ProfileSummaryScreen extends StatelessWidget {
           _SectionCard(
             title: l10n.advancedMeasures1Title,
             rows: [
-              _Row(l10n.advancedMeasures1ArmSpan,
-                  _opt(profile.armSpanCm, na)),
+              _Row(l10n.advancedMeasures1ArmSpan, _opt(profile.armSpanCm, na)),
               _Row(l10n.advancedMeasures1BicepsPerimeter,
                   _opt(profile.bicepsPerimeterCm, na)),
               _Row(l10n.advancedMeasures1ChestPerimeter,
@@ -102,8 +101,7 @@ class ProfileSummaryScreen extends StatelessWidget {
                 _goalLabel(profile.weightGoal, l10n),
               ),
               if (profile.targetWeightKg != null)
-                _Row(l10n.goalsTargetWeight,
-                    '${profile.targetWeightKg}'),
+                _Row(l10n.goalsTargetWeight, '${profile.targetWeightKg}'),
               if (profile.kcalPerDay != null)
                 _Row(
                   profile.weightGoal == 'gain'

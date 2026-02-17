@@ -112,8 +112,7 @@ void main() {
       expect(find.byType(Slider), findsOneWidget);
     });
 
-    testWidgets(
-        'back from day 2 restores day 1 filters and selection',
+    testWidgets('back from day 2 restores day 1 filters and selection',
         (tester) async {
       await tester.pumpWidget(_buildFlowApp(routinePort));
       await tester.pumpAndSettle();
@@ -148,8 +147,7 @@ void main() {
       expect(find.byIcon(Icons.check_circle), findsOneWidget);
     });
 
-    testWidgets(
-        'day 1 to day 2 flow keeps selected exercise count visible',
+    testWidgets('day 1 to day 2 flow keeps selected exercise count visible',
         (tester) async {
       await tester.pumpWidget(_buildFlowApp(routinePort));
       await tester.pumpAndSettle();

@@ -48,8 +48,7 @@ void main() {
     });
 
     test('authStateChanges emits current user', () async {
-      authPort.simulatedUser =
-          const AuthUser(uid: 'uid1', email: 'a@b.com');
+      authPort.simulatedUser = const AuthUser(uid: 'uid1', email: 'a@b.com');
       final user = await authPort.authStateChanges.first;
       expect(user, isNotNull);
       expect(user!.uid, 'uid1');

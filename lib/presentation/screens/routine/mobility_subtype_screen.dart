@@ -57,8 +57,7 @@ class MobilitySubTypeScreen extends StatelessWidget {
               .map((o) => SelectableOptionGridCard(
                     option: o,
                     comingSoonLabel: l10n.routineComingSoon,
-                    onTap:
-                        o.enabled ? () => onSubTypeSelected(o.key) : null,
+                    onTap: o.enabled ? () => onSubTypeSelected(o.key) : null,
                   ))
               .toList(),
         ),

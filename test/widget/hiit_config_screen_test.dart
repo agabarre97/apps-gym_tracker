@@ -144,8 +144,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Tap save (scroll within ListView to reach the button)
-      await tester.scrollToAndTap(
-          find.widgetWithText(FilledButton, 'Guardar'));
+      await tester.scrollToAndTap(find.widgetWithText(FilledButton, 'Guardar'));
 
       expect(savedName, 'Tabata');
       expect(savedSets, 3); // default

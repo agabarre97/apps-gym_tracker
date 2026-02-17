@@ -150,14 +150,20 @@ class _LandingScreenState extends State<LandingScreen> {
   String _typeLabelFor(String type, AppLocalizations l10n) =>
       RoutineTypeHelper.labelFor(type, l10n);
 
+  /// Active (non-archived) routines, optionally filtered by type.
   List<Routine> get _filteredRoutines {
-    if (_routineTypeFilter == null) return _routines;
-    return _routines.where((r) => r.type == _routineTypeFilter).toList();
+    final active = _routines.where((r) => !r.isArchived);
+    if (_routineTypeFilter == null) return active.toList();
+    return active.where((r) => r.type == _routineTypeFilter).toList();
   }
 
-  /// Unique routine types present in the saved routines.
+  /// Unique routine types present in the active (non-archived) routines.
   List<String> get _availableTypes {
-    final types = _routines.map((r) => r.type).toSet().toList();
+    final types = _routines
+        .where((r) => !r.isArchived)
+        .map((r) => r.type)
+        .toSet()
+        .toList();
     types.sort();
     return types;
   }
@@ -206,8 +212,7 @@ class _LandingScreenState extends State<LandingScreen> {
   /// Starts the Add-training flow for a past or today day (no time tracking).
   Future<void> _startAddTrainingFlow() async {
     if (_routines.isEmpty || _selectedDay == null) return;
-    await _startWorkoutFlow(
-        trackTime: false, date: _normalise(_selectedDay!));
+    await _startWorkoutFlow(trackTime: false, date: _normalise(_selectedDay!));
   }
 
   /// Navigates to RoutinePicker → DayPicker → WorkoutSession,
@@ -220,7 +225,7 @@ class _LandingScreenState extends State<LandingScreen> {
     final routine = await Navigator.of(context).push<Routine>(
       MaterialPageRoute(
         builder: (_) => RoutinePickerScreen(
-          routines: _routines,
+          routines: _routines.where((r) => !r.isArchived).toList(),
           onRoutineSelected: (r) => Navigator.of(context).pop(r),
         ),
       ),
@@ -405,6 +410,7 @@ class _LandingScreenState extends State<LandingScreen> {
           routine: mobilityRoutine,
           mobilitySessionPort: widget.mobilitySessionPort,
           routineName: routine.name,
+          autoStart: true,
         ),
       ),
     );
@@ -518,8 +524,7 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 
   /// Shows a bottom sheet listing all training entries for the day.
-  Future<void> _showUnifiedSessionPicker(
-      List<_TrainingEntry> entries) async {
+  Future<void> _showUnifiedSessionPicker(List<_TrainingEntry> entries) async {
     final l10n = AppLocalizations.of(context)!;
 
     await showModalBottomSheet<void>(
@@ -554,8 +559,7 @@ class _LandingScreenState extends State<LandingScreen> {
                     ];
 
                     return ListTile(
-                      leading:
-                          Icon(entry.icon, color: Colors.white70),
+                      leading: Icon(entry.icon, color: Colors.white70),
                       title: Text(entry.displayName),
                       subtitle: Text(
                         subtitleParts.join(' · '),
@@ -570,10 +574,13 @@ class _LandingScreenState extends State<LandingScreen> {
                                 color: Colors.redAccent, size: 20),
                             tooltip: l10n.landingDeleteTrainingConfirm,
                             onPressed: () async {
+                              final navigator = Navigator.of(ctx);
                               await _confirmDeleteEntry(entry, l10n);
                               if (!mounted) return;
                               if (_entriesForSelectedDay.isEmpty) {
-                                Navigator.pop(ctx);
+                                if (navigator.mounted) {
+                                  navigator.pop();
+                                }
                               } else {
                                 setSheetState(() {});
                               }
@@ -587,8 +594,7 @@ class _LandingScreenState extends State<LandingScreen> {
                       onTap: entry.type == _TrainingEntryType.workout
                           ? () {
                               Navigator.pop(ctx);
-                              _navigateToWorkoutSession(
-                                  entry.workoutSession!);
+                              _navigateToWorkoutSession(entry.workoutSession!);
                             }
                           : null,
                     );
@@ -656,8 +662,7 @@ class _LandingScreenState extends State<LandingScreen> {
         await widget.mobilitySessionPort.saveSessions(_mobilitySessions);
         break;
       case _TrainingEntryType.hiit:
-        _hiitSessions =
-            _hiitSessions.where((s) => s.id != entry.id).toList();
+        _hiitSessions = _hiitSessions.where((s) => s.id != entry.id).toList();
         await widget.hiitSessionPort.saveSessions(_hiitSessions);
         break;
     }
@@ -838,8 +843,7 @@ class _LandingScreenState extends State<LandingScreen> {
           children: [
             // ── Top bar: avatar + language ──
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -848,7 +852,8 @@ class _LandingScreenState extends State<LandingScreen> {
                     icon: const CircleAvatar(
                       radius: 16,
                       backgroundColor: Colors.white24,
-                      child: Icon(Icons.person, size: 18, color: Colors.white70),
+                      child:
+                          Icon(Icons.person, size: 18, color: Colors.white70),
                     ),
                     onPressed: _goToProfile,
                   ),
@@ -963,7 +968,7 @@ class _LandingScreenState extends State<LandingScreen> {
                       child: SizedBox(
                         width: 220,
                         child: DropdownButtonFormField<String?>(
-                          value: _routineTypeFilter,
+                          initialValue: _routineTypeFilter,
                           decoration: InputDecoration(
                             isDense: true,
                             filled: true,
@@ -974,7 +979,8 @@ class _LandingScreenState extends State<LandingScreen> {
                                 horizontal: 12, vertical: 10),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(color: Colors.white24),
+                              borderSide:
+                                  const BorderSide(color: Colors.white24),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
@@ -1035,11 +1041,11 @@ class _LandingScreenState extends State<LandingScreen> {
                     )
                   else
                     ..._filteredRoutines.map(
-                          (routine) => _RoutineTile(
-                            routine: routine,
-                            onTap: () => _openRoutineDetail(routine),
-                          ),
-                        ),
+                      (routine) => _RoutineTile(
+                        routine: routine,
+                        onTap: () => _openRoutineDetail(routine),
+                      ),
+                    ),
                   const SizedBox(height: 24),
                 ],
               ),
@@ -1101,8 +1107,7 @@ class _LandingScreenState extends State<LandingScreen> {
         final hasWorkout = _sessions.any((s) => _normalise(s.date) == norm);
         final hasMobility =
             _mobilitySessions.any((s) => _normalise(s.date) == norm);
-        final hasHiit =
-            _hiitSessions.any((s) => _normalise(s.date) == norm);
+        final hasHiit = _hiitSessions.any((s) => _normalise(s.date) == norm);
         return (hasTrainingDay || hasWorkout || hasMobility || hasHiit)
             ? ['trained']
             : [];
@@ -1145,7 +1150,8 @@ class _RoutineTile extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
-        leading: Icon(RoutineTypeHelper.iconFor(routine.type), color: Colors.white70),
+        leading: Icon(RoutineTypeHelper.iconFor(routine.type),
+            color: Colors.white70),
         title: Text(routine.name),
         subtitle: routine.days.isNotEmpty
             ? Text(
@@ -1190,8 +1196,7 @@ class _TimeInputPageState extends State<_TimeInputPage> {
   TimeOfDay? _startTime;
   TimeOfDay? _endTime;
 
-  String _formatTime(TimeOfDay t) =>
-      '${t.hour.toString().padLeft(2, '0')}:'
+  String _formatTime(TimeOfDay t) => '${t.hour.toString().padLeft(2, '0')}:'
       '${t.minute.toString().padLeft(2, '0')}';
 
   @override
@@ -1298,8 +1303,8 @@ class _TimePickerRow extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(label,
-                      style: const TextStyle(
-                          fontSize: 12, color: Colors.white54)),
+                      style:
+                          const TextStyle(fontSize: 12, color: Colors.white54)),
                   const SizedBox(height: 2),
                   Text(
                     value,

@@ -122,8 +122,7 @@ class _MobilityExerciseDetailContent extends StatelessWidget {
                 runSpacing: 6,
                 children: info.benefits
                     .map((b) => Chip(
-                          label:
-                              Text(b, style: const TextStyle(fontSize: 12)),
+                          label: Text(b, style: const TextStyle(fontSize: 12)),
                           visualDensity: VisualDensity.compact,
                         ))
                     .toList(),

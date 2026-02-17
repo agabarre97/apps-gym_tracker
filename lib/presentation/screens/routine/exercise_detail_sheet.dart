@@ -102,17 +102,19 @@ class ExerciseDetailSheet extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
-              ...List.generate(10, (i) => Container(
-                    width: 10,
-                    height: 10,
-                    margin: const EdgeInsets.symmetric(horizontal: 2),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: i < exercise.difficulty
-                          ? Colors.greenAccent
-                          : Colors.white12,
-                    ),
-                  )),
+              ...List.generate(
+                  10,
+                  (i) => Container(
+                        width: 10,
+                        height: 10,
+                        margin: const EdgeInsets.symmetric(horizontal: 2),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: i < exercise.difficulty
+                              ? Colors.greenAccent
+                              : Colors.white12,
+                        ),
+                      )),
               const SizedBox(width: 8),
               Text(
                 '${exercise.difficulty}/10',

@@ -40,8 +40,9 @@ class ExerciseSet {
       ExerciseSet(
         reps: reps ?? this.reps,
         weight: weight ?? this.weight,
-        estimatedRestSeconds:
-            clearRest ? null : (estimatedRestSeconds ?? this.estimatedRestSeconds),
+        estimatedRestSeconds: clearRest
+            ? null
+            : (estimatedRestSeconds ?? this.estimatedRestSeconds),
       );
 }
 

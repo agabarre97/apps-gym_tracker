@@ -46,8 +46,7 @@ Future<void> selectToday(WidgetTester tester) async {
 }
 
 void main() {
-  testWidgets(
-      'Session picker shows all 3 session types with correct icons',
+  testWidgets('Session picker shows all 3 session types with correct icons',
       (tester) async {
     final routinePort = FakeRoutinePort();
     final trainingDayPort = FakeTrainingDayPort();
@@ -56,12 +55,12 @@ void main() {
     final hiitSessionPort = FakeHiitSessionPort();
 
     await routinePort.saveRoutines([
-      Routine(
+      const Routine(
         id: 'r1',
         name: 'Push Pull',
         type: 'musculacion',
         days: [
-          const RoutineDay(muscleGroups: ['chest'], exerciseKeys: ['bench'])
+          RoutineDay(muscleGroups: ['chest'], exerciseKeys: ['bench'])
         ],
       ),
     ]);

@@ -8,12 +8,17 @@ import '../helpers/test_helpers.dart';
 const _testExercises = [
   HiitExercise(key: 'burpees', name: 'Burpees', description: 'Full body'),
   HiitExercise(key: 'jump_squats', name: 'Jump squats', description: 'Legs'),
-  HiitExercise(key: 'mountain_climbers', name: 'Mountain climbers', description: 'Core'),
-  HiitExercise(key: 'jumping_jacks', name: 'Jumping jacks', description: 'Cardio'),
+  HiitExercise(
+      key: 'mountain_climbers', name: 'Mountain climbers', description: 'Core'),
+  HiitExercise(
+      key: 'jumping_jacks', name: 'Jumping jacks', description: 'Cardio'),
   HiitExercise(key: 'box_jumps', name: 'Box jumps', description: 'Explosive'),
-  HiitExercise(key: 'plank_jacks', name: 'Plank jacks', description: 'Core variant'),
-  HiitExercise(key: 'jump_lunges', name: 'Jump lunges', description: 'Legs variant'),
-  HiitExercise(key: 'sprint_in_place', name: 'Sprint in place', description: 'Speed'),
+  HiitExercise(
+      key: 'plank_jacks', name: 'Plank jacks', description: 'Core variant'),
+  HiitExercise(
+      key: 'jump_lunges', name: 'Jump lunges', description: 'Legs variant'),
+  HiitExercise(
+      key: 'sprint_in_place', name: 'Sprint in place', description: 'Speed'),
 ];
 
 void main() {
@@ -64,10 +69,8 @@ void main() {
           HiitExerciseSelectionScreen(
             exercises: _testExercises,
             // Pre-select 7 exercises
-            initialSelectedKeys: _testExercises
-                .take(7)
-                .map((e) => e.key)
-                .toList(),
+            initialSelectedKeys:
+                _testExercises.take(7).map((e) => e.key).toList(),
             onConfirmed: (_) {},
             onBack: () {},
           ),
@@ -88,10 +91,8 @@ void main() {
         buildTestableWidget(
           HiitExerciseSelectionScreen(
             exercises: _testExercises,
-            initialSelectedKeys: _testExercises
-                .take(6)
-                .map((e) => e.key)
-                .toList(),
+            initialSelectedKeys:
+                _testExercises.take(6).map((e) => e.key).toList(),
             onConfirmed: (_) {},
             onBack: () {},
           ),

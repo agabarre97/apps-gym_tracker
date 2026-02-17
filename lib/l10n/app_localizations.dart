@@ -497,7 +497,7 @@ abstract class AppLocalizations {
   /// No description provided for @mobilityFeetAnkles2.
   ///
   /// In es, this message translates to:
-  /// **'Pies y tobillos 2'**
+  /// **'Movilidad de tobillo'**
   String get mobilityFeetAnkles2;
 
   /// No description provided for @mobilityPelvicTilt.
@@ -1051,6 +1051,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Grupos musculares'**
   String get routineSelectMuscleGroups;
+
+  /// No description provided for @exerciseSearchHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Buscar ejercicio...'**
+  String get exerciseSearchHint;
 
   /// No description provided for @routineSelectExercises.
   ///

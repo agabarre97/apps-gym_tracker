@@ -20,11 +20,16 @@ class MobilityTimerScreen extends StatefulWidget {
     required this.routine,
     required this.mobilitySessionPort,
     required this.routineName,
+    this.autoStart = false,
   });
 
   final MobilityRoutine routine;
   final MobilitySessionPort mobilitySessionPort;
   final String routineName;
+
+  /// When true, the countdown starts automatically on first frame,
+  /// skipping the manual "Comenzar" tap in the preview phase.
+  final bool autoStart;
 
   @override
   State<MobilityTimerScreen> createState() => _MobilityTimerScreenState();
@@ -61,6 +66,12 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
     _animController = AnimationController(vsync: this);
     _progressAnim =
         Tween<double>(begin: 1.0, end: 0.0).animate(_animController);
+
+    if (widget.autoStart) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _onStartPressed();
+      });
+    }
   }
 
   @override
@@ -255,9 +266,8 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
     if (_paused) {
       _animController.stop();
     } else {
-      final fraction = _totalPhaseSeconds > 0
-          ? _remainingSeconds / _totalPhaseSeconds
-          : 0.0;
+      final fraction =
+          _totalPhaseSeconds > 0 ? _remainingSeconds / _totalPhaseSeconds : 0.0;
       _animController.duration = Duration(seconds: _remainingSeconds);
       _animController.forward(from: 1.0 - fraction);
     }
@@ -327,8 +337,7 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    final showSettings =
-        _phase != _Phase.complete && _phase != _Phase.preview;
+    final showSettings = _phase != _Phase.complete && _phase != _Phase.preview;
     final showFinish = _phase == _Phase.exercise ||
         _phase == _Phase.rest ||
         _phase == _Phase.countdown;
@@ -468,8 +477,7 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
     } else if (_currentExercise.bilateral) {
       sideLabel = l10n.mobilityBothSides;
     } else {
-      sideLabel =
-          _isLeftSide ? l10n.mobilityLeftSide : l10n.mobilityRightSide;
+      sideLabel = _isLeftSide ? l10n.mobilityLeftSide : l10n.mobilityRightSide;
     }
 
     final stepInfo = l10n.mobilityExerciseOf(
@@ -525,9 +533,8 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
                     return CustomPaint(
                       painter: CircularTimerPainter(
                         progress: 1.0 - _progressAnim.value,
-                        color: isRest
-                            ? Colors.orangeAccent
-                            : Colors.greenAccent,
+                        color:
+                            isRest ? Colors.orangeAccent : Colors.greenAccent,
                         backgroundColor: Colors.white12,
                         strokeWidth: 10,
                       ),
@@ -565,13 +572,11 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.skip_next,
-                      size: 18, color: Colors.white38),
+                  const Icon(Icons.skip_next, size: 18, color: Colors.white38),
                   const SizedBox(width: 6),
                   Text(
                     mobilityExerciseDisplayName(_nextExercise!.key, l10n),
-                    style: const TextStyle(
-                        fontSize: 14, color: Colors.white54),
+                    style: const TextStyle(fontSize: 14, color: Colors.white54),
                   ),
                 ],
               ),
@@ -603,8 +608,7 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.check_circle,
-                size: 80, color: Colors.greenAccent),
+            const Icon(Icons.check_circle, size: 80, color: Colors.greenAccent),
             const SizedBox(height: 24),
             Text(l10n.mobilityComplete,
                 style: const TextStyle(
@@ -613,8 +617,7 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
                     color: Colors.white)),
             const SizedBox(height: 12),
             Text(widget.routineName,
-                style:
-                    const TextStyle(fontSize: 16, color: Colors.white54)),
+                style: const TextStyle(fontSize: 16, color: Colors.white54)),
             const SizedBox(height: 48),
             FilledButton.icon(
               onPressed: () => Navigator.of(context).pop(true),

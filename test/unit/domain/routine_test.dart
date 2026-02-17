@@ -228,18 +228,104 @@ void main() {
     });
   });
 
+  // ── isArchived (soft delete) ────────────────────────────────
+
+  group('isArchived soft delete', () {
+    test('defaults to false when not present in JSON', () {
+      final json = {
+        'id': 'r1',
+        'name': 'Push',
+        'type': 'musculacion',
+        'days': <Map<String, dynamic>>[],
+      };
+      final routine = Routine.fromJson(json);
+      expect(routine.isArchived, isFalse);
+    });
+
+    test('toJson omits isArchived when false', () {
+      const routine = Routine(
+        id: 'r1',
+        name: 'Push',
+        type: 'musculacion',
+        days: [],
+      );
+      final json = routine.toJson();
+      expect(json.containsKey('isArchived'), isFalse);
+    });
+
+    test('toJson includes isArchived when true', () {
+      const routine = Routine(
+        id: 'r1',
+        name: 'Push',
+        type: 'musculacion',
+        days: [],
+        isArchived: true,
+      );
+      final json = routine.toJson();
+      expect(json['isArchived'], isTrue);
+    });
+
+    test('round-trip preserves isArchived true', () {
+      const routine = Routine(
+        id: 'r1',
+        name: 'Archived',
+        type: 'musculacion',
+        days: [],
+        isArchived: true,
+      );
+      final json = routine.toJson();
+      final restored = Routine.fromJson(json);
+      expect(restored.isArchived, isTrue);
+    });
+
+    test('copyWith can set isArchived to true', () {
+      const routine = Routine(
+        id: 'r1',
+        name: 'Push',
+        type: 'musculacion',
+        days: [],
+      );
+      final archived = routine.copyWith(isArchived: true);
+      expect(archived.isArchived, isTrue);
+      expect(archived.name, 'Push');
+    });
+
+    test('listToJsonString preserves isArchived in list round-trip', () {
+      final routines = [
+        const Routine(
+          id: 'r1',
+          name: 'Active',
+          type: 'musculacion',
+          days: [],
+        ),
+        const Routine(
+          id: 'r2',
+          name: 'Deleted',
+          type: 'musculacion',
+          days: [],
+          isArchived: true,
+        ),
+      ];
+      final jsonStr = Routine.listToJsonString(routines);
+      final restored = Routine.listFromJsonString(jsonStr);
+      expect(restored[0].isArchived, isFalse);
+      expect(restored[1].isArchived, isTrue);
+    });
+  });
+
   // ── HIIT config fields ──────────────────────────────────────
 
   group('HIIT config fields', () {
     test('toJson and fromJson round-trip preserves HIIT config', () {
-      final routine = Routine(
+      const routine = Routine(
         id: 'hiit1',
         name: 'My HIIT',
         type: 'hiit',
-        days: const [
-          RoutineDay(muscleGroups: [], exerciseKeys: ['burpees', 'jump_squats']),
+        days: [
+          RoutineDay(
+              muscleGroups: [], exerciseKeys: ['burpees', 'jump_squats']),
         ],
-        hiitConfig: const HiitConfig(
+        hiitConfig: HiitConfig(
           sets: 4,
           workSeconds: 30,
           restSeconds: 15,
@@ -275,12 +361,12 @@ void main() {
     });
 
     test('copyWith overrides HIIT config', () {
-      final routine = Routine(
+      const routine = Routine(
         id: 'hiit1',
         name: 'My HIIT',
         type: 'hiit',
-        days: const [],
-        hiitConfig: const HiitConfig(
+        days: [],
+        hiitConfig: HiitConfig(
           sets: 3,
           workSeconds: 20,
           restSeconds: 10,
@@ -302,14 +388,14 @@ void main() {
     });
 
     test('export and import round-trip preserves HIIT fields', () {
-      final routine = Routine(
+      const routine = Routine(
         id: 'hiit1',
         name: 'My HIIT',
         type: 'hiit',
-        days: const [
+        days: [
           RoutineDay(muscleGroups: [], exerciseKeys: ['burpees']),
         ],
-        hiitConfig: const HiitConfig(
+        hiitConfig: HiitConfig(
           sets: 4,
           workSeconds: 30,
           restSeconds: 15,

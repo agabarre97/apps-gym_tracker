@@ -100,7 +100,8 @@ void main() {
       expect(find.text('Añadir'), findsOneWidget);
     });
 
-    testWidgets('tapping checkbox icon toggles selection without opening detail',
+    testWidgets(
+        'tapping checkbox icon toggles selection without opening detail',
         (tester) async {
       await tester.pumpWidget(
         buildTestableWidget(
@@ -157,9 +158,10 @@ void main() {
       expect(button.onPressed, isNotNull);
     });
 
-    testWidgets('orders exercises by category priority for selected muscle group',
+    testWidgets(
+        'orders exercises by category priority for selected muscle group',
         (tester) async {
-      final prioritizedExercises = const [
+      const prioritizedExercises = [
         Exercise(
           key: 'biceps_multi',
           name: 'Curl multi',
@@ -196,6 +198,45 @@ void main() {
       final bicepsMultiY = tester.getTopLeft(find.text('Curl multi')).dy;
 
       expect(bicepsOnlyY, lessThan(bicepsMultiY));
+    });
+
+    testWidgets('search field filters exercises by name', (tester) async {
+      await tester.pumpWidget(
+        buildTestableWidget(
+          ExerciseSelectionScreen(
+            currentDay: 1,
+            totalDays: 1,
+            allExercises: exercises,
+            initialSelectedCategories: const [MuscleGroupCategory.pectoral],
+            onConfirmed: (_) {},
+            onBack: () {},
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Both pectoral exercises visible initially
+      expect(find.text('Press en multipower'), findsOneWidget);
+      expect(find.text('Cruce de poleas'), findsOneWidget);
+
+      // Type a search query that only matches "Press"
+      await tester.enterText(
+        find.byType(TextField),
+        'press',
+      );
+      await tester.pumpAndSettle();
+
+      // Only "Press en multipower" should remain visible
+      expect(find.text('Press en multipower'), findsOneWidget);
+      expect(find.text('Cruce de poleas'), findsNothing);
+
+      // Clear the search via the X button
+      await tester.tap(find.byIcon(Icons.clear));
+      await tester.pumpAndSettle();
+
+      // Both exercises visible again
+      expect(find.text('Press en multipower'), findsOneWidget);
+      expect(find.text('Cruce de poleas'), findsOneWidget);
     });
   });
 }

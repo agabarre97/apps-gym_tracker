@@ -65,8 +65,7 @@ class _MobilityRoutineDetailScreenState
       ]);
       setState(() {
         _mobilityRoutine = results[0] as MobilityRoutine;
-        _exerciseInfoMap =
-            results[1] as Map<String, MobilityExerciseInfo>;
+        _exerciseInfoMap = results[1] as Map<String, MobilityExerciseInfo>;
         _loading = false;
       });
     } catch (_) {
@@ -87,8 +86,9 @@ class _MobilityRoutineDetailScreenState
 
     if (confirmed != true || !mounted) return;
 
-    final updated =
-        widget.allRoutines.where((r) => r.id != widget.routine.id).toList();
+    final updated = widget.allRoutines.map((r) {
+      return r.id == widget.routine.id ? r.copyWith(isArchived: true) : r;
+    }).toList();
     await widget.routinePort.saveRoutines(updated);
 
     if (!mounted) return;
@@ -105,6 +105,7 @@ class _MobilityRoutineDetailScreenState
           routine: mr,
           mobilitySessionPort: widget.mobilitySessionPort,
           routineName: widget.routine.name,
+          autoStart: true,
         ),
       ),
     );
@@ -148,8 +149,7 @@ class _MobilityRoutineDetailScreenState
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
           child: Row(
             children: [
-              const Icon(Icons.timer_outlined,
-                  size: 20, color: Colors.white54),
+              const Icon(Icons.timer_outlined, size: 20, color: Colors.white54),
               const SizedBox(width: 8),
               Text(
                 l10n.mobilityRoutineDuration('${mr.totalDurationMinutes}'),

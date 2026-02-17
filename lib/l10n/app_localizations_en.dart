@@ -519,6 +519,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routineSelectMuscleGroups => 'Muscle groups';
 
   @override
+  String get exerciseSearchHint => 'Search exercise...';
+
+  @override
   String get routineSelectExercises => 'Select exercises';
 
   @override

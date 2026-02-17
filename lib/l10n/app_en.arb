@@ -233,6 +233,7 @@
   "routineDayOf": "Day {current} of {total}",
   "routineDaysCount": "{count} days",
   "routineSelectMuscleGroups": "Muscle groups",
+  "exerciseSearchHint": "Search exercise...",
   "routineSelectExercises": "Select exercises",
   "routineExerciseDetail": "Exercise detail",
   "routineAdd": "Add",

@@ -38,6 +38,7 @@ class Routine {
     required this.days,
     this.recommendedRoutineKey,
     this.hiitConfig,
+    this.isArchived = false,
   });
 
   final String id;
@@ -53,6 +54,10 @@ class Routine {
 
   /// HIIT configuration (only populated when [type] == 'hiit').
   final HiitConfig? hiitConfig;
+
+  /// Soft-delete flag. Archived routines are hidden from the active list
+  /// but remain in storage so historical sessions can still resolve their name.
+  final bool isArchived;
 
   // ── Backward-compatible convenience getters ────────────────────
 
@@ -74,6 +79,7 @@ class Routine {
           'hiitRestSeconds': hiitConfig!.restSeconds,
           'hiitSetRestSeconds': hiitConfig!.setRestSeconds,
         },
+        if (isArchived) 'isArchived': true,
       };
 
   factory Routine.fromJson(Map<String, dynamic> json) {
@@ -82,8 +88,10 @@ class Routine {
     final hiitWork = json['hiitWorkSeconds'] as int?;
     final hiitRest = json['hiitRestSeconds'] as int?;
     final hiitSetRest = json['hiitSetRestSeconds'] as int?;
-    final hasHiitFields =
-        hiitSets != null || hiitWork != null || hiitRest != null || hiitSetRest != null;
+    final hasHiitFields = hiitSets != null ||
+        hiitWork != null ||
+        hiitRest != null ||
+        hiitSetRest != null;
 
     return Routine(
       id: json['id'] as String,
@@ -104,6 +112,7 @@ class Routine {
               setRestSeconds: hiitSetRest ?? HiitConfig.defaultSetRestSeconds,
             )
           : null,
+      isArchived: json['isArchived'] as bool? ?? false,
     );
   }
 
@@ -115,6 +124,7 @@ class Routine {
     List<RoutineDay>? days,
     String? recommendedRoutineKey,
     HiitConfig? hiitConfig,
+    bool? isArchived,
   }) =>
       Routine(
         id: id ?? this.id,
@@ -124,6 +134,7 @@ class Routine {
         recommendedRoutineKey:
             recommendedRoutineKey ?? this.recommendedRoutineKey,
         hiitConfig: hiitConfig ?? this.hiitConfig,
+        isArchived: isArchived ?? this.isArchived,
       );
 
   /// Current export format version — bump when the schema changes.
@@ -179,17 +190,16 @@ class Routine {
     final hiitWork = decoded['hiitWorkSeconds'] as int?;
     final hiitRest = decoded['hiitRestSeconds'] as int?;
     final hiitSetRest = decoded['hiitSetRestSeconds'] as int?;
-    final hasHiitFields =
-        hiitSets != null || hiitWork != null || hiitRest != null || hiitSetRest != null;
+    final hasHiitFields = hiitSets != null ||
+        hiitWork != null ||
+        hiitRest != null ||
+        hiitSetRest != null;
 
     return Routine(
       id: id,
       name: name,
       type: type,
-      days: days
-          .cast<Map<String, dynamic>>()
-          .map(RoutineDay.fromJson)
-          .toList(),
+      days: days.cast<Map<String, dynamic>>().map(RoutineDay.fromJson).toList(),
       recommendedRoutineKey: decoded['recommendedRoutineKey'] as String?,
       hiitConfig: hasHiitFields
           ? HiitConfig(

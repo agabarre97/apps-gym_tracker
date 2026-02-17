@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
 
 import 'package:gym_tracker/domain/entities/exercise.dart';
+import 'package:gym_tracker/domain/services/rest_time_calculator.dart';
 import 'package:gym_tracker/domain/entities/workout_session.dart';
 import 'package:gym_tracker/domain/ports/workout_session_port.dart';
 import 'package:gym_tracker/presentation/screens/routine/exercise_selection_screen.dart';
@@ -160,10 +161,10 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
       final prevKey = (exIndex, setIndex - 1);
       final prevLastEdit = _lastEditTimes[prevKey];
       final thisFirstEdit = _firstEditTimes[key];
-      if (prevLastEdit != null && thisFirstEdit != null) {
-        restSeconds = thisFirstEdit.difference(prevLastEdit).inSeconds;
-        if (restSeconds < 0) restSeconds = null;
-      }
+      restSeconds = RestTimeCalculator.fromEditTimes(
+        previousSetLastEdit: prevLastEdit,
+        currentSetFirstEdit: thisFirstEdit,
+      );
     }
 
     final ex = _session.exercises[exIndex];
@@ -286,7 +287,10 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
     for (final s in ex.sets) {
       final w = s.weight == s.weight.truncateToDouble()
           ? s.weight.toInt().toString()
-          : s.weight.toStringAsFixed(2).replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+          : s.weight
+              .toStringAsFixed(2)
+              .replaceAll(RegExp(r'0+$'), '')
+              .replaceAll(RegExp(r'\.$'), '');
       parts.add('${s.reps}x${w}kg');
     }
     return parts.join(' | ');
@@ -295,7 +299,8 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
   /// Compute average rest seconds for an exercise (ignoring first set and nulls).
   String? _averageRestLabel(WorkoutExercise ex) {
     final rests = ex.sets
-        .where((s) => s.estimatedRestSeconds != null && s.estimatedRestSeconds! > 0)
+        .where((s) =>
+            s.estimatedRestSeconds != null && s.estimatedRestSeconds! > 0)
         .map((s) => s.estimatedRestSeconds!)
         .toList();
     if (rests.isEmpty) return null;
@@ -429,8 +434,7 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
-                        color:
-                            ex.completed ? Colors.greenAccent : Colors.white,
+                        color: ex.completed ? Colors.greenAccent : Colors.white,
                       ),
                     ),
                   ),
@@ -446,8 +450,7 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
                 const SizedBox(height: 6),
                 Text(
                   _briefSummary(ex),
-                  style:
-                      const TextStyle(fontSize: 12, color: Colors.white38),
+                  style: const TextStyle(fontSize: 12, color: Colors.white38),
                 ),
                 if (avgRest != null) ...[
                   const SizedBox(height: 2),
@@ -571,34 +574,31 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
           return Padding(
             padding: const EdgeInsets.only(bottom: 6),
             child: Row(
-                  children: [
-                    SizedBox(
-                      width: 36,
-                      child: Text(
-                        l10n.workoutSet('${setIdx + 1}'),
-                        style: const TextStyle(
-                            fontSize: 11, color: Colors.white54),
-                      ),
-                    ),
-                    Expanded(
-                      child: _StepperIntField(
-                        value: s.reps,
-                        step: 1,
-                        onChanged: (v) =>
-                            _updateSet(exIndex, setIdx, reps: v),
-                      ),
-                    ),
-                    const SizedBox(width: 6),
-                    Expanded(
-                      child: _StepperDoubleField(
-                        value: s.weight,
-                        step: 1.25,
-                        onChanged: (v) =>
-                            _updateSet(exIndex, setIdx, weight: v),
-                      ),
-                    ),
-                  ],
+              children: [
+                SizedBox(
+                  width: 36,
+                  child: Text(
+                    l10n.workoutSet('${setIdx + 1}'),
+                    style: const TextStyle(fontSize: 11, color: Colors.white54),
+                  ),
                 ),
+                Expanded(
+                  child: _StepperIntField(
+                    value: s.reps,
+                    step: 1,
+                    onChanged: (v) => _updateSet(exIndex, setIdx, reps: v),
+                  ),
+                ),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: _StepperDoubleField(
+                    value: s.weight,
+                    step: 1.25,
+                    onChanged: (v) => _updateSet(exIndex, setIdx, weight: v),
+                  ),
+                ),
+              ],
+            ),
           );
         }),
       ],
@@ -630,8 +630,8 @@ class _StepperIntFieldState extends State<_StepperIntField> {
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController(
-        text: widget.value == 0 ? '' : '${widget.value}');
+    _controller =
+        TextEditingController(text: widget.value == 0 ? '' : '${widget.value}');
   }
 
   @override
@@ -678,8 +678,7 @@ class _StepperIntFieldState extends State<_StepperIntField> {
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
               isDense: true,
-              contentPadding:
-                  EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+              contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 4),
             ),
             onChanged: (v) => widget.onChanged(int.tryParse(v) ?? 0),
           ),
@@ -752,8 +751,7 @@ class _StepperDoubleFieldState extends State<_StepperDoubleField> {
     widget.onChanged(_round2(widget.value + widget.step));
   }
 
-  static double _round2(double v) =>
-      (v * 100).roundToDouble() / 100;
+  static double _round2(double v) => (v * 100).roundToDouble() / 100;
 
   @override
   Widget build(BuildContext context) {
@@ -764,16 +762,14 @@ class _StepperDoubleFieldState extends State<_StepperDoubleField> {
         Expanded(
           child: TextField(
             controller: _controller,
-            keyboardType:
-                const TextInputType.numberWithOptions(decimal: true),
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
             inputFormatters: [_DecimalInputFormatter()],
             textAlign: TextAlign.center,
             style: const TextStyle(fontSize: 14),
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
               isDense: true,
-              contentPadding:
-                  EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+              contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 4),
             ),
             onChanged: (v) {
               final parsed = double.tryParse(v) ?? 0;

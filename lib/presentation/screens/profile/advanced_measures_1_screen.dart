@@ -25,8 +25,7 @@ class _AdvancedMeasures1ScreenState extends State<AdvancedMeasures1Screen> {
   @override
   void initState() {
     super.initState();
-    _armSpanCtrl =
-        TextEditingController(text: _str(widget.data['armSpanCm']));
+    _armSpanCtrl = TextEditingController(text: _str(widget.data['armSpanCm']));
     _bicepsCtrl =
         TextEditingController(text: _str(widget.data['bicepsPerimeterCm']));
     _chestCtrl =
@@ -66,8 +65,7 @@ class _AdvancedMeasures1ScreenState extends State<AdvancedMeasures1Screen> {
             controller: _armSpanCtrl,
             decoration:
                 InputDecoration(labelText: l10n.advancedMeasures1ArmSpan),
-            keyboardType:
-                const TextInputType.numberWithOptions(decimal: true),
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
             onChanged: (_) => _save(),
           ),
           const SizedBox(height: 16),
@@ -75,8 +73,7 @@ class _AdvancedMeasures1ScreenState extends State<AdvancedMeasures1Screen> {
             controller: _bicepsCtrl,
             decoration: InputDecoration(
                 labelText: l10n.advancedMeasures1BicepsPerimeter),
-            keyboardType:
-                const TextInputType.numberWithOptions(decimal: true),
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
             onChanged: (_) => _save(),
           ),
           const SizedBox(height: 16),
@@ -84,8 +81,7 @@ class _AdvancedMeasures1ScreenState extends State<AdvancedMeasures1Screen> {
             controller: _chestCtrl,
             decoration: InputDecoration(
                 labelText: l10n.advancedMeasures1ChestPerimeter),
-            keyboardType:
-                const TextInputType.numberWithOptions(decimal: true),
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
             onChanged: (_) => _save(),
           ),
         ],

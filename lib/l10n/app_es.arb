@@ -98,7 +98,7 @@
   "mobilityCustomRoutine": "Crear rutina personalizada",
   "mobilityRecommendedRoutine": "Rutina recomendada",
   "mobilityChooseOption": "Elige una opción",
-  "mobilityFeetAnkles2": "Pies y tobillos 2",
+  "mobilityFeetAnkles2": "Movilidad de tobillo",
   "mobilityPelvicTilt": "Inclinación Pélvica",
   "mobilityHips": "Caderas",
   "mobilityRelajacion": "Relajación",
@@ -256,6 +256,7 @@
     }
   },
   "routineSelectMuscleGroups": "Grupos musculares",
+  "exerciseSearchHint": "Buscar ejercicio...",
   "routineSelectExercises": "Selecciona ejercicios",
   "routineExerciseDetail": "Detalle del ejercicio",
   "routineAdd": "Añadir",
