@@ -341,6 +341,7 @@
   "workoutElapsed": "Tiempo",
   "workoutNoRoutines": "Crea una rutina primero",
   "workoutSaveChanges": "Guardar cambios",
+  "workoutRestTimer": "Descanso",
   "workoutAvgRest": "Descanso medio: {rest}",
   "@workoutAvgRest": {
     "placeholders": {

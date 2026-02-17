@@ -216,6 +216,16 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
     }
   }
 
+  // ── Rest stopwatch ─────────────────────────────────────────────
+
+  void _showRestStopwatch() {
+    showModalBottomSheet(
+      context: context,
+      isDismissible: true,
+      builder: (_) => const _RestStopwatchSheet(),
+    );
+  }
+
   // ── Elapsed time format ────────────────────────────────────────
 
   String _formatDuration(Duration d) {
@@ -277,19 +287,25 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
             if (widget.trackTime)
               Padding(
                 padding: const EdgeInsets.only(right: 16),
-                child: Center(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.timer_outlined,
-                          size: 18, color: Colors.white54),
-                      const SizedBox(width: 4),
-                      Text(
-                        _formatDuration(_elapsed),
-                        style: const TextStyle(
-                            color: Colors.white70, fontSize: 14),
-                      ),
-                    ],
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(8),
+                  onTap: _showRestStopwatch,
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.timer_outlined,
+                            size: 18, color: Colors.white54),
+                        const SizedBox(width: 4),
+                        Text(
+                          _formatDuration(_elapsed),
+                          style: const TextStyle(
+                              color: Colors.white70, fontSize: 14),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -758,5 +774,172 @@ class _DecimalInputFormatter extends TextInputFormatter {
       return oldValue;
     }
     return newValue;
+  }
+}
+
+// ── Rest stopwatch bottom sheet ─────────────────────────────────────
+
+/// A standalone stopwatch widget displayed as a bottom sheet. It tracks rest
+/// time between sets with centisecond precision and provides play, pause, and
+/// reset controls. Completely independent from the session elapsed timer.
+class _RestStopwatchSheet extends StatefulWidget {
+  const _RestStopwatchSheet();
+
+  @override
+  State<_RestStopwatchSheet> createState() => _RestStopwatchSheetState();
+}
+
+class _RestStopwatchSheetState extends State<_RestStopwatchSheet> {
+  final Stopwatch _stopwatch = Stopwatch();
+  Timer? _ticker;
+
+  static const _tickInterval = Duration(milliseconds: 30);
+
+  @override
+  void dispose() {
+    _ticker?.cancel();
+    _stopwatch.stop();
+    super.dispose();
+  }
+
+  void _start() {
+    _stopwatch.start();
+    _ticker?.cancel();
+    _ticker = Timer.periodic(_tickInterval, (_) {
+      if (mounted) setState(() {});
+    });
+    setState(() {});
+  }
+
+  void _pause() {
+    _stopwatch.stop();
+    _ticker?.cancel();
+    setState(() {});
+  }
+
+  void _reset() {
+    _stopwatch
+      ..stop()
+      ..reset();
+    _ticker?.cancel();
+    setState(() {});
+  }
+
+  String _formatStopwatch() {
+    final elapsed = _stopwatch.elapsed;
+    final minutes = elapsed.inMinutes.toString().padLeft(2, '0');
+    final seconds = (elapsed.inSeconds % 60).toString().padLeft(2, '0');
+    final centiseconds =
+        (elapsed.inMilliseconds % 1000 ~/ 10).toString().padLeft(2, '0');
+    return '$minutes:$seconds.$centiseconds';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isRunning = _stopwatch.isRunning;
+    final hasElapsed = _stopwatch.elapsedMilliseconds > 0;
+
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.hourglass_bottom,
+                    size: 20, color: Colors.white54),
+                const SizedBox(width: 8),
+                Text(
+                  AppLocalizations.of(context)?.workoutRestTimer ?? 'Descanso',
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            const SizedBox(height: 28),
+            Text(
+              _formatStopwatch(),
+              style: const TextStyle(
+                fontSize: 56,
+                fontWeight: FontWeight.w300,
+                fontFamily: 'monospace',
+                letterSpacing: 2,
+              ),
+            ),
+            const SizedBox(height: 28),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Reset button (square icon)
+                _StopwatchButton(
+                  icon: Icons.stop_rounded,
+                  color: Colors.white24,
+                  activeColor: Colors.redAccent,
+                  isActive: hasElapsed && !isRunning,
+                  onTap: hasElapsed ? _reset : null,
+                ),
+                const SizedBox(width: 32),
+                // Play / Pause button
+                _StopwatchButton(
+                  icon: isRunning
+                      ? Icons.pause_rounded
+                      : Icons.play_arrow_rounded,
+                  color: Colors.white24,
+                  activeColor: isRunning ? Colors.amber : Colors.greenAccent,
+                  isActive: true,
+                  onTap: isRunning ? _pause : _start,
+                  large: true,
+                ),
+                const SizedBox(width: 32),
+                // Invisible spacer to keep play/pause centered
+                const SizedBox(width: 48),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Circular button used in the rest stopwatch controls.
+class _StopwatchButton extends StatelessWidget {
+  const _StopwatchButton({
+    required this.icon,
+    required this.color,
+    required this.activeColor,
+    required this.isActive,
+    this.onTap,
+    this.large = false,
+  });
+
+  final IconData icon;
+  final Color color;
+  final Color activeColor;
+  final bool isActive;
+  final VoidCallback? onTap;
+  final bool large;
+
+  @override
+  Widget build(BuildContext context) {
+    final size = large ? 64.0 : 48.0;
+    final iconSize = large ? 32.0 : 24.0;
+    final effectiveColor = isActive ? activeColor : color;
+
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(size / 2),
+      child: Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(color: effectiveColor, width: 2),
+        ),
+        child: Icon(icon, size: iconSize, color: effectiveColor),
+      ),
+    );
   }
 }

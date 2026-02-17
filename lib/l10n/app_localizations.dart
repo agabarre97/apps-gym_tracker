@@ -1418,6 +1418,12 @@ abstract class AppLocalizations {
   /// **'Guardar cambios'**
   String get workoutSaveChanges;
 
+  /// No description provided for @workoutRestTimer.
+  ///
+  /// In es, this message translates to:
+  /// **'Descanso'**
+  String get workoutRestTimer;
+
   /// No description provided for @workoutAvgRest.
   ///
   /// In es, this message translates to:

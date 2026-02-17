@@ -713,6 +713,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get workoutSaveChanges => 'Guardar cambios';
 
   @override
+  String get workoutRestTimer => 'Descanso';
+
+  @override
   String workoutAvgRest(String rest) {
     return 'Descanso medio: $rest';
   }

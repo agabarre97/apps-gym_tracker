@@ -710,6 +710,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get workoutSaveChanges => 'Save changes';
 
   @override
+  String get workoutRestTimer => 'Rest';
+
+  @override
   String workoutAvgRest(String rest) {
     return 'Avg rest: $rest';
   }

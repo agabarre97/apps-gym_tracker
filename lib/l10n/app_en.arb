@@ -303,6 +303,7 @@
   "workoutElapsed": "Time",
   "workoutNoRoutines": "Create a routine first",
   "workoutSaveChanges": "Save changes",
+  "workoutRestTimer": "Rest",
   "workoutAvgRest": "Avg rest: {rest}",
   "@workoutAvgRest": {
     "placeholders": {
