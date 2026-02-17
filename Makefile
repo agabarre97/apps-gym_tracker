@@ -1,4 +1,4 @@
-.PHONY: help run format test analyze clean gen-l10n build-apk build-ios pub-get lint fix fix-snap
+.PHONY: help run format test analyze clean gen-l10n build-apk build-ios pub-get lint fix fix-snap test-coverage-check
 
 ## ─── Default ────────────────────────────────────────────────────────────────
 
@@ -43,20 +43,23 @@ fix: ## Apply automated dart fixes
 ## ─── Testing ────────────────────────────────────────────────────────────────
 
 test: ## Run all tests
-	flutter test
+	flutter test --concurrency=4
 
 test-unit: ## Run only unit tests
-	flutter test test/unit/
+	flutter test test/unit/ --concurrency=4
 
 test-widget: ## Run only widget tests
-	flutter test test/widget/
+	flutter test test/widget/ --concurrency=4
 
 test-e2e: ## Run only end-to-end tests
-	flutter test test/e2e/
+	flutter test test/e2e/ --concurrency=2
 
 test-coverage: ## Run tests with coverage report
 	flutter test --coverage
 	@echo "Coverage report generated at coverage/lcov.info"
+
+test-coverage-check: test-coverage ## Fail if line coverage below threshold
+	@python3 scripts/check_coverage.py --lcov coverage/lcov.info --min-lines 70
 
 ## ─── Build ──────────────────────────────────────────────────────────────────
 
@@ -72,4 +75,4 @@ clean: ## Clean build artifacts and caches
 	flutter clean
 	flutter pub get
 
-ci: format analyze test ## Run full CI pipeline (format + analyze + test)
+ci: format analyze test-coverage-check ## Run CI pipeline (format + analyze + coverage gate)

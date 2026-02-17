@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
 
 import 'package:gym_tracker/domain/entities/exercise.dart';
+import 'package:gym_tracker/domain/services/rest_time_calculator.dart';
 import 'package:gym_tracker/domain/entities/workout_session.dart';
 import 'package:gym_tracker/domain/ports/workout_session_port.dart';
 import 'package:gym_tracker/presentation/screens/routine/exercise_selection_screen.dart';
@@ -160,10 +161,10 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
       final prevKey = (exIndex, setIndex - 1);
       final prevLastEdit = _lastEditTimes[prevKey];
       final thisFirstEdit = _firstEditTimes[key];
-      if (prevLastEdit != null && thisFirstEdit != null) {
-        restSeconds = thisFirstEdit.difference(prevLastEdit).inSeconds;
-        if (restSeconds < 0) restSeconds = null;
-      }
+      restSeconds = RestTimeCalculator.fromEditTimes(
+        previousSetLastEdit: prevLastEdit,
+        currentSetFirstEdit: thisFirstEdit,
+      );
     }
 
     final ex = _session.exercises[exIndex];

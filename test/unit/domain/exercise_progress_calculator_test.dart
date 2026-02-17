@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gym_tracker/domain/entities/workout_session.dart';
-import 'package:gym_tracker/presentation/screens/workout/exercise_progress_calculator.dart';
+import 'package:gym_tracker/domain/services/exercise_progress_calculator.dart';
 
 void main() {
   // Shared reference date for all tests.

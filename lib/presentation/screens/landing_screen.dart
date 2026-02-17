@@ -963,7 +963,7 @@ class _LandingScreenState extends State<LandingScreen> {
                       child: SizedBox(
                         width: 220,
                         child: DropdownButtonFormField<String?>(
-                          value: _routineTypeFilter,
+                          initialValue: _routineTypeFilter,
                           decoration: InputDecoration(
                             isDense: true,
                             filled: true,

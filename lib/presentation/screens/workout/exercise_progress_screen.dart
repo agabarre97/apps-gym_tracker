@@ -4,8 +4,8 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:gym_tracker/domain/entities/workout_session.dart';
 import 'package:gym_tracker/domain/ports/workout_session_port.dart';
+import 'package:gym_tracker/domain/services/exercise_progress_calculator.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
-import 'package:gym_tracker/presentation/screens/workout/exercise_progress_calculator.dart';
 
 /// Displays historical progress for a single exercise within a specific
 /// routine + day.
