@@ -237,7 +237,8 @@ void main() {
         name: 'My HIIT',
         type: 'hiit',
         days: const [
-          RoutineDay(muscleGroups: [], exerciseKeys: ['burpees', 'jump_squats']),
+          RoutineDay(
+              muscleGroups: [], exerciseKeys: ['burpees', 'jump_squats']),
         ],
         hiitConfig: const HiitConfig(
           sets: 4,

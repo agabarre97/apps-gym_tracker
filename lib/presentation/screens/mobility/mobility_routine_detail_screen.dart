@@ -65,8 +65,7 @@ class _MobilityRoutineDetailScreenState
       ]);
       setState(() {
         _mobilityRoutine = results[0] as MobilityRoutine;
-        _exerciseInfoMap =
-            results[1] as Map<String, MobilityExerciseInfo>;
+        _exerciseInfoMap = results[1] as Map<String, MobilityExerciseInfo>;
         _loading = false;
       });
     } catch (_) {
@@ -148,8 +147,7 @@ class _MobilityRoutineDetailScreenState
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
           child: Row(
             children: [
-              const Icon(Icons.timer_outlined,
-                  size: 20, color: Colors.white54),
+              const Icon(Icons.timer_outlined, size: 20, color: Colors.white54),
               const SizedBox(width: 8),
               Text(
                 l10n.mobilityRoutineDuration('${mr.totalDurationMinutes}'),

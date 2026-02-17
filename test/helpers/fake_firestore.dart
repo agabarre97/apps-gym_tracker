@@ -21,11 +21,12 @@ class FakeFirebaseFirestore implements FirebaseFirestore {
   // ── Not implemented ──────────────────────────────────────────
 
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      throw UnimplementedError('FakeFirebaseFirestore: ${invocation.memberName}');
+  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError(
+      'FakeFirebaseFirestore: ${invocation.memberName}');
 }
 
-class FakeCollectionReference implements CollectionReference<Map<String, dynamic>> {
+class FakeCollectionReference
+    implements CollectionReference<Map<String, dynamic>> {
   FakeCollectionReference(this._path);
 
   final String _path;
@@ -54,8 +55,8 @@ class FakeCollectionReference implements CollectionReference<Map<String, dynamic
   // ── Not implemented ──────────────────────────────────────────
 
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      throw UnimplementedError('FakeCollectionReference: ${invocation.memberName}');
+  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError(
+      'FakeCollectionReference: ${invocation.memberName}');
 }
 
 class FakeDocumentReference implements DocumentReference<Map<String, dynamic>> {
@@ -97,8 +98,8 @@ class FakeDocumentReference implements DocumentReference<Map<String, dynamic>> {
   // ── Not implemented ──────────────────────────────────────────
 
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      throw UnimplementedError('FakeDocumentReference: ${invocation.memberName}');
+  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError(
+      'FakeDocumentReference: ${invocation.memberName}');
 }
 
 class FakeDocumentSnapshot implements DocumentSnapshot<Map<String, dynamic>> {
@@ -119,8 +120,8 @@ class FakeDocumentSnapshot implements DocumentSnapshot<Map<String, dynamic>> {
   // ── Not implemented ──────────────────────────────────────────
 
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      throw UnimplementedError('FakeDocumentSnapshot: ${invocation.memberName}');
+  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError(
+      'FakeDocumentSnapshot: ${invocation.memberName}');
 }
 
 class FakeQuerySnapshot implements QuerySnapshot<Map<String, dynamic>> {
@@ -161,7 +162,6 @@ class FakeQueryDocumentSnapshot
   // ── Not implemented ──────────────────────────────────────────
 
   @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      throw UnimplementedError(
-          'FakeQueryDocumentSnapshot: ${invocation.memberName}');
+  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError(
+      'FakeQueryDocumentSnapshot: ${invocation.memberName}');
 }

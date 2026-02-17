@@ -105,8 +105,7 @@ void main() {
       expect(importCalled, isTrue);
     });
 
-    testWidgets('HIIT card is rendered and enabled (tappable)',
-        (tester) async {
+    testWidgets('HIIT card is rendered and enabled (tappable)', (tester) async {
       String? selectedType;
 
       await tester.pumpWidget(

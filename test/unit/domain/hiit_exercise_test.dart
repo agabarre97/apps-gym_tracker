@@ -19,8 +19,16 @@ void main() {
 
     test('fromJson handles all 18 exercises consistently', () {
       final jsonList = [
-        {'key': 'mountain_climbers', 'ejercicio': 'Mountain climbers', 'descripcion': 'desc1'},
-        {'key': 'jumping_jacks', 'ejercicio': 'Jumping jacks', 'descripcion': 'desc2'},
+        {
+          'key': 'mountain_climbers',
+          'ejercicio': 'Mountain climbers',
+          'descripcion': 'desc1'
+        },
+        {
+          'key': 'jumping_jacks',
+          'ejercicio': 'Jumping jacks',
+          'descripcion': 'desc2'
+        },
         {'key': 'burpees', 'ejercicio': 'Burpees', 'descripcion': 'desc3'},
       ];
 
@@ -36,7 +44,8 @@ void main() {
       final json = {
         'key': 'high_knee_sprints',
         'ejercicio': 'High knee sprints',
-        'descripcion': 'Corre en el sitio elevando las rodillas lo más alto posible.',
+        'descripcion':
+            'Corre en el sitio elevando las rodillas lo más alto posible.',
       };
 
       final exercise = HiitExercise.fromJson(json);

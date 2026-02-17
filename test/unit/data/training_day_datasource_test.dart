@@ -19,7 +19,8 @@ void main() {
       expect(days, isEmpty);
     });
 
-    test('saveTrainingDays persists and loadTrainingDays restores data', () async {
+    test('saveTrainingDays persists and loadTrainingDays restores data',
+        () async {
       final days = [
         TrainingDay(date: DateTime(2026, 2, 16)),
         TrainingDay(date: DateTime(2026, 2, 17)),

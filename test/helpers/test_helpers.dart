@@ -183,7 +183,8 @@ class FakeSyncPort implements SyncPort {
   void setUserId(String? uid) => userId = uid;
 
   @override
-  Future<void> pullFromCloud({Duration timeout = const Duration(seconds: 10)}) async {
+  Future<void> pullFromCloud(
+      {Duration timeout = const Duration(seconds: 10)}) async {
     pullCount++;
   }
 

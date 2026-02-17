@@ -30,8 +30,8 @@ class WorkoutSessionBuilder {
 
     // Find previous session for same routine + day
     final matching = previousSessions
-        .where((s) =>
-            s.routineId == routine.id && s.routineDayIndex == dayIndex)
+        .where(
+            (s) => s.routineId == routine.id && s.routineDayIndex == dayIndex)
         .toList()
       ..sort((a, b) => b.date.compareTo(a.date));
 
@@ -40,9 +40,8 @@ class WorkoutSessionBuilder {
     // Build exercise list
     final exercises = day.exerciseKeys.map((key) {
       if (prevSession != null) {
-        final prevEx = prevSession.exercises
-            .where((e) => e.exerciseKey == key)
-            .toList();
+        final prevEx =
+            prevSession.exercises.where((e) => e.exerciseKey == key).toList();
         if (prevEx.isNotEmpty) {
           return WorkoutExercise(
             exerciseKey: key,

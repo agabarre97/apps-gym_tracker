@@ -112,8 +112,7 @@ void main() {
 
     // ── Navigation with auth (authenticated, no profile) ────────
 
-    testWidgets(
-        'navigates to onboarding when user is signed in but no profile',
+    testWidgets('navigates to onboarding when user is signed in but no profile',
         (tester) async {
       final authPort = FakeAuthPort(
         simulatedUser: const AuthUser(uid: 'u1', email: 'a@b.com'),

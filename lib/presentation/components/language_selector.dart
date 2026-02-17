@@ -43,6 +43,5 @@ class LocaleStorage {
     return Locale(code ?? 'es');
   }
 
-  Future<void> save(Locale locale) =>
-      _storage.set(_key, locale.languageCode);
+  Future<void> save(Locale locale) => _storage.set(_key, locale.languageCode);
 }

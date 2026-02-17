@@ -66,26 +66,23 @@ class _AdvancedMeasures2ScreenState extends State<AdvancedMeasures2Screen> {
             controller: _waistCtrl,
             decoration: InputDecoration(
                 labelText: l10n.advancedMeasures2WaistPerimeter),
-            keyboardType:
-                const TextInputType.numberWithOptions(decimal: true),
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
             onChanged: (_) => _save(),
           ),
           const SizedBox(height: 16),
           TextFormField(
             controller: _quadCtrl,
-            decoration: InputDecoration(
-                labelText: l10n.advancedMeasures2QuadPerimeter),
-            keyboardType:
-                const TextInputType.numberWithOptions(decimal: true),
+            decoration:
+                InputDecoration(labelText: l10n.advancedMeasures2QuadPerimeter),
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
             onChanged: (_) => _save(),
           ),
           const SizedBox(height: 16),
           TextFormField(
             controller: _calfCtrl,
-            decoration: InputDecoration(
-                labelText: l10n.advancedMeasures2CalfPerimeter),
-            keyboardType:
-                const TextInputType.numberWithOptions(decimal: true),
+            decoration:
+                InputDecoration(labelText: l10n.advancedMeasures2CalfPerimeter),
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
             onChanged: (_) => _save(),
           ),
         ],

@@ -73,7 +73,8 @@ class _HiitExerciseSelectionScreenState
                 l10n.hiitWarningTooMany,
                 style: const TextStyle(color: Colors.amberAccent),
               ),
-              leading: const Icon(Icons.warning_amber, color: Colors.amberAccent),
+              leading:
+                  const Icon(Icons.warning_amber, color: Colors.amberAccent),
               actions: const [SizedBox.shrink()],
             ),
 
@@ -172,8 +173,7 @@ class _HiitExerciseSelectionScreenState
           // Confirm button
           SafeArea(
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               child: SizedBox(
                 width: double.infinity,
                 height: 52,

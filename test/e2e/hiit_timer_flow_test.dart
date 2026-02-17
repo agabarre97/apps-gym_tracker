@@ -9,8 +9,7 @@ import '../helpers/test_helpers.dart';
 
 const _preloadedExercises = [
   HiitExercise(key: 'burpees', name: 'Burpees', description: 'Full body'),
-  HiitExercise(
-      key: 'jump_squats', name: 'Jump squats', description: 'Legs'),
+  HiitExercise(key: 'jump_squats', name: 'Jump squats', description: 'Legs'),
 ];
 
 void main() {
@@ -70,9 +69,7 @@ void main() {
               HiitExercise(
                   key: 'burpees', name: 'Burpees', description: 'Full body'),
               HiitExercise(
-                  key: 'jump_squats',
-                  name: 'Jump squats',
-                  description: 'Legs'),
+                  key: 'jump_squats', name: 'Jump squats', description: 'Legs'),
             ],
             routineName: 'Test HIIT',
             sets: 2,

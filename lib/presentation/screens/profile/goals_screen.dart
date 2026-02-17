@@ -29,8 +29,7 @@ class _GoalsScreenState extends State<GoalsScreen> {
     super.initState();
     _targetWeightCtrl =
         TextEditingController(text: _str(widget.data['targetWeightKg']));
-    _kcalCtrl =
-        TextEditingController(text: _str(widget.data['kcalPerDay']));
+    _kcalCtrl = TextEditingController(text: _str(widget.data['kcalPerDay']));
     widget.data['weightGoal'] ??= 'gain';
   }
 
@@ -50,8 +49,7 @@ class _GoalsScreenState extends State<GoalsScreen> {
       widget.data['targetWeightKg'] = null;
       widget.data['kcalPerDay'] = null;
     } else {
-      widget.data['targetWeightKg'] =
-          double.tryParse(_targetWeightCtrl.text);
+      widget.data['targetWeightKg'] = double.tryParse(_targetWeightCtrl.text);
       widget.data['kcalPerDay'] = int.tryParse(_kcalCtrl.text);
     }
     widget.onChanged();
@@ -114,8 +112,7 @@ class _GoalsScreenState extends State<GoalsScreen> {
             // Target weight
             TextFormField(
               controller: _targetWeightCtrl,
-              decoration:
-                  InputDecoration(labelText: l10n.goalsTargetWeight),
+              decoration: InputDecoration(labelText: l10n.goalsTargetWeight),
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
               autovalidateMode: AutovalidateMode.onUserInteraction,

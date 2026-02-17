@@ -114,7 +114,8 @@ class ExerciseProgressCalculator {
           session.exercises.where((e) => e.exerciseKey == exerciseKey);
       if (matches.isEmpty) continue;
 
-      final norm = DateTime(session.date.year, session.date.month, session.date.day);
+      final norm =
+          DateTime(session.date.year, session.date.month, session.date.day);
       final value = _computeMetric(matches.first, metric);
       byDate.putIfAbsent(norm, () => []).add(value);
     }
@@ -194,8 +195,8 @@ class ExerciseProgressCalculator {
       final hasExercise =
           session.exercises.any((e) => e.exerciseKey == exerciseKey);
       if (hasExercise) {
-        dates.add(DateTime(
-            session.date.year, session.date.month, session.date.day));
+        dates.add(
+            DateTime(session.date.year, session.date.month, session.date.day));
       }
     }
     final sorted = dates.toList()..sort((a, b) => b.compareTo(a));
@@ -216,8 +217,8 @@ class ExerciseProgressCalculator {
           session.routineDayIndex != routineDayIndex) {
         continue;
       }
-      final sessionDate = DateTime(
-          session.date.year, session.date.month, session.date.day);
+      final sessionDate =
+          DateTime(session.date.year, session.date.month, session.date.day);
       if (sessionDate != norm) continue;
       for (final ex in session.exercises) {
         if (ex.exerciseKey == exerciseKey) {

@@ -41,8 +41,7 @@ class MobilityRoutine {
   final List<MobilityExercise> exercises;
 
   /// Total seconds across all exercises.
-  int get totalSeconds =>
-      exercises.fold(0, (sum, e) => sum + e.totalSeconds);
+  int get totalSeconds => exercises.fold(0, (sum, e) => sum + e.totalSeconds);
 
   factory MobilityRoutine.fromJson(Map<String, dynamic> json) =>
       MobilityRoutine(

@@ -193,8 +193,7 @@ class _ExerciseSelectionScreenState extends State<ExerciseSelectionScreen> {
                     color: isSelected ? Colors.black : Colors.white,
                   ),
                   backgroundColor: Colors.white12,
-                  onSelected: (selected) =>
-                      _toggleCategory(category, selected),
+                  onSelected: (selected) => _toggleCategory(category, selected),
                 );
               }).toList(),
             ),
@@ -241,8 +240,7 @@ class _ExerciseSelectionScreenState extends State<ExerciseSelectionScreen> {
                                     behavior: HitTestBehavior.opaque,
                                     onTap: () => _toggleExercise(exercise.key),
                                     child: Padding(
-                                      padding:
-                                          const EdgeInsets.only(right: 12),
+                                      padding: const EdgeInsets.only(right: 12),
                                       child: Icon(
                                         isSelected
                                             ? Icons.check_circle
@@ -294,8 +292,7 @@ class _ExerciseSelectionScreenState extends State<ExerciseSelectionScreen> {
           // Bottom bar
           SafeArea(
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               child: SizedBox(
                 width: double.infinity,
                 height: 52,

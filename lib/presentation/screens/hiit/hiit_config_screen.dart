@@ -250,8 +250,8 @@ class _ConfigRow extends StatelessWidget {
               child: Text(
                 value,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                    fontSize: 18, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ),
             IconButton(

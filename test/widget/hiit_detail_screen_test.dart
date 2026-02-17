@@ -9,12 +9,9 @@ import '../helpers/test_helpers.dart';
 
 const _preloadedExercises = [
   HiitExercise(key: 'burpees', name: 'Burpees', description: 'Full body'),
+  HiitExercise(key: 'jump_squats', name: 'Jump squats', description: 'Legs'),
   HiitExercise(
-      key: 'jump_squats', name: 'Jump squats', description: 'Legs'),
-  HiitExercise(
-      key: 'mountain_climbers',
-      name: 'Mountain climbers',
-      description: 'Core'),
+      key: 'mountain_climbers', name: 'Mountain climbers', description: 'Core'),
 ];
 
 void main() {

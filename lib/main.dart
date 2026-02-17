@@ -2,7 +2,8 @@ import 'dart:developer' as dev;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart' show kIsWeb, defaultTargetPlatform, TargetPlatform;
+import 'package:flutter/foundation.dart'
+    show kIsWeb, defaultTargetPlatform, TargetPlatform;
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
@@ -78,8 +79,7 @@ void main() async {
       WorkoutSessionDatasource(storage);
   final MobilitySessionPort mobilitySessionPort =
       MobilitySessionDatasource(storage);
-  final HiitSessionPort hiitSessionPort =
-      HiitSessionDatasource(storage);
+  final HiitSessionPort hiitSessionPort = HiitSessionDatasource(storage);
 
   runApp(GymTrackerApp(
     storage: storage,

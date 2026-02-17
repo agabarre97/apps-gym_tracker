@@ -58,8 +58,7 @@ class RoutineTypeScreen extends StatelessWidget {
                     .map((t) => SelectableOptionGridCard(
                           option: t,
                           comingSoonLabel: l10n.routineComingSoon,
-                          onTap:
-                              t.enabled ? () => onTypeSelected(t.key) : null,
+                          onTap: t.enabled ? () => onTypeSelected(t.key) : null,
                         ))
                     .toList(),
               ),

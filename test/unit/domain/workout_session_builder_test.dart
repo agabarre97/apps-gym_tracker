@@ -50,8 +50,12 @@ void main() {
       final after = DateTime.now();
 
       expect(session.startTime, isNotNull);
-      expect(session.startTime!.isAfter(before.subtract(const Duration(seconds: 1))), isTrue);
-      expect(session.startTime!.isBefore(after.add(const Duration(seconds: 1))), isTrue);
+      expect(
+          session.startTime!
+              .isAfter(before.subtract(const Duration(seconds: 1))),
+          isTrue);
+      expect(session.startTime!.isBefore(after.add(const Duration(seconds: 1))),
+          isTrue);
     });
 
     test('auto-fills sets from most recent matching session', () {

@@ -9,7 +9,8 @@ abstract final class RestTimeCalculator {
     if (previousSetLastEdit == null || currentSetFirstEdit == null) {
       return null;
     }
-    final seconds = currentSetFirstEdit.difference(previousSetLastEdit).inSeconds;
+    final seconds =
+        currentSetFirstEdit.difference(previousSetLastEdit).inSeconds;
     return seconds < 0 ? null : seconds;
   }
 }

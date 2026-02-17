@@ -100,7 +100,8 @@ void main() {
       expect(find.text('Añadir'), findsOneWidget);
     });
 
-    testWidgets('tapping checkbox icon toggles selection without opening detail',
+    testWidgets(
+        'tapping checkbox icon toggles selection without opening detail',
         (tester) async {
       await tester.pumpWidget(
         buildTestableWidget(
@@ -157,7 +158,8 @@ void main() {
       expect(button.onPressed, isNotNull);
     });
 
-    testWidgets('orders exercises by category priority for selected muscle group',
+    testWidgets(
+        'orders exercises by category priority for selected muscle group',
         (tester) async {
       final prioritizedExercises = const [
         Exercise(

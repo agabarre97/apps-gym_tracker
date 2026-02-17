@@ -70,8 +70,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     // On web, currentUser is null until the auth state is hydrated.
     AuthUser? user;
     try {
-      user = await authPort.authStateChanges
-          .first
+      user = await authPort.authStateChanges.first
           .timeout(const Duration(seconds: 5), onTimeout: () => null);
     } catch (_) {
       // Stream completed without emitting (e.g. empty stream) or other error

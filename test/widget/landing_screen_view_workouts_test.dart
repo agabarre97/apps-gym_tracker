@@ -20,9 +20,11 @@ void main() {
     await routinePort.saveRoutines([
       const Routine(id: 'r1', name: 'Dummy', type: 'musculacion', days: []),
     ]);
-    await trainingDayPort.saveTrainingDays([TrainingDay(date: DateTime(2026, 2, 16))]);
+    await trainingDayPort
+        .saveTrainingDays([TrainingDay(date: DateTime(2026, 2, 16))]);
     await mobilitySessionPort.saveSessions([
-      MobilitySession(id: 'm1', routineKey: 'feet_ankles_2', date: DateTime(2026, 2, 16)),
+      MobilitySession(
+          id: 'm1', routineKey: 'feet_ankles_2', date: DateTime(2026, 2, 16)),
     ]);
 
     await tester.pumpWidget(buildTestableWidget(

@@ -61,8 +61,7 @@ class MobilityOptionScreen extends StatelessWidget {
                   child: SelectableOptionListCard(
                     option: o,
                     comingSoonLabel: l10n.routineComingSoon,
-                    onTap:
-                        o.enabled ? () => onOptionSelected(o.key) : null,
+                    onTap: o.enabled ? () => onOptionSelected(o.key) : null,
                   ),
                 )),
           ],

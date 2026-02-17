@@ -13,7 +13,8 @@ void main() {
           name: 'Push Pull Legs',
           type: 'musculacion',
           days: [
-            RoutineDay(muscleGroups: ['pectoral'], exerciseKeys: ['press_banca']),
+            RoutineDay(
+                muscleGroups: ['pectoral'], exerciseKeys: ['press_banca']),
             RoutineDay(muscleGroups: ['espalda'], exerciseKeys: ['remo']),
           ],
         ),
@@ -22,7 +23,8 @@ void main() {
           name: 'Full Body',
           type: 'musculacion',
           days: [
-            RoutineDay(muscleGroups: ['pectoral'], exerciseKeys: ['press_banca']),
+            RoutineDay(
+                muscleGroups: ['pectoral'], exerciseKeys: ['press_banca']),
           ],
         ),
       ];

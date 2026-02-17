@@ -25,7 +25,9 @@ void main() {
           id: 'r1',
           name: 'Push',
           type: 'musculacion',
-          days: [RoutineDay(muscleGroups: ['pectoral'], exerciseKeys: ['press'])],
+          days: [
+            RoutineDay(muscleGroups: ['pectoral'], exerciseKeys: ['press'])
+          ],
         ),
       ];
 

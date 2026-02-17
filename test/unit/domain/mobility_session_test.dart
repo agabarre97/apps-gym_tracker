@@ -24,8 +24,10 @@ void main() {
 
     test('listToJsonString and listFromJsonString round-trip', () {
       final list = [
-        MobilitySession(id: 'm1', routineKey: 'sleep', date: DateTime(2026, 2, 16)),
-        MobilitySession(id: 'm2', routineKey: 'hips', date: DateTime(2026, 2, 17)),
+        MobilitySession(
+            id: 'm1', routineKey: 'sleep', date: DateTime(2026, 2, 16)),
+        MobilitySession(
+            id: 'm2', routineKey: 'hips', date: DateTime(2026, 2, 17)),
       ];
 
       final json = MobilitySession.listToJsonString(list);

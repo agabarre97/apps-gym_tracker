@@ -209,8 +209,7 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
 
   Future<void> _onMobilityOptionSelected(String option) async {
     if (option == 'recommended') {
-      final routines =
-          _routinesBySubType[_selectedMobilitySubType] ?? const [];
+      final routines = _routinesBySubType[_selectedMobilitySubType] ?? const [];
       if (routines.length == 1) {
         await _saveRecommendedMobilityRoutine(routines.first);
       } else if (routines.isNotEmpty) {

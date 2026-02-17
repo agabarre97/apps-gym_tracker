@@ -281,8 +281,7 @@ void main() {
       // After tapping, the reps field should now show 6
       // Check that a text field contains "6"
       final repsField = find.byType(TextField).first;
-      final controller =
-          (tester.widget<TextField>(repsField)).controller;
+      final controller = (tester.widget<TextField>(repsField)).controller;
       expect(controller?.text, '6');
     });
 

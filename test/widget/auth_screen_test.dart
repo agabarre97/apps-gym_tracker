@@ -49,8 +49,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.widgetWithText(FilledButton, 'Crear cuenta'), findsOneWidget);
-      expect(
-          find.widgetWithText(TextButton, 'Iniciar sesión'), findsOneWidget);
+      expect(find.widgetWithText(TextButton, 'Iniciar sesión'), findsOneWidget);
     });
 
     testWidgets('renders Google sign-in button', (tester) async {

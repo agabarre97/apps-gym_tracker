@@ -46,8 +46,7 @@ Future<void> selectToday(WidgetTester tester) async {
 }
 
 void main() {
-  testWidgets(
-      'Session picker shows all 3 session types with correct icons',
+  testWidgets('Session picker shows all 3 session types with correct icons',
       (tester) async {
     final routinePort = FakeRoutinePort();
     final trainingDayPort = FakeTrainingDayPort();

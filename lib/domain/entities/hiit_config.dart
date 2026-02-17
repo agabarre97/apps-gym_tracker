@@ -46,8 +46,7 @@ class HiitConfig {
         sets: json['sets'] as int? ?? defaultSets,
         workSeconds: json['workSeconds'] as int? ?? defaultWorkSeconds,
         restSeconds: json['restSeconds'] as int? ?? defaultRestSeconds,
-        setRestSeconds:
-            json['setRestSeconds'] as int? ?? defaultSetRestSeconds,
+        setRestSeconds: json['setRestSeconds'] as int? ?? defaultSetRestSeconds,
       );
 
   /// Creates a copy with optional overrides.
@@ -74,7 +73,8 @@ class HiitConfig {
           setRestSeconds == other.setRestSeconds;
 
   @override
-  int get hashCode => Object.hash(sets, workSeconds, restSeconds, setRestSeconds);
+  int get hashCode =>
+      Object.hash(sets, workSeconds, restSeconds, setRestSeconds);
 
   @override
   String toString() =>

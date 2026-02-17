@@ -260,8 +260,7 @@ class _RoutineDetailScreenState extends State<RoutineDetailScreen> {
           // Delete button
           SafeArea(
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               child: SizedBox(
                 width: double.infinity,
                 height: 52,

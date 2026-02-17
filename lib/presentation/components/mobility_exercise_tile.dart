@@ -97,10 +97,10 @@ class MobilityExerciseTile extends StatelessWidget {
         : '${exercise.durationSeconds}s × 2';
 
     return switch (variant) {
-      MobilityExerciseTileVariant.detailed => _buildDetailed(
-          context, name, sideLabel, duration),
-      MobilityExerciseTileVariant.compact => _buildCompact(
-          name, sideLabel, duration),
+      MobilityExerciseTileVariant.detailed =>
+        _buildDetailed(context, name, sideLabel, duration),
+      MobilityExerciseTileVariant.compact =>
+        _buildCompact(name, sideLabel, duration),
     };
   }
 
@@ -196,8 +196,7 @@ class MobilityExerciseTile extends StatelessWidget {
         ),
         trailing: Text(
           duration,
-          style:
-              const TextStyle(fontSize: 13, color: Colors.greenAccent),
+          style: const TextStyle(fontSize: 13, color: Colors.greenAccent),
         ),
       ),
     );
