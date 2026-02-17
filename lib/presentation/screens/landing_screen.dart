@@ -159,8 +159,11 @@ class _LandingScreenState extends State<LandingScreen> {
 
   /// Unique routine types present in the active (non-archived) routines.
   List<String> get _availableTypes {
-    final types =
-        _routines.where((r) => !r.isArchived).map((r) => r.type).toSet().toList();
+    final types = _routines
+        .where((r) => !r.isArchived)
+        .map((r) => r.type)
+        .toSet()
+        .toList();
     types.sort();
     return types;
   }

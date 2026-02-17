@@ -1,4 +1,4 @@
-.PHONY: help run format test analyze clean gen-l10n build-apk build-ios pub-get lint fix fix-snap test-coverage-check
+.PHONY: help run format test tests analyze clean gen-l10n build-apk build-ios pub-get lint check-format fix fix-snap test-coverage-check
 
 ## ─── Default ────────────────────────────────────────────────────────────────
 
@@ -34,6 +34,8 @@ format: ## Format all Dart files
 lint: ## Run dart format check without applying changes
 	dart format --set-exit-if-changed lib/ test/
 
+check-format: lint ## Alias for format check used by hooks
+
 analyze: ## Run Flutter static analysis
 	flutter analyze
 
@@ -44,6 +46,8 @@ fix: ## Apply automated dart fixes
 
 test: ## Run all tests
 	flutter test --concurrency=4
+
+tests: test ## Alias for test target used by hooks
 
 test-unit: ## Run only unit tests
 	flutter test test/unit/ --concurrency=4

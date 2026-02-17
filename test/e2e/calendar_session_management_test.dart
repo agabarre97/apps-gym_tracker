@@ -26,7 +26,9 @@ void main() {
           id: 'r1',
           name: 'Push Pull',
           type: 'musculacion',
-          days: [RoutineDay(muscleGroups: ['pectoral'], exerciseKeys: ['bench'])],
+          days: [
+            RoutineDay(muscleGroups: ['pectoral'], exerciseKeys: ['bench'])
+          ],
         ),
       ]);
       await trainingDayPort.saveTrainingDays([TrainingDay(date: _day)]);

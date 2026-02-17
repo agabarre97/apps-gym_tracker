@@ -56,17 +56,19 @@ void main() {
         buildTestableWidget(
           RoutineDetailScreen(
             routine: routine,
-            allRoutines: const [Routine(
-              id: 'r1',
-              name: 'Push day',
-              type: 'musculacion',
-              days: [
-                RoutineDay(
-                  muscleGroups: ['pectoral', 'triceps'],
-                  exerciseKeys: ['press_banca', 'fondos'],
-                ),
-              ],
-            )],
+            allRoutines: const [
+              Routine(
+                id: 'r1',
+                name: 'Push day',
+                type: 'musculacion',
+                days: [
+                  RoutineDay(
+                    muscleGroups: ['pectoral', 'triceps'],
+                    exerciseKeys: ['press_banca', 'fondos'],
+                  ),
+                ],
+              )
+            ],
             routinePort: routinePort,
             allExercises: allExercises,
             workoutSessionPort: FakeWorkoutSessionPort(),

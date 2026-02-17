@@ -23,7 +23,10 @@ void main() {
           exercises: const [
             WorkoutExercise(
               exerciseKey: 'bench_press',
-              sets: [ExerciseSet(reps: 10, weight: 50), ExerciseSet(reps: 8, weight: 55)],
+              sets: [
+                ExerciseSet(reps: 10, weight: 50),
+                ExerciseSet(reps: 8, weight: 55)
+              ],
               completed: true,
             ),
           ],
@@ -36,7 +39,10 @@ void main() {
           exercises: const [
             WorkoutExercise(
               exerciseKey: 'bench_press',
-              sets: [ExerciseSet(reps: 12, weight: 60), ExerciseSet(reps: 10, weight: 65)],
+              sets: [
+                ExerciseSet(reps: 12, weight: 60),
+                ExerciseSet(reps: 10, weight: 65)
+              ],
               completed: true,
             ),
           ],
@@ -49,7 +55,10 @@ void main() {
           exercises: const [
             WorkoutExercise(
               exerciseKey: 'bench_press',
-              sets: [ExerciseSet(reps: 8, weight: 70), ExerciseSet(reps: 6, weight: 75)],
+              sets: [
+                ExerciseSet(reps: 8, weight: 70),
+                ExerciseSet(reps: 6, weight: 75)
+              ],
               completed: true,
             ),
           ],

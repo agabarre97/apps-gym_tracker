@@ -225,12 +225,10 @@ class _ExerciseSelectionScreenState extends State<ExerciseSelectionScreen> {
                 decoration: InputDecoration(
                   hintText: l10n.exerciseSearchHint,
                   hintStyle: const TextStyle(color: Colors.white38),
-                  prefixIcon:
-                      const Icon(Icons.search, color: Colors.white54),
+                  prefixIcon: const Icon(Icons.search, color: Colors.white54),
                   suffixIcon: _searchQuery.isNotEmpty
                       ? IconButton(
-                          icon: const Icon(Icons.clear,
-                              color: Colors.white54),
+                          icon: const Icon(Icons.clear, color: Colors.white54),
                           onPressed: () {
                             _searchController.clear();
                             setState(() => _searchQuery = '');
@@ -243,12 +241,10 @@ class _ExerciseSelectionScreenState extends State<ExerciseSelectionScreen> {
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide.none,
                   ),
-                  contentPadding:
-                      const EdgeInsets.symmetric(vertical: 10),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 10),
                 ),
                 style: const TextStyle(color: Colors.white),
-                onChanged: (value) =>
-                    setState(() => _searchQuery = value),
+                onChanged: (value) => setState(() => _searchQuery = value),
               ),
             ),
             const SizedBox(height: 8),
