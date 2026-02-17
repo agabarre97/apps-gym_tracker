@@ -185,6 +185,7 @@ Future<void> _routeByProfile({
   AuthPort? authPort,
   SyncPort? syncedStorage,
 }) async {
+  final navigator = Navigator.of(context);
   final completed = await profilePort.isProfileCompleted();
   if (!mounted()) return;
 
@@ -214,7 +215,8 @@ Future<void> _routeByProfile({
           syncedStorage: syncedStorage,
         );
 
-  Navigator.of(context).pushReplacement(
+  if (!navigator.mounted) return;
+  navigator.pushReplacement(
     MaterialPageRoute(builder: (_) => destination),
   );
 }

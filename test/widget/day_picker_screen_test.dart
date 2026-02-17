@@ -7,7 +7,7 @@ import '../helpers/test_helpers.dart';
 
 void main() {
   group('DayPickerScreen', () {
-    final routine = const Routine(
+    const routine = Routine(
       id: 'r1',
       name: 'Push Pull',
       type: 'musculacion',

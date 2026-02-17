@@ -161,7 +161,7 @@ class FakeAuthPort implements AuthPort {
   @override
   Future<AuthUser> signInWithGoogle() async {
     _throwIfNeeded();
-    final user = AuthUser(uid: 'google-uid', email: 'test@gmail.com');
+    const user = AuthUser(uid: 'google-uid', email: 'test@gmail.com');
     simulatedUser = user;
     return user;
   }

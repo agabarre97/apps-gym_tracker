@@ -65,11 +65,11 @@ void main() {
         routineDayIndex: 0,
         date: DateTime(2026, 2, 14),
         exercises: [
-          WorkoutExercise(
+          const WorkoutExercise(
             exerciseKey: 'bench_press',
             sets: [
-              const ExerciseSet(reps: 10, weight: 80),
-              const ExerciseSet(reps: 8, weight: 85),
+              ExerciseSet(reps: 10, weight: 80),
+              ExerciseSet(reps: 8, weight: 85),
             ],
             notes: 'Good form',
             completed: true,
@@ -109,9 +109,9 @@ void main() {
         routineDayIndex: 0,
         date: DateTime(2026, 2, 10),
         exercises: [
-          WorkoutExercise(
+          const WorkoutExercise(
             exerciseKey: 'bench_press',
-            sets: [const ExerciseSet(reps: 5, weight: 50)],
+            sets: [ExerciseSet(reps: 5, weight: 50)],
             notes: '',
             completed: true,
           ),
@@ -123,9 +123,9 @@ void main() {
         routineDayIndex: 0,
         date: DateTime(2026, 2, 14),
         exercises: [
-          WorkoutExercise(
+          const WorkoutExercise(
             exerciseKey: 'bench_press',
-            sets: [const ExerciseSet(reps: 12, weight: 100)],
+            sets: [ExerciseSet(reps: 12, weight: 100)],
             notes: '',
             completed: true,
           ),
@@ -153,9 +153,9 @@ void main() {
         routineDayIndex: 0,
         date: DateTime(2026, 2, 14),
         exercises: [
-          WorkoutExercise(
+          const WorkoutExercise(
             exerciseKey: 'bench_press',
-            sets: [const ExerciseSet(reps: 99, weight: 999)],
+            sets: [ExerciseSet(reps: 99, weight: 999)],
             notes: '',
             completed: true,
           ),

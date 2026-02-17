@@ -161,7 +161,7 @@ void main() {
     testWidgets(
         'orders exercises by category priority for selected muscle group',
         (tester) async {
-      final prioritizedExercises = const [
+      const prioritizedExercises = [
         Exercise(
           key: 'biceps_multi',
           name: 'Curl multi',

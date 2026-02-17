@@ -567,10 +567,13 @@ class _LandingScreenState extends State<LandingScreen> {
                                 color: Colors.redAccent, size: 20),
                             tooltip: l10n.landingDeleteTrainingConfirm,
                             onPressed: () async {
+                              final navigator = Navigator.of(ctx);
                               await _confirmDeleteEntry(entry, l10n);
                               if (!mounted) return;
                               if (_entriesForSelectedDay.isEmpty) {
-                                Navigator.pop(ctx);
+                                if (navigator.mounted) {
+                                  navigator.pop();
+                                }
                               } else {
                                 setSheetState(() {});
                               }

@@ -55,12 +55,12 @@ void main() {
     final hiitSessionPort = FakeHiitSessionPort();
 
     await routinePort.saveRoutines([
-      Routine(
+      const Routine(
         id: 'r1',
         name: 'Push Pull',
         type: 'musculacion',
         days: [
-          const RoutineDay(muscleGroups: ['chest'], exerciseKeys: ['bench'])
+          RoutineDay(muscleGroups: ['chest'], exerciseKeys: ['bench'])
         ],
       ),
     ]);

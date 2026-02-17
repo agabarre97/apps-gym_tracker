@@ -66,6 +66,7 @@ class FakeDocumentReference implements DocumentReference<Map<String, dynamic>> {
   Map<String, dynamic>? _data;
   final Map<String, FakeCollectionReference> _subCollections = {};
 
+  @override
   FakeCollectionReference collection(String path) {
     return _subCollections.putIfAbsent(
         path, () => FakeCollectionReference('$_path/$path'));

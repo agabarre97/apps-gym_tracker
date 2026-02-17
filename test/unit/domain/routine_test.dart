@@ -232,15 +232,15 @@ void main() {
 
   group('HIIT config fields', () {
     test('toJson and fromJson round-trip preserves HIIT config', () {
-      final routine = Routine(
+      const routine = Routine(
         id: 'hiit1',
         name: 'My HIIT',
         type: 'hiit',
-        days: const [
+        days: [
           RoutineDay(
               muscleGroups: [], exerciseKeys: ['burpees', 'jump_squats']),
         ],
-        hiitConfig: const HiitConfig(
+        hiitConfig: HiitConfig(
           sets: 4,
           workSeconds: 30,
           restSeconds: 15,
@@ -276,12 +276,12 @@ void main() {
     });
 
     test('copyWith overrides HIIT config', () {
-      final routine = Routine(
+      const routine = Routine(
         id: 'hiit1',
         name: 'My HIIT',
         type: 'hiit',
-        days: const [],
-        hiitConfig: const HiitConfig(
+        days: [],
+        hiitConfig: HiitConfig(
           sets: 3,
           workSeconds: 20,
           restSeconds: 10,
@@ -303,14 +303,14 @@ void main() {
     });
 
     test('export and import round-trip preserves HIIT fields', () {
-      final routine = Routine(
+      const routine = Routine(
         id: 'hiit1',
         name: 'My HIIT',
         type: 'hiit',
-        days: const [
+        days: [
           RoutineDay(muscleGroups: [], exerciseKeys: ['burpees']),
         ],
-        hiitConfig: const HiitConfig(
+        hiitConfig: HiitConfig(
           sets: 4,
           workSeconds: 30,
           restSeconds: 15,
