@@ -277,7 +277,7 @@ class _LandingScreenState extends State<LandingScreen> {
     DateTime? retroEndTime;
     if (!trackTime) {
       final l10n = AppLocalizations.of(context)!;
-      final times = await _showTimeInputSheet(l10n);
+      final times = await _showTimeInputPage(l10n);
       if (times == null || !mounted) return;
       if (times.start != null) {
         retroStartTime = date.add(
@@ -322,7 +322,7 @@ class _LandingScreenState extends State<LandingScreen> {
   /// for mobility / HIIT routines added from the calendar.
   Future<void> _quickLogTraining(Routine routine, DateTime date) async {
     final l10n = AppLocalizations.of(context)!;
-    final times = await _showTimeInputSheet(l10n);
+    final times = await _showTimeInputPage(l10n);
     if (times == null || !mounted) return; // user cancelled
 
     final isMobility = routine.recommendedRoutineKey != null;
@@ -364,103 +364,21 @@ class _LandingScreenState extends State<LandingScreen> {
     );
   }
 
-  /// Shows a bottom sheet with optional start/end time pickers.
+  /// Navigates to a full-screen page with optional start/end time pickers.
   /// Returns a record with optional [TimeOfDay] values, or null if cancelled.
-  Future<({TimeOfDay? start, TimeOfDay? end})?> _showTimeInputSheet(
+  Future<({TimeOfDay? start, TimeOfDay? end})?> _showTimeInputPage(
       AppLocalizations l10n) {
-    TimeOfDay? startTime;
-    TimeOfDay? endTime;
-
-    return showModalBottomSheet<({TimeOfDay? start, TimeOfDay? end})>(
-      context: context,
-      builder: (ctx) {
-        return StatefulBuilder(
-          builder: (ctx, setSheetState) {
-            String formatTime(TimeOfDay t) =>
-                '${t.hour.toString().padLeft(2, '0')}:'
-                '${t.minute.toString().padLeft(2, '0')}';
-
-            return SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(24, 20, 24, 16),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      l10n.landingMarkTrainingTitle,
-                      style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 20),
-                    // Start time row
-                    _TimePickerRow(
-                      label: l10n.landingOptionalStartTime,
-                      value: startTime != null
-                          ? formatTime(startTime!)
-                          : l10n.landingNoTime,
-                      hasValue: startTime != null,
-                      onTap: () async {
-                        final picked = await showTimePicker(
-                          context: ctx,
-                          initialTime: startTime ?? TimeOfDay.now(),
-                        );
-                        if (picked != null) {
-                          setSheetState(() => startTime = picked);
-                        }
-                      },
-                      onClear: startTime != null
-                          ? () => setSheetState(() => startTime = null)
-                          : null,
-                    ),
-                    const SizedBox(height: 12),
-                    // End time row
-                    _TimePickerRow(
-                      label: l10n.landingOptionalEndTime,
-                      value: endTime != null
-                          ? formatTime(endTime!)
-                          : l10n.landingNoTime,
-                      hasValue: endTime != null,
-                      onTap: () async {
-                        final picked = await showTimePicker(
-                          context: ctx,
-                          initialTime: endTime ?? startTime ?? TimeOfDay.now(),
-                        );
-                        if (picked != null) {
-                          setSheetState(() => endTime = picked);
-                        }
-                      },
-                      onClear: endTime != null
-                          ? () => setSheetState(() => endTime = null)
-                          : null,
-                    ),
-                    const SizedBox(height: 24),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: OutlinedButton(
-                            onPressed: () => Navigator.pop(ctx),
-                            child: Text(l10n.sharedCancel),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: FilledButton(
-                            onPressed: () => Navigator.pop(
-                              ctx,
-                              (start: startTime, end: endTime),
-                            ),
-                            child: Text(l10n.landingMarkTrainingConfirm),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      },
+    return Navigator.of(context).push<({TimeOfDay? start, TimeOfDay? end})>(
+      MaterialPageRoute(
+        builder: (_) => _TimeInputPage(
+          title: l10n.landingMarkTrainingTitle,
+          startTimeLabel: l10n.landingOptionalStartTime,
+          endTimeLabel: l10n.landingOptionalEndTime,
+          noTimeLabel: l10n.landingNoTime,
+          cancelLabel: l10n.sharedCancel,
+          confirmLabel: l10n.landingMarkTrainingConfirm,
+        ),
+      ),
     );
   }
 
@@ -503,12 +421,6 @@ class _LandingScreenState extends State<LandingScreen> {
   Future<void> _viewSessionsForDay() async {
     final entries = _entriesForSelectedDay;
     if (entries.isEmpty) return;
-
-    if (entries.length == 1 &&
-        entries.first.type == _TrainingEntryType.workout) {
-      await _navigateToWorkoutSession(entries.first.workoutSession!);
-      return;
-    }
 
     await _showUnifiedSessionPicker(entries);
   }
@@ -735,18 +647,18 @@ class _LandingScreenState extends State<LandingScreen> {
 
     switch (entry.type) {
       case _TrainingEntryType.workout:
-        final updated = _sessions.where((s) => s.id != entry.id).toList();
-        await widget.workoutSessionPort.saveSessions(updated);
+        _sessions = _sessions.where((s) => s.id != entry.id).toList();
+        await widget.workoutSessionPort.saveSessions(_sessions);
         break;
       case _TrainingEntryType.mobility:
-        final updated =
+        _mobilitySessions =
             _mobilitySessions.where((s) => s.id != entry.id).toList();
-        await widget.mobilitySessionPort.saveSessions(updated);
+        await widget.mobilitySessionPort.saveSessions(_mobilitySessions);
         break;
       case _TrainingEntryType.hiit:
-        final updated =
+        _hiitSessions =
             _hiitSessions.where((s) => s.id != entry.id).toList();
-        await widget.hiitSessionPort.saveSessions(updated);
+        await widget.hiitSessionPort.saveSessions(_hiitSessions);
         break;
     }
 
@@ -1221,6 +1133,109 @@ class _RoutineTile extends StatelessWidget {
 }
 
 // ── Time picker row for the time-input bottom sheet ──────────────
+
+/// Full-screen page for optional start/end time input when logging a past
+/// training. Returns a `({TimeOfDay? start, TimeOfDay? end})` record via
+/// [Navigator.pop], or `null` if the user navigates back.
+class _TimeInputPage extends StatefulWidget {
+  const _TimeInputPage({
+    required this.title,
+    required this.startTimeLabel,
+    required this.endTimeLabel,
+    required this.noTimeLabel,
+    required this.cancelLabel,
+    required this.confirmLabel,
+  });
+
+  final String title;
+  final String startTimeLabel;
+  final String endTimeLabel;
+  final String noTimeLabel;
+  final String cancelLabel;
+  final String confirmLabel;
+
+  @override
+  State<_TimeInputPage> createState() => _TimeInputPageState();
+}
+
+class _TimeInputPageState extends State<_TimeInputPage> {
+  TimeOfDay? _startTime;
+  TimeOfDay? _endTime;
+
+  String _formatTime(TimeOfDay t) =>
+      '${t.hour.toString().padLeft(2, '0')}:'
+      '${t.minute.toString().padLeft(2, '0')}';
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(widget.title)),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+        child: Column(
+          children: [
+            _TimePickerRow(
+              label: widget.startTimeLabel,
+              value: _startTime != null
+                  ? _formatTime(_startTime!)
+                  : widget.noTimeLabel,
+              hasValue: _startTime != null,
+              onTap: () async {
+                final picked = await showTimePicker(
+                  context: context,
+                  initialTime: _startTime ?? TimeOfDay.now(),
+                );
+                if (picked != null) setState(() => _startTime = picked);
+              },
+              onClear: _startTime != null
+                  ? () => setState(() => _startTime = null)
+                  : null,
+            ),
+            const SizedBox(height: 12),
+            _TimePickerRow(
+              label: widget.endTimeLabel,
+              value: _endTime != null
+                  ? _formatTime(_endTime!)
+                  : widget.noTimeLabel,
+              hasValue: _endTime != null,
+              onTap: () async {
+                final picked = await showTimePicker(
+                  context: context,
+                  initialTime: _endTime ?? _startTime ?? TimeOfDay.now(),
+                );
+                if (picked != null) setState(() => _endTime = picked);
+              },
+              onClear: _endTime != null
+                  ? () => setState(() => _endTime = null)
+                  : null,
+            ),
+            const Spacer(),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text(widget.cancelLabel),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: FilledButton(
+                    onPressed: () => Navigator.pop(
+                      context,
+                      (start: _startTime, end: _endTime),
+                    ),
+                    child: Text(widget.confirmLabel),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 class _TimePickerRow extends StatelessWidget {
   const _TimePickerRow({
