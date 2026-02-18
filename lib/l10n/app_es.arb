@@ -269,6 +269,8 @@
   },
   "routineSummaryTitle": "Resumen de rutina",
   "routineNameHint": "Nombre de la rutina",
+  "routineNameRequired": "Por favor, introduce un nombre para la rutina.",
+  "routineNeedsExercises": "Añade al menos un ejercicio antes de guardar.",
   "routineSave": "Guardar rutina",
   "routineDifficulty": "Dificultad",
   "routineMuscles": "Músculos",

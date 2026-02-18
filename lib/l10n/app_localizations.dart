@@ -1100,6 +1100,18 @@ abstract class AppLocalizations {
   /// **'Nombre de la rutina'**
   String get routineNameHint;
 
+  /// No description provided for @routineNameRequired.
+  ///
+  /// In es, this message translates to:
+  /// **'Por favor, introduce un nombre para la rutina.'**
+  String get routineNameRequired;
+
+  /// No description provided for @routineNeedsExercises.
+  ///
+  /// In es, this message translates to:
+  /// **'Añade al menos un ejercicio antes de guardar.'**
+  String get routineNeedsExercises;
+
   /// No description provided for @routineSave.
   ///
   /// In es, this message translates to:

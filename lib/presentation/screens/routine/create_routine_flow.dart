@@ -236,7 +236,7 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
     final routine = Routine(
       id: _uuid.v4(),
       name: name,
-      type: 'movilidad',
+      type: RoutineType.movilidad.value,
       days: const [],
       recommendedRoutineKey: routineKey,
     );
@@ -296,7 +296,7 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
     final routine = Routine(
       id: _uuid.v4(),
       name: name,
-      type: 'hiit',
+      type: RoutineType.hiit.value,
       days: [
         RoutineDay(
           muscleGroups: const [],
@@ -346,6 +346,18 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
   }
 
   Future<void> _onSave(String name) async {
+    final trimmedName = name.trim();
+    if (trimmedName.isEmpty) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.routineNameRequired),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
     final days = <RoutineDay>[];
     for (var i = 0; i < _dayMuscleGroups.length; i++) {
       days.add(RoutineDay(
@@ -354,9 +366,20 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
       ));
     }
 
+    if (days.isEmpty || days.every((d) => d.exerciseKeys.isEmpty)) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.routineNeedsExercises),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
     final routine = Routine(
       id: _uuid.v4(),
-      name: name,
+      name: trimmedName,
       type: _selectedType!,
       days: days,
     );

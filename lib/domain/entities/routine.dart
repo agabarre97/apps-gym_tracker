@@ -2,6 +2,28 @@ import 'dart:convert';
 
 import 'package:gym_tracker/domain/entities/hiit_config.dart';
 
+/// Strongly-typed discriminator for [Routine.type].
+///
+/// The underlying JSON representation stays as its [value] string so
+/// existing stored data requires no migration.
+enum RoutineType {
+  musculacion('musculacion'),
+  pliometricos('pliometricos'),
+  movilidad('movilidad'),
+  hiit('hiit');
+
+  const RoutineType(this.value);
+
+  /// Serialised string stored in JSON / shared-prefs.
+  final String value;
+
+  /// Parses [raw] into a [RoutineType]; returns [musculacion] for unknown values.
+  static RoutineType fromString(String raw) => RoutineType.values.firstWhere(
+        (t) => t.value == raw,
+        orElse: () => RoutineType.musculacion,
+      );
+}
+
 /// A single day within a routine.
 class RoutineDay {
   const RoutineDay({
@@ -46,6 +68,9 @@ class Routine {
 
   /// One of: 'musculacion', 'pliometricos', 'movilidad', 'hiit'.
   final String type;
+
+  /// Typed accessor for [type]. Prefer this over raw string comparisons.
+  RoutineType get routineType => RoutineType.fromString(type);
 
   final List<RoutineDay> days;
 

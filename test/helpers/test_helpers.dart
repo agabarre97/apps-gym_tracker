@@ -69,6 +69,16 @@ class FakeWorkoutSessionPort implements WorkoutSessionPort {
   @override
   Future<void> saveSessions(List<WorkoutSession> sessions) async =>
       _sessions = List.of(sessions);
+
+  @override
+  Future<void> upsertSession(WorkoutSession session) async {
+    final index = _sessions.indexWhere((s) => s.id == session.id);
+    if (index >= 0) {
+      _sessions[index] = session;
+    } else {
+      _sessions.add(session);
+    }
+  }
 }
 
 /// In-memory implementation of [MobilitySessionPort] for testing.

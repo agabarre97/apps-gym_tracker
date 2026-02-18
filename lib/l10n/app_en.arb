@@ -241,6 +241,8 @@
   "routineSelected": "{count} selected",
   "routineSummaryTitle": "Routine summary",
   "routineNameHint": "Routine name",
+  "routineNameRequired": "Please enter a name for this routine.",
+  "routineNeedsExercises": "Add at least one exercise before saving.",
   "routineSave": "Save routine",
   "routineDifficulty": "Difficulty",
   "routineMuscles": "Muscles",

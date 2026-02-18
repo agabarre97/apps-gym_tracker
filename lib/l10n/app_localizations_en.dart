@@ -545,6 +545,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routineNameHint => 'Routine name';
 
   @override
+  String get routineNameRequired => 'Please enter a name for this routine.';
+
+  @override
+  String get routineNeedsExercises =>
+      'Add at least one exercise before saving.';
+
+  @override
   String get routineSave => 'Save routine';
 
   @override

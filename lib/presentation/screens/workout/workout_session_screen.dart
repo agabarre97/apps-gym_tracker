@@ -10,6 +10,7 @@ import 'package:gym_tracker/domain/entities/workout_session.dart';
 import 'package:gym_tracker/domain/ports/workout_session_port.dart';
 import 'package:gym_tracker/presentation/screens/routine/exercise_selection_screen.dart';
 import 'package:gym_tracker/presentation/screens/routine/by_muscle_category_labels.dart';
+import 'package:gym_tracker/presentation/utils/time_formatter.dart';
 
 /// Main workout screen showing exercise cards with sets/reps/weight editing.
 class WorkoutSessionScreen extends StatefulWidget {
@@ -52,6 +53,22 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
   /// consecutive sets.
   final Map<(int, int), DateTime> _setCompletionTimes = {};
 
+  /// One TextEditingController per exercise key for the notes field.
+  ///
+  /// Created lazily and disposed in [dispose] to avoid leaking controllers
+  /// that were previously created inside [build].
+  final Map<String, TextEditingController> _notesControllers = {};
+
+  /// Persists the session whenever the app is sent to background or
+  /// detached (e.g. home button, incoming call) so data is not lost.
+  late final AppLifecycleListener _lifecycleListener;
+
+  TextEditingController _notesControllerFor(WorkoutExercise ex) =>
+      _notesControllers.putIfAbsent(
+        ex.exerciseKey,
+        () => TextEditingController(text: ex.notes ?? ''),
+      );
+
   /// Whether the session has been modified from its original state (view mode).
   bool get _hasChanges {
     return WorkoutSession.listToJsonString([_session]) != _originalJson;
@@ -71,11 +88,20 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
         });
       });
     }
+    _lifecycleListener = AppLifecycleListener(
+      onHide: _persistSession,
+      onPause: _persistSession,
+      onDetach: _persistSession,
+    );
   }
 
   @override
   void dispose() {
     _timer?.cancel();
+    _lifecycleListener.dispose();
+    for (final c in _notesControllers.values) {
+      c.dispose();
+    }
     super.dispose();
   }
 
@@ -84,20 +110,13 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
 
   // ── Persistence ────────────────────────────────────────────────
 
-  Future<void> _persistSession() async {
-    final all = await widget.workoutSessionPort.loadSessions();
-    final idx = all.indexWhere((s) => s.id == _session.id);
-    if (idx >= 0) {
-      all[idx] = _session;
-    } else {
-      all.add(_session);
-    }
-    await widget.workoutSessionPort.saveSessions(all);
-  }
+  Future<void> _persistSession() =>
+      widget.workoutSessionPort.upsertSession(_session);
 
   // ── Exercise actions ───────────────────────────────────────────
 
   void _completeSet(int exIndex, int setIndex) {
+    HapticFeedback.mediumImpact();
     final completedAt = DateTime.now();
     final ex = _session.exercises[exIndex];
     final updatedSets = List<ExerciseSet>.from(ex.sets);
@@ -404,14 +423,6 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
 
   // ── Elapsed time format ────────────────────────────────────────
 
-  String _formatDuration(Duration d) {
-    final h = d.inHours;
-    final m = d.inMinutes % 60;
-    final s = d.inSeconds % 60;
-    if (h > 0) return '${h}h ${m}m';
-    return '${m}m ${s}s';
-  }
-
   /// Brief summary for a completed exercise, e.g. "3x12 @ 60kg".
   String _briefSummary(WorkoutExercise ex) {
     if (ex.sets.isEmpty) return '';
@@ -437,16 +448,7 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
         .toList();
     if (rests.isEmpty) return null;
     final avg = (rests.reduce((a, b) => a + b) / rests.length).round();
-    return _formatRestSeconds(avg);
-  }
-
-  String _formatRestSeconds(int seconds) {
-    if (seconds >= 60) {
-      final m = seconds ~/ 60;
-      final s = seconds % 60;
-      return s > 0 ? '${m}m ${s}s' : '${m}m';
-    }
-    return '${seconds}s';
+    return Duration(seconds: avg).toRestLabel();
   }
 
   // ── Build ──────────────────────────────────────────────────────
@@ -487,7 +489,7 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
                             size: 18, color: Colors.white54),
                         const SizedBox(width: 4),
                         Text(
-                          _formatDuration(_elapsed),
+                          _elapsed.toHumanReadable(),
                           style: const TextStyle(
                               color: Colors.white70, fontSize: 14),
                         ),
@@ -660,7 +662,7 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
                       border: const OutlineInputBorder(),
                       isDense: true,
                     ),
-                    controller: TextEditingController(text: ex.notes),
+                    controller: _notesControllerFor(ex),
                     maxLines: 2,
                     onChanged: (v) => _updateExerciseNotes(index, v),
                   ),
@@ -980,14 +982,19 @@ class _StepButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback onTap;
 
+  // 44 dp is the Material minimum touch-target width; height is left
+  // unconstrained so the button matches its sibling TextField height and
+  // the expanded card stays within the ReorderableListView bounds.
+  static const _minTouchWidth = 44.0;
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(14),
-      child: Padding(
-        padding: const EdgeInsets.all(4),
-        child: Icon(icon, size: 18, color: Colors.white54),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minWidth: _minTouchWidth),
+        child: Center(child: Icon(icon, size: 22, color: Colors.white54)),
       ),
     );
   }
@@ -1027,7 +1034,8 @@ class _RestStopwatchSheetState extends State<_RestStopwatchSheet> {
   final Stopwatch _stopwatch = Stopwatch();
   Timer? _ticker;
 
-  static const _tickInterval = Duration(milliseconds: 30);
+  // 100 ms gives smooth centisecond updates at ~10 fps while cutting redraws by 3×.
+  static const _tickInterval = Duration(milliseconds: 100);
 
   @override
   void dispose() {
@@ -1059,14 +1067,7 @@ class _RestStopwatchSheetState extends State<_RestStopwatchSheet> {
     setState(() {});
   }
 
-  String _formatStopwatch() {
-    final elapsed = _stopwatch.elapsed;
-    final minutes = elapsed.inMinutes.toString().padLeft(2, '0');
-    final seconds = (elapsed.inSeconds % 60).toString().padLeft(2, '0');
-    final centiseconds =
-        (elapsed.inMilliseconds % 1000 ~/ 10).toString().padLeft(2, '0');
-    return '$minutes:$seconds.$centiseconds';
-  }
+  String _formatStopwatch() => _stopwatch.elapsed.toStopwatch();
 
   @override
   Widget build(BuildContext context) {

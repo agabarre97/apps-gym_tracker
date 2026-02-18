@@ -19,4 +19,16 @@ class WorkoutSessionDatasource implements WorkoutSessionPort {
   @override
   Future<void> saveSessions(List<WorkoutSession> sessions) =>
       _storage.set(_key, WorkoutSession.listToJsonString(sessions));
+
+  @override
+  Future<void> upsertSession(WorkoutSession session) async {
+    final all = await loadSessions();
+    final index = all.indexWhere((s) => s.id == session.id);
+    if (index >= 0) {
+      all[index] = session;
+    } else {
+      all.add(session);
+    }
+    await saveSessions(all);
+  }
 }

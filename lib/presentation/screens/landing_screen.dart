@@ -234,7 +234,7 @@ class _LandingScreenState extends State<LandingScreen> {
 
     // ── Mobility / HIIT quick-log (calendar add, no timer) ──
     final isMobility = routine.recommendedRoutineKey != null;
-    final isHiit = routine.type == 'hiit';
+    final isHiit = routine.routineType == RoutineType.hiit;
 
     if (!trackTime && (isMobility || isHiit)) {
       await _quickLogTraining(routine, date);
@@ -746,7 +746,7 @@ class _LandingScreenState extends State<LandingScreen> {
           ),
         ),
       );
-    } else if (routine.type == 'hiit') {
+    } else if (routine.routineType == RoutineType.hiit) {
       result = await Navigator.of(context).push<bool>(
         MaterialPageRoute(
           builder: (_) => HiitDetailScreen(
