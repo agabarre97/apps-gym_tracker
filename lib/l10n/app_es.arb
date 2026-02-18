@@ -327,6 +327,9 @@
   "workoutStart": "Comenzar",
   "workoutFinish": "Finalizar entrenamiento",
   "workoutFinishConfirm": "¿Quieres finalizar el entrenamiento?",
+  "workoutSavePrompt": "¿Quieres guardar el entrenamiento?",
+  "workoutSaveYes": "Sí",
+  "workoutSaveNo": "No",
   "workoutSets": "Series",
   "workoutSet": "Serie {n}",
   "@workoutSet": {
@@ -351,7 +354,7 @@
   "workoutRemoveSet": "Quitar serie",
   "workoutElapsed": "Tiempo",
   "workoutNoRoutines": "Crea una rutina primero",
-  "workoutSaveChanges": "Guardar cambios",
+  "workoutSaveChanges": "Guardar entrenamiento",
   "workoutRestTimer": "Descanso",
   "workoutAvgRest": "Descanso medio: {rest}",
   "@workoutAvgRest": {

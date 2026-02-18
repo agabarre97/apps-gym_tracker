@@ -708,8 +708,8 @@ class _LandingScreenState extends State<LandingScreen> {
         '${dt.minute.toString().padLeft(2, '0')}';
   }
 
-  /// Creates a [WorkoutSession] auto-filled from the last session of the same
-  /// routine+day, or with 3 empty sets per exercise.
+  /// Creates a [WorkoutSession] auto-filled from the closest previous session
+  /// in time (same routine+day), or with 3 empty sets per exercise.
   WorkoutSession _buildNewSession({
     required Routine routine,
     required int dayIndex,

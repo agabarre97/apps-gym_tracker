@@ -137,15 +137,13 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      // Should show "Guardar cambios" instead of "Finalizar entrenamiento"
-      expect(find.text('Guardar cambios'), findsOneWidget);
+      // Should show "Guardar entrenamiento" instead of "Finalizar entrenamiento"
+      expect(find.text('Guardar entrenamiento'), findsOneWidget);
       expect(find.text('Finalizar entrenamiento'), findsNothing);
-
-      // Button should be disabled (no changes made)
       final button = tester.widget<FilledButton>(
-        find.widgetWithText(FilledButton, 'Guardar cambios'),
+        find.widgetWithText(FilledButton, 'Guardar entrenamiento'),
       );
-      expect(button.onPressed, isNull);
+      expect(button.onPressed, isNotNull);
     });
 
     testWidgets('finishing exercise persists to port', (tester) async {
@@ -156,7 +154,7 @@ void main() {
             allExercises: exercises,
             workoutSessionPort: port,
             routineName: 'Test Routine',
-            trackTime: false,
+            trackTime: true,
           ),
         ),
       );
@@ -196,6 +194,56 @@ void main() {
 
       // Timer icon should be present
       expect(find.byIcon(Icons.timer_outlined), findsOneWidget);
+    });
+
+    testWidgets(
+        'back in live workout asks save prompt and No exits without persisting',
+        (tester) async {
+      await port.saveSessions([session]);
+
+      await tester.pumpWidget(
+        buildTestableWidget(
+          Builder(
+            builder: (context) => Scaffold(
+              body: Center(
+                child: FilledButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => WorkoutSessionScreen(
+                          session: session,
+                          allExercises: exercises,
+                          workoutSessionPort: port,
+                          routineName: 'Test Routine',
+                          trackTime: true,
+                        ),
+                      ),
+                    );
+                  },
+                  child: const Text('open'),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.text('open'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Test Routine'), findsOneWidget);
+      await tester.tap(find.byIcon(Icons.arrow_back));
+      await tester.pumpAndSettle();
+
+      expect(find.text('¿Quieres guardar el entrenamiento?'), findsOneWidget);
+      expect(find.text('Sí'), findsOneWidget);
+      expect(find.text('No'), findsOneWidget);
+
+      await tester.tap(find.text('No'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Test Routine'), findsNothing);
+      final saved = await port.loadSessions();
+      expect(saved, isEmpty);
     });
 
     testWidgets('timer is hidden when trackTime is false', (tester) async {
@@ -343,7 +391,7 @@ void main() {
             allExercises: exercises,
             workoutSessionPort: port,
             routineName: 'Test Routine',
-            trackTime: false,
+            trackTime: true,
           ),
         ),
       );
@@ -377,7 +425,7 @@ void main() {
             allExercises: exercises,
             workoutSessionPort: port,
             routineName: 'Test Routine',
-            trackTime: false,
+            trackTime: true,
           ),
         ),
       );
@@ -410,6 +458,132 @@ void main() {
       expect(saved.first.exercises.first.completed, isTrue);
       expect(
           saved.first.exercises.first.sets.every((s) => s.completed), isTrue);
+    });
+
+    testWidgets('view mode shows Guardar in exercise CTA (no finish set flow)',
+        (tester) async {
+      await tester.pumpWidget(
+        buildTestableWidget(
+          WorkoutSessionScreen(
+            session: session,
+            allExercises: exercises,
+            workoutSessionPort: port,
+            routineName: 'Test Routine',
+            trackTime: false,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Press banca'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Guardar'), findsOneWidget);
+      expect(find.textContaining('Finalizar serie'), findsNothing);
+
+      await tester.tap(find.text('Guardar'));
+      await tester.pumpAndSettle();
+
+      // Exercise is marked as completed (green tick shown when collapsed).
+      expect(find.byIcon(Icons.check_circle), findsOneWidget);
+      // This change should enable saving the full training.
+      final saveTrainingButton = tester.widget<FilledButton>(
+        find.widgetWithText(FilledButton, 'Guardar entrenamiento'),
+      );
+      expect(saveTrainingButton.onPressed, isNotNull);
+    });
+
+    testWidgets('view mode can save full training without saving each exercise',
+        (tester) async {
+      await tester.pumpWidget(
+        buildTestableWidget(
+          WorkoutSessionScreen(
+            session: session,
+            allExercises: exercises,
+            workoutSessionPort: port,
+            routineName: 'Test Routine',
+            trackTime: false,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Guardar entrenamiento'));
+      await tester.pumpAndSettle();
+
+      final saved = await port.loadSessions();
+      expect(saved, hasLength(1));
+      expect(saved.first.exercises, hasLength(2));
+      expect(saved.first.exercises.every((exercise) => exercise.completed),
+          isTrue);
+    });
+
+    testWidgets(
+        'reordering exercise cards updates visual order and persists session order',
+        (tester) async {
+      await tester.pumpWidget(
+        buildTestableWidget(
+          WorkoutSessionScreen(
+            session: session,
+            allExercises: exercises,
+            workoutSessionPort: port,
+            routineName: 'Test Routine',
+            trackTime: false,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final pressBefore = tester.getTopLeft(find.text('Press banca')).dy;
+      final curlBefore = tester.getTopLeft(find.text('Curl bíceps')).dy;
+      expect(pressBefore, lessThan(curlBefore));
+
+      await tester.drag(
+        find.byKey(const ValueKey('workout-exercise-card-press_banca')),
+        const Offset(0, 180),
+      );
+      await tester.pumpAndSettle();
+
+      final pressAfter = tester.getTopLeft(find.text('Press banca')).dy;
+      final curlAfter = tester.getTopLeft(find.text('Curl bíceps')).dy;
+      expect(pressAfter, greaterThan(curlAfter));
+
+      final saved = await port.loadSessions();
+      expect(saved, hasLength(1));
+      expect(
+        saved.first.exercises.map((exercise) => exercise.exerciseKey).toList(),
+        ['curl_biceps', 'press_banca'],
+      );
+    });
+
+    testWidgets('reordering keeps expanded card bound to moved exercise',
+        (tester) async {
+      await tester.pumpWidget(
+        buildTestableWidget(
+          WorkoutSessionScreen(
+            session: session,
+            allExercises: exercises,
+            workoutSessionPort: port,
+            routineName: 'Test Routine',
+            trackTime: false,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Press banca'));
+      await tester.pumpAndSettle();
+      expect(find.text('Serie 3'), findsOneWidget);
+
+      await tester.drag(
+        find.byKey(const ValueKey('workout-exercise-card-press_banca')),
+        const Offset(0, 180),
+      );
+      await tester.pumpAndSettle();
+
+      // Press banca remains the expanded card even after moving.
+      expect(find.text('Press banca'), findsOneWidget);
+      expect(find.text('Serie 3'), findsOneWidget);
     });
   });
 }

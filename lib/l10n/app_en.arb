@@ -294,6 +294,9 @@
   "workoutStart": "Start",
   "workoutFinish": "Finish workout",
   "workoutFinishConfirm": "Finish the workout?",
+  "workoutSavePrompt": "Do you want to save the workout?",
+  "workoutSaveYes": "Yes",
+  "workoutSaveNo": "No",
   "workoutSets": "Sets",
   "workoutSet": "Set {n}",
   "workoutReps": "Reps",
@@ -313,7 +316,7 @@
   "workoutRemoveSet": "Remove set",
   "workoutElapsed": "Time",
   "workoutNoRoutines": "Create a routine first",
-  "workoutSaveChanges": "Save changes",
+  "workoutSaveChanges": "Save workout",
   "workoutRestTimer": "Rest",
   "workoutAvgRest": "Avg rest: {rest}",
   "@workoutAvgRest": {

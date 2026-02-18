@@ -134,6 +134,56 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
     _completeSet(exIndex, setIndex);
   }
 
+  int _mapIndexAfterReorder(int index, int oldIndex, int newIndex) {
+    if (index == oldIndex) return newIndex;
+    if (oldIndex < newIndex && index > oldIndex && index <= newIndex) {
+      return index - 1;
+    }
+    if (oldIndex > newIndex && index >= newIndex && index < oldIndex) {
+      return index + 1;
+    }
+    return index;
+  }
+
+  void _reorderExercises(int oldIndex, int newIndex) {
+    if (newIndex > oldIndex) {
+      newIndex -= 1;
+    }
+    if (oldIndex == newIndex) return;
+
+    setState(() {
+      final updatedExercises = List<WorkoutExercise>.from(_session.exercises);
+      final movedExercise = updatedExercises.removeAt(oldIndex);
+      updatedExercises.insert(newIndex, movedExercise);
+
+      if (_expandedIndex >= 0) {
+        _expandedIndex = _mapIndexAfterReorder(
+          _expandedIndex,
+          oldIndex,
+          newIndex,
+        );
+      }
+
+      final updatedCompletionTimes = <(int, int), DateTime>{};
+      for (final entry in _setCompletionTimes.entries) {
+        final (exerciseIndex, setIndex) = entry.key;
+        final mappedExerciseIndex = _mapIndexAfterReorder(
+          exerciseIndex,
+          oldIndex,
+          newIndex,
+        );
+        updatedCompletionTimes[(mappedExerciseIndex, setIndex)] = entry.value;
+      }
+      _setCompletionTimes
+        ..clear()
+        ..addAll(updatedCompletionTimes);
+
+      _session = _session.copyWith(exercises: updatedExercises);
+    });
+
+    unawaited(_persistSession());
+  }
+
   void _finishExercise(int index) {
     setState(() {
       final ex = _session.exercises[index];
@@ -147,6 +197,18 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
       final list = List<WorkoutExercise>.from(_session.exercises);
       list[index] = updated;
       _session = _session.copyWith(exercises: list);
+      _expandedIndex = -1;
+    });
+    _persistSession();
+  }
+
+  void _saveExercise(int index) {
+    setState(() {
+      final exercise = _session.exercises[index];
+      final updated = exercise.copyWith(completed: true);
+      final updatedExercises = List<WorkoutExercise>.from(_session.exercises);
+      updatedExercises[index] = updated;
+      _session = _session.copyWith(exercises: updatedExercises);
       _expandedIndex = -1;
     });
     _persistSession();
@@ -272,8 +334,55 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
     }
   }
 
+  Future<void> _discardSessionIfExists() async {
+    final all = await widget.workoutSessionPort.loadSessions();
+    final updated = all.where((session) => session.id != _session.id).toList();
+    if (updated.length == all.length) return;
+    await widget.workoutSessionPort.saveSessions(updated);
+  }
+
+  /// Live workout mode: prompt save/discard when leaving with back button.
+  Future<void> _confirmExitTraining() async {
+    final l10n = AppLocalizations.of(context)!;
+    final shouldSave = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => AlertDialog(
+        title: Text(l10n.workoutFinish),
+        content: Text(l10n.workoutSavePrompt),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(l10n.workoutSaveNo),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text(l10n.workoutSaveYes),
+          ),
+        ],
+      ),
+    );
+    if (shouldSave == null || !mounted) return;
+
+    if (shouldSave) {
+      _session = _session.copyWith(endTime: DateTime.now());
+      await _persistSession();
+    } else {
+      await _discardSessionIfExists();
+    }
+
+    if (mounted) {
+      Navigator.of(context).pop(true);
+    }
+  }
+
   /// View/edit mode (calendar): just save and go back.
   Future<void> _saveChanges() async {
+    _session = _session.copyWith(
+      exercises: _session.exercises
+          .map((exercise) => exercise.copyWith(completed: true))
+          .toList(),
+    );
     await _persistSession();
     if (mounted) {
       Navigator.of(context).pop(true);
@@ -346,7 +455,9 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
     return PopScope(
       canPop: !widget.trackTime,
       onPopInvokedWithResult: (didPop, _) {
-        if (!didPop && widget.trackTime) _confirmFinish();
+        if (!didPop && widget.trackTime) {
+          _confirmExitTraining();
+        }
       },
       child: Scaffold(
         appBar: AppBar(
@@ -387,9 +498,11 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
         body: Column(
           children: [
             Expanded(
-              child: ListView.builder(
+              child: ReorderableListView.builder(
                 padding: const EdgeInsets.all(16),
                 itemCount: _session.exercises.length,
+                onReorder: _reorderExercises,
+                buildDefaultDragHandles: false,
                 itemBuilder: (context, index) =>
                     _buildExerciseCard(index, l10n),
               ),
@@ -409,7 +522,7 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
                       : FilledButton.icon(
                           icon: const Icon(Icons.save),
                           label: Text(l10n.workoutSaveChanges),
-                          onPressed: _hasChanges ? _saveChanges : null,
+                          onPressed: _saveChanges,
                         ),
                 ),
               ),
@@ -425,149 +538,159 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
     final isExpanded = _expandedIndex == index;
     final name = _nameForKey(ex.exerciseKey);
     final avgRest = _averageRestLabel(ex);
+    final isViewMode = !widget.trackTime;
     final nextPendingSet = _nextPendingSetIndex(ex);
-    final isSeriesProgressMode = nextPendingSet != null;
+    final isSeriesProgressMode = !isViewMode && nextPendingSet != null;
 
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(12),
-        onTap: () => setState(() {
-          _expandedIndex = isExpanded ? -1 : index;
-        }),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // ── Header: name + check ──
-              Row(
-                children: [
-                  if (ex.completed)
-                    const Padding(
-                      padding: EdgeInsets.only(right: 8),
-                      child: Icon(Icons.check_circle,
-                          color: Colors.greenAccent, size: 20),
-                    ),
-                  Expanded(
-                    child: Text(
-                      name,
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                        color: ex.completed ? Colors.greenAccent : Colors.white,
+    return ReorderableDragStartListener(
+      key: ValueKey('workout-exercise-card-${ex.exerciseKey}'),
+      index: index,
+      child: Card(
+        margin: const EdgeInsets.only(bottom: 12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(12),
+          onTap: () => setState(() {
+            _expandedIndex = isExpanded ? -1 : index;
+          }),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // ── Header: name + check ──
+                Row(
+                  children: [
+                    if (ex.completed)
+                      const Padding(
+                        padding: EdgeInsets.only(right: 8),
+                        child: Icon(Icons.check_circle,
+                            color: Colors.greenAccent, size: 20),
+                      ),
+                    Expanded(
+                      child: Text(
+                        name,
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color:
+                              ex.completed ? Colors.greenAccent : Colors.white,
+                        ),
                       ),
                     ),
-                  ),
-                  Icon(
-                    isExpanded ? Icons.expand_less : Icons.expand_more,
-                    color: Colors.white54,
-                  ),
-                ],
-              ),
-
-              // ── Brief summary when completed & collapsed ──
-              if (ex.completed && !isExpanded) ...[
-                const SizedBox(height: 6),
-                Text(
-                  _briefSummary(ex),
-                  style: const TextStyle(fontSize: 12, color: Colors.white38),
+                    Icon(
+                      isExpanded ? Icons.expand_less : Icons.expand_more,
+                      color: Colors.white54,
+                    ),
+                  ],
                 ),
-                if (avgRest != null) ...[
-                  const SizedBox(height: 2),
-                  Row(
-                    children: [
-                      const Icon(Icons.hourglass_bottom,
-                          size: 12, color: Colors.white24),
-                      const SizedBox(width: 4),
-                      Text(
-                        l10n.workoutAvgRest(avgRest),
-                        style: const TextStyle(
-                            fontSize: 11, color: Colors.white24),
-                      ),
-                    ],
-                  ),
-                ],
-              ],
 
-              // ── Expanded content ──
-              if (isExpanded) ...[
-                const Divider(height: 20),
-                _buildSetsTable(index, ex, l10n),
-                const SizedBox(height: 8),
-                // Average rest summary
-                if (avgRest != null) ...[
+                // ── Brief summary when completed & collapsed ──
+                if (ex.completed && !isExpanded) ...[
+                  const SizedBox(height: 6),
+                  Text(
+                    _briefSummary(ex),
+                    style: const TextStyle(fontSize: 12, color: Colors.white38),
+                  ),
+                  if (avgRest != null) ...[
+                    const SizedBox(height: 2),
+                    Row(
+                      children: [
+                        const Icon(Icons.hourglass_bottom,
+                            size: 12, color: Colors.white24),
+                        const SizedBox(width: 4),
+                        Text(
+                          l10n.workoutAvgRest(avgRest),
+                          style: const TextStyle(
+                              fontSize: 11, color: Colors.white24),
+                        ),
+                      ],
+                    ),
+                  ],
+                ],
+
+                // ── Expanded content ──
+                if (isExpanded) ...[
+                  const Divider(height: 20),
+                  _buildSetsTable(index, ex, l10n),
+                  const SizedBox(height: 8),
+                  // Average rest summary
+                  if (avgRest != null) ...[
+                    Row(
+                      children: [
+                        const Icon(Icons.hourglass_bottom,
+                            size: 14, color: Colors.white38),
+                        const SizedBox(width: 4),
+                        Text(
+                          l10n.workoutAvgRest(avgRest),
+                          style: const TextStyle(
+                              fontSize: 12, color: Colors.white38),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                  ],
+                  // Add / Remove set
                   Row(
                     children: [
-                      const Icon(Icons.hourglass_bottom,
-                          size: 14, color: Colors.white38),
-                      const SizedBox(width: 4),
-                      Text(
-                        l10n.workoutAvgRest(avgRest),
-                        style: const TextStyle(
-                            fontSize: 12, color: Colors.white38),
+                      TextButton.icon(
+                        icon: const Icon(Icons.add, size: 16),
+                        label: Text(l10n.workoutAddSet,
+                            style: const TextStyle(fontSize: 13)),
+                        onPressed: () => _addSet(index),
+                      ),
+                      const SizedBox(width: 8),
+                      TextButton.icon(
+                        icon: const Icon(Icons.remove, size: 16),
+                        label: Text(l10n.workoutRemoveSet,
+                            style: const TextStyle(fontSize: 13)),
+                        onPressed:
+                            ex.sets.length > 1 ? () => _removeSet(index) : null,
                       ),
                     ],
                   ),
                   const SizedBox(height: 8),
+                  // Notes
+                  TextField(
+                    decoration: InputDecoration(
+                      labelText: l10n.workoutNotes,
+                      border: const OutlineInputBorder(),
+                      isDense: true,
+                    ),
+                    controller: TextEditingController(text: ex.notes),
+                    maxLines: 2,
+                    onChanged: (v) => _updateExerciseNotes(index, v),
+                  ),
+                  const SizedBox(height: 12),
+                  // Save button
+                  SizedBox(
+                    width: double.infinity,
+                    child: FilledButton.icon(
+                      icon: Icon(
+                        isSeriesProgressMode
+                            ? Icons.task_alt_outlined
+                            : Icons.check_circle_outline,
+                        size: 18,
+                      ),
+                      label: Text(
+                        isViewMode
+                            ? l10n.workoutSaveExercise
+                            : isSeriesProgressMode
+                                ? l10n.workoutFinishSet('${nextPendingSet + 1}')
+                                : l10n.workoutFinishExercise,
+                      ),
+                      onPressed: ex.completed
+                          ? null
+                          : isViewMode
+                              ? () => _saveExercise(index)
+                              : isSeriesProgressMode
+                                  ? () => _completeNextPendingSet(index)
+                                  : () => _finishExercise(index),
+                    ),
+                  ),
                 ],
-                // Add / Remove set
-                Row(
-                  children: [
-                    TextButton.icon(
-                      icon: const Icon(Icons.add, size: 16),
-                      label: Text(l10n.workoutAddSet,
-                          style: const TextStyle(fontSize: 13)),
-                      onPressed: () => _addSet(index),
-                    ),
-                    const SizedBox(width: 8),
-                    TextButton.icon(
-                      icon: const Icon(Icons.remove, size: 16),
-                      label: Text(l10n.workoutRemoveSet,
-                          style: const TextStyle(fontSize: 13)),
-                      onPressed:
-                          ex.sets.length > 1 ? () => _removeSet(index) : null,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                // Notes
-                TextField(
-                  decoration: InputDecoration(
-                    labelText: l10n.workoutNotes,
-                    border: const OutlineInputBorder(),
-                    isDense: true,
-                  ),
-                  controller: TextEditingController(text: ex.notes),
-                  maxLines: 2,
-                  onChanged: (v) => _updateExerciseNotes(index, v),
-                ),
-                const SizedBox(height: 12),
-                // Save button
-                SizedBox(
-                  width: double.infinity,
-                  child: FilledButton.icon(
-                    icon: Icon(
-                      isSeriesProgressMode
-                          ? Icons.task_alt_outlined
-                          : Icons.check_circle_outline,
-                      size: 18,
-                    ),
-                    label: Text(
-                      isSeriesProgressMode
-                          ? l10n.workoutFinishSet('${nextPendingSet + 1}')
-                          : l10n.workoutFinishExercise,
-                    ),
-                    onPressed: ex.completed
-                        ? null
-                        : isSeriesProgressMode
-                            ? () => _completeNextPendingSet(index)
-                            : () => _finishExercise(index),
-                  ),
-                ),
               ],
-            ],
+            ),
           ),
         ),
       ),

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
 import 'package:gym_tracker/domain/entities/workout_session.dart';
@@ -168,13 +170,38 @@ class _RoutineDetailScreenState extends State<RoutineDetailScreen> {
 
     final updatedRoutine = _routine.copyWith(days: newDays);
 
-    // Persist
+    await _saveRoutine(updatedRoutine);
+  }
+
+  Future<void> _saveRoutine(Routine updatedRoutine) async {
     final updatedList = widget.allRoutines.map((r) {
       return r.id == _routine.id ? updatedRoutine : r;
     }).toList();
     await widget.routinePort.saveRoutines(updatedList);
+    if (!mounted) return;
+    setState(() => _routine = updatedRoutine);
+  }
+
+  void _reorderDayExercises(int dayIndex, int oldIndex, int newIndex) {
+    if (newIndex > oldIndex) {
+      newIndex -= 1;
+    }
+    if (oldIndex == newIndex) return;
+
+    final day = _routine.days[dayIndex];
+    final reorderedKeys = List<String>.from(day.exerciseKeys);
+    final moved = reorderedKeys.removeAt(oldIndex);
+    reorderedKeys.insert(newIndex, moved);
+
+    final updatedDays = List<RoutineDay>.from(_routine.days);
+    updatedDays[dayIndex] = RoutineDay(
+      muscleGroups: day.muscleGroups,
+      exerciseKeys: reorderedKeys,
+    );
+    final updatedRoutine = _routine.copyWith(days: updatedDays);
 
     setState(() => _routine = updatedRoutine);
+    unawaited(_saveRoutine(updatedRoutine));
   }
 
   // ── Progress ───────────────────────────────────────────────────
@@ -278,12 +305,44 @@ class _RoutineDetailScreenState extends State<RoutineDetailScreen> {
                         ),
                         const SizedBox(height: 8),
                         const Divider(height: 1),
-                        ...day.exerciseKeys.map((key) => ListTile(
+                        ReorderableListView(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          buildDefaultDragHandles: false,
+                          onReorder: (oldIndex, newIndex) =>
+                              _reorderDayExercises(i, oldIndex, newIndex),
+                          children:
+                              day.exerciseKeys.asMap().entries.map((entry) {
+                            final exerciseIndex = entry.key;
+                            final key = entry.value;
+                            return ListTile(
+                              key: ValueKey('routine-day-$i-exercise-$key'),
                               dense: true,
-                              leading: const Icon(Icons.fitness_center,
-                                  size: 16, color: Colors.white54),
-                              title: Text(_nameForKey(key),
-                                  style: const TextStyle(fontSize: 13)),
+                              leading: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(
+                                    Icons.fitness_center,
+                                    size: 16,
+                                    color: Colors.white54,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  ReorderableDragStartListener(
+                                    index: exerciseIndex,
+                                    child: Icon(
+                                      Icons.drag_handle,
+                                      key: ValueKey(
+                                          'routine-day-$i-drag-handle-$key'),
+                                      size: 18,
+                                      color: Colors.white38,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              title: Text(
+                                _nameForKey(key),
+                                style: const TextStyle(fontSize: 13),
+                              ),
                               trailing: TextButton(
                                 style: TextButton.styleFrom(
                                   foregroundColor: Colors.white60,
@@ -297,7 +356,9 @@ class _RoutineDetailScreenState extends State<RoutineDetailScreen> {
                                   style: const TextStyle(fontSize: 11),
                                 ),
                               ),
-                            )),
+                            );
+                          }).toList(),
+                        ),
                         const SizedBox(height: 8),
                       ],
                     ),

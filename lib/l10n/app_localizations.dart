@@ -1364,6 +1364,24 @@ abstract class AppLocalizations {
   /// **'¿Quieres finalizar el entrenamiento?'**
   String get workoutFinishConfirm;
 
+  /// No description provided for @workoutSavePrompt.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Quieres guardar el entrenamiento?'**
+  String get workoutSavePrompt;
+
+  /// No description provided for @workoutSaveYes.
+  ///
+  /// In es, this message translates to:
+  /// **'Sí'**
+  String get workoutSaveYes;
+
+  /// No description provided for @workoutSaveNo.
+  ///
+  /// In es, this message translates to:
+  /// **'No'**
+  String get workoutSaveNo;
+
   /// No description provided for @workoutSets.
   ///
   /// In es, this message translates to:
@@ -1451,7 +1469,7 @@ abstract class AppLocalizations {
   /// No description provided for @workoutSaveChanges.
   ///
   /// In es, this message translates to:
-  /// **'Guardar cambios'**
+  /// **'Guardar entrenamiento'**
   String get workoutSaveChanges;
 
   /// No description provided for @workoutRestTimer.

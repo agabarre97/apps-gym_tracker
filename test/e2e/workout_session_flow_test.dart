@@ -82,13 +82,11 @@ void main() {
       await tester.tap(addButtons.at(1)); // weight +1.25
       await tester.pumpAndSettle();
 
-      // Complete pending sets through single CTA, then finish exercise.
-      await tester.scrollToAndTap(find.text('Finalizar serie 1'));
-      await tester.scrollToAndTap(find.text('Finalizar serie 2'));
-      await tester.scrollToAndTap(find.text('Finalizar ejercicio'));
+      // Save the edited exercise in retroactive mode.
+      await tester.scrollToAndTap(find.text('Guardar'));
 
       // Save full session changes.
-      await tester.tap(find.text('Guardar cambios'));
+      await tester.tap(find.text('Guardar entrenamiento'));
       await tester.pumpAndSettle();
 
       final savedSessions = await workoutPort.loadSessions();

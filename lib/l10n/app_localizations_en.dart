@@ -681,6 +681,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get workoutFinishConfirm => 'Finish the workout?';
 
   @override
+  String get workoutSavePrompt => 'Do you want to save the workout?';
+
+  @override
+  String get workoutSaveYes => 'Yes';
+
+  @override
+  String get workoutSaveNo => 'No';
+
+  @override
   String get workoutSets => 'Sets';
 
   @override
@@ -727,7 +736,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get workoutNoRoutines => 'Create a routine first';
 
   @override
-  String get workoutSaveChanges => 'Save changes';
+  String get workoutSaveChanges => 'Save workout';
 
   @override
   String get workoutRestTimer => 'Rest';
