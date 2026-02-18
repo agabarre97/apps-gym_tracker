@@ -2,12 +2,12 @@
   {
     "key": "barbell-bench-press",
     "name": {
-      "es": "Barbell Bench Press",
+      "es": "Press de banca con barra",
       "en": "Barbell Bench Press"
     },
     "short_description": {
-      "es": "1. Lay flat on the bench with your feet on the ground. With straight arms unrack the bar. 2. Lower the bar to your mid chest 3. Raise the bar until you've locked your elbows.",
-      "en": "1. Lay flat on the bench with your feet on the ground. With straight arms unrack the bar. 2. Lower the bar to your mid chest 3. Raise the bar until you've locked your elbows."
+      "es": "1. Acuéstate en el banco plano con los pies en el suelo. Con los brazos rectos, saca la barra del soporte. \n2. Baja la barra hasta la mitad del pecho. \n3. Sube la barra hasta que los codos estén bloqueados.",
+      "en": "1. Lay flat on the bench with your feet on the ground. With straight arms unrack the bar. \n2. Lower the bar to your mid chest \n3. Raise the bar until you've locked your elbows."
     },
     "muscles_involved": [
       "chest",
@@ -44,8 +44,8 @@
       "en": "Barbell Skullcrusher"
     },
     "short_description": {
-      "es": "1. Coloca las manos a la anchura de los hombros. Dobla los codos. Procura mantener los codos pegados al cuerpo. No dejes que se abran. 2. Detén la barra a few inches de tu frente y extiende los codos hacia atrás.",
-      "en": "1. Take a shoulder width grip. Break at the elbows. Try to keep your elbows tucked in. Don't let them flare out. 2. Stop the bar a few inches from your forehead and extend your elbows back up."
+      "es": "1. Coloca las manos a la anchura de los hombros. Dobla los codos. Procura mantener los codos pegados al cuerpo. No dejes que se abran. \n2. Detén la barra a unos pocos centímetros de tu frente y extiende los codos hacia atrás.",
+      "en": "1. Take a shoulder width grip. Break at the elbows. Try to keep your elbows tucked in. Don't let them flare out. \n2. Stop the bar a few inches from your forehead and extend your elbows back up."
     },
     "muscles_involved": [
       "triceps"
@@ -72,12 +72,12 @@
   {
     "key": "cable-bench-press",
     "name": {
-      "es": "Cable Bench Press",
+      "es": "Press de banca con polea",
       "en": "Cable Bench Press"
     },
     "short_description": {
-      "es": "1. Use a handle attachment. Bring a bench over to the cables. The cables should be set to shoulder height. 2. Bring both of the handles to your chest and make sure you are in the center of the cable crossover. 3. From there, you should flex and extend at both the shoulders and elbows simultaneously.",
-      "en": "1. Use a handle attachment. Bring a bench over to the cables. The cables should be set to shoulder height. 2. Bring both of the handles to your chest and make sure you are in the center of the cable crossover. 3. From there, you should flex and extend at both the shoulders and elbows simultaneously."
+      "es": "1. Usa un accesorio de agarre. Lleva un banco a las poleas. Los cables deben estar a la altura de los hombros. \n2. Lleva ambos agarres al pecho y asegúrate de estar en el centro del cruce de poleas. \n3. Desde ahí, debes flexionar y extender tanto los hombros como los codos simultáneamente.",
+      "en": "1. Use a handle attachment. Bring a bench over to the cables. The cables should be set to shoulder height. \n2. Bring both of the handles to your chest and make sure you are in the center of the cable crossover. \n3. From there, you should flex and extend at both the shoulders and elbows simultaneously."
     },
     "muscles_involved": [
       "chest",
@@ -108,12 +108,12 @@
   {
     "key": "cable-chest-press",
     "name": {
-      "es": "Cable Chest Press",
-      "en": "Performing security verification"
+      "es": "Press de pecho con polea",
+      "en": "Cable Chest Press"
     },
     "short_description": {
-      "es": "1. Use a handle attachment. The cables should be set to shoulder height. 2. Bring both of the handles to your chest and make sure you are in the center of the cable crossover. 3. Walk a few steps forward. Then press the weight forward. 4. From there, you should flex and extend at both the shoulders and elbows simultaneously.",
-      "en": "1. Use a handle attachment. The cables should be set to shoulder height. 2. Bring both of the handles to your chest and make sure you are in the center of the cable crossover. 3. Walk a few steps forward. Then press the weight forward. 4. From there, you should flex and extend at both the shoulders and elbows simultaneously."
+      "es": "1. Usa un accesorio de agarre. Los cables deben estar a la altura de los hombros. \n2. Lleva ambos agarres al pecho y asegúrate de estar en el centro del cruce de poleas. \n3. Da unos pasos hacia adelante. Luego presiona el peso hacia adelante. \n4. Desde ahí, debes flexionar y extender tanto los hombros como los codos simultáneamente.",
+      "en": "1. Use a handle attachment. The cables should be set to shoulder height. \n2. Bring both of the handles to your chest and make sure you are in the center of the cable crossover. \n3. Walk a few steps forward. Then press the weight forward. \n4. From there, you should flex and extend at both the shoulders and elbows simultaneously."
     },
     "muscles_involved": [
       "chest",
@@ -142,12 +142,12 @@
   {
     "key": "cable-cross-pushdown",
     "name": {
-      "es": "Extensión de Tríceps en Polea Cruzada",
+      "es": "Extensión de tríceps en polea cruzada",
       "en": "Cable Cross Pushdown"
     },
     "short_description": {
-      "es": "1. Usa dos agarres o ninguno. Ambos lados del cruce de poleas deben ajustarse a la posición más alta. 2. Colócate en el centro de la máquina sujetando cada cable con la mano opuesta. Tu brazo superior debe formar un ángulo de 45 grados con el torso. 3. Extiende los codos hasta que sientas la contracción y vuelve a la posición inicial.",
-      "en": "1. Either use two handles or no attachment at all. Both sides of the cable crossover should be set to the top. 2. Stand in the center of the machine holding each Cable in the opposing hand. Your upper arm should be at a 45 degree angle with your torso. 3. Extend your elbows until you feel a contraction and then return to the starting position"
+      "es": "1. Usa dos agarres o ninguno. Ambos lados del cruce de poleas deben ajustarse a la posición más alta. \n2. Colócate en el centro de la máquina sujetando cada cable con la mano opuesta. Tu brazo superior debe formar un ángulo de 45 grados con el torso. \n3. Extiende los codos hasta que sientas la contracción y vuelve a la posición inicial.",
+      "en": "1. Either use two handles or no attachment at all. Both sides of the cable crossover should be set to the top. \n2. Stand in the center of the machine holding each Cable in the opposing hand. Your upper arm should be at a 45 degree angle with your torso. \n3. Extend your elbows until you feel a contraction and then return to the starting position"
     },
     "muscles_involved": [
       "triceps"
@@ -178,8 +178,8 @@
       "en": "Cable Rope Overhead Tricep Extension"
     },
     "short_description": {
-      "es": "1. Puedes usar cualquier accesorio. El cable debe quedar en la posición más baja de la máquina. Ponte de espaldas a la máquina. 2. Apunta los codos directamente hacia el techo. 3. Desde ahí, extiende los codos hasta que tus puños apunten directamente hacia el techo.",
-      "en": "1. You can use any attachment. The cable should be all the way to the bottom of the machine. Face away from the machine. 2. Point your elbows straight up toward the ceiling. 3. From there, extend your elbows until your fists are pointed straight toward the ceiling."
+      "es": "1. Puedes usar cualquier accesorio. El cable debe quedar en la posición más baja de la máquina. Ponte de espaldas a la máquina. \n2. Apunta los codos directamente hacia el techo. \n3. Desde ahí, extiende los codos hasta que tus puños apunten directamente hacia el techo.",
+      "en": "1. You can use any attachment. The cable should be all the way to the bottom of the machine. Face away from the machine. \n2. Point your elbows straight up toward the ceiling. \n3. From there, extend your elbows until your fists are pointed straight toward the ceiling."
     },
     "muscles_involved": [
       "triceps"
@@ -206,12 +206,12 @@
   {
     "key": "cable-rope-pushdown",
     "name": {
-      "es": "Extensión de Tríceps en Polea Alta con Cuerda",
+      "es": "Extensión de tríceps en polea alta con cuerda",
       "en": "Cable Rope Pushdown"
     },
     "short_description": {
-      "es": "1. El cable debe colocarse en la parte más alta de la máquina. 2. Asegúrate de mantener la parte superior del brazo pegada al costado. Extiende los codos hasta sentir la contracción de los tríceps.",
-      "en": "1. The cable should be set all the way at the top of the machine. 2. Make sure to keep your upper arm glued at your side. Extend your elbows until you feel your triceps contract."
+      "es": "1. El cable debe colocarse en la parte más alta de la máquina. \n2. Asegúrate de mantener la parte superior del brazo pegada al costado. Extiende los codos hasta sentir la contracción de los tríceps.",
+      "en": "1. The cable should be set all the way at the top of the machine. \n2. Make sure to keep your upper arm glued at your side. Extend your elbows until you feel your triceps contract."
     },
     "muscles_involved": [
       "triceps"
@@ -242,8 +242,8 @@
       "en": "Cable Single Arm Overhead Tricep Extension"
     },
     "short_description": {
-      "es": "1. Usa un agarre. El cable debe colocarse a la altura media de la espalda. Ponte de espaldas a la máquina. 2. Apunta los codos directamente hacia el techo. 3. Desde ahí, extiende los codos hasta que los puños apunten directamente al techo.",
-      "en": "1. Use a handle attachment. The cable should be set to your mid-back. Face away from the machine. 2. Point your elbows straight up toward the ceiling. 3. From there, extend your elbows until your fists are pointed straight toward the ceiling."
+      "es": "1. Usa un agarre. El cable debe colocarse a la altura media de la espalda. Ponte de espaldas a la máquina. \n2. Apunta los codos directamente hacia el techo. \n3. Desde ahí, extiende los codos hasta que los puños apunten directamente al techo.",
+      "en": "1. Use a handle attachment. The cable should be set to your mid-back. Face away from the machine. \n2. Point your elbows straight up toward the ceiling. \n3. From there, extend your elbows until your fists are pointed straight toward the ceiling."
     },
     "muscles_involved": [
       "triceps"
@@ -272,12 +272,12 @@
   {
     "key": "cable-tricep-kickback",
     "name": {
-      "es": "Cable Tricep Kickback",
+      "es": "Patada de tríceps en polea",
       "en": "Cable Tricep Kickback"
     },
     "short_description": {
-      "es": "1. Use a handle attachment. The cable should be set to hip height. 2. Hinge forward. Make sure to keep your upper arm glued at your side. Extend your elbows until you feel your triceps contract.",
-      "en": "1. Use a handle attachment. The cable should be set to hip height. 2. Hinge forward. Make sure to keep your upper arm glued at your side. Extend your elbows until you feel your triceps contract."
+      "es": "1. Usa un accesorio de agarre. El cable debe ajustarse a la altura de la cadera. \n2. Inclínate hacia adelante. Asegúrate de mantener la parte superior del brazo pegada al costado. Extiende los codos hasta que sientas que los tríceps se contraen.",
+      "en": "1. Use a handle attachment. The cable should be set to hip height. \n2. Hinge forward. Make sure to keep your upper arm glued at your side. Extend your elbows until you feel your triceps contract."
     },
     "muscles_involved": [
       "triceps"
@@ -304,12 +304,12 @@
   {
     "key": "dumbbell-bench-press",
     "name": {
-      "es": "Dumbbell Bench Press",
+      "es": "Press de banca con mancuernas",
       "en": "Dumbbell Bench Press"
     },
     "short_description": {
-      "es": "1. Start by lying flat on a bench with a dumbbell in each hand. 2. Hold the dumbbells at chest level with your palms facing forward. 3. Engage your core and press the dumbbells upward until your arms are fully extended.",
-      "en": "1. Start by lying flat on a bench with a dumbbell in each hand. 2. Hold the dumbbells at chest level with your palms facing forward. 3. Engage your core and press the dumbbells upward until your arms are fully extended."
+      "es": "1. Comienza acostándote en un banco plano con una mancuerna en cada mano. \n2. Sostén las mancuernas al nivel del pecho con las palmas hacia adelante. \n3. Activa tu core y presiona las mancuernas hacia arriba hasta que tus brazos estén completamente extendidos.",
+      "en": "1. Start by lying flat on a bench with a dumbbell in each hand. \n2. Hold the dumbbells at chest level with your palms facing forward. \n3. Engage your core and press the dumbbells upward until your arms are fully extended."
     },
     "muscles_involved": [
       "chest",
@@ -338,12 +338,12 @@
   {
     "key": "dumbbell-decline-bench-press",
     "name": {
-      "es": "Dumbbell Decline Bench Press",
+      "es": "Press de banca declinado con mancuernas",
       "en": "Dumbbell Decline Bench Press"
     },
     "short_description": {
-      "es": "1. Lay on a decline bench with both arms extended in front of you. 2. Break at the elbows and bring your upper arms to your side. 3. Once your upper arms have reached your side, press the dumbbells back to the ceiling.",
-      "en": "1. Lay on a decline bench with both arms extended in front of you. 2. Break at the elbows and bring your upper arms to your side. 3. Once your upper arms have reached your side, press the dumbbells back to the ceiling."
+      "es": "1. Acuéstate en un banco declinado con ambos brazos extendidos frente a ti. \n2. Flexiona los codos y lleva la parte superior de los brazos hacia los lados. \n3. Una vez que la parte superior de los brazos haya llegado a los lados, presiona las mancuernas de nuevo hacia el techo.",
+      "en": "1. Lay on a decline bench with both arms extended in front of you. \n2. Break at the elbows and bring your upper arms to your side. \n3. Once your upper arms have reached your side, press the dumbbells back to the ceiling."
     },
     "muscles_involved": [
       "chest",
@@ -378,8 +378,8 @@
       "en": "Machine Cable V Bar Push Downs"
     },
     "short_description": {
-      "es": "1. Agarra la barra de la polea con las palmas mirando hacia abajo a la anchura de los hombros. 2. Mantente erguido con una ligera inclinación hacia adelante. Mantén la parte superior de los brazos pegada al cuerpo y baja la barra de la polea lentamente hasta que los brazos estén completamente extendidos. 3. Haz una pausa cuando estés en la posición contraída del movimiento, luego sube lentamente la barra de la polea hasta la posición inicial.",
-      "en": "1. Grip the pulley bar with palms facing down at shoulder width. 2. Stand straight with a small forward incline. Keep your upper arms close to your body, and slowly bring the pulley bar down until your arms are fully extended. 3. Pause when you are at the contracted position of the motion, then slowly raise the pulley bar back to the starting point."
+      "es": "1. Agarra la barra de la polea con las palmas mirando hacia abajo a la anchura de los hombros. \n2. Mantente erguido con una ligera inclinación hacia adelante. Mantén la parte superior de los brazos pegada al cuerpo y baja la barra de la polea lentamente hasta que los brazos estén completamente extendidos. \n3. Haz una pausa cuando estés en la posición contraída del movimiento, luego sube lentamente la barra de la polea hasta la posición inicial.",
+      "en": "1. Grip the pulley bar with palms facing down at shoulder width. \n2. Stand straight with a small forward incline. Keep your upper arms close to your body, and slowly bring the pulley bar down until your arms are fully extended. \n3. Pause when you are at the contracted position of the motion, then slowly raise the pulley bar back to the starting point."
     },
     "muscles_involved": [
       "triceps"
@@ -406,12 +406,12 @@
   {
     "key": "machine-chest-press",
     "name": {
-      "es": "Prensa de Pecho en Máquina",
-      "en": "Performing security verification"
+      "es": "Press de pecho en máquina",
+      "en": "Machine Chest Press"
     },
     "short_description": {
-      "es": "1. Siéntate en la máquina y sujeta las asas con las palmas hacia abajo. 2. Ajusta la máquina para conseguir la mayor amplitud de movimiento posible. 3. Empuja hasta que los codos no estén completamente extendidos, sin bloquearlos.",
-      "en": "1. Siéntate en la máquina y sujeta las asas con las palmas hacia abajo. 2. Ajusta la máquina para conseguir la mayor amplitud de movimiento posible. 3. Empuja hasta que los codos no estén completamente extendidos, sin bloquearlos."
+      "es": "1. Siéntate en la máquina y sujeta las asas con las palmas hacia abajo. \n2. Ajusta la máquina para conseguir la mayor amplitud de movimiento posible. \n3. Empuja hasta que los codos no estén completamente extendidos, sin bloquearlos.",
+      "en": "1. Sit at the machine and grip the handles with your palms facing down. \n2. Adjust the machine to achieve the greatest range of motion possible. \n3. Press until your elbows are fully extended, without locking them."
     },
     "muscles_involved": [
       "chest",
@@ -444,8 +444,8 @@
       "en": "Smith Machine Incline Bench Press"
     },
     "short_description": {
-      "es": "1. Coloca el banco entre 30 y 45 grados. 2. Acuéstate en el banco con los pies en el suelo. Con los brazos extendidos, desengancha la barra del soporte. 3. Baja la barra hasta la mitad del pecho. 4. Sube la barra (lentamente y con control) hasta bloquear los codos.",
-      "en": "1. Position the bench between 30 and 45 degrees. 2. Lay flat on the bench with your feet on the ground. With straight arms unrack the bar. 3. Lower the bar to your mid chest 4. Raise the bar (slowly and controlled) until you've locked your elbows."
+      "es": "1. Coloca el banco entre 30 y 45 grados. \n2. Acuéstate en el banco con los pies en el suelo. Con los brazos extendidos, desengancha la barra del soporte. \n3. Baja la barra hasta la mitad del pecho. \n4. Sube la barra (lentamente y con control) hasta bloquear los codos.",
+      "en": "1. Position the bench between 30 and 45 degrees. \n2. Lay flat on the bench with your feet on the ground. With straight arms unrack the bar. \n3. Lower the bar to your mid chest \n4. Raise the bar (slowly and controlled) until you've locked your elbows."
     },
     "muscles_involved": [
       "chest",

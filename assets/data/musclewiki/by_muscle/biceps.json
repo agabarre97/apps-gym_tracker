@@ -2,11 +2,11 @@
   {
     "key": "barbell-bent-over-row",
     "name": {
-      "es": "Barbell Bent Over Row",
+      "es": "Remo con barra inclinado",
       "en": "Barbell Bent Over Row"
     },
     "short_description": {
-      "es": "1. Grab a barbell with a shoulder width pronated or supinated grip. 2. Bend forward at your hips while maintaining a flat back. 3. Pull the weight toward your upper abdomen. 4. Lower the weight in a controlled manner and repeat.",
+      "es": "1. Agarra una barra con un agarre prono o supino al ancho de los hombros. \n2. Inclínate hacia adelante por las caderas manteniendo la espalda plana. \n3. Tira del peso hacia la parte superior del abdomen. \n4. Baja el peso de forma controlada y repite.",
       "en": "1. Grab a barbell with a shoulder width pronated or supinated grip. 2. Bend forward at your hips while maintaining a flat back. 3. Pull the weight toward your upper abdomen. 4. Lower the weight in a controlled manner and repeat."
     },
     "muscles_involved": [
@@ -40,11 +40,11 @@
   {
     "key": "barbell-curl",
     "name": {
-      "es": "Barbell Curl",
+      "es": "Curl con barra",
       "en": "Barbell Curl"
     },
     "short_description": {
-      "es": "1. While holding the upper arms stationary, curl the weights forward while contracting the biceps as you breathe out. 2. Continue the movement until your biceps are fully contracted and the bar is at shoulder level. 3. Hold the contracted position for a second and squeeze the biceps hard. 4. Slowly bring the weight back down to the starting position.",
+      "es": "1. Mientras mantienes los brazos inmóviles, flexiona los pesos hacia adelante contrayendo los bíceps mientras exhalas. \n2. Continúa el movimiento hasta que tus bíceps estén completamente contraídos y la barra esté al nivel de los hombros. \n3. Mantén la posición contraída por un segundo y aprieta fuerte los bíceps. \n4. Baja lentamente el peso de nuevo a la posición inicial.",
       "en": "1. While holding the upper arms stationary, curl the weights forward while contracting the biceps as you breathe out. 2. Continue the movement until your biceps are fully contracted and the bar is at shoulder level. 3. Hold the contracted position for a second and squeeze the biceps hard. 4. Slowly bring the weight back down to the starting position."
     },
     "muscles_involved": [
@@ -76,7 +76,7 @@
       "en": "Cable Single Arm Bayesian Curl"
     },
     "short_description": {
-      "es": "1. Usa un accesorio de agarre. El cable debe ajustarse hasta la posición más baja de la máquina. 2. Ponte de espaldas a la máquina de poleas. 3. Adopta una postura escalonada para tener una base de apoyo más estable. Gira la palma hacia delante. Flexiona y extiende el codo.",
+      "es": "1. Usa un accesorio de agarre. El cable debe ajustarse hasta la posición más baja de la máquina. \n2. Ponte de espaldas a la máquina de poleas. \n3. Adopta una postura escalonada para tener una base de apoyo más estable. Gira la palma hacia delante. Flexiona y extiende el codo.",
       "en": "1. Use a handle attachment. The cable should be set all the way to the bottom of the machine. 2. Face away from the cable machine. 3. Stagger your stance so you have a better base of support. Face your palm forward. Flex at the elbow and extend."
     },
     "muscles_involved": [
@@ -108,7 +108,7 @@
       "en": "Dumbbell Curl"
     },
     "short_description": {
-      "es": "1. Ponte de pie erguido con una mancuerna en cada mano, brazos extendidos. 2. Levanta una mancuerna y gira el antebrazo hasta que esté vertical y la palma mire hacia el hombro. 3. Vuelve a la posición inicial y repite con el brazo opuesto",
+      "es": "1. Ponte de pie erguido con una mancuerna en cada mano, brazos extendidos. \n2. Levanta una mancuerna y gira el antebrazo hasta que esté vertical y la palma mire hacia el hombro. \n3. Vuelve a la posición inicial y repite con el brazo opuesto",
       "en": "1. Stand up straight with a dumbbell in each hand at arm's length. 2. Raise one dumbbell and twist your forearm until it is vertical and your palm faces the shoulder. 3. Lower to original position and repeat with opposite arm"
     },
     "muscles_involved": [
@@ -137,11 +137,11 @@
     "key": "dumbbell-hammer-curl",
     "name": {
       "es": "Curl martillo con mancuernas",
-      "en": "Performing security verification"
+      "en": "Dumbbell Hammer Curl"
     },
     "short_description": {
-      "es": "1. Sujeta las mancuernas con un agarre neutro (pulgares mirando hacia el techo). 2. Eleva la mancuerna lentamente hasta la altura del pecho. 3. Vuelve a la posición inicial y repite.",
-      "en": "1. Sujeta las mancuernas con un agarre neutro (pulgares mirando hacia el techo). 2. Eleva la mancuerna lentamente hasta la altura del pecho. 3. Vuelve a la posición inicial y repite."
+      "es": "1. Sujeta las mancuernas con un agarre neutro (pulgares mirando hacia el techo). \n2. Eleva la mancuerna lentamente hasta la altura del pecho. \n3. Vuelve a la posición inicial y repite.",
+      "en": "1. Hold the dumbbells with a neutral grip (thumbs facing the ceiling). 2. Slowly raise the dumbbell to chest height. 3. Return to the starting position and repeat."
     },
     "muscles_involved": [
       "biceps"
@@ -172,7 +172,7 @@
       "en": "Dumbbell Spider Curl"
     },
     "short_description": {
-      "es": "1. Coloca los antebrazos sobre un banco plano y sujeta una mancuerna en cada mano. 2. Desde esta posición inicial, realiza un curl de bíceps con mancuernas hacia los hombros, mantén los codos pegados al cuerpo y el core activado. 3. Baja las mancuernas lentamente hasta la posición inicial y repite el número de repeticiones deseado.",
+      "es": "1. Coloca los antebrazos sobre un banco plano y sujeta una mancuerna en cada mano. \n2. Desde esta posición inicial, realiza un curl de bíceps con mancuernas hacia los hombros, mantén los codos pegados al cuerpo y el core activado. \n3. Baja las mancuernas lentamente hasta la posición inicial y repite el número de repeticiones deseado.",
       "en": "1. Start by placing your forearms on a flat bench and holding a dumbbell in each hand. 2. From this starting position, curl the dumbbells up towards your shoulders, keeping your elbows close to your body and your core engaged. 3. Slowly lower the dumbbells back down to the starting position, and repeat for the desired number of repetitions."
     },
     "muscles_involved": [
@@ -204,7 +204,7 @@
       "en": "Machine Pulldown"
     },
     "short_description": {
-      "es": "1. Agarra la barra con las palmas hacia delante; las manos deben estar más separadas que el ancho de los hombros. 2. Con ambos brazos extendidos frente a ti sujetando la barra, lleva el torso hacia atrás unos 30 degrees mientras sacas el pecho. 3. Tira de la barra hacia abajo hasta aproximadamente el nivel del mentón o un poco más abajo con un movimiento suave, mientras juntas los omóplatos. 4. Después de contraer durante un segundo, sube la barra lentamente hasta la posición inicial, con los brazos completamente extendidos.",
+      "es": "1. Agarra la barra con las palmas hacia delante; las manos deben estar más separadas que el ancho de los hombros. \n2. Con ambos brazos extendidos frente a ti sujetando la barra, lleva el torso hacia atrás unos 30 grados mientras sacas el pecho. \n3. Tira de la barra hacia abajo hasta aproximadamente el nivel del mentón o un poco más abajo con un movimiento suave, mientras juntas los omóplatos. \n4. Después de contraer durante un segundo, sube la barra lentamente hasta la posición inicial, con los brazos completamente extendidos.",
       "en": "1. Grip the bar with the palms facing forward, your hands need to be spaced out at a distance wider than shoulder width. 2. As you have both arms extended in front of you holding the bar, bring your torso back around 30 degrees while sticking your chest out. 3. Pull the bar down to about chin level or a little lower in a smooth movement whilst squeezing the shoulder blades together. 4. After a second of squeezing, slowly raise the bar back to the starting position when your arms are fully extended."
     },
     "muscles_involved": [
@@ -239,7 +239,7 @@
       "en": "Machine Seated Cable Row"
     },
     "short_description": {
-      "es": "1. Agarre por encima, Submano, Neutral",
+      "es": "1. Agarre prono, supino o neutro.",
       "en": "1. Overhand, Underhand, Neutral"
     },
     "muscles_involved": [
@@ -270,11 +270,11 @@
     "key": "narrow-pulldown",
     "name": {
       "es": "Jalón con agarre estrecho",
-      "en": "Performing security verification"
+      "en": "Narrow Pulldown"
     },
     "short_description": {
-      "es": "1. Usa el accesorio de barra recta. 2. Sujeta el accesorio al sentarte en la máquina y coloca las piernas bajo las almohadillas. 3. Tira de la barra hasta la clavícula, luego vuelve a subirla hasta que los brazos estén extendidos.",
-      "en": "1. Usa el accesorio de barra recta. 2. Sujeta el accesorio al sentarte en la máquina y coloca las piernas bajo las almohadillas. 3. Tira de la barra hasta la clavícula, luego vuelve a subirla hasta que los brazos estén extendidos."
+      "es": "1. Usa el accesorio de barra recta. \n2. Sujeta el accesorio al sentarte en la máquina y coloca las piernas bajo las almohadillas. \n3. Tira de la barra hasta la clavícula, luego vuelve a subirla hasta que los brazos estén extendidos.",
+      "en": "1. Use the straight bar attachment. 2. Hold the attachment as you sit on the machine and put your legs under the pads. 3. Pull the bar to your collarbone, then raise back up until your arms are extended."
     },
     "muscles_involved": [
       "biceps",
@@ -307,7 +307,7 @@
       "en": "Neutral Pulldown"
     },
     "short_description": {
-      "es": "1. Sujeta el accesorio mientras te sientas en la máquina y coloca las piernas bajo las almohadillas. 2. Tira de la barra hasta la clavícula, luego vuelve a subir hasta que los brazos estén extendidos.",
+      "es": "1. Sujeta el accesorio mientras te sientas en la máquina y coloca las piernas bajo las almohadillas. \n2. Tira de la barra hasta la clavícula, luego vuelve a subir hasta que los brazos estén extendidos.",
       "en": "1. Use the V Bar attachment. 2. Hold the attachment as you sit on the machine and put your legs under the leg pads. 3. Pull the bar to your clavicle, then raise back up until your arm are extended."
     },
     "muscles_involved": [
@@ -337,11 +337,11 @@
   {
     "key": "pull-ups",
     "name": {
-      "es": "Pull Ups",
+      "es": "Dominadas",
       "en": "Pull Ups"
     },
     "short_description": {
-      "es": "1. Grasp the bar with an overhand grip, arms and shoulders fully extended. 2. Pull your body up until your chin is above the bar. 3. Lower your body back to starting position.",
+      "es": "1. Sujeta la barra con un agarre prono, con los brazos y hombros completamente extendidos. \n2. Tira de tu cuerpo hacia arriba hasta que tu barbilla esté por encima de la barra. \n3. Baja tu cuerpo de nuevo a la posición inicial.",
       "en": "1. Grasp the bar with an overhand grip, arms and shoulders fully extended. 2. Pull your body up until your chin is above the bar. 3. Lower your body back to starting position."
     },
     "muscles_involved": [

@@ -2,12 +2,12 @@
   {
     "key": "barbell-bent-over-row",
     "name": {
-      "es": "Barbell Bent Over Row",
+      "es": "Remo con barra inclinado",
       "en": "Barbell Bent Over Row"
     },
     "short_description": {
-      "es": "1. Grab a barbell with a shoulder width pronated or supinated grip. 2. Bend forward at your hips while maintaining a flat back. 3. Pull the weight toward your upper abdomen. 4. Lower the weight in a controlled manner and repeat.",
-      "en": "1. Grab a barbell with a shoulder width pronated or supinated grip. 2. Bend forward at your hips while maintaining a flat back. 3. Pull the weight toward your upper abdomen. 4. Lower the weight in a controlled manner and repeat."
+      "es": "1. Agarra una barra con un agarre prono o supino al ancho de los hombros. \n2. Inclínate hacia adelante por las caderas manteniendo la espalda plana. \n3. Tira del peso hacia la parte superior del abdomen. \n4. Baja el peso de forma controlada y repite.",
+      "en": "1. Grab a barbell with a shoulder width pronated or supinated grip. \n2. Bend forward at your hips while maintaining a flat back. \n3. Pull the weight toward your upper abdomen. \n4. Lower the weight in a controlled manner and repeat."
     },
     "muscles_involved": [
       "biceps",
@@ -41,11 +41,11 @@
     "key": "cable-bent-over-bar-pullover",
     "name": {
       "es": "Pullover inclinado con barra en polea",
-      "en": "Performing security verification"
+      "en": "Cable Bent Over Bar Pullover"
     },
     "short_description": {
-      "es": "1. Puedes usar cualquier agarre. Ajusta el cable hasta la parte más alta de la máquina. 2. Sujeta el accesorio y da unos pasos hacia atrás. Lleva los glúteos hacia atrás hasta quedar ligeramente inclinado hacia adelante. 3. Inicia el movimiento con los hombros, no con los codos. Imagina que intentas tirar del accesorio a través de tus muslos en la parte más baja.",
-      "en": "1. Puedes usar cualquier agarre. Ajusta el cable hasta la parte más alta de la máquina. 2. Sujeta el accesorio y da unos pasos hacia atrás. Lleva los glúteos hacia atrás hasta quedar ligeramente inclinado hacia adelante. 3. Inicia el movimiento con los hombros, no con los codos. Imagina que intentas tirar del accesorio a través de tus muslos en la parte más baja."
+      "es": "1. Puedes usar cualquier agarre. Ajusta el cable hasta la parte más alta de la máquina. \n2. Sujeta el accesorio y da unos pasos hacia atrás. Lleva los glúteos hacia atrás hasta quedar ligeramente inclinado hacia adelante. \n3. Inicia el movimiento con los hombros, no con los codos. Imagina que intentas tirar del accesorio a través de tus muslos en la parte más baja.",
+      "en": "1. You can use any grip. Adjust the cable to the top position of the machine. \n2. Grasp the attachment and take a few steps back. Push your glutes back until you are slightly leaned forward. \n3. Initiate the movement with your shoulders, not your elbows. Imagine trying to pull the attachment through your thighs at the bottom."
     },
     "muscles_involved": [
       "lats"
@@ -76,8 +76,8 @@
       "en": "Machine Chest Supported T Bar Row"
     },
     "short_description": {
-      "es": "1. Agarre por encima, Submano, Neutral",
-      "en": "1. Overhand, Underhand, Neutral"
+      "es": "1. Agarre prono, supino o neutro.",
+      "en": "1. Overhand, underhand, or neutral grip."
     },
     "muscles_involved": [
       "lats"
@@ -110,8 +110,8 @@
       "en": "Machine Seated Cable Row"
     },
     "short_description": {
-      "es": "1. Agarre por encima, Submano, Neutral",
-      "en": "1. Overhand, Underhand, Neutral"
+      "es": "1. Agarre prono, supino o neutro.",
+      "en": "1. Overhand, underhand, or neutral grip."
     },
     "muscles_involved": [
       "biceps",
@@ -141,11 +141,11 @@
     "key": "narrow-pulldown",
     "name": {
       "es": "Jalón con agarre estrecho",
-      "en": "Performing security verification"
+      "en": "Narrow Pulldown"
     },
     "short_description": {
-      "es": "1. Usa el accesorio de barra recta. 2. Sujeta el accesorio al sentarte en la máquina y coloca las piernas bajo las almohadillas. 3. Tira de la barra hasta la clavícula, luego vuelve a subirla hasta que los brazos estén extendidos.",
-      "en": "1. Usa el accesorio de barra recta. 2. Sujeta el accesorio al sentarte en la máquina y coloca las piernas bajo las almohadillas. 3. Tira de la barra hasta la clavícula, luego vuelve a subirla hasta que los brazos estén extendidos."
+      "es": "1. Usa el accesorio de barra recta. \n2. Sujeta el accesorio al sentarte en la máquina y coloca las piernas bajo las almohadillas. \n3. Tira de la barra hasta la clavícula, luego vuelve a subirla hasta que los brazos estén extendidos.",
+      "en": "1. Use the straight bar attachment. \n2. Grasp the attachment as you sit in the machine and place your legs under the pads. \n3. Pull the bar to your clavicle, then return it up until your arms are extended."
     },
     "muscles_involved": [
       "biceps",
@@ -178,8 +178,8 @@
       "en": "Neutral Pulldown"
     },
     "short_description": {
-      "es": "1. Sujeta el accesorio mientras te sientas en la máquina y coloca las piernas bajo las almohadillas. 2. Tira de la barra hasta la clavícula, luego vuelve a subir hasta que los brazos estén extendidos.",
-      "en": "1. Use the V Bar attachment. 2. Hold the attachment as you sit on the machine and put your legs under the leg pads. 3. Pull the bar to your clavicle, then raise back up until your arm are extended."
+      "es": "1. Sujeta el accesorio mientras te sientas en la máquina y coloca las piernas bajo las almohadillas. \n2. Tira de la barra hasta la clavícula, luego vuelve a subir hasta que los brazos estén extendidos.",
+      "en": "1. Use the V Bar attachment. \n2. Hold the attachment as you sit on the machine and put your legs under the leg pads. \n3. Pull the bar to your clavicle, then raise back up until your arm are extended."
     },
     "muscles_involved": [
       "biceps",
@@ -208,12 +208,12 @@
   {
     "key": "pull-ups",
     "name": {
-      "es": "Pull Ups",
+      "es": "Dominadas",
       "en": "Pull Ups"
     },
     "short_description": {
-      "es": "1. Grasp the bar with an overhand grip, arms and shoulders fully extended. 2. Pull your body up until your chin is above the bar. 3. Lower your body back to starting position.",
-      "en": "1. Grasp the bar with an overhand grip, arms and shoulders fully extended. 2. Pull your body up until your chin is above the bar. 3. Lower your body back to starting position."
+      "es": "1. Sujeta la barra con un agarre prono, con los brazos y hombros completamente extendidos. \n2. Tira de tu cuerpo hacia arriba hasta que tu barbilla esté por encima de la barra. \n3. Baja tu cuerpo de nuevo a la posición inicial.",
+      "en": "1. Grasp the bar with an overhand grip, arms and shoulders fully extended. \n2. Pull your body up until your chin is above the bar. \n3. Lower your body back to starting position."
     },
     "muscles_involved": [
       "biceps",

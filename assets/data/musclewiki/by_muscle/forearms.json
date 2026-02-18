@@ -2,12 +2,12 @@
   {
     "key": "barbell-bent-over-row",
     "name": {
-      "es": "Barbell Bent Over Row",
+      "es": "Remo con barra inclinado",
       "en": "Barbell Bent Over Row"
     },
     "short_description": {
-      "es": "1. Grab a barbell with a shoulder width pronated or supinated grip. 2. Bend forward at your hips while maintaining a flat back. 3. Pull the weight toward your upper abdomen. 4. Lower the weight in a controlled manner and repeat.",
-      "en": "1. Grab a barbell with a shoulder width pronated or supinated grip. 2. Bend forward at your hips while maintaining a flat back. 3. Pull the weight toward your upper abdomen. 4. Lower the weight in a controlled manner and repeat."
+      "es": "1. Agarra una barra con un agarre prono o supino al ancho de los hombros. \n2. Inclínate hacia adelante por las caderas manteniendo la espalda plana. \n3. Tira del peso hacia la parte superior del abdomen. \n4. Baja el peso de forma controlada y repite.",
+      "en": "1. Grab a barbell with a shoulder width pronated or supinated grip. \n2. Bend forward at your hips while maintaining a flat back. \n3. Pull the weight toward your upper abdomen. \n4. Lower the weight in a controlled manner and repeat."
     },
     "muscles_involved": [
       "biceps",

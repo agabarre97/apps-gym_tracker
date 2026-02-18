@@ -2,12 +2,12 @@
   {
     "key": "barbell-bulgarian-split-squat",
     "name": {
-      "es": "Sentadilla Búlgara con Barra",
-      "en": "Performing security verification"
+      "es": "Sentadilla búlgara con barra",
+      "en": "Barbell Bulgarian Split Squat"
     },
     "short_description": {
-      "es": "1. Busca una caja o un banco aproximadamente a la altura de la rodilla o unos pocos inches por debajo. (Cuanto más baja sea la caja, menor será el requisito de movilidad). 2. Puedes apoyar los dedos o el empeine en el cajón. Coloca el pie delantero apuntando hacia delante o ligeramente hacia fuera y flexiona rodillas y caderas al mismo tiempo. 3. Intenta que la pierna delantera llegue hasta la paralela (femorales paralelos al suelo) o más abajo. 4. Cuanto más adelantado esté tu pie delantero, mayor será el rango de movimiento en tus caderas. Cuanto más retrasado esté tu pie delantero, mayor será el rango de movimiento en tus rodillas.",
-      "en": "1. Busca una caja o un banco aproximadamente a la altura de la rodilla o unos pocos inches por debajo. (Cuanto más baja sea la caja, menor será el requisito de movilidad). 2. Puedes apoyar los dedos o el empeine en el cajón. Coloca el pie delantero apuntando hacia delante o ligeramente hacia fuera y flexiona rodillas y caderas al mismo tiempo. 3. Intenta que la pierna delantera llegue hasta la paralela (femorales paralelos al suelo) o más abajo. 4. Cuanto más adelantado esté tu pie delantero, mayor será el rango de movimiento en tus caderas. Cuanto más retrasado esté tu pie delantero, mayor será el rango de movimiento en tus rodillas."
+      "es": "1. Busca una caja o un banco aproximadamente a la altura de la rodilla o unos pocos centímetros por debajo. (Cuanto más baja sea la caja, menor será el requisito de movilidad). \n2. Puedes apoyar los dedos o el empeine en el cajón. Coloca el pie delantero apuntando hacia delante o ligeramente hacia fuera y flexiona rodillas y caderas al mismo tiempo. \n3. Intenta que la pierna delantera llegue hasta la paralela (femorales paralelos al suelo) o más abajo. \n4. Cuanto más adelantado esté tu pie delantero, mayor será el rango de movimiento en tus caderas. Cuanto más retrasado esté tu pie delantero, mayor será el rango de movimiento en tus rodillas.",
+      "en": "1. Find a box or bench approximately at knee height or a few inches below. (The lower the box, the lower the mobility requirement). \n2. You can rest your toes or your instep on the box. Place your front foot pointing forward or slightly outward and flex your knees and hips at the same time. \n3. Try to have your front leg reach parallel (hamstrings parallel to the floor) or lower. \n4. The further forward your front foot is, the greater the range of motion in your hips. The further back your front foot is, the greater the range of motion in your knees."
     },
     "muscles_involved": [
       "glutes",
@@ -36,12 +36,12 @@
   {
     "key": "machine-pendulum-squat",
     "name": {
-      "es": "Machine Pendulum Squat",
+      "es": "Sentadilla en máquina de péndulo",
       "en": "Machine Pendulum Squat"
     },
     "short_description": {
-      "es": "1. Position yourself in the pendulum squat machine with your back against the pad and shoulders under the shoulder pads. 2. Place feet shoulder-width apart on the platform. Keep your back straight, and slowly lower into a squat position. 3. Press through your heels to return to the starting position, keeping your core engaged. Repeat for desired reps and sets.",
-      "en": "1. Position yourself in the pendulum squat machine with your back against the pad and shoulders under the shoulder pads. 2. Place feet shoulder-width apart on the platform. Keep your back straight, and slowly lower into a squat position. 3. Press through your heels to return to the starting position, keeping your core engaged. Repeat for desired reps and sets."
+      "es": "1. Colócate en la máquina de sentadilla de péndulo con la espalda contra la almohadilla y los hombros bajo las hombreras. \n2. Coloca los pies a la anchura de los hombros en la plataforma. Mantén la espalda recta y baja lentamente hasta una posición de sentadilla. \n3. Empuja a través de los talones para volver a la posición inicial, manteniendo el core activo. Repite las repeticiones y series deseadas.",
+      "en": "1. Position yourself in the pendulum squat machine with your back against the pad and shoulders under the shoulder pads. \n2. Place feet shoulder-width apart on the platform. Keep your back straight, and slowly lower into a squat position. \n3. Press through your heels to return to the starting position, keeping your core engaged. Repeat for desired reps and sets."
     },
     "muscles_involved": [
       "glutes",
