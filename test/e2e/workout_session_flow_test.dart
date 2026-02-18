@@ -82,11 +82,11 @@ void main() {
       await tester.tap(addButtons.at(1)); // weight +1.25
       await tester.pumpAndSettle();
 
-      // Save this exercise block.
+      // Save the edited exercise in retroactive mode.
       await tester.scrollToAndTap(find.text('Guardar'));
 
       // Save full session changes.
-      await tester.tap(find.text('Guardar cambios'));
+      await tester.tap(find.text('Guardar entrenamiento'));
       await tester.pumpAndSettle();
 
       final savedSessions = await workoutPort.loadSessions();

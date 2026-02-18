@@ -92,5 +92,69 @@ void main() {
 
       expect(find.text('Rutina copiada al portapapeles'), findsOneWidget);
     });
+
+    testWidgets('reordering a day exercises persists new exerciseKeys order',
+        (tester) async {
+      final routinePort = FakeRoutinePort();
+      const reorderRoutine = Routine(
+        id: 'r-reorder',
+        name: 'Pull day',
+        type: 'musculacion',
+        days: [
+          RoutineDay(
+            muscleGroups: ['espalda'],
+            exerciseKeys: ['jalon_abierto', 'remo_barra'],
+          ),
+        ],
+      );
+      const reorderExercises = [
+        Exercise(
+          key: 'jalon_abierto',
+          name: 'Jalón abierto',
+          description: 'Descripción',
+          muscleGroups: ['espalda'],
+          difficulty: 3,
+        ),
+        Exercise(
+          key: 'remo_barra',
+          name: 'Remo barra',
+          description: 'Descripción',
+          muscleGroups: ['espalda'],
+          difficulty: 3,
+        ),
+      ];
+
+      await tester.pumpWidget(
+        buildTestableWidget(
+          RoutineDetailScreen(
+            routine: reorderRoutine,
+            allRoutines: const [reorderRoutine],
+            routinePort: routinePort,
+            allExercises: reorderExercises,
+            workoutSessionPort: FakeWorkoutSessionPort(),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final jalonBefore = tester.getTopLeft(find.text('Jalón abierto')).dy;
+      final remoBefore = tester.getTopLeft(find.text('Remo barra')).dy;
+      expect(jalonBefore, lessThan(remoBefore));
+
+      await tester.drag(
+        find.byKey(const ValueKey('routine-day-0-drag-handle-jalon_abierto')),
+        const Offset(0, 160),
+      );
+      await tester.pumpAndSettle();
+
+      final jalonAfter = tester.getTopLeft(find.text('Jalón abierto')).dy;
+      final remoAfter = tester.getTopLeft(find.text('Remo barra')).dy;
+      expect(jalonAfter, greaterThan(remoAfter));
+
+      final saved = await routinePort.loadRoutines();
+      expect(saved, hasLength(1));
+      expect(
+          saved.first.days.first.exerciseKeys, ['remo_barra', 'jalon_abierto']);
+    });
   });
 }

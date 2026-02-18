@@ -588,6 +588,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routineExportShare => 'Share';
 
   @override
+  String get routineExportPdf => 'Export PDF';
+
+  @override
+  String get routineExportPdfError => 'Could not export routine as PDF';
+
+  @override
   String get routineExportCopied => 'Routine copied to clipboard';
 
   @override
@@ -675,6 +681,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get workoutFinishConfirm => 'Finish the workout?';
 
   @override
+  String get workoutSavePrompt => 'Do you want to save the workout?';
+
+  @override
+  String get workoutSaveYes => 'Yes';
+
+  @override
+  String get workoutSaveNo => 'No';
+
+  @override
   String get workoutSets => 'Sets';
 
   @override
@@ -690,6 +705,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get workoutNotes => 'Notes';
+
+  @override
+  String workoutFinishSet(String n) {
+    return 'Finish set $n';
+  }
+
+  @override
+  String get workoutSetCompleted => 'Completed';
+
+  @override
+  String get workoutFinishExercise => 'Finish exercise';
 
   @override
   String get workoutSaveExercise => 'Save';
@@ -710,7 +736,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get workoutNoRoutines => 'Create a routine first';
 
   @override
-  String get workoutSaveChanges => 'Save changes';
+  String get workoutSaveChanges => 'Save workout';
 
   @override
   String get workoutRestTimer => 'Rest';

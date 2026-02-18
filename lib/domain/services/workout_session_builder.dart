@@ -9,9 +9,13 @@ import 'package:gym_tracker/domain/entities/workout_session.dart';
 class WorkoutSessionBuilder {
   const WorkoutSessionBuilder._();
 
+  static DateTime _effectiveSessionTime(WorkoutSession session) {
+    return session.startTime ?? session.date;
+  }
+
   /// Builds a [WorkoutSession] for the given [routine] and [dayIndex],
   /// auto-filling exercise sets from the latest matching session in
-  /// [previousSessions] when available.
+  /// [previousSessions] that is not later than the target session time.
   ///
   /// - [id]: unique session identifier (typically a UUID).
   /// - [date]: calendar date for the session.
@@ -27,13 +31,18 @@ class WorkoutSessionBuilder {
     DateTime? overrideEndTime,
   }) {
     final day = routine.days[dayIndex];
+    final targetSessionTime = overrideStartTime ?? date;
 
-    // Find previous session for same routine + day
+    // Find previous session for same routine + day, strictly in the past
+    // (or exact same timestamp), relative to the target session time.
     final matching = previousSessions
-        .where(
-            (s) => s.routineId == routine.id && s.routineDayIndex == dayIndex)
+        .where((session) =>
+            session.routineId == routine.id &&
+            session.routineDayIndex == dayIndex &&
+            !_effectiveSessionTime(session).isAfter(targetSessionTime))
         .toList()
-      ..sort((a, b) => b.date.compareTo(a.date));
+      ..sort((a, b) =>
+          _effectiveSessionTime(b).compareTo(_effectiveSessionTime(a)));
 
     final prevSession = matching.isNotEmpty ? matching.first : null;
 

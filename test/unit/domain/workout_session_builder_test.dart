@@ -175,5 +175,180 @@ void main() {
       expect(session.exercises[0].sets.length, 3);
       expect(session.exercises[0].sets[0].reps, 0);
     });
+
+    test('uses day 16 as reference when creating on day 18', () {
+      final day11 = WorkoutSession(
+        id: 'day11',
+        routineId: 'r1',
+        routineDayIndex: 0,
+        date: DateTime(2026, 2, 11),
+        exercises: [
+          const WorkoutExercise(
+            exerciseKey: 'bench_press',
+            sets: [ExerciseSet(reps: 8, weight: 70)],
+            notes: '',
+            completed: true,
+          ),
+        ],
+      );
+      final day16 = WorkoutSession(
+        id: 'day16',
+        routineId: 'r1',
+        routineDayIndex: 0,
+        date: DateTime(2026, 2, 16),
+        exercises: [
+          const WorkoutExercise(
+            exerciseKey: 'bench_press',
+            sets: [ExerciseSet(reps: 6, weight: 80)],
+            notes: '',
+            completed: true,
+          ),
+        ],
+      );
+
+      final session = WorkoutSessionBuilder.build(
+        id: 'day18',
+        routine: routine,
+        dayIndex: 0,
+        date: DateTime(2026, 2, 18),
+        trackTime: false,
+        previousSessions: [day11, day16],
+      );
+
+      expect(session.exercises.first.sets.first.reps, 6);
+      expect(session.exercises.first.sets.first.weight, 80);
+    });
+
+    test('uses day 11 as reference when creating retroactively on day 13', () {
+      final day11 = WorkoutSession(
+        id: 'day11',
+        routineId: 'r1',
+        routineDayIndex: 0,
+        date: DateTime(2026, 2, 11),
+        exercises: [
+          const WorkoutExercise(
+            exerciseKey: 'bench_press',
+            sets: [ExerciseSet(reps: 8, weight: 70)],
+            notes: '',
+            completed: true,
+          ),
+        ],
+      );
+      final day16 = WorkoutSession(
+        id: 'day16',
+        routineId: 'r1',
+        routineDayIndex: 0,
+        date: DateTime(2026, 2, 16),
+        exercises: [
+          const WorkoutExercise(
+            exerciseKey: 'bench_press',
+            sets: [ExerciseSet(reps: 6, weight: 80)],
+            notes: '',
+            completed: true,
+          ),
+        ],
+      );
+
+      final session = WorkoutSessionBuilder.build(
+        id: 'day13',
+        routine: routine,
+        dayIndex: 0,
+        date: DateTime(2026, 2, 13),
+        trackTime: false,
+        previousSessions: [day11, day16],
+      );
+
+      expect(session.exercises.first.sets.first.reps, 8);
+      expect(session.exercises.first.sets.first.weight, 70);
+    });
+
+    test('does not use future sessions as reference', () {
+      final day11 = WorkoutSession(
+        id: 'day11',
+        routineId: 'r1',
+        routineDayIndex: 0,
+        date: DateTime(2026, 2, 11),
+        exercises: [
+          const WorkoutExercise(
+            exerciseKey: 'bench_press',
+            sets: [ExerciseSet(reps: 8, weight: 70)],
+            notes: '',
+            completed: true,
+          ),
+        ],
+      );
+      final day18 = WorkoutSession(
+        id: 'day18',
+        routineId: 'r1',
+        routineDayIndex: 0,
+        date: DateTime(2026, 2, 18),
+        exercises: [
+          const WorkoutExercise(
+            exerciseKey: 'bench_press',
+            sets: [ExerciseSet(reps: 4, weight: 90)],
+            notes: '',
+            completed: true,
+          ),
+        ],
+      );
+
+      final session = WorkoutSessionBuilder.build(
+        id: 'day16',
+        routine: routine,
+        dayIndex: 0,
+        date: DateTime(2026, 2, 16),
+        trackTime: false,
+        previousSessions: [day11, day18],
+      );
+
+      expect(session.exercises.first.sets.first.reps, 8);
+      expect(session.exercises.first.sets.first.weight, 70);
+    });
+
+    test('for same day, picks immediately previous session by startTime', () {
+      final morning = WorkoutSession(
+        id: 'morning',
+        routineId: 'r1',
+        routineDayIndex: 0,
+        date: DateTime(2026, 2, 16),
+        startTime: DateTime(2026, 2, 16, 9, 0),
+        exercises: [
+          const WorkoutExercise(
+            exerciseKey: 'bench_press',
+            sets: [ExerciseSet(reps: 9, weight: 72.5)],
+            notes: '',
+            completed: true,
+          ),
+        ],
+      );
+      final noon = WorkoutSession(
+        id: 'noon',
+        routineId: 'r1',
+        routineDayIndex: 0,
+        date: DateTime(2026, 2, 16),
+        startTime: DateTime(2026, 2, 16, 12, 0),
+        exercises: [
+          const WorkoutExercise(
+            exerciseKey: 'bench_press',
+            sets: [ExerciseSet(reps: 7, weight: 77.5)],
+            notes: '',
+            completed: true,
+          ),
+        ],
+      );
+
+      final session = WorkoutSessionBuilder.build(
+        id: 'afternoon',
+        routine: routine,
+        dayIndex: 0,
+        date: DateTime(2026, 2, 16),
+        trackTime: false,
+        previousSessions: [morning, noon],
+        overrideStartTime: DateTime(2026, 2, 16, 15, 0),
+      );
+
+      expect(session.exercises.first.sets.first.reps, 7);
+      expect(session.exercises.first.sets.first.weight, 77.5);
+    });
   });
 }

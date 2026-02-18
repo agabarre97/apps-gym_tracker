@@ -292,6 +292,8 @@
   "routineExport": "Exportar",
   "routineExportCopy": "Copiar al portapapeles",
   "routineExportShare": "Compartir",
+  "routineExportPdf": "Exportar PDF",
+  "routineExportPdfError": "No se pudo exportar la rutina en PDF",
   "routineExportCopied": "Rutina copiada al portapapeles",
   "routineImport": "Importar rutina",
   "routineImportHint": "Pega aquí el JSON de la rutina",
@@ -325,6 +327,9 @@
   "workoutStart": "Comenzar",
   "workoutFinish": "Finalizar entrenamiento",
   "workoutFinishConfirm": "¿Quieres finalizar el entrenamiento?",
+  "workoutSavePrompt": "¿Quieres guardar el entrenamiento?",
+  "workoutSaveYes": "Sí",
+  "workoutSaveNo": "No",
   "workoutSets": "Series",
   "workoutSet": "Serie {n}",
   "@workoutSet": {
@@ -335,13 +340,21 @@
   "workoutReps": "Reps",
   "workoutWeight": "Peso (kg)",
   "workoutNotes": "Observaciones",
+  "workoutFinishSet": "Finalizar serie {n}",
+  "@workoutFinishSet": {
+    "placeholders": {
+      "n": { "type": "String" }
+    }
+  },
+  "workoutSetCompleted": "Finalizada",
+  "workoutFinishExercise": "Finalizar ejercicio",
   "workoutSaveExercise": "Guardar",
   "workoutExerciseDone": "Hecho",
   "workoutAddSet": "Añadir serie",
   "workoutRemoveSet": "Quitar serie",
   "workoutElapsed": "Tiempo",
   "workoutNoRoutines": "Crea una rutina primero",
-  "workoutSaveChanges": "Guardar cambios",
+  "workoutSaveChanges": "Guardar entrenamiento",
   "workoutRestTimer": "Descanso",
   "workoutAvgRest": "Descanso medio: {rest}",
   "@workoutAvgRest": {

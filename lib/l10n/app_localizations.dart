@@ -1178,6 +1178,18 @@ abstract class AppLocalizations {
   /// **'Compartir'**
   String get routineExportShare;
 
+  /// No description provided for @routineExportPdf.
+  ///
+  /// In es, this message translates to:
+  /// **'Exportar PDF'**
+  String get routineExportPdf;
+
+  /// No description provided for @routineExportPdfError.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo exportar la rutina en PDF'**
+  String get routineExportPdfError;
+
   /// No description provided for @routineExportCopied.
   ///
   /// In es, this message translates to:
@@ -1352,6 +1364,24 @@ abstract class AppLocalizations {
   /// **'¿Quieres finalizar el entrenamiento?'**
   String get workoutFinishConfirm;
 
+  /// No description provided for @workoutSavePrompt.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Quieres guardar el entrenamiento?'**
+  String get workoutSavePrompt;
+
+  /// No description provided for @workoutSaveYes.
+  ///
+  /// In es, this message translates to:
+  /// **'Sí'**
+  String get workoutSaveYes;
+
+  /// No description provided for @workoutSaveNo.
+  ///
+  /// In es, this message translates to:
+  /// **'No'**
+  String get workoutSaveNo;
+
   /// No description provided for @workoutSets.
   ///
   /// In es, this message translates to:
@@ -1381,6 +1411,24 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Observaciones'**
   String get workoutNotes;
+
+  /// No description provided for @workoutFinishSet.
+  ///
+  /// In es, this message translates to:
+  /// **'Finalizar serie {n}'**
+  String workoutFinishSet(String n);
+
+  /// No description provided for @workoutSetCompleted.
+  ///
+  /// In es, this message translates to:
+  /// **'Finalizada'**
+  String get workoutSetCompleted;
+
+  /// No description provided for @workoutFinishExercise.
+  ///
+  /// In es, this message translates to:
+  /// **'Finalizar ejercicio'**
+  String get workoutFinishExercise;
 
   /// No description provided for @workoutSaveExercise.
   ///
@@ -1421,7 +1469,7 @@ abstract class AppLocalizations {
   /// No description provided for @workoutSaveChanges.
   ///
   /// In es, this message translates to:
-  /// **'Guardar cambios'**
+  /// **'Guardar entrenamiento'**
   String get workoutSaveChanges;
 
   /// No description provided for @workoutRestTimer.

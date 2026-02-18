@@ -835,7 +835,6 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
         cumY,
         cumY + reps,
         baseColor.withValues(alpha: segAlpha),
-        const BorderSide(color: Colors.black38, width: 0.5),
       ));
       cumY += reps;
     }
