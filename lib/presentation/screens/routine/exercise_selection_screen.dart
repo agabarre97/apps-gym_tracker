@@ -323,9 +323,8 @@ class _ExerciseSelectionScreenState extends State<ExerciseSelectionScreen> {
                                 ],
                               ),
                             ),
-                            // Difficulty dots
-                            _DifficultyIndicator(
-                                difficulty: exercise.difficulty),
+                            // TODO(difficulty): re-enable once difficulty data is reliable
+                            // _DifficultyIndicator(difficulty: exercise.difficulty),
                           ],
                         ),
                       ),

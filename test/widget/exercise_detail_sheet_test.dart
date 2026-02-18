@@ -32,7 +32,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(MuscleWikiSvgPreview), findsOneWidget);
-      expect(find.text('3/3'), findsOneWidget);
+      // TODO(difficulty): restore expect(find.text('3/3'), findsOneWidget) when difficulty UI is re-enabled
     });
 
     testWidgets('shows translated description from bilingual payload',

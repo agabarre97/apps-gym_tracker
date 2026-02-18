@@ -160,6 +160,51 @@ void main() {
       expect(restored.days.length, 1);
       expect(restored.days[0].exerciseKeys, ['dominadas']);
     });
+
+    test('export → import round-trip preserves all days and does not throw',
+        () {
+      const routine = Routine(
+        id: 'full-routine',
+        name: 'Full body',
+        type: 'musculacion',
+        days: [
+          RoutineDay(
+            muscleGroups: ['chest', 'triceps'],
+            exerciseKeys: ['press_banca', 'fondos', 'press_inclinado'],
+          ),
+          RoutineDay(
+            muscleGroups: ['lats', 'biceps'],
+            exerciseKeys: ['dominadas', 'curl_barra'],
+          ),
+          RoutineDay(
+            muscleGroups: ['quads', 'hamstrings', 'glutes'],
+            exerciseKeys: ['sentadilla', 'peso_muerto'],
+          ),
+        ],
+      );
+
+      // Must not throw.
+      final jsonStr = routine.toExportJsonString();
+      final restored = Routine.fromImportJsonString(jsonStr, id: 'imported-id');
+
+      expect(restored.id, 'imported-id');
+      expect(restored.name, routine.name);
+      expect(restored.type, routine.type);
+      expect(restored.days.length, routine.days.length);
+
+      for (var i = 0; i < routine.days.length; i++) {
+        expect(
+          restored.days[i].muscleGroups,
+          routine.days[i].muscleGroups,
+          reason: 'muscleGroups mismatch on day $i',
+        );
+        expect(
+          restored.days[i].exerciseKeys,
+          routine.days[i].exerciseKeys,
+          reason: 'exerciseKeys mismatch on day $i',
+        );
+      }
+    });
   });
 
   group('Routine import', () {

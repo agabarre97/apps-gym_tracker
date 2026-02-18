@@ -92,36 +92,7 @@ class ExerciseDetailSheet extends StatelessWidget {
           ),
           const SizedBox(height: 16),
 
-          // Difficulty
-          Row(
-            children: [
-              Text(
-                '${l10n.routineDifficulty}: ',
-                style: const TextStyle(
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
-              ),
-              ...List.generate(
-                  3,
-                  (i) => Container(
-                        width: 10,
-                        height: 10,
-                        margin: const EdgeInsets.symmetric(horizontal: 2),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: i < exercise.difficulty
-                              ? Colors.greenAccent
-                              : Colors.white12,
-                        ),
-                      )),
-              const SizedBox(width: 8),
-              Text(
-                '${exercise.difficulty}/3',
-                style: const TextStyle(color: Colors.white54),
-              ),
-            ],
-          ),
+          // TODO(difficulty): re-enable difficulty row once data is reliable
           const SizedBox(height: 24),
 
           // Add / Remove button
