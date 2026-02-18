@@ -148,7 +148,7 @@ void main() {
       expect(button.onPressed, isNull);
     });
 
-    testWidgets('saving exercise persists to port', (tester) async {
+    testWidgets('finishing exercise persists to port', (tester) async {
       await tester.pumpWidget(
         buildTestableWidget(
           WorkoutSessionScreen(
@@ -166,13 +166,17 @@ void main() {
       await tester.tap(find.text('Press banca'));
       await tester.pumpAndSettle();
 
-      // Scroll to the Save button and tap
-      await tester.scrollToAndTap(find.text('Guardar'));
+      // Progress through sets with the single CTA and then finish exercise.
+      await tester.scrollToAndTap(find.text('Finalizar serie 1'));
+      await tester.scrollToAndTap(find.text('Finalizar serie 2'));
+      await tester.scrollToAndTap(find.text('Finalizar serie 3'));
+      await tester.scrollToAndTap(find.text('Finalizar ejercicio'));
 
       // Session should have been persisted
       final saved = await port.loadSessions();
       expect(saved.length, 1);
       expect(saved[0].exercises[0].completed, true);
+      expect(saved[0].exercises[0].sets.every((s) => s.completed), isTrue);
     });
 
     testWidgets('timer shows elapsed time when trackTime is true',
@@ -315,6 +319,97 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Extensión tríceps'), findsOneWidget);
+    });
+
+    testWidgets('single CTA progresses set by set and keeps sets editable',
+        (tester) async {
+      final singleSession = WorkoutSession(
+        id: 'session-2',
+        routineId: 'r1',
+        routineDayIndex: 0,
+        date: DateTime(2026, 2, 13),
+        exercises: const [
+          WorkoutExercise(
+            exerciseKey: 'press_banca',
+            sets: [ExerciseSet(reps: 5, weight: 60)],
+          ),
+        ],
+      );
+
+      await tester.pumpWidget(
+        buildTestableWidget(
+          WorkoutSessionScreen(
+            session: singleSession,
+            allExercises: exercises,
+            workoutSessionPort: port,
+            routineName: 'Test Routine',
+            trackTime: false,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Press banca'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Finalizar serie 1'), findsOneWidget);
+      await tester.tap(find.text('Finalizar serie 1'));
+      await tester.pumpAndSettle();
+      expect(find.text('Finalizar ejercicio'), findsOneWidget);
+      expect(find.byIcon(Icons.task_alt), findsOneWidget);
+
+      final addIcons = find.byIcon(Icons.add);
+      await tester.tap(addIcons.first);
+      await tester.pumpAndSettle();
+
+      final repsField = find.byType(TextField).first;
+      final controller = (tester.widget<TextField>(repsField)).controller;
+      expect(controller?.text, '6');
+    });
+
+    testWidgets(
+        'single CTA changes label until Finalizar ejercicio and then collapses card',
+        (tester) async {
+      await tester.pumpWidget(
+        buildTestableWidget(
+          WorkoutSessionScreen(
+            session: session,
+            allExercises: exercises,
+            workoutSessionPort: port,
+            routineName: 'Test Routine',
+            trackTime: false,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Press banca'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Finalizar serie 1'), findsOneWidget);
+      await tester.scrollToAndTap(find.text('Finalizar serie 1'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Finalizar serie 2'), findsOneWidget);
+      await tester.scrollToAndTap(find.text('Finalizar serie 2'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Finalizar serie 3'), findsOneWidget);
+      await tester.scrollToAndTap(find.text('Finalizar serie 3'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Finalizar ejercicio'), findsOneWidget);
+      await tester.scrollToAndTap(find.text('Finalizar ejercicio'));
+      await tester.pumpAndSettle();
+
+      // Card collapses and set rows disappear.
+      expect(find.text('Serie 1'), findsNothing);
+
+      final saved = await port.loadSessions();
+      expect(saved, hasLength(1));
+      expect(saved.first.exercises.first.completed, isTrue);
+      expect(
+          saved.first.exercises.first.sets.every((s) => s.completed), isTrue);
     });
   });
 }

@@ -299,6 +299,14 @@
   "workoutReps": "Reps",
   "workoutWeight": "Weight (kg)",
   "workoutNotes": "Notes",
+  "workoutFinishSet": "Finish set {n}",
+  "@workoutFinishSet": {
+    "placeholders": {
+      "n": { "type": "String" }
+    }
+  },
+  "workoutSetCompleted": "Completed",
+  "workoutFinishExercise": "Finish exercise",
   "workoutSaveExercise": "Save",
   "workoutExerciseDone": "Done",
   "workoutAddSet": "Add set",

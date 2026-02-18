@@ -13,17 +13,10 @@ class FirebaseAuthDatasource implements AuthPort {
     FirebaseAuth? firebaseAuth,
     GoogleSignIn? googleSignIn,
   })  : _auth = firebaseAuth ?? FirebaseAuth.instance,
-        _googleSignIn = googleSignIn ?? GoogleSignIn.instance;
+        _googleSignIn = googleSignIn ?? GoogleSignIn();
 
   final FirebaseAuth _auth;
   final GoogleSignIn _googleSignIn;
-  bool _googleInitialized = false;
-
-  Future<void> _ensureGoogleInitialized() async {
-    if (_googleInitialized) return;
-    await _googleSignIn.initialize();
-    _googleInitialized = true;
-  }
 
   AuthUser? _toAuthUser(User? user) {
     if (user == null) return null;
@@ -76,12 +69,18 @@ class FirebaseAuthDatasource implements AuthPort {
 
   @override
   Future<AuthUser> signInWithGoogle() async {
-    await _ensureGoogleInitialized();
-    final googleUser = await _googleSignIn.authenticate();
+    final googleUser = await _googleSignIn.signIn();
+    if (googleUser == null) {
+      throw const AuthException(
+        code: 'sign-in-cancelled',
+        message: 'Google sign-in was cancelled',
+      );
+    }
 
     try {
-      final googleAuth = googleUser.authentication;
+      final googleAuth = await googleUser.authentication;
       final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
       final cred = await _auth.signInWithCredential(credential);

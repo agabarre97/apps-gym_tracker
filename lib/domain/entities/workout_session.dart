@@ -6,6 +6,7 @@ class ExerciseSet {
     required this.reps,
     required this.weight,
     this.estimatedRestSeconds,
+    this.completed = false,
   });
 
   final int reps;
@@ -17,24 +18,28 @@ class ExerciseSet {
   /// Computed from the time between the last edit of the previous set and
   /// the first edit of this set. `null` for the first set or when unavailable.
   final int? estimatedRestSeconds;
+  final bool completed;
 
   Map<String, dynamic> toJson() => {
         'reps': reps,
         'weight': weight,
         if (estimatedRestSeconds != null)
           'estimatedRestSeconds': estimatedRestSeconds,
+        if (completed) 'completed': completed,
       };
 
   factory ExerciseSet.fromJson(Map<String, dynamic> json) => ExerciseSet(
         reps: json['reps'] as int,
         weight: (json['weight'] as num).toDouble(),
         estimatedRestSeconds: json['estimatedRestSeconds'] as int?,
+        completed: json['completed'] as bool? ?? false,
       );
 
   ExerciseSet copyWith({
     int? reps,
     double? weight,
     int? estimatedRestSeconds,
+    bool? completed,
     bool clearRest = false,
   }) =>
       ExerciseSet(
@@ -43,6 +48,7 @@ class ExerciseSet {
         estimatedRestSeconds: clearRest
             ? null
             : (estimatedRestSeconds ?? this.estimatedRestSeconds),
+        completed: completed ?? this.completed,
       );
 }
 

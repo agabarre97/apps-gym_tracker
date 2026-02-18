@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
 
 import 'package:gym_tracker/domain/entities/exercise.dart';
-import 'package:gym_tracker/domain/services/rest_time_calculator.dart';
 import 'package:gym_tracker/domain/entities/workout_session.dart';
 import 'package:gym_tracker/domain/ports/workout_session_port.dart';
 import 'package:gym_tracker/presentation/screens/routine/exercise_selection_screen.dart';
@@ -46,12 +45,11 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
   /// Index of the currently expanded exercise (-1 = none).
   int _expandedIndex = -1;
 
-  // ── Rest-time tracking (in-memory, not persisted) ──────────────
-  /// First edit timestamp per (exerciseIndex, setIndex).
-  final Map<(int, int), DateTime> _firstEditTimes = {};
-
-  /// Last edit timestamp per (exerciseIndex, setIndex).
-  final Map<(int, int), DateTime> _lastEditTimes = {};
+  /// Completion timestamp per (exerciseIndex, setIndex).
+  ///
+  /// Used to compute rest time as the interval between the end of
+  /// consecutive sets.
+  final Map<(int, int), DateTime> _setCompletionTimes = {};
 
   /// Whether the session has been modified from its original state (view mode).
   bool get _hasChanges {
@@ -98,10 +96,54 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
 
   // ── Exercise actions ───────────────────────────────────────────
 
-  void _saveExercise(int index) {
+  void _completeSet(int exIndex, int setIndex) {
+    final completedAt = DateTime.now();
+    final ex = _session.exercises[exIndex];
+    final updatedSets = List<ExerciseSet>.from(ex.sets);
+    int? restSeconds;
+    if (setIndex > 0) {
+      final previousCompletion = _setCompletionTimes[(exIndex, setIndex - 1)];
+      if (previousCompletion != null) {
+        final diff = completedAt.difference(previousCompletion).inSeconds;
+        if (diff > 0) restSeconds = diff;
+      }
+    }
+    updatedSets[setIndex] = updatedSets[setIndex].copyWith(
+      completed: true,
+      estimatedRestSeconds: restSeconds,
+      clearRest: setIndex == 0,
+    );
+    _setCompletionTimes[(exIndex, setIndex)] = completedAt;
+    _updateExerciseSets(exIndex, updatedSets);
+    _persistSession();
+  }
+
+  int? _nextPendingSetIndex(WorkoutExercise exercise) {
+    for (var index = 0; index < exercise.sets.length; index++) {
+      if (!exercise.sets[index].completed) {
+        return index;
+      }
+    }
+    return null;
+  }
+
+  void _completeNextPendingSet(int exIndex) {
+    final ex = _session.exercises[exIndex];
+    final setIndex = _nextPendingSetIndex(ex);
+    if (setIndex == null) return;
+    _completeSet(exIndex, setIndex);
+  }
+
+  void _finishExercise(int index) {
     setState(() {
       final ex = _session.exercises[index];
-      final updated = ex.copyWith(completed: true);
+      final completedSets = ex.sets
+          .map((set) => set.completed ? set : set.copyWith(completed: true))
+          .toList();
+      final updated = ex.copyWith(
+        completed: true,
+        sets: completedSets,
+      );
       final list = List<WorkoutExercise>.from(_session.exercises);
       list[index] = updated;
       _session = _session.copyWith(exercises: list);
@@ -141,39 +183,17 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
     final ex = _session.exercises[exIndex];
     if (ex.sets.length <= 1) return;
     final lastIdx = ex.sets.length - 1;
-    _firstEditTimes.remove((exIndex, lastIdx));
-    _lastEditTimes.remove((exIndex, lastIdx));
+    _setCompletionTimes.remove((exIndex, lastIdx));
     final newSets = List<ExerciseSet>.from(ex.sets)..removeLast();
     _updateExerciseSets(exIndex, newSets);
   }
 
   void _updateSet(int exIndex, int setIndex, {int? reps, double? weight}) {
-    final now = DateTime.now();
-    final key = (exIndex, setIndex);
-
-    // Track first and last edit timestamps for rest estimation
-    _firstEditTimes.putIfAbsent(key, () => now);
-    _lastEditTimes[key] = now;
-
-    // Compute estimated rest for this set (skip the first set)
-    int? restSeconds;
-    if (setIndex > 0) {
-      final prevKey = (exIndex, setIndex - 1);
-      final prevLastEdit = _lastEditTimes[prevKey];
-      final thisFirstEdit = _firstEditTimes[key];
-      restSeconds = RestTimeCalculator.fromEditTimes(
-        previousSetLastEdit: prevLastEdit,
-        currentSetFirstEdit: thisFirstEdit,
-      );
-    }
-
     final ex = _session.exercises[exIndex];
     final newSets = List<ExerciseSet>.from(ex.sets);
     newSets[setIndex] = newSets[setIndex].copyWith(
       reps: reps,
       weight: weight,
-      estimatedRestSeconds: restSeconds,
-      clearRest: setIndex == 0,
     );
     _updateExerciseSets(exIndex, newSets);
   }
@@ -405,6 +425,8 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
     final isExpanded = _expandedIndex == index;
     final name = _nameForKey(ex.exerciseKey);
     final avgRest = _averageRestLabel(ex);
+    final nextPendingSet = _nextPendingSetIndex(ex);
+    final isSeriesProgressMode = nextPendingSet != null;
 
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
@@ -526,9 +548,22 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
                 SizedBox(
                   width: double.infinity,
                   child: FilledButton.icon(
-                    icon: const Icon(Icons.save, size: 18),
-                    label: Text(l10n.workoutSaveExercise),
-                    onPressed: () => _saveExercise(index),
+                    icon: Icon(
+                      isSeriesProgressMode
+                          ? Icons.task_alt_outlined
+                          : Icons.check_circle_outline,
+                      size: 18,
+                    ),
+                    label: Text(
+                      isSeriesProgressMode
+                          ? l10n.workoutFinishSet('${nextPendingSet + 1}')
+                          : l10n.workoutFinishExercise,
+                    ),
+                    onPressed: ex.completed
+                        ? null
+                        : isSeriesProgressMode
+                            ? () => _completeNextPendingSet(index)
+                            : () => _finishExercise(index),
                   ),
                 ),
               ],
@@ -548,7 +583,7 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
         // Header row
         Row(
           children: [
-            const SizedBox(width: 36),
+            const SizedBox(width: 52),
             Expanded(
               child: Text(l10n.workoutReps,
                   textAlign: TextAlign.center,
@@ -573,31 +608,60 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
           final s = ex.sets[setIdx];
           return Padding(
             padding: const EdgeInsets.only(bottom: 6),
-            child: Row(
-              children: [
-                SizedBox(
-                  width: 36,
-                  child: Text(
-                    l10n.workoutSet('${setIdx + 1}'),
-                    style: const TextStyle(fontSize: 11, color: Colors.white54),
-                  ),
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: s.completed ? Colors.greenAccent : Colors.transparent,
                 ),
-                Expanded(
-                  child: _StepperIntField(
-                    value: s.reps,
-                    step: 1,
-                    onChanged: (v) => _updateSet(exIndex, setIdx, reps: v),
-                  ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 46,
+                      child: Row(
+                        children: [
+                          if (s.completed)
+                            const Padding(
+                              padding: EdgeInsets.only(right: 4),
+                              child: Icon(
+                                Icons.task_alt,
+                                size: 14,
+                                color: Colors.greenAccent,
+                              ),
+                            ),
+                          Expanded(
+                            child: Text(
+                              l10n.workoutSet('${setIdx + 1}'),
+                              style: const TextStyle(
+                                  fontSize: 11, color: Colors.white54),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: _StepperIntField(
+                        value: s.reps,
+                        step: 1,
+                        onChanged: (v) => _updateSet(exIndex, setIdx, reps: v),
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: _StepperDoubleField(
+                        value: s.weight,
+                        step: 1.25,
+                        onChanged: (v) =>
+                            _updateSet(exIndex, setIdx, weight: v),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 6),
-                Expanded(
-                  child: _StepperDoubleField(
-                    value: s.weight,
-                    step: 1.25,
-                    onChanged: (v) => _updateSet(exIndex, setIdx, weight: v),
-                  ),
-                ),
-              ],
+              ),
             ),
           );
         }),

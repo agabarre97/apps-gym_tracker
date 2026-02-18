@@ -701,6 +701,17 @@ class AppLocalizationsEs extends AppLocalizations {
   String get workoutNotes => 'Observaciones';
 
   @override
+  String workoutFinishSet(String n) {
+    return 'Finalizar serie $n';
+  }
+
+  @override
+  String get workoutSetCompleted => 'Finalizada';
+
+  @override
+  String get workoutFinishExercise => 'Finalizar ejercicio';
+
+  @override
   String get workoutSaveExercise => 'Guardar';
 
   @override

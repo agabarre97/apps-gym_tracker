@@ -82,8 +82,10 @@ void main() {
       await tester.tap(addButtons.at(1)); // weight +1.25
       await tester.pumpAndSettle();
 
-      // Save this exercise block.
-      await tester.scrollToAndTap(find.text('Guardar'));
+      // Complete pending sets through single CTA, then finish exercise.
+      await tester.scrollToAndTap(find.text('Finalizar serie 1'));
+      await tester.scrollToAndTap(find.text('Finalizar serie 2'));
+      await tester.scrollToAndTap(find.text('Finalizar ejercicio'));
 
       // Save full session changes.
       await tester.tap(find.text('Guardar cambios'));

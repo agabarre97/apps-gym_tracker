@@ -1394,6 +1394,24 @@ abstract class AppLocalizations {
   /// **'Observaciones'**
   String get workoutNotes;
 
+  /// No description provided for @workoutFinishSet.
+  ///
+  /// In es, this message translates to:
+  /// **'Finalizar serie {n}'**
+  String workoutFinishSet(String n);
+
+  /// No description provided for @workoutSetCompleted.
+  ///
+  /// In es, this message translates to:
+  /// **'Finalizada'**
+  String get workoutSetCompleted;
+
+  /// No description provided for @workoutFinishExercise.
+  ///
+  /// In es, this message translates to:
+  /// **'Finalizar ejercicio'**
+  String get workoutFinishExercise;
+
   /// No description provided for @workoutSaveExercise.
   ///
   /// In es, this message translates to:

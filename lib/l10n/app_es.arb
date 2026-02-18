@@ -337,6 +337,14 @@
   "workoutReps": "Reps",
   "workoutWeight": "Peso (kg)",
   "workoutNotes": "Observaciones",
+  "workoutFinishSet": "Finalizar serie {n}",
+  "@workoutFinishSet": {
+    "placeholders": {
+      "n": { "type": "String" }
+    }
+  },
+  "workoutSetCompleted": "Finalizada",
+  "workoutFinishExercise": "Finalizar ejercicio",
   "workoutSaveExercise": "Guardar",
   "workoutExerciseDone": "Hecho",
   "workoutAddSet": "Añadir serie",
