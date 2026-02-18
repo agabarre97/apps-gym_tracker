@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
 import 'package:gym_tracker/domain/entities/exercise.dart';
-import 'package:gym_tracker/domain/entities/muscle_group.dart';
+import 'package:gym_tracker/presentation/screens/routine/by_muscle_category_labels.dart';
 
 /// Final screen of the routine creation flow.
 ///
@@ -20,7 +20,7 @@ class RoutineSummaryScreen extends StatefulWidget {
   });
 
   final String type;
-  final List<List<MuscleGroupCategory>> dayMuscleGroups;
+  final List<List<String>> dayMuscleGroups;
   final List<List<String>> dayExerciseKeys;
   final List<Exercise> allExercises;
   final Future<void> Function(String name) onSave;
@@ -60,7 +60,6 @@ class _RoutineSummaryScreenState extends State<RoutineSummaryScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final lang = Localizations.localeOf(context).languageCode;
-    final labels = muscleGroupLabels(lang);
 
     return Scaffold(
       appBar: AppBar(
@@ -140,7 +139,7 @@ class _RoutineSummaryScreenState extends State<RoutineSummaryScreen> {
                             children: groups
                                 .map((g) => Chip(
                                       label: Text(
-                                        labels[g] ?? g.name,
+                                        categoryLabelForLocale(g, lang),
                                         style: const TextStyle(fontSize: 11),
                                       ),
                                       visualDensity: VisualDensity.compact,

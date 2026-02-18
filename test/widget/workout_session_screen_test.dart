@@ -357,9 +357,10 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Selecciona ejercicios'), findsWidgets);
-      await tester.tap(find.text('Tríceps'));
-      await tester.pumpAndSettle();
       expect(find.text('Extensión tríceps'), findsOneWidget);
+
+      await tester.enterText(find.byType(TextField).first, 'Extensión tríceps');
+      await tester.pumpAndSettle();
 
       await tester.tap(find.byIcon(Icons.radio_button_unchecked).first);
       await tester.pumpAndSettle();

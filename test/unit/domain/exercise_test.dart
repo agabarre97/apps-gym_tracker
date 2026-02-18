@@ -24,4 +24,23 @@ void main() {
       expect(result, 'unknown_key');
     });
   });
+
+  group('Exercise.fromJson by_muscle', () {
+    test('parses bilingual fields and confidence difficulty', () {
+      final exercise = Exercise.fromJson({
+        'key': 'barbell-curl',
+        'name': {'es': 'Curl con barra', 'en': 'Barbell Curl'},
+        'short_description': {'es': 'Descripcion ES', 'en': 'Description EN'},
+        'muscles_involved': ['biceps', 'forearms'],
+        'muscles_confidence': 'high',
+      });
+
+      expect(exercise.localizedNameFor('es'), 'Curl con barra');
+      expect(exercise.localizedNameFor('en'), 'Barbell Curl');
+      expect(exercise.localizedDescriptionFor('es'), 'Descripcion ES');
+      expect(exercise.localizedDescriptionFor('en'), 'Description EN');
+      expect(exercise.resolvedMusclesInvolved, ['biceps', 'forearms']);
+      expect(exercise.difficulty, 3);
+    });
+  });
 }

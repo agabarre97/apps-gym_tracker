@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gym_tracker/domain/entities/exercise.dart';
+import 'package:gym_tracker/presentation/components/musclewiki_svg_preview.dart';
 import 'package:gym_tracker/presentation/screens/routine/exercise_detail_sheet.dart';
 
 import '../helpers/test_helpers.dart';
 
 void main() {
   group('ExerciseDetailSheet', () {
-    testWidgets('shows muscle image when muscleImage is provided',
-        (tester) async {
+    testWidgets('shows SVG body preview for involved muscles', (tester) async {
       const exercise = Exercise(
         key: 'press_banca',
         name: 'Press banca',
         description: 'Descripcion',
-        muscleGroups: ['Pectoral', 'Triceps'],
-        difficulty: 4,
-        muscleImage: 'assets/images/muscles/pectoralis_major.png',
+        muscleGroups: ['chest', 'triceps'],
+        musclesInvolved: ['chest', 'triceps'],
+        difficulty: 3,
       );
 
       await tester.pumpWidget(
@@ -31,22 +31,19 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.byType(Image), findsOneWidget);
-      final imageWidget = tester.widget<Image>(find.byType(Image));
-      final imageProvider = imageWidget.image;
-      expect(imageProvider, isA<AssetImage>());
-      expect((imageProvider as AssetImage).assetName,
-          'assets/images/muscles/pectoralis_major.png');
+      expect(find.byType(MuscleWikiSvgPreview), findsOneWidget);
+      expect(find.text('3/3'), findsOneWidget);
     });
 
-    testWidgets('does not show muscle image when muscleImage is null',
+    testWidgets('shows translated description from bilingual payload',
         (tester) async {
       const exercise = Exercise(
         key: 'press_banca',
         name: 'Press banca',
-        description: 'Descripcion',
-        muscleGroups: ['Pectoral', 'Triceps'],
-        difficulty: 4,
+        description: 'Descripcion ES',
+        localizedShortDescription: {'es': 'Descripcion ES', 'en': 'EN Desc'},
+        muscleGroups: ['chest', 'triceps'],
+        difficulty: 2,
       );
 
       await tester.pumpWidget(
@@ -62,7 +59,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.byType(Image), findsNothing);
+      expect(find.text('Descripcion ES'), findsOneWidget);
     });
   });
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
 import 'package:gym_tracker/domain/entities/exercise.dart';
+import 'package:gym_tracker/presentation/components/musclewiki_svg_preview.dart';
 
 /// Bottom sheet showing full details of an exercise with add/remove toggle.
 class ExerciseDetailSheet extends StatelessWidget {
@@ -18,6 +19,7 @@ class ExerciseDetailSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final languageCode = Localizations.localeOf(context).languageCode;
 
     return Padding(
       padding: EdgeInsets.only(
@@ -45,7 +47,7 @@ class ExerciseDetailSheet extends StatelessWidget {
 
           // Title
           Text(
-            exercise.name,
+            exercise.localizedNameFor(languageCode),
             style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -56,7 +58,7 @@ class ExerciseDetailSheet extends StatelessWidget {
 
           // Description
           Text(
-            exercise.description,
+            exercise.localizedDescriptionFor(languageCode),
             style: const TextStyle(color: Colors.white70, fontSize: 14),
           ),
           const SizedBox(height: 20),
@@ -73,23 +75,21 @@ class ExerciseDetailSheet extends StatelessWidget {
           Wrap(
             spacing: 8,
             runSpacing: 6,
-            children: exercise.muscleGroups
+            children: exercise.resolvedMusclesInvolved
                 .map((g) => Chip(
                       label: Text(g, style: const TextStyle(fontSize: 12)),
                       visualDensity: VisualDensity.compact,
                     ))
                 .toList(),
           ),
-          if (exercise.muscleImage != null) ...[
-            const SizedBox(height: 16),
-            Center(
-              child: Image.asset(
-                exercise.muscleImage!,
-                height: 160,
-                fit: BoxFit.contain,
-              ),
+          const SizedBox(height: 16),
+          Center(
+            child: MuscleWikiSvgPreview(
+              musclesInvolved: exercise.resolvedMusclesInvolved,
+              width: 220,
+              height: 180,
             ),
-          ],
+          ),
           const SizedBox(height: 16),
 
           // Difficulty
@@ -103,7 +103,7 @@ class ExerciseDetailSheet extends StatelessWidget {
                 ),
               ),
               ...List.generate(
-                  10,
+                  3,
                   (i) => Container(
                         width: 10,
                         height: 10,
@@ -117,7 +117,7 @@ class ExerciseDetailSheet extends StatelessWidget {
                       )),
               const SizedBox(width: 8),
               Text(
-                '${exercise.difficulty}/10',
+                '${exercise.difficulty}/3',
                 style: const TextStyle(color: Colors.white54),
               ),
             ],

@@ -9,6 +9,7 @@ import 'package:gym_tracker/domain/entities/exercise.dart';
 import 'package:gym_tracker/domain/entities/workout_session.dart';
 import 'package:gym_tracker/domain/ports/workout_session_port.dart';
 import 'package:gym_tracker/presentation/screens/routine/exercise_selection_screen.dart';
+import 'package:gym_tracker/presentation/screens/routine/by_muscle_category_labels.dart';
 
 /// Main workout screen showing exercise cards with sets/reps/weight editing.
 class WorkoutSessionScreen extends StatefulWidget {
@@ -263,6 +264,7 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
   Future<void> _openAddExercisePicker() async {
     final l10n = AppLocalizations.of(context)!;
     final initialKeys = _session.exercises.map((e) => e.exerciseKey).toList();
+    final availableCategories = byMuscleCategoryOrder;
 
     final result = await Navigator.of(context).push<ExerciseSelectionResult>(
       MaterialPageRoute(
@@ -270,6 +272,7 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
           currentDay: 1,
           totalDays: 1,
           allExercises: widget.allExercises,
+          availableCategories: availableCategories,
           initialSelectedCategories: const [],
           initialSelectedKeys: initialKeys,
           showDayProgress: false,

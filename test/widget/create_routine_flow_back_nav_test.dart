@@ -16,6 +16,7 @@ const _mockExercises = [
     description: 'Press de pecho en banco plano.',
     muscleGroups: ['Pectoral', 'Tríceps'],
     difficulty: 5,
+    categoryKeys: ['chest'],
   ),
   Exercise(
     key: 'cruce_poleas',
@@ -23,6 +24,7 @@ const _mockExercises = [
     description: 'Apertura en poleas.',
     muscleGroups: ['Pectoral mayor'],
     difficulty: 4,
+    categoryKeys: ['chest'],
   ),
   Exercise(
     key: 'curl_biceps',
@@ -30,6 +32,7 @@ const _mockExercises = [
     description: 'Curl con mancuernas.',
     muscleGroups: ['Bíceps'],
     difficulty: 3,
+    categoryKeys: ['biceps'],
   ),
   Exercise(
     key: 'jalon_pecho',
@@ -37,6 +40,7 @@ const _mockExercises = [
     description: 'Tirón vertical al pecho.',
     muscleGroups: ['Dorsal ancho', 'Bíceps'],
     difficulty: 5,
+    categoryKeys: ['lats'],
   ),
 ];
 
@@ -125,8 +129,8 @@ void main() {
       await tester.tap(find.text('Siguiente'));
       await tester.pumpAndSettle();
 
-      // Day 1 exercises: select Pectoral filter
-      await tester.tap(find.text('Pectoral'));
+      // Day 1 exercises: select chest filter
+      await tester.tap(find.text('Pecho'));
       await tester.pump();
 
       // Select one exercise and confirm day 1
@@ -141,7 +145,7 @@ void main() {
 
       expect(find.text('Selecciona ejercicios'), findsOneWidget);
       final pectoralChip = tester.widget<FilterChip>(
-        find.widgetWithText(FilterChip, 'Pectoral'),
+        find.widgetWithText(FilterChip, 'Pecho'),
       );
       expect(pectoralChip.selected, isTrue);
       expect(find.byIcon(Icons.check_circle), findsOneWidget);
@@ -163,7 +167,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Select filter + exercise on day 1
-      await tester.tap(find.text('Pectoral'));
+      await tester.tap(find.text('Pecho'));
       await tester.pump();
       await tester.tap(find.byIcon(Icons.radio_button_unchecked).first);
       await tester.pump();

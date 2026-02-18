@@ -6,7 +6,6 @@ import 'package:gym_tracker/data/datasources/asset_data_loader.dart';
 import 'package:gym_tracker/domain/entities/exercise.dart';
 import 'package:gym_tracker/domain/entities/hiit_config.dart';
 import 'package:gym_tracker/domain/entities/hiit_exercise.dart';
-import 'package:gym_tracker/domain/entities/muscle_group.dart';
 import 'package:gym_tracker/domain/entities/routine.dart';
 import 'package:gym_tracker/domain/ports/routine_port.dart';
 import 'package:gym_tracker/presentation/screens/routine/routine_type_screen.dart';
@@ -16,6 +15,7 @@ import 'package:gym_tracker/presentation/screens/routine/routine_summary_screen.
 import 'package:gym_tracker/presentation/screens/routine/mobility_subtype_screen.dart';
 import 'package:gym_tracker/presentation/screens/routine/mobility_option_screen.dart';
 import 'package:gym_tracker/presentation/screens/routine/mobility_routine_selection_screen.dart';
+import 'package:gym_tracker/presentation/screens/routine/by_muscle_category_labels.dart';
 import 'package:gym_tracker/presentation/screens/hiit/hiit_exercise_selection_screen.dart';
 import 'package:gym_tracker/presentation/screens/hiit/hiit_config_screen.dart';
 
@@ -72,12 +72,13 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
   int _currentDayIndex = 0;
 
   // Completed days
-  final List<List<MuscleGroupCategory>> _dayMuscleGroups = [];
+  final List<List<String>> _dayMuscleGroups = [];
   final List<List<String>> _dayExerciseKeys = [];
 
   // Current day in-progress state
-  List<MuscleGroupCategory> _currentMuscleSelection = [];
+  List<String> _currentMuscleSelection = [];
   List<String> _currentExerciseSelection = [];
+  List<String> _availableCategories = [];
 
   // All exercises (loaded once)
   List<Exercise> _allExercises = [];
@@ -95,9 +96,12 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
     if (_exercisesLoaded) return;
     if (widget.preloadedExercises != null) {
       _allExercises = widget.preloadedExercises!;
+      _availableCategories = byMuscleCategoryOrder;
     } else {
       final lang = Localizations.localeOf(context).languageCode;
-      _allExercises = await AssetDataLoader.loadExercises(lang);
+      final catalog = await AssetDataLoader.loadByMuscleCatalog(lang);
+      _allExercises = catalog.exercises;
+      _availableCategories = catalog.categories;
     }
     _exercisesLoaded = true;
     if (mounted) setState(() {});
@@ -324,6 +328,7 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
           currentDay: dayIndex + 1,
           totalDays: _numDays,
           allExercises: _allExercises,
+          availableCategories: _availableCategories,
           initialSelectedCategories: categories,
           initialSelectedKeys: currentKeys,
           onConfirmed: (selectionResult) =>
@@ -344,7 +349,7 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
     final days = <RoutineDay>[];
     for (var i = 0; i < _dayMuscleGroups.length; i++) {
       days.add(RoutineDay(
-        muscleGroups: _dayMuscleGroups[i].map((c) => c.name).toList(),
+        muscleGroups: _dayMuscleGroups[i],
         exerciseKeys: _dayExerciseKeys[i],
       ));
     }
@@ -473,6 +478,7 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
           currentDay: _currentDayIndex + 1,
           totalDays: _numDays,
           allExercises: _allExercises,
+          availableCategories: _availableCategories,
           initialSelectedCategories: _currentMuscleSelection,
           initialSelectedKeys: _currentExerciseSelection,
           onConfirmed: _onExercisesConfirmed,

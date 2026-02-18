@@ -13,7 +13,8 @@ const _preloadedExercises = [
     description: 'Pecho',
     muscleGroups: ['Pectoral'],
     difficulty: 5,
-    muscleCategoryPriority: {'pectoral': 1},
+    muscleCategoryPriority: {'chest': 1},
+    categoryKeys: ['chest'],
   ),
   Exercise(
     key: 'press_inclinado',
@@ -21,7 +22,8 @@ const _preloadedExercises = [
     description: 'Pecho superior',
     muscleGroups: ['Pectoral superior', 'Tríceps'],
     difficulty: 6,
-    muscleCategoryPriority: {'pectoral': 1, 'triceps': 2},
+    muscleCategoryPriority: {'chest': 1, 'triceps': 2},
+    categoryKeys: ['chest', 'triceps'],
   ),
   Exercise(
     key: 'jalon_pecho',
@@ -29,7 +31,8 @@ const _preloadedExercises = [
     description: 'Espalda',
     muscleGroups: ['Dorsal ancho'],
     difficulty: 5,
-    muscleCategoryPriority: {'espalda': 1},
+    muscleCategoryPriority: {'lats': 1},
+    categoryKeys: ['lats'],
   ),
   Exercise(
     key: 'remo_mancuerna',
@@ -37,7 +40,8 @@ const _preloadedExercises = [
     description: 'Espalda media',
     muscleGroups: ['Dorsal ancho', 'Romboides'],
     difficulty: 5,
-    muscleCategoryPriority: {'espalda': 1},
+    muscleCategoryPriority: {'lats': 1},
+    categoryKeys: ['lats'],
   ),
   Exercise(
     key: 'curl_barra',
@@ -46,6 +50,7 @@ const _preloadedExercises = [
     muscleGroups: ['Bíceps braquial'],
     difficulty: 4,
     muscleCategoryPriority: {'biceps': 1},
+    categoryKeys: ['biceps'],
   ),
   Exercise(
     key: 'extension_triceps',
@@ -54,6 +59,7 @@ const _preloadedExercises = [
     muscleGroups: ['Tríceps braquial'],
     difficulty: 4,
     muscleCategoryPriority: {'triceps': 1},
+    categoryKeys: ['triceps'],
   ),
 ];
 
@@ -87,8 +93,8 @@ void main() {
       await tester.tap(find.text('Siguiente'));
       await tester.pumpAndSettle();
 
-      // Day 1: pectoral + search "press".
-      await tester.tap(find.text('Pectoral'));
+      // Day 1: chest (Pecho) + search "press".
+      await tester.tap(find.text('Pecho'));
       await tester.pumpAndSettle();
       await tester.enterText(find.byType(TextField), 'press');
       await tester.pumpAndSettle();
@@ -99,8 +105,8 @@ void main() {
       await tester.tap(find.text('Confirmar'));
       await tester.pumpAndSettle();
 
-      // Day 2: espalda + search "jalón".
-      await tester.tap(find.text('Espalda'));
+      // Day 2: lats (Dorsales) + search "jalón".
+      await tester.tap(find.text('Dorsales'));
       await tester.pumpAndSettle();
       await tester.enterText(find.byType(TextField), 'jalón');
       await tester.pumpAndSettle();

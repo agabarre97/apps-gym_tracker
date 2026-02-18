@@ -24,6 +24,7 @@ dependencies:
   pdf: ^3.11.3
   path_provider: ^2.1.5
   printing: ^5.14.2
+  flutter_svg: ^2.2.3
 
 dev_dependencies:
   flutter_test:
@@ -38,5 +39,7 @@ flutter:
     - assets/images/muscles/
     - assets/fonts/
     - assets/data/
+    - assets/data/musclewiki/svg_templates/
+    - assets/data/musclewiki/by_muscle/
     - assets/data/mobility_routines/
     - assets/data/mobility_exercises_info/

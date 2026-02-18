@@ -7,11 +7,11 @@ import 'package:gym_tracker/domain/services/routine_pdf_export_service.dart';
 import 'package:gym_tracker/presentation/components/export_sheet.dart';
 import 'package:gym_tracker/presentation/components/pdf_share_helper.dart';
 import 'package:gym_tracker/domain/entities/exercise.dart';
-import 'package:gym_tracker/domain/entities/muscle_group.dart';
 import 'package:gym_tracker/domain/entities/routine.dart';
 import 'package:gym_tracker/domain/ports/routine_port.dart';
 import 'package:gym_tracker/domain/ports/workout_session_port.dart';
 import 'package:gym_tracker/presentation/components/delete_routine_dialog.dart';
+import 'package:gym_tracker/presentation/screens/routine/by_muscle_category_labels.dart';
 import 'package:gym_tracker/presentation/screens/routine/exercise_selection_screen.dart';
 import 'package:gym_tracker/presentation/screens/workout/exercise_progress_screen.dart';
 
@@ -54,20 +54,6 @@ class _RoutineDetailScreenState extends State<RoutineDetailScreen> {
   /// Resolves an exercise key to its localized display name.
   String _nameForKey(String key) =>
       Exercise.nameForKey(widget.allExercises, key);
-
-  /// Resolves muscle group category keys to enum values.
-  List<MuscleGroupCategory> _categoriesFromKeys(List<String> keys) {
-    return keys
-        .map((k) {
-          try {
-            return MuscleGroupCategory.values.firstWhere((v) => v.name == k);
-          } catch (_) {
-            return null;
-          }
-        })
-        .whereType<MuscleGroupCategory>()
-        .toList();
-  }
 
   // ── Export ──────────────────────────────────────────────────────
 
@@ -145,7 +131,8 @@ class _RoutineDetailScreenState extends State<RoutineDetailScreen> {
 
   Future<void> _editDay(int dayIndex) async {
     final day = _routine.days[dayIndex];
-    final categories = _categoriesFromKeys(day.muscleGroups);
+    final categories = day.muscleGroups;
+    final availableCategories = byMuscleCategoryOrder;
 
     final result = await Navigator.of(context).push<List<String>>(
       MaterialPageRoute(
@@ -153,6 +140,7 @@ class _RoutineDetailScreenState extends State<RoutineDetailScreen> {
           dayIndex: dayIndex,
           totalDays: _routine.days.length,
           selectedCategories: categories,
+          availableCategories: availableCategories,
           allExercises: widget.allExercises,
           initialSelectedKeys: day.exerciseKeys,
         ),
@@ -226,7 +214,6 @@ class _RoutineDetailScreenState extends State<RoutineDetailScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final lang = Localizations.localeOf(context).languageCode;
-    final labels = muscleGroupLabels(lang);
 
     return Scaffold(
       appBar: AppBar(
@@ -248,7 +235,7 @@ class _RoutineDetailScreenState extends State<RoutineDetailScreen> {
                 // Day summaries
                 ...List.generate(_routine.days.length, (i) {
                   final day = _routine.days[i];
-                  final groups = _categoriesFromKeys(day.muscleGroups);
+                  final groups = day.muscleGroups;
 
                   return Card(
                     margin: const EdgeInsets.only(bottom: 12),
@@ -295,7 +282,7 @@ class _RoutineDetailScreenState extends State<RoutineDetailScreen> {
                             children: groups
                                 .map((g) => Chip(
                                       label: Text(
-                                        labels[g] ?? g.name,
+                                        categoryLabelForLocale(g, lang),
                                         style: const TextStyle(fontSize: 11),
                                       ),
                                       visualDensity: VisualDensity.compact,
@@ -403,13 +390,15 @@ class _EditDayExercisesScreen extends StatelessWidget {
     required this.dayIndex,
     required this.totalDays,
     required this.selectedCategories,
+    required this.availableCategories,
     required this.allExercises,
     required this.initialSelectedKeys,
   });
 
   final int dayIndex;
   final int totalDays;
-  final List<MuscleGroupCategory> selectedCategories;
+  final List<String> selectedCategories;
+  final List<String> availableCategories;
   final List<Exercise> allExercises;
   final List<String> initialSelectedKeys;
 
@@ -419,6 +408,7 @@ class _EditDayExercisesScreen extends StatelessWidget {
       currentDay: dayIndex + 1,
       totalDays: totalDays,
       allExercises: allExercises,
+      availableCategories: availableCategories,
       initialSelectedCategories: selectedCategories,
       initialSelectedKeys: initialSelectedKeys,
       onConfirmed: (result) =>

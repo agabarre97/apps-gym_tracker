@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gym_tracker/domain/entities/exercise.dart';
-import 'package:gym_tracker/domain/entities/muscle_group.dart';
 import 'package:gym_tracker/presentation/screens/routine/routine_summary_screen.dart';
 
 import '../helpers/test_helpers.dart';
@@ -41,8 +40,8 @@ void main() {
           RoutineSummaryScreen(
             type: 'musculacion',
             dayMuscleGroups: const [
-              [MuscleGroupCategory.pectoral, MuscleGroupCategory.triceps],
-              [MuscleGroupCategory.espalda, MuscleGroupCategory.biceps],
+              ['chest', 'triceps'],
+              ['lats', 'biceps'],
             ],
             dayExerciseKeys: const [
               ['press_multipower', 'extension_triceps'],
@@ -73,7 +72,7 @@ void main() {
           RoutineSummaryScreen(
             type: 'musculacion',
             dayMuscleGroups: const [
-              [MuscleGroupCategory.pectoral],
+              ['chest'],
             ],
             dayExerciseKeys: const [
               ['press_multipower'],
@@ -96,7 +95,7 @@ void main() {
           RoutineSummaryScreen(
             type: 'musculacion',
             dayMuscleGroups: const [
-              [MuscleGroupCategory.pectoral],
+              ['chest'],
             ],
             dayExerciseKeys: const [
               ['press_multipower'],

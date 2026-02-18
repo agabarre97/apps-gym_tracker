@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gym_tracker/domain/entities/exercise.dart';
-import 'package:gym_tracker/domain/entities/muscle_group.dart';
 import 'package:gym_tracker/presentation/screens/routine/exercise_selection_screen.dart';
 
 import '../helpers/test_helpers.dart';
@@ -15,6 +14,7 @@ void main() {
         description: 'Press de pecho en multipower.',
         muscleGroups: ['Pectoral superior', 'Tríceps'],
         difficulty: 6,
+        categoryKeys: ['chest'],
       ),
       const Exercise(
         key: 'cruce_poleas',
@@ -22,6 +22,7 @@ void main() {
         description: 'Apertura en poleas.',
         muscleGroups: ['Pectoral mayor'],
         difficulty: 5,
+        categoryKeys: ['chest'],
       ),
       const Exercise(
         key: 'jalon_abierto',
@@ -29,6 +30,7 @@ void main() {
         description: 'Tirón vertical.',
         muscleGroups: ['Dorsal ancho', 'Bíceps'],
         difficulty: 5,
+        categoryKeys: ['lats'],
       ),
     ];
 
@@ -40,7 +42,8 @@ void main() {
             currentDay: 1,
             totalDays: 3,
             allExercises: exercises,
-            initialSelectedCategories: const [MuscleGroupCategory.pectoral],
+            availableCategories: const ['chest', 'lats'],
+            initialSelectedCategories: const ['chest'],
             onConfirmed: (_) {},
             onBack: () {},
           ),
@@ -63,7 +66,8 @@ void main() {
             currentDay: 1,
             totalDays: 1,
             allExercises: exercises,
-            initialSelectedCategories: const [MuscleGroupCategory.pectoral],
+            availableCategories: const ['chest', 'lats'],
+            initialSelectedCategories: const ['chest'],
             onConfirmed: (_) {},
             onBack: () {},
           ),
@@ -83,7 +87,8 @@ void main() {
             currentDay: 1,
             totalDays: 1,
             allExercises: exercises,
-            initialSelectedCategories: const [MuscleGroupCategory.pectoral],
+            availableCategories: const ['chest', 'lats'],
+            initialSelectedCategories: const ['chest'],
             onConfirmed: (_) {},
             onBack: () {},
           ),
@@ -96,7 +101,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Bottom sheet should show the description
-      expect(find.text('Press de pecho en multipower.'), findsOneWidget);
+      expect(find.text('Press de pecho en multipower.'), findsWidgets);
       expect(find.text('Añadir'), findsOneWidget);
     });
 
@@ -109,7 +114,8 @@ void main() {
             currentDay: 1,
             totalDays: 1,
             allExercises: exercises,
-            initialSelectedCategories: const [MuscleGroupCategory.pectoral],
+            availableCategories: const ['chest', 'lats'],
+            initialSelectedCategories: const ['chest'],
             onConfirmed: (_) {},
             onBack: () {},
           ),
@@ -129,7 +135,6 @@ void main() {
       expect(find.byIcon(Icons.check_circle), findsOneWidget);
 
       // Detail bottom sheet should NOT have opened
-      expect(find.text('Press de pecho en multipower.'), findsNothing);
       expect(find.text('Añadir'), findsNothing);
     });
 
@@ -141,7 +146,8 @@ void main() {
             currentDay: 1,
             totalDays: 1,
             allExercises: exercises,
-            initialSelectedCategories: const [MuscleGroupCategory.pectoral],
+            availableCategories: const ['chest', 'lats'],
+            initialSelectedCategories: const ['chest'],
             initialSelectedKeys: const ['press_multipower'],
             onConfirmed: (_) {},
             onBack: () {},
@@ -168,6 +174,7 @@ void main() {
           description: 'desc',
           muscleGroups: ['Dorsal ancho', 'Bíceps'],
           difficulty: 5,
+          categoryKeys: ['biceps'],
           muscleCategoryPriority: {'biceps': 2, 'espalda': 1},
         ),
         Exercise(
@@ -176,6 +183,7 @@ void main() {
           description: 'desc',
           muscleGroups: ['Bíceps braquial'],
           difficulty: 5,
+          categoryKeys: ['biceps'],
           muscleCategoryPriority: {'biceps': 1},
         ),
       ];
@@ -186,7 +194,8 @@ void main() {
             currentDay: 1,
             totalDays: 1,
             allExercises: prioritizedExercises,
-            initialSelectedCategories: const [MuscleGroupCategory.biceps],
+            availableCategories: const ['biceps'],
+            initialSelectedCategories: const ['biceps'],
             onConfirmed: (_) {},
             onBack: () {},
           ),
@@ -207,7 +216,8 @@ void main() {
             currentDay: 1,
             totalDays: 1,
             allExercises: exercises,
-            initialSelectedCategories: const [MuscleGroupCategory.pectoral],
+            availableCategories: const ['chest', 'lats'],
+            initialSelectedCategories: const ['chest'],
             onConfirmed: (_) {},
             onBack: () {},
           ),

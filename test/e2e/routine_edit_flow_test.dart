@@ -33,6 +33,7 @@ void main() {
           description: 'Pecho',
           muscleGroups: ['Pectoral'],
           difficulty: 5,
+          categoryKeys: ['pectoral'],
         ),
         Exercise(
           key: 'fondos',
@@ -40,6 +41,7 @@ void main() {
           description: 'Tríceps',
           muscleGroups: ['Tríceps braquial'],
           difficulty: 5,
+          categoryKeys: ['triceps'],
         ),
         Exercise(
           key: 'press_inclinado',
@@ -47,6 +49,7 @@ void main() {
           description: 'Pecho superior',
           muscleGroups: ['Pectoral superior'],
           difficulty: 6,
+          categoryKeys: ['pectoral'],
         ),
       ];
     });
