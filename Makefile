@@ -1,4 +1,4 @@
-.PHONY: help run format test tests analyze clean gen-l10n build-apk build-ios pub-get lint check-format fix fix-snap test-coverage-check
+.PHONY: help run format test tests analyze clean gen-l10n build-apk build-ios pub-get lint check-format fix fix-snap test-coverage-check scrape-musclewiki scrape-musclewiki-full
 
 ## ─── Default ────────────────────────────────────────────────────────────────
 
@@ -80,3 +80,11 @@ clean: ## Clean build artifacts and caches
 	flutter pub get
 
 ci: format analyze test-coverage-check ## Run CI pipeline (format + analyze + coverage gate)
+
+## ─── Data: MuscleWiki ────────────────────────────────────────────────────────
+
+scrape-musclewiki: ## Scrape from scripts/exersise-urls.txt (urls-only mode)
+	python3 scripts/musclewiki_scraper.py --urls-file "scripts/exersise-urls.txt" --urls-only
+
+scrape-musclewiki-full: ## Scrape with manual validation/proof enabled
+	python3 scripts/musclewiki_scraper.py --urls-file "scripts/exersise-urls.txt"

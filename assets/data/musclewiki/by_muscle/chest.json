@@ -1,0 +1,645 @@
+[
+  {
+    "key": "barbell-bench-press",
+    "name": {
+      "es": "Barbell Bench Press",
+      "en": "Barbell Bench Press"
+    },
+    "short_description": {
+      "es": "1. Lay flat on the bench with your feet on the ground. With straight arms unrack the bar. 2. Lower the bar to your mid chest 3. Raise the bar until you've locked your elbows.",
+      "en": "1. Lay flat on the bench with your feet on the ground. With straight arms unrack the bar. 2. Lower the bar to your mid chest 3. Raise the bar until you've locked your elbows."
+    },
+    "muscles_involved": [
+      "chest",
+      "front-shoulders",
+      "rear-shoulders",
+      "triceps"
+    ],
+    "muscles_source": "svg",
+    "muscles_confidence": "high",
+    "muscles_trace": {
+      "svg_detected_ids": [
+        "chest",
+        "front-shoulders",
+        "rear-shoulders",
+        "triceps"
+      ],
+      "text_roles_detected": {
+        "primary": [],
+        "secondary": [],
+        "tertiary": []
+      },
+      "url_slug_inferred": null
+    },
+    "general_categories": [],
+    "source_urls": {
+      "es": "https://musclewiki.com/es-es/exercise/barbell-bench-press",
+      "en": "https://musclewiki.com/en-us/exercise/barbell-bench-press"
+    }
+  },
+  {
+    "key": "barbell-deadlift",
+    "name": {
+      "es": "Barbell Deadlift",
+      "en": "Barbell Deadlift"
+    },
+    "short_description": {
+      "es": "1. Stand with your mid-foot under the bar and grip the bar with your hands, about a shoulder width apart. 2. Bend your knees, then lift the bar by straightening your back. It is important to keep your back straight. 3. Stand to your full height and hold. 4. Lower the bar to the floor by bending your knees and keeping your back straight.",
+      "en": "1. Stand with your mid-foot under the bar and grip the bar with your hands, about a shoulder width apart. 2. Bend your knees, then lift the bar by straightening your back. It is important to keep your back straight. 3. Stand to your full height and hold. 4. Lower the bar to the floor by bending your knees and keeping your back straight."
+    },
+    "muscles_involved": [
+      "chest"
+    ],
+    "muscles_source": "text_roles",
+    "muscles_confidence": "medium",
+    "muscles_trace": {
+      "svg_detected_ids": [],
+      "text_roles_detected": {
+        "primary": [
+          "chest"
+        ],
+        "secondary": [],
+        "tertiary": []
+      },
+      "url_slug_inferred": null
+    },
+    "general_categories": [],
+    "source_urls": {
+      "es": "https://musclewiki.com/es-es/exercise/barbell-deadlift",
+      "en": "https://musclewiki.com/en-us/exercise/barbell-deadlift"
+    }
+  },
+  {
+    "key": "barbell-incline-bench-press",
+    "name": {
+      "es": "Barbell Incline Bench Press",
+      "en": "Barbell Incline Bench Press"
+    },
+    "short_description": {
+      "es": "1. Position the bench between 30 and 45 degrees. 2. Lay flat on the bench with your feet on the ground. With straight arms unrack the bar. 3. Lower the bar to your mid chest 4. Raise the bar (slowly and controlled) until you've locked your elbows.",
+      "en": "1. Position the bench between 30 and 45 degrees. 2. Lay flat on the bench with your feet on the ground. With straight arms unrack the bar. 3. Lower the bar to your mid chest 4. Raise the bar (slowly and controlled) until you've locked your elbows."
+    },
+    "muscles_involved": [
+      "chest"
+    ],
+    "muscles_source": "text_roles",
+    "muscles_confidence": "medium",
+    "muscles_trace": {
+      "svg_detected_ids": [],
+      "text_roles_detected": {
+        "primary": [
+          "chest"
+        ],
+        "secondary": [],
+        "tertiary": []
+      },
+      "url_slug_inferred": null
+    },
+    "general_categories": [],
+    "source_urls": {
+      "es": "https://musclewiki.com/es-es/exercise/barbell-incline-bench-press",
+      "en": "https://musclewiki.com/en-us/exercise/barbell-incline-bench-press"
+    }
+  },
+  {
+    "key": "barbell-overhead-press",
+    "name": {
+      "es": "Performing security verification",
+      "en": "Barbell Overhead Press"
+    },
+    "short_description": {
+      "es": "1. Take a roughly shoulder width grip. There should be a straight line from your elbow to fist (vertical forearms). 2. Pull your chin back and press the weight toward the ceiling by extending at the elbow joint and flexing at the shoulder joint. 3. Press until your elbows are extended and push your head forward slightly. 4. Return to the start position with control. Pulling your chin back to allow the bar to pass your face safely.",
+      "en": "1. Take a roughly shoulder width grip. There should be a straight line from your elbow to fist (vertical forearms). 2. Pull your chin back and press the weight toward the ceiling by extending at the elbow joint and flexing at the shoulder joint. 3. Press until your elbows are extended and push your head forward slightly. 4. Return to the start position with control. Pulling your chin back to allow the bar to pass your face safely."
+    },
+    "muscles_involved": [
+      "chest"
+    ],
+    "muscles_source": "text_roles",
+    "muscles_confidence": "medium",
+    "muscles_trace": {
+      "svg_detected_ids": [],
+      "text_roles_detected": {
+        "primary": [
+          "chest"
+        ],
+        "secondary": [],
+        "tertiary": []
+      },
+      "url_slug_inferred": null
+    },
+    "general_categories": [],
+    "source_urls": {
+      "es": "https://musclewiki.com/es-es/exercise/barbell-overhead-press",
+      "en": "https://musclewiki.com/en-us/exercise/barbell-overhead-press"
+    }
+  },
+  {
+    "key": "cable-bench-chest-fly",
+    "name": {
+      "es": "Performing security verification",
+      "en": "Cable Bench Chest Fly"
+    },
+    "short_description": {
+      "es": "1. Bring a bench over to the cables, set the cables just below shoulder height. 2. Bring both of the handles to your chest and make sure you are in the center of the cable crossover. 3. Press the weight forward. From there, your shoulders should horizontally abduct and adduct while your elbows stay in a fixed position.",
+      "en": "1. Bring a bench over to the cables, set the cables just below shoulder height. 2. Bring both of the handles to your chest and make sure you are in the center of the cable crossover. 3. Press the weight forward. From there, your shoulders should horizontally abduct and adduct while your elbows stay in a fixed position."
+    },
+    "muscles_involved": [
+      "chest"
+    ],
+    "muscles_source": "svg",
+    "muscles_confidence": "high",
+    "muscles_trace": {
+      "svg_detected_ids": [
+        "chest"
+      ],
+      "text_roles_detected": {
+        "primary": [],
+        "secondary": [],
+        "tertiary": []
+      },
+      "url_slug_inferred": null
+    },
+    "general_categories": [],
+    "source_urls": {
+      "es": "https://musclewiki.com/es-es/exercise/cable-bench-chest-fly",
+      "en": "https://musclewiki.com/en-us/exercise/cable-bench-chest-fly"
+    }
+  },
+  {
+    "key": "cable-bench-press",
+    "name": {
+      "es": "Cable Bench Press",
+      "en": "Cable Bench Press"
+    },
+    "short_description": {
+      "es": "1. Use a handle attachment. Bring a bench over to the cables. The cables should be set to shoulder height. 2. Bring both of the handles to your chest and make sure you are in the center of the cable crossover. 3. From there, you should flex and extend at both the shoulders and elbows simultaneously.",
+      "en": "1. Use a handle attachment. Bring a bench over to the cables. The cables should be set to shoulder height. 2. Bring both of the handles to your chest and make sure you are in the center of the cable crossover. 3. From there, you should flex and extend at both the shoulders and elbows simultaneously."
+    },
+    "muscles_involved": [
+      "chest",
+      "triceps"
+    ],
+    "muscles_source": "svg",
+    "muscles_confidence": "high",
+    "muscles_trace": {
+      "svg_detected_ids": [
+        "chest",
+        "triceps"
+      ],
+      "text_roles_detected": {
+        "primary": [
+          "chest"
+        ],
+        "secondary": [],
+        "tertiary": []
+      },
+      "url_slug_inferred": null
+    },
+    "general_categories": [],
+    "source_urls": {
+      "es": "https://musclewiki.com/es-es/exercise/cable-bench-press",
+      "en": "https://musclewiki.com/en-us/exercise/cable-bench-press"
+    }
+  },
+  {
+    "key": "cable-chest-press",
+    "name": {
+      "es": "Cable Chest Press",
+      "en": "Performing security verification"
+    },
+    "short_description": {
+      "es": "1. Use a handle attachment. The cables should be set to shoulder height. 2. Bring both of the handles to your chest and make sure you are in the center of the cable crossover. 3. Walk a few steps forward. Then press the weight forward. 4. From there, you should flex and extend at both the shoulders and elbows simultaneously.",
+      "en": "1. Use a handle attachment. The cables should be set to shoulder height. 2. Bring both of the handles to your chest and make sure you are in the center of the cable crossover. 3. Walk a few steps forward. Then press the weight forward. 4. From there, you should flex and extend at both the shoulders and elbows simultaneously."
+    },
+    "muscles_involved": [
+      "chest",
+      "triceps"
+    ],
+    "muscles_source": "svg",
+    "muscles_confidence": "high",
+    "muscles_trace": {
+      "svg_detected_ids": [
+        "chest",
+        "triceps"
+      ],
+      "text_roles_detected": {
+        "primary": [],
+        "secondary": [],
+        "tertiary": []
+      },
+      "url_slug_inferred": null
+    },
+    "general_categories": [],
+    "source_urls": {
+      "es": "https://musclewiki.com/es-es/exercise/cable-chest-press",
+      "en": "https://musclewiki.com/en-us/exercise/cable-chest-press"
+    }
+  },
+  {
+    "key": "cable-incline-chest-fly",
+    "name": {
+      "es": "Performing security verification",
+      "en": "Cable Incline Chest Fly"
+    },
+    "short_description": {
+      "es": "1. Place the cable anchor at a lower level than your shoulders. 2. Sit on the bench, leave your elbows mostly extended. 3. Bring your fists together and flex your pecs.",
+      "en": "1. Place the cable anchor at a lower level than your shoulders. 2. Sit on the bench, leave your elbows mostly extended. 3. Bring your fists together and flex your pecs."
+    },
+    "muscles_involved": [
+      "chest"
+    ],
+    "muscles_source": "svg",
+    "muscles_confidence": "high",
+    "muscles_trace": {
+      "svg_detected_ids": [
+        "chest"
+      ],
+      "text_roles_detected": {
+        "primary": [
+          "chest"
+        ],
+        "secondary": [],
+        "tertiary": []
+      },
+      "url_slug_inferred": null
+    },
+    "general_categories": [],
+    "source_urls": {
+      "es": "https://musclewiki.com/es-es/exercise/cable-incline-chest-fly",
+      "en": "https://musclewiki.com/en-us/exercise/cable-incline-chest-fly"
+    }
+  },
+  {
+    "key": "cable-pec-fly",
+    "name": {
+      "es": "Cable Pec Fly",
+      "en": "Cable Pec Fly"
+    },
+    "short_description": {
+      "es": "1. Set the cable pin at shoulder height or just above. 2. Bring both of the handles to your chest and make sure you are in the center of the cable crossover. 3. Walk a few steps forward. Then press the weight forward. From there, your shoulders should horizontally abduct and adduct while your elbows stay in a fixed position.",
+      "en": "1. Set the cable pin at shoulder height or just above. 2. Bring both of the handles to your chest and make sure you are in the center of the cable crossover. 3. Walk a few steps forward. Then press the weight forward. From there, your shoulders should horizontally abduct and adduct while your elbows stay in a fixed position."
+    },
+    "muscles_involved": [
+      "chest"
+    ],
+    "muscles_source": "svg",
+    "muscles_confidence": "high",
+    "muscles_trace": {
+      "svg_detected_ids": [
+        "chest"
+      ],
+      "text_roles_detected": {
+        "primary": [],
+        "secondary": [],
+        "tertiary": []
+      },
+      "url_slug_inferred": null
+    },
+    "general_categories": [],
+    "source_urls": {
+      "es": "https://musclewiki.com/es-es/exercise/cable-pec-fly",
+      "en": "https://musclewiki.com/en-us/exercise/cable-pec-fly"
+    }
+  },
+  {
+    "key": "cable-rope-overhead-tricep-extension",
+    "name": {
+      "es": "Performing security verification",
+      "en": "Cable Rope Overhead Tricep Extension"
+    },
+    "short_description": {
+      "es": "1. You can use any attachment. The cable should be all the way to the bottom of the machine. Face away from the machine. 2. Point your elbows straight up toward the ceiling. 3. From there, extend your elbows until your fists are pointed straight toward the ceiling.",
+      "en": "1. You can use any attachment. The cable should be all the way to the bottom of the machine. Face away from the machine. 2. Point your elbows straight up toward the ceiling. 3. From there, extend your elbows until your fists are pointed straight toward the ceiling."
+    },
+    "muscles_involved": [
+      "chest"
+    ],
+    "muscles_source": "text_roles",
+    "muscles_confidence": "medium",
+    "muscles_trace": {
+      "svg_detected_ids": [],
+      "text_roles_detected": {
+        "primary": [
+          "chest"
+        ],
+        "secondary": [],
+        "tertiary": []
+      },
+      "url_slug_inferred": null
+    },
+    "general_categories": [],
+    "source_urls": {
+      "es": "https://musclewiki.com/es-es/exercise/cable-rope-overhead-tricep-extension",
+      "en": "https://musclewiki.com/en-us/exercise/cable-rope-overhead-tricep-extension"
+    }
+  },
+  {
+    "key": "dumbbell-bench-press",
+    "name": {
+      "es": "Dumbbell Bench Press",
+      "en": "Dumbbell Bench Press"
+    },
+    "short_description": {
+      "es": "1. Start by lying flat on a bench with a dumbbell in each hand. 2. Hold the dumbbells at chest level with your palms facing forward. 3. Engage your core and press the dumbbells upward until your arms are fully extended.",
+      "en": "1. Start by lying flat on a bench with a dumbbell in each hand. 2. Hold the dumbbells at chest level with your palms facing forward. 3. Engage your core and press the dumbbells upward until your arms are fully extended."
+    },
+    "muscles_involved": [
+      "chest",
+      "triceps"
+    ],
+    "muscles_source": "svg",
+    "muscles_confidence": "high",
+    "muscles_trace": {
+      "svg_detected_ids": [
+        "chest",
+        "triceps"
+      ],
+      "text_roles_detected": {
+        "primary": [],
+        "secondary": [],
+        "tertiary": []
+      },
+      "url_slug_inferred": null
+    },
+    "general_categories": [],
+    "source_urls": {
+      "es": "https://musclewiki.com/es-es/exercise/dumbbell-bench-press",
+      "en": "https://musclewiki.com/en-us/exercise/dumbbell-bench-press"
+    }
+  },
+  {
+    "key": "dumbbell-chest-fly",
+    "name": {
+      "es": "Dumbbell Chest Fly",
+      "en": "Dumbbell Chest Fly"
+    },
+    "short_description": {
+      "es": "1. Lay on a bench with two dumbbells extended in front of you. 2. You should have a slight bend in your elbows and maintain that bend. Your shoulder joint should do all the movement. 3. Bring the dumbbells out to your side. Stop the dumbbells before going behind your body. 4. Bring the dumbbells back together at the top.",
+      "en": "1. Lay on a bench with two dumbbells extended in front of you. 2. You should have a slight bend in your elbows and maintain that bend. Your shoulder joint should do all the movement. 3. Bring the dumbbells out to your side. Stop the dumbbells before going behind your body. 4. Bring the dumbbells back together at the top."
+    },
+    "muscles_involved": [
+      "chest"
+    ],
+    "muscles_source": "svg",
+    "muscles_confidence": "high",
+    "muscles_trace": {
+      "svg_detected_ids": [
+        "chest"
+      ],
+      "text_roles_detected": {
+        "primary": [
+          "chest"
+        ],
+        "secondary": [],
+        "tertiary": []
+      },
+      "url_slug_inferred": null
+    },
+    "general_categories": [],
+    "source_urls": {
+      "es": "https://musclewiki.com/es-es/exercise/dumbbell-chest-fly",
+      "en": "https://musclewiki.com/en-us/exercise/dumbbell-chest-fly"
+    }
+  },
+  {
+    "key": "dumbbell-decline-bench-press",
+    "name": {
+      "es": "Dumbbell Decline Bench Press",
+      "en": "Dumbbell Decline Bench Press"
+    },
+    "short_description": {
+      "es": "1. Lay on a decline bench with both arms extended in front of you. 2. Break at the elbows and bring your upper arms to your side. 3. Once your upper arms have reached your side, press the dumbbells back to the ceiling.",
+      "en": "1. Lay on a decline bench with both arms extended in front of you. 2. Break at the elbows and bring your upper arms to your side. 3. Once your upper arms have reached your side, press the dumbbells back to the ceiling."
+    },
+    "muscles_involved": [
+      "chest",
+      "triceps"
+    ],
+    "muscles_source": "svg",
+    "muscles_confidence": "high",
+    "muscles_trace": {
+      "svg_detected_ids": [
+        "chest",
+        "triceps"
+      ],
+      "text_roles_detected": {
+        "primary": [
+          "chest"
+        ],
+        "secondary": [],
+        "tertiary": []
+      },
+      "url_slug_inferred": null
+    },
+    "general_categories": [],
+    "source_urls": {
+      "es": "https://musclewiki.com/es-es/exercise/dumbbell-decline-bench-press",
+      "en": "https://musclewiki.com/en-us/exercise/dumbbell-decline-bench-press"
+    }
+  },
+  {
+    "key": "dumbbell-incline-chest-flys",
+    "name": {
+      "es": "Dumbbell Incline Chest Flys",
+      "en": "Dumbbell Incline Chest Flys"
+    },
+    "short_description": {
+      "es": "1. Lay flat on the bench and place your feet on the ground. 2. Begin the exercise with the dumbbells held together above your chest, elbows slightly bent. 3. Simultaneously lower the weights to either side. 4. Pause when the weights are parallel to the bench, then raise your arms to the starting position.",
+      "en": "1. Lay flat on the bench and place your feet on the ground. 2. Begin the exercise with the dumbbells held together above your chest, elbows slightly bent. 3. Simultaneously lower the weights to either side. 4. Pause when the weights are parallel to the bench, then raise your arms to the starting position."
+    },
+    "muscles_involved": [
+      "chest"
+    ],
+    "muscles_source": "svg",
+    "muscles_confidence": "high",
+    "muscles_trace": {
+      "svg_detected_ids": [
+        "chest"
+      ],
+      "text_roles_detected": {
+        "primary": [
+          "chest"
+        ],
+        "secondary": [],
+        "tertiary": []
+      },
+      "url_slug_inferred": null
+    },
+    "general_categories": [],
+    "source_urls": {
+      "es": "https://musclewiki.com/es-es/exercise/dumbbell-incline-chest-flys",
+      "en": "https://musclewiki.com/en-us/exercise/dumbbell-incline-chest-flys"
+    }
+  },
+  {
+    "key": "dumbbell-preacher-curl",
+    "name": {
+      "es": "Performing security verification",
+      "en": "Dumbbell Preacher Curl"
+    },
+    "short_description": {
+      "es": "1. Sit at preacher bench, hold dumbbells in each hand with arm extended, palm facing up. 2. Curl dumbbells towards shoulder, keeping upper arm stationary and elbows in. 3. Lower dumbbell slowly back to start.",
+      "en": "1. Sit at preacher bench, hold dumbbells in each hand with arm extended, palm facing up. 2. Curl dumbbells towards shoulder, keeping upper arm stationary and elbows in. 3. Lower dumbbell slowly back to start."
+    },
+    "muscles_involved": [
+      "chest"
+    ],
+    "muscles_source": "text_roles",
+    "muscles_confidence": "medium",
+    "muscles_trace": {
+      "svg_detected_ids": [],
+      "text_roles_detected": {
+        "primary": [
+          "chest"
+        ],
+        "secondary": [],
+        "tertiary": []
+      },
+      "url_slug_inferred": null
+    },
+    "general_categories": [],
+    "source_urls": {
+      "es": "https://musclewiki.com/es-es/exercise/dumbbell-preacher-curl",
+      "en": "https://musclewiki.com/en-us/exercise/dumbbell-preacher-curl"
+    }
+  },
+  {
+    "key": "machine-chest-press",
+    "name": {
+      "es": "Prensa de Pecho en Máquina",
+      "en": "Performing security verification"
+    },
+    "short_description": {
+      "es": "1. Siéntate en la máquina y sujeta las asas con las palmas hacia abajo. 2. Ajusta la máquina para conseguir la mayor amplitud de movimiento posible. 3. Empuja hasta que los codos no estén completamente extendidos, sin bloquearlos.",
+      "en": "1. Siéntate en la máquina y sujeta las asas con las palmas hacia abajo. 2. Ajusta la máquina para conseguir la mayor amplitud de movimiento posible. 3. Empuja hasta que los codos no estén completamente extendidos, sin bloquearlos."
+    },
+    "muscles_involved": [
+      "chest",
+      "triceps"
+    ],
+    "muscles_source": "svg",
+    "muscles_confidence": "high",
+    "muscles_trace": {
+      "svg_detected_ids": [
+        "chest",
+        "triceps"
+      ],
+      "text_roles_detected": {
+        "primary": [],
+        "secondary": [],
+        "tertiary": []
+      },
+      "url_slug_inferred": null
+    },
+    "general_categories": [],
+    "source_urls": {
+      "es": "https://musclewiki.com/es-es/exercise/machine-chest-press",
+      "en": "https://musclewiki.com/en-us/exercise/machine-chest-press"
+    }
+  },
+  {
+    "key": "machine-pec-fly",
+    "name": {
+      "es": "Máquina de Apertura de Pecho",
+      "en": "Machine Pec Fly"
+    },
+    "short_description": {
+      "es": "1. Ajusta la altura del asiento para que los agarres queden a la altura del pecho. Siéntate y sujeta los agarres con los codos ligeramente flexionados. 2. Acerca las asas lentamente hacia delante y mantén la tensión. Concéntrate en apretar los pectorales. 3. Devuelve los agarres a la posición inicial con un movimiento controlado. Mantén el pecho erguido en todo momento. Repite para las repeticiones.",
+      "en": "1. Adjust seat height so handles align with chest. Sit and grip handles with elbows slightly bent. 2. Slowly bring handles together in front, keeping tension. Focus on squeezing chest muscles. 3. Return handles to starting position with controlled motion. Keep chest up throughout. Repeat for reps."
+    },
+    "muscles_involved": [
+      "chest"
+    ],
+    "muscles_source": "svg",
+    "muscles_confidence": "high",
+    "muscles_trace": {
+      "svg_detected_ids": [
+        "chest"
+      ],
+      "text_roles_detected": {
+        "primary": [],
+        "secondary": [],
+        "tertiary": []
+      },
+      "url_slug_inferred": null
+    },
+    "general_categories": [],
+    "source_urls": {
+      "es": "https://musclewiki.com/es-es/exercise/machine-pec-fly",
+      "en": "https://musclewiki.com/en-us/exercise/machine-pec-fly"
+    }
+  },
+  {
+    "key": "machine-pulldown",
+    "name": {
+      "es": "Jalón en máquina",
+      "en": "Machine Pulldown"
+    },
+    "short_description": {
+      "es": "1. Agarra la barra con las palmas hacia delante; las manos deben estar más separadas que el ancho de los hombros. 2. Con ambos brazos extendidos frente a ti sujetando la barra, lleva el torso hacia atrás unos 30 degrees mientras sacas el pecho. 3. Tira de la barra hacia abajo hasta aproximadamente el nivel del mentón o un poco más abajo con un movimiento suave, mientras juntas los omóplatos. 4. Después de contraer durante un segundo, sube la barra lentamente hasta la posición inicial, con los brazos completamente extendidos.",
+      "en": "1. Grip the bar with the palms facing forward, your hands need to be spaced out at a distance wider than shoulder width. 2. As you have both arms extended in front of you holding the bar, bring your torso back around 30 degrees while sticking your chest out. 3. Pull the bar down to about chin level or a little lower in a smooth movement whilst squeezing the shoulder blades together. 4. After a second of squeezing, slowly raise the bar back to the starting position when your arms are fully extended."
+    },
+    "muscles_involved": [
+      "biceps",
+      "chest"
+    ],
+    "muscles_source": "text_roles",
+    "muscles_confidence": "medium",
+    "muscles_trace": {
+      "svg_detected_ids": [],
+      "text_roles_detected": {
+        "primary": [
+          "chest"
+        ],
+        "secondary": [
+          "biceps"
+        ],
+        "tertiary": []
+      },
+      "url_slug_inferred": null
+    },
+    "general_categories": [],
+    "source_urls": {
+      "es": "https://musclewiki.com/es-es/exercise/machine-pulldown",
+      "en": "https://musclewiki.com/en-us/exercise/machine-pulldown"
+    }
+  },
+  {
+    "key": "smith-machine-incline-bench-press",
+    "name": {
+      "es": "Press de banca inclinado en máquina Smith",
+      "en": "Smith Machine Incline Bench Press"
+    },
+    "short_description": {
+      "es": "1. Coloca el banco entre 30 y 45 grados. 2. Acuéstate en el banco con los pies en el suelo. Con los brazos extendidos, desengancha la barra del soporte. 3. Baja la barra hasta la mitad del pecho. 4. Sube la barra (lentamente y con control) hasta bloquear los codos.",
+      "en": "1. Position the bench between 30 and 45 degrees. 2. Lay flat on the bench with your feet on the ground. With straight arms unrack the bar. 3. Lower the bar to your mid chest 4. Raise the bar (slowly and controlled) until you've locked your elbows."
+    },
+    "muscles_involved": [
+      "chest",
+      "front-shoulders",
+      "rear-shoulders",
+      "triceps"
+    ],
+    "muscles_source": "svg",
+    "muscles_confidence": "high",
+    "muscles_trace": {
+      "svg_detected_ids": [
+        "chest",
+        "front-shoulders",
+        "rear-shoulders",
+        "triceps"
+      ],
+      "text_roles_detected": {
+        "primary": [],
+        "secondary": [],
+        "tertiary": []
+      },
+      "url_slug_inferred": null
+    },
+    "general_categories": [],
+    "source_urls": {
+      "es": "https://musclewiki.com/es-es/exercise/smith-machine-incline-bench-press",
+      "en": "https://musclewiki.com/en-us/exercise/smith-machine-incline-bench-press"
+    }
+  }
+]

@@ -1,0 +1,40 @@
+[
+  {
+    "key": "barbell-bent-over-row",
+    "name": {
+      "es": "Barbell Bent Over Row",
+      "en": "Barbell Bent Over Row"
+    },
+    "short_description": {
+      "es": "1. Grab a barbell with a shoulder width pronated or supinated grip. 2. Bend forward at your hips while maintaining a flat back. 3. Pull the weight toward your upper abdomen. 4. Lower the weight in a controlled manner and repeat.",
+      "en": "1. Grab a barbell with a shoulder width pronated or supinated grip. 2. Bend forward at your hips while maintaining a flat back. 3. Pull the weight toward your upper abdomen. 4. Lower the weight in a controlled manner and repeat."
+    },
+    "muscles_involved": [
+      "biceps",
+      "forearms",
+      "lats"
+    ],
+    "muscles_source": "svg",
+    "muscles_confidence": "high",
+    "muscles_trace": {
+      "svg_detected_ids": [
+        "biceps",
+        "forearms",
+        "lats"
+      ],
+      "text_roles_detected": {
+        "primary": [
+          "chest"
+        ],
+        "secondary": [],
+        "tertiary": []
+      },
+      "url_slug_inferred": null
+    },
+    "general_categories": [],
+    "source_urls": {
+      "es": "https://musclewiki.com/es-es/exercise/barbell-bent-over-row",
+      "en": "https://musclewiki.com/en-us/exercise/barbell-bent-over-row"
+    }
+  }
+]

@@ -1,0 +1,70 @@
+[
+  {
+    "key": "barbell-bulgarian-split-squat",
+    "name": {
+      "es": "Sentadilla Búlgara con Barra",
+      "en": "Performing security verification"
+    },
+    "short_description": {
+      "es": "1. Busca una caja o un banco aproximadamente a la altura de la rodilla o unos pocos inches por debajo. (Cuanto más baja sea la caja, menor será el requisito de movilidad). 2. Puedes apoyar los dedos o el empeine en el cajón. Coloca el pie delantero apuntando hacia delante o ligeramente hacia fuera y flexiona rodillas y caderas al mismo tiempo. 3. Intenta que la pierna delantera llegue hasta la paralela (femorales paralelos al suelo) o más abajo. 4. Cuanto más adelantado esté tu pie delantero, mayor será el rango de movimiento en tus caderas. Cuanto más retrasado esté tu pie delantero, mayor será el rango de movimiento en tus rodillas.",
+      "en": "1. Busca una caja o un banco aproximadamente a la altura de la rodilla o unos pocos inches por debajo. (Cuanto más baja sea la caja, menor será el requisito de movilidad). 2. Puedes apoyar los dedos o el empeine en el cajón. Coloca el pie delantero apuntando hacia delante o ligeramente hacia fuera y flexiona rodillas y caderas al mismo tiempo. 3. Intenta que la pierna delantera llegue hasta la paralela (femorales paralelos al suelo) o más abajo. 4. Cuanto más adelantado esté tu pie delantero, mayor será el rango de movimiento en tus caderas. Cuanto más retrasado esté tu pie delantero, mayor será el rango de movimiento en tus rodillas."
+    },
+    "muscles_involved": [
+      "glutes",
+      "quads"
+    ],
+    "muscles_source": "svg",
+    "muscles_confidence": "high",
+    "muscles_trace": {
+      "svg_detected_ids": [
+        "glutes",
+        "quads"
+      ],
+      "text_roles_detected": {
+        "primary": [],
+        "secondary": [],
+        "tertiary": []
+      },
+      "url_slug_inferred": null
+    },
+    "general_categories": [],
+    "source_urls": {
+      "es": "https://musclewiki.com/es-es/exercise/barbell-bulgarian-split-squat",
+      "en": "https://musclewiki.com/en-us/exercise/barbell-bulgarian-split-squat"
+    }
+  },
+  {
+    "key": "machine-pendulum-squat",
+    "name": {
+      "es": "Machine Pendulum Squat",
+      "en": "Machine Pendulum Squat"
+    },
+    "short_description": {
+      "es": "1. Position yourself in the pendulum squat machine with your back against the pad and shoulders under the shoulder pads. 2. Place feet shoulder-width apart on the platform. Keep your back straight, and slowly lower into a squat position. 3. Press through your heels to return to the starting position, keeping your core engaged. Repeat for desired reps and sets.",
+      "en": "1. Position yourself in the pendulum squat machine with your back against the pad and shoulders under the shoulder pads. 2. Place feet shoulder-width apart on the platform. Keep your back straight, and slowly lower into a squat position. 3. Press through your heels to return to the starting position, keeping your core engaged. Repeat for desired reps and sets."
+    },
+    "muscles_involved": [
+      "glutes",
+      "quads"
+    ],
+    "muscles_source": "svg",
+    "muscles_confidence": "high",
+    "muscles_trace": {
+      "svg_detected_ids": [
+        "glutes",
+        "quads"
+      ],
+      "text_roles_detected": {
+        "primary": [],
+        "secondary": [],
+        "tertiary": []
+      },
+      "url_slug_inferred": null
+    },
+    "general_categories": [],
+    "source_urls": {
+      "es": "https://musclewiki.com/es-es/exercise/machine-pendulum-squat",
+      "en": "https://musclewiki.com/en-us/exercise/machine-pendulum-squat"
+    }
+  }
+]

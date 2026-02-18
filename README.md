@@ -149,6 +149,40 @@ Run `make help` to see all available commands.
 | `make build-ios` | Build a release iOS bundle (macOS only) |
 | `make clean` | Remove build artifacts and re-fetch dependencies |
 | `make ci` | Full CI pipeline: format + analyze + test |
+| `make scrape-musclewiki` | Run MuscleWiki scraper from `scripts/exersise-urls.txt` in `--urls-only` mode |
+| `make scrape-musclewiki-full` | Run MuscleWiki scraper with manual validation/proof enabled |
+
+---
+
+## MuscleWiki Scraper
+
+The scraper reads exercise URLs from `scripts/exersise-urls.txt` and writes grouped outputs in:
+
+- `assets/data/musclewiki/by_muscle/*.json`
+- `assets/data/musclewiki/reports/svg-preview.html`
+
+### Recommended run (from URLs file only)
+
+```bash
+make scrape-musclewiki
+```
+
+Equivalent direct command:
+
+```bash
+python3 scripts/musclewiki_scraper.py --urls-file "scripts/exersise-urls.txt" --urls-only
+```
+
+### Optional flags
+
+- `--limit N`: process only the first `N` unique exercise keys (useful for quick tests)
+- `--urls-file <path>`: use a different URLs file
+
+Example:
+
+```bash
+python3 scripts/musclewiki_scraper.py --urls-file "scripts/exersise-urls.txt" --urls-only --limit 5
+```
 
 ---
 
