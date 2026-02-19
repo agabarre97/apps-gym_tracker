@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gym_tracker/domain/entities/mobility_routine.dart';
 import 'package:gym_tracker/presentation/screens/mobility/mobility_timer_screen.dart';
@@ -56,5 +57,80 @@ void main() {
       // The preview "Comenzar" button should no longer be visible
       expect(find.text('Comenzar'), findsNothing);
     });
+
+    testWidgets(
+        'finish early from top saves session and returns success result',
+        (tester) async {
+      final mobilityPort = FakeMobilitySessionPort();
+
+      await tester.pumpWidget(
+        buildTestableWidget(
+          _MobilityTimerRouteHost(
+            mobilitySessionPort: mobilityPort,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Comenzar'));
+      await tester.pump();
+      await tester.tap(find.text('Finalizar').first);
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find
+            .descendant(
+              of: find.byType(AlertDialog),
+              matching: find.text('Finalizar'),
+            )
+            .last,
+      );
+      await tester.pumpAndSettle();
+
+      final sessions = await mobilityPort.loadSessions();
+      expect(sessions, hasLength(1));
+      expect(find.text('result:true'), findsOneWidget);
+    });
   });
+}
+
+class _MobilityTimerRouteHost extends StatefulWidget {
+  const _MobilityTimerRouteHost({required this.mobilitySessionPort});
+
+  final FakeMobilitySessionPort mobilitySessionPort;
+
+  @override
+  State<_MobilityTimerRouteHost> createState() =>
+      _MobilityTimerRouteHostState();
+}
+
+class _MobilityTimerRouteHostState extends State<_MobilityTimerRouteHost> {
+  bool _opened = false;
+  bool? _result;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_opened) return;
+    _opened = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final result = await Navigator.of(context).push<bool>(
+        MaterialPageRoute(
+          builder: (_) => MobilityTimerScreen(
+            routine: _testRoutine,
+            mobilitySessionPort: widget.mobilitySessionPort,
+            routineName: 'Test Mobility',
+          ),
+        ),
+      );
+      if (!mounted) return;
+      setState(() => _result = result);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+        body: Center(
+          child: Text('result:${_result ?? 'null'}'),
+        ),
+      );
 }

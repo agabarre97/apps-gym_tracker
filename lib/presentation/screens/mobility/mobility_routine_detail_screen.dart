@@ -99,6 +99,11 @@ class _MobilityRoutineDetailScreenState
         mobilityRoutine: _mobilityRoutine,
         lastSession: latestSession,
         generatedAt: DateTime.now(),
+        exerciseNameByKey: {
+          if (_mobilityRoutine != null)
+            for (final exercise in _mobilityRoutine!.exercises)
+              exercise.key: mobilityExerciseDisplayName(exercise.key, l10n),
+        },
       );
 
       await sharePdfBytes(
@@ -147,7 +152,7 @@ class _MobilityRoutineDetailScreenState
     final mr = _mobilityRoutine;
     if (mr == null) return;
 
-    await Navigator.of(context).push<bool>(
+    final result = await Navigator.of(context).push<bool>(
       MaterialPageRoute(
         builder: (_) => MobilityTimerScreen(
           routine: mr,
@@ -157,6 +162,10 @@ class _MobilityRoutineDetailScreenState
         ),
       ),
     );
+
+    if (result == true && mounted) {
+      Navigator.of(context).pop(true);
+    }
   }
 
   @override

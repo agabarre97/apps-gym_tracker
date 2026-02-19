@@ -27,7 +27,7 @@ build/app/outputs/flutter-apk/app-release.apk
    - If prompted, enable _"Install from unknown sources"_ in Settings → Security.
    - Tap _Install_ and wait for completion.
 
-> **Tip**: For development builds with hot reload, connect via USB and run `flutter run`.
+> **Tip**: For development builds with hot reload on a physical device, follow the **Run on Physical Device (USB)** section below.
 
 ### iPhone (iOS)
 
@@ -82,6 +82,49 @@ Or target a specific platform:
 make run-linux
 make run-chrome
 ```
+
+### Run on Physical Device (USB)
+
+#### Android (USB debug, hot reload)
+
+1. Enable **Developer options** on your phone:
+   - Open **Settings -> About phone**.
+   - Tap **Build number** 7 times.
+2. Enable **USB debugging**:
+   - Open **Settings -> Developer options**.
+   - Turn on **USB debugging**.
+3. Connect the phone with a USB data cable and accept the RSA prompt:
+   - Tap **Allow USB debugging** when the phone asks to trust this computer.
+4. From the project root, run:
+
+```bash
+make pub-get
+flutter devices
+make run
+```
+
+5. If multiple devices appear, run on a specific one:
+
+```bash
+flutter run -d <deviceId>
+```
+
+#### Android troubleshooting (quick)
+
+- Ensure the USB mode is **File transfer (MTP)**, not charge-only.
+- Try another USB cable/port (some cables are charge-only).
+- Revoke and re-authorize USB debugging on the device.
+- Restart ADB if needed:
+
+```bash
+adb kill-server
+adb start-server
+flutter devices
+```
+
+#### iOS note
+
+Physical iOS development requires **macOS + Xcode**. Follow the existing steps in **Install on a Mobile Device -> iPhone (iOS)**.
 
 ---
 

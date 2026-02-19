@@ -496,6 +496,9 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
         );
       case _Step.exercises:
         _loadExercises();
+        if (!_exercisesLoaded) {
+          return const Center(child: CircularProgressIndicator());
+        }
         return ExerciseSelectionScreen(
           key: ValueKey('exercises_$_currentDayIndex'),
           currentDay: _currentDayIndex + 1,

@@ -12,6 +12,42 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('RoutinePdfExportService', () {
+    test('buildMobilityExerciseLines uses localized names when provided', () {
+      const mobilityRoutine = MobilityRoutine(
+        key: 'pelvic_tilt',
+        nameKey: 'mobilityPelvicTilt',
+        totalDurationMinutes: 7,
+        exercises: [
+          MobilityExercise(
+            key: 'pelvic_tilt',
+            durationSeconds: 30,
+            bilateral: true,
+          ),
+          MobilityExercise(
+            key: 'glute_bridge',
+            durationSeconds: 30,
+            bilateral: true,
+          ),
+        ],
+      );
+
+      final lines = RoutinePdfExportService.buildMobilityExerciseLines(
+        mobilityRoutine,
+        exerciseNameByKey: const {
+          'pelvic_tilt': 'Inclinación pélvica',
+          'glute_bridge': 'Puente de glúteo',
+        },
+      );
+
+      expect(
+        lines,
+        equals(const [
+          'Inclinación pélvica (30s)',
+          'Puente de glúteo (30s)',
+        ]),
+      );
+    });
+
     test('buildWorkoutRoutinePdf returns non-empty bytes', () async {
       const routine = Routine(
         id: 'r1',

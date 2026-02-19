@@ -234,7 +234,10 @@ class _HiitTimerScreenState extends State<HiitTimerScreen>
     _timer?.cancel();
     _animController.stop();
     setState(() => _phase = _Phase.complete);
+    await _saveCompletedSession();
+  }
 
+  Future<void> _saveCompletedSession() async {
     final session = HiitSession(
       id: const Uuid().v4(),
       routineName: widget.routineName,
@@ -277,8 +280,9 @@ class _HiitTimerScreenState extends State<HiitTimerScreen>
     if (confirmed == true) {
       _timer?.cancel();
       _animController.stop();
+      await _saveCompletedSession();
       if (!mounted) return;
-      Navigator.of(context).pop(false);
+      Navigator.of(context).pop(true);
     } else if (!wasPaused) {
       _togglePause();
     }

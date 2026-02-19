@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gym_tracker/domain/entities/hiit_config.dart';
 import 'package:gym_tracker/domain/entities/hiit_exercise.dart';
@@ -183,5 +184,84 @@ void main() {
       // which is expected in tests with buildTestableWidget
       expect(popped || true, isTrue);
     });
+
+    testWidgets(
+        'finish early from top saves session and returns success result',
+        (tester) async {
+      final hiitPort = FakeHiitSessionPort();
+
+      await tester.pumpWidget(
+        buildTestableWidget(
+          _HiitTimerRouteHost(hiitSessionPort: hiitPort),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Comenzar'));
+      await tester.pump();
+      await tester.tap(find.text('Finalizar').first);
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find
+            .descendant(
+              of: find.byType(AlertDialog),
+              matching: find.text('Finalizar'),
+            )
+            .last,
+      );
+      await tester.pumpAndSettle();
+
+      final sessions = await hiitPort.loadSessions();
+      expect(sessions, hasLength(1));
+      expect(find.text('result:true'), findsOneWidget);
+    });
   });
+}
+
+class _HiitTimerRouteHost extends StatefulWidget {
+  const _HiitTimerRouteHost({required this.hiitSessionPort});
+
+  final FakeHiitSessionPort hiitSessionPort;
+
+  @override
+  State<_HiitTimerRouteHost> createState() => _HiitTimerRouteHostState();
+}
+
+class _HiitTimerRouteHostState extends State<_HiitTimerRouteHost> {
+  bool _opened = false;
+  bool? _result;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_opened) return;
+    _opened = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final result = await Navigator.of(context).push<bool>(
+        MaterialPageRoute(
+          builder: (_) => HiitTimerScreen(
+            exercises: const [
+              HiitExercise(
+                  key: 'burpees', name: 'Burpees', description: 'Full body'),
+            ],
+            routineName: 'Test HIIT',
+            sets: 1,
+            workSeconds: 20,
+            restSeconds: 10,
+            setRestSeconds: 60,
+            hiitSessionPort: widget.hiitSessionPort,
+          ),
+        ),
+      );
+      if (!mounted) return;
+      setState(() => _result = result);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+        body: Center(
+          child: Text('result:${_result ?? 'null'}'),
+        ),
+      );
 }

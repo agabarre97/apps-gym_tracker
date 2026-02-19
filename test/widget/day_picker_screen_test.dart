@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:gym_tracker/domain/entities/exercise.dart';
 import 'package:gym_tracker/domain/entities/routine.dart';
 import 'package:gym_tracker/presentation/screens/workout/day_picker_screen.dart';
 
@@ -67,6 +68,40 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(selectedDay, 0);
+    });
+
+    testWidgets('shows categories derived from exercise keys', (tester) async {
+      const routineWithEmptyGroups = Routine(
+        id: 'r2',
+        name: 'Demo Test',
+        type: 'musculacion',
+        days: [
+          RoutineDay(muscleGroups: [], exerciseKeys: ['press_banca']),
+        ],
+      );
+      const allExercises = [
+        Exercise(
+          key: 'press_banca',
+          name: 'Press banca',
+          description: 'Press de banca plano',
+          muscleGroups: ['Pectoral'],
+          difficulty: 2,
+          categoryKeys: ['chest'],
+        ),
+      ];
+
+      await tester.pumpWidget(
+        buildTestableWidget(
+          DayPickerScreen(
+            routine: routineWithEmptyGroups,
+            allExercises: allExercises,
+            onDaySelected: (_) {},
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Pecho'), findsOneWidget);
     });
   });
 }

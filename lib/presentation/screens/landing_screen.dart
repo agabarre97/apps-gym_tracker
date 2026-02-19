@@ -30,8 +30,6 @@ import 'package:gym_tracker/presentation/screens/hiit/hiit_detail_screen.dart';
 import 'package:gym_tracker/presentation/screens/workout/routine_picker_screen.dart';
 import 'package:gym_tracker/presentation/screens/workout/day_picker_screen.dart';
 import 'package:gym_tracker/presentation/screens/workout/workout_session_screen.dart';
-import 'package:gym_tracker/presentation/screens/mobility/mobility_timer_screen.dart';
-import 'package:gym_tracker/domain/entities/mobility_routine.dart';
 import 'package:uuid/uuid.dart';
 
 // ── Unified training entry for the day view ──────────────────────
@@ -132,11 +130,11 @@ class _LandingScreenState extends State<LandingScreen> {
     final hiitSessions = await widget.hiitSessionPort.loadSessions();
     if (!mounted) return;
     final lang = Localizations.localeOf(context).languageCode;
-    final exercises = await AssetDataLoader.loadExercises(lang);
+    final catalog = await AssetDataLoader.loadByMuscleCatalog(lang);
     if (!mounted) return;
     setState(() {
       _routines = routines;
-      _allExercises = exercises;
+      _allExercises = catalog.exercises;
       _sessions = sessions;
       _mobilitySessions = mobilitySessions;
       _hiitSessions = hiitSessions;
@@ -216,7 +214,7 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 
   /// Navigates to RoutinePicker → DayPicker → WorkoutSession,
-  /// or directly to MobilityTimerScreen for mobility routines.
+  /// or to mobility/HIIT detail flows for those routine types.
   Future<void> _startWorkoutFlow({
     required bool trackTime,
     required DateTime date,
@@ -272,6 +270,7 @@ class _LandingScreenState extends State<LandingScreen> {
         builder: (_) => DayPickerScreen(
           routine: routine,
           onDaySelected: (i) => Navigator.of(context).pop(i),
+          allExercises: _allExercises,
         ),
       ),
     );
@@ -387,30 +386,15 @@ class _LandingScreenState extends State<LandingScreen> {
     );
   }
 
-  /// Loads the mobility routine asset and navigates to the timer screen.
+  /// Opens the mobility routine detail and starts from there.
   Future<void> _startMobilityFlow(Routine routine, DateTime date) async {
-    final l10n = AppLocalizations.of(context)!;
-    MobilityRoutine mobilityRoutine;
-    try {
-      mobilityRoutine = await AssetDataLoader.loadMobilityRoutine(
-        routine.recommendedRoutineKey!,
-      );
-    } catch (_) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.mobilityRoutineNotFound)),
-      );
-      return;
-    }
-    if (!mounted) return;
-
     final result = await Navigator.of(context).push<bool>(
       MaterialPageRoute(
-        builder: (_) => MobilityTimerScreen(
-          routine: mobilityRoutine,
+        builder: (_) => MobilityRoutineDetailScreen(
+          routine: routine,
+          allRoutines: _routines,
+          routinePort: widget.routinePort,
           mobilitySessionPort: widget.mobilitySessionPort,
-          routineName: routine.name,
-          autoStart: true,
         ),
       ),
     );

@@ -9,8 +9,7 @@ plugins {
 
 android {
     namespace = "com.agabarre.gymtracker"
-    compileSdk = 34
-    ndkVersion = flutter.ndkVersion
+    compileSdk = 36
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -23,8 +22,8 @@ android {
 
     defaultConfig {
         applicationId = "com.agabarre.gymtracker"
-        minSdk = 23
-        targetSdk = 34
+        minSdkVersion = flutter.minSdkVersion
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0.0"
     }

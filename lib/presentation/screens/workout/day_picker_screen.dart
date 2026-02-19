@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
 
+import 'package:gym_tracker/domain/entities/exercise.dart';
 import 'package:gym_tracker/domain/entities/routine.dart';
 import 'package:gym_tracker/domain/entities/muscle_group.dart';
+import 'package:gym_tracker/presentation/screens/routine/by_muscle_category_labels.dart';
 
 /// Lets the user choose which day within the selected routine to train.
 class DayPickerScreen extends StatefulWidget {
@@ -10,9 +12,11 @@ class DayPickerScreen extends StatefulWidget {
     super.key,
     required this.routine,
     required this.onDaySelected,
+    this.allExercises = const [],
   });
 
   final Routine routine;
+  final List<Exercise> allExercises;
 
   /// Called with the selected day index (0-based).
   final void Function(int dayIndex) onDaySelected;
@@ -29,6 +33,9 @@ class _DayPickerScreenState extends State<DayPickerScreen> {
     final l10n = AppLocalizations.of(context)!;
     final lang = Localizations.localeOf(context).languageCode;
     final labels = muscleGroupLabels(lang);
+    final exercisesByKey = {
+      for (final exercise in widget.allExercises) exercise.key: exercise,
+    };
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.workoutPickDay)),
@@ -55,14 +62,27 @@ class _DayPickerScreenState extends State<DayPickerScreen> {
                 final day = widget.routine.days[index];
                 final isSelected = _selectedIndex == index;
 
-                // Resolve category labels for display
-                final chipLabels = day.muscleGroups.map((key) {
-                  final cat = MuscleGroupCategory.values.firstWhere(
-                    (c) => c.name == key,
-                    orElse: () => MuscleGroupCategory.pectoral,
-                  );
-                  return labels[cat] ?? key;
-                }).toList();
+                // Prefer categories derived from exercise keys so every day
+                // can show its real categories even if legacy muscleGroups is empty.
+                final exerciseCategoryKeys = <String>{};
+                for (final exerciseKey in day.exerciseKeys) {
+                  final exercise = exercisesByKey[exerciseKey];
+                  if (exercise == null) continue;
+                  exerciseCategoryKeys.addAll(exercise.resolvedCategoryKeys);
+                }
+
+                // Backward-compatible fallback for legacy routines.
+                final chipLabels = exerciseCategoryKeys.isNotEmpty
+                    ? exerciseCategoryKeys
+                        .map((key) => categoryLabelForLocale(key, lang))
+                        .toList()
+                    : day.muscleGroups.map((key) {
+                        final cat = MuscleGroupCategory.values.firstWhere(
+                          (c) => c.name == key,
+                          orElse: () => MuscleGroupCategory.pectoral,
+                        );
+                        return labels[cat] ?? key;
+                      }).toList();
 
                 return Card(
                   margin: const EdgeInsets.only(bottom: 8),

@@ -208,7 +208,10 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
     _timer?.cancel();
     _animController.stop();
     setState(() => _phase = _Phase.complete);
+    await _saveCompletedSession();
+  }
 
+  Future<void> _saveCompletedSession() async {
     final session = MobilitySession(
       id: const Uuid().v4(),
       routineKey: widget.routine.key,
@@ -252,8 +255,9 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
     if (confirmed == true) {
       _timer?.cancel();
       _animController.stop();
+      await _saveCompletedSession();
       if (!mounted) return;
-      Navigator.of(context).pop(false);
+      Navigator.of(context).pop(true);
     } else if (!wasPaused) {
       _togglePause();
     }

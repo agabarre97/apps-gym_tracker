@@ -142,14 +142,14 @@ class RoutinePdfExportService {
     required MobilityRoutine? mobilityRoutine,
     required MobilitySession? lastSession,
     required DateTime generatedAt,
+    Map<String, String> exerciseNameByKey = const {},
   }) async {
     final doc = pw.Document();
 
-    final exerciseLines = mobilityRoutine == null
-        ? <String>[]
-        : mobilityRoutine.exercises
-            .map((exercise) => '${exercise.key} (${exercise.durationSeconds}s)')
-            .toList();
+    final exerciseLines = buildMobilityExerciseLines(
+      mobilityRoutine,
+      exerciseNameByKey: exerciseNameByKey,
+    );
 
     final theme = await _buildTheme();
     doc.addPage(
@@ -281,5 +281,19 @@ class RoutinePdfExportService {
       bold: boldFont,
     );
     return _cachedTheme!;
+  }
+
+  /// Builds human-readable mobility plan lines for PDF output.
+  ///
+  /// Uses [exerciseNameByKey] when available, falling back to the exercise key.
+  static List<String> buildMobilityExerciseLines(
+    MobilityRoutine? mobilityRoutine, {
+    Map<String, String> exerciseNameByKey = const {},
+  }) {
+    if (mobilityRoutine == null) return const <String>[];
+    return mobilityRoutine.exercises.map((exercise) {
+      final displayName = exerciseNameByKey[exercise.key] ?? exercise.key;
+      return '$displayName (${exercise.durationSeconds}s)';
+    }).toList();
   }
 }

@@ -84,6 +84,17 @@ class _ExerciseSelectionScreenState extends State<ExerciseSelectionScreen> {
     super.dispose();
   }
 
+  @override
+  void didUpdateWidget(covariant ExerciseSelectionScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final exercisesChanged = oldWidget.allExercises != widget.allExercises;
+    final categoriesChanged =
+        oldWidget.availableCategories != widget.availableCategories;
+    if (exercisesChanged || categoriesChanged) {
+      setState(_recomputeFilteredExercises);
+    }
+  }
+
   void _recomputeFilteredExercises() {
     _filteredExercises = List<Exercise>.from(widget.allExercises);
     if (_selectedCategories.isNotEmpty) {
@@ -209,7 +220,7 @@ class _ExerciseSelectionScreenState extends State<ExerciseSelectionScreen> {
                   label: Text(categoryLabelForLocale(category, lang)),
                   selected: isSelected,
                   selectedColor: Colors.white,
-                  checkmarkColor: Colors.black,
+                  showCheckmark: false,
                   labelStyle: TextStyle(
                     color: isSelected ? Colors.black : Colors.white,
                   ),
