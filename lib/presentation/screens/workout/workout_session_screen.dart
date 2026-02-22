@@ -11,6 +11,7 @@ import 'package:gym_tracker/domain/ports/workout_session_port.dart';
 import 'package:gym_tracker/presentation/screens/routine/exercise_selection_screen.dart';
 import 'package:gym_tracker/presentation/screens/routine/by_muscle_category_labels.dart';
 import 'package:gym_tracker/presentation/utils/time_formatter.dart';
+import 'package:gym_tracker/presentation/theme/app_theme.dart';
 
 /// Main workout screen showing exercise cards with sets/reps/weight editing.
 class WorkoutSessionScreen extends StatefulWidget {
@@ -479,21 +480,25 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
                 child: InkWell(
                   borderRadius: BorderRadius.circular(8),
                   onTap: _showRestStopwatch,
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(Icons.timer_outlined,
-                            size: 18, color: Colors.white54),
-                        const SizedBox(width: 4),
-                        Text(
-                          _elapsed.toHumanReadable(),
-                          style: const TextStyle(
-                              color: Colors.white70, fontSize: 14),
-                        ),
-                      ],
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(
+                        minHeight: AppSizes.buttonHeightSmall),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.timer_outlined,
+                              size: 18, color: context.textSecondary),
+                          const SizedBox(width: 4),
+                          Text(
+                            _elapsed.toHumanReadable(),
+                            style: TextStyle(
+                                color: context.textSecondary, fontSize: 14),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -558,143 +563,150 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
           onTap: () => setState(() {
             _expandedIndex = isExpanded ? -1 : index;
           }),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // ── Header: name + check ──
-                Row(
-                  children: [
-                    if (ex.completed)
-                      const Padding(
-                        padding: EdgeInsets.only(right: 8),
-                        child: Icon(Icons.check_circle,
-                            color: Colors.greenAccent, size: 20),
-                      ),
-                    Expanded(
-                      child: Text(
-                        name,
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color:
-                              ex.completed ? Colors.greenAccent : Colors.white,
+          child: ConstrainedBox(
+            constraints:
+                const BoxConstraints(minHeight: AppSizes.buttonHeightSmall),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // ── Header: name + check ──
+                  Row(
+                    children: [
+                      if (ex.completed)
+                        const Padding(
+                          padding: EdgeInsets.only(right: 8),
+                          child: Icon(Icons.check_circle,
+                              color: Colors.greenAccent, size: 20),
+                        ),
+                      Expanded(
+                        child: Text(
+                          name,
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            color: ex.completed
+                                ? Colors.greenAccent
+                                : Colors.white,
+                          ),
                         ),
                       ),
-                    ),
-                    Icon(
-                      isExpanded ? Icons.expand_less : Icons.expand_more,
-                      color: Colors.white54,
-                    ),
-                  ],
-                ),
-
-                // ── Brief summary when completed & collapsed ──
-                if (ex.completed && !isExpanded) ...[
-                  const SizedBox(height: 6),
-                  Text(
-                    _briefSummary(ex),
-                    style: const TextStyle(fontSize: 12, color: Colors.white38),
+                      Icon(
+                        isExpanded ? Icons.expand_less : Icons.expand_more,
+                        color: context.textSecondary,
+                      ),
+                    ],
                   ),
-                  if (avgRest != null) ...[
-                    const SizedBox(height: 2),
-                    Row(
-                      children: [
-                        const Icon(Icons.hourglass_bottom,
-                            size: 12, color: Colors.white24),
-                        const SizedBox(width: 4),
-                        Text(
-                          l10n.workoutAvgRest(avgRest),
-                          style: const TextStyle(
-                              fontSize: 11, color: Colors.white24),
-                        ),
-                      ],
-                    ),
-                  ],
-                ],
 
-                // ── Expanded content ──
-                if (isExpanded) ...[
-                  const Divider(height: 20),
-                  _buildSetsTable(index, ex, l10n),
-                  const SizedBox(height: 8),
-                  // Average rest summary
-                  if (avgRest != null) ...[
+                  // ── Brief summary when completed & collapsed ──
+                  if (ex.completed && !isExpanded) ...[
+                    const SizedBox(height: 6),
+                    Text(
+                      _briefSummary(ex),
+                      style: TextStyle(fontSize: 12, color: context.textSubtle),
+                    ),
+                    if (avgRest != null) ...[
+                      const SizedBox(height: 2),
+                      Row(
+                        children: [
+                          const Icon(Icons.hourglass_bottom,
+                              size: 12, color: Colors.white24),
+                          const SizedBox(width: 4),
+                          Text(
+                            l10n.workoutAvgRest(avgRest),
+                            style: const TextStyle(
+                                fontSize: 11, color: Colors.white24),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ],
+
+                  // ── Expanded content ──
+                  if (isExpanded) ...[
+                    const Divider(height: 20),
+                    _buildSetsTable(index, ex, l10n),
+                    const SizedBox(height: 8),
+                    // Average rest summary
+                    if (avgRest != null) ...[
+                      Row(
+                        children: [
+                          Icon(Icons.hourglass_bottom,
+                              size: 14, color: context.textSubtle),
+                          const SizedBox(width: 4),
+                          Text(
+                            l10n.workoutAvgRest(avgRest),
+                            style: TextStyle(
+                                fontSize: 12, color: context.textSubtle),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                    ],
+                    // Add / Remove set
                     Row(
                       children: [
-                        const Icon(Icons.hourglass_bottom,
-                            size: 14, color: Colors.white38),
-                        const SizedBox(width: 4),
-                        Text(
-                          l10n.workoutAvgRest(avgRest),
-                          style: const TextStyle(
-                              fontSize: 12, color: Colors.white38),
+                        TextButton.icon(
+                          icon: const Icon(Icons.add, size: 16),
+                          label: Text(l10n.workoutAddSet,
+                              style: const TextStyle(fontSize: 13)),
+                          onPressed: () => _addSet(index),
+                        ),
+                        const SizedBox(width: 8),
+                        TextButton.icon(
+                          icon: const Icon(Icons.remove, size: 16),
+                          label: Text(l10n.workoutRemoveSet,
+                              style: const TextStyle(fontSize: 13)),
+                          onPressed: ex.sets.length > 1
+                              ? () => _removeSet(index)
+                              : null,
                         ),
                       ],
                     ),
                     const SizedBox(height: 8),
-                  ],
-                  // Add / Remove set
-                  Row(
-                    children: [
-                      TextButton.icon(
-                        icon: const Icon(Icons.add, size: 16),
-                        label: Text(l10n.workoutAddSet,
-                            style: const TextStyle(fontSize: 13)),
-                        onPressed: () => _addSet(index),
+                    // Notes
+                    TextField(
+                      decoration: InputDecoration(
+                        labelText: l10n.workoutNotes,
+                        border: const OutlineInputBorder(),
+                        isDense: true,
                       ),
-                      const SizedBox(width: 8),
-                      TextButton.icon(
-                        icon: const Icon(Icons.remove, size: 16),
-                        label: Text(l10n.workoutRemoveSet,
-                            style: const TextStyle(fontSize: 13)),
-                        onPressed:
-                            ex.sets.length > 1 ? () => _removeSet(index) : null,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  // Notes
-                  TextField(
-                    decoration: InputDecoration(
-                      labelText: l10n.workoutNotes,
-                      border: const OutlineInputBorder(),
-                      isDense: true,
+                      controller: _notesControllerFor(ex),
+                      maxLines: 2,
+                      onChanged: (v) => _updateExerciseNotes(index, v),
                     ),
-                    controller: _notesControllerFor(ex),
-                    maxLines: 2,
-                    onChanged: (v) => _updateExerciseNotes(index, v),
-                  ),
-                  const SizedBox(height: 12),
-                  // Save button
-                  SizedBox(
-                    width: double.infinity,
-                    child: FilledButton.icon(
-                      icon: Icon(
-                        isSeriesProgressMode
-                            ? Icons.task_alt_outlined
-                            : Icons.check_circle_outline,
-                        size: 18,
-                      ),
-                      label: Text(
-                        isViewMode
-                            ? l10n.workoutSaveExercise
-                            : isSeriesProgressMode
-                                ? l10n.workoutFinishSet('${nextPendingSet + 1}')
-                                : l10n.workoutFinishExercise,
-                      ),
-                      onPressed: ex.completed
-                          ? null
-                          : isViewMode
-                              ? () => _saveExercise(index)
+                    const SizedBox(height: 12),
+                    // Save button
+                    SizedBox(
+                      width: double.infinity,
+                      child: FilledButton.icon(
+                        icon: Icon(
+                          isSeriesProgressMode
+                              ? Icons.task_alt_outlined
+                              : Icons.check_circle_outline,
+                          size: 18,
+                        ),
+                        label: Text(
+                          isViewMode
+                              ? l10n.workoutSaveExercise
                               : isSeriesProgressMode
-                                  ? () => _completeNextPendingSet(index)
-                                  : () => _finishExercise(index),
+                                  ? l10n
+                                      .workoutFinishSet('${nextPendingSet + 1}')
+                                  : l10n.workoutFinishExercise,
+                        ),
+                        onPressed: ex.completed
+                            ? null
+                            : isViewMode
+                                ? () => _saveExercise(index)
+                                : isSeriesProgressMode
+                                    ? () => _completeNextPendingSet(index)
+                                    : () => _finishExercise(index),
+                      ),
                     ),
-                  ),
+                  ],
                 ],
-              ],
+              ),
             ),
           ),
         ),
@@ -715,18 +727,18 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
             Expanded(
               child: Text(l10n.workoutReps,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: Colors.white54)),
+                      color: context.textSecondary)),
             ),
             Expanded(
               child: Text(l10n.workoutWeight,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: Colors.white54)),
+                      color: context.textSecondary)),
             ),
           ],
         ),
@@ -764,8 +776,8 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
                           Expanded(
                             child: Text(
                               l10n.workoutSet('${setIdx + 1}'),
-                              style: const TextStyle(
-                                  fontSize: 11, color: Colors.white54),
+                              style: TextStyle(
+                                  fontSize: 11, color: context.textSecondary),
                             ),
                           ),
                         ],
@@ -863,7 +875,7 @@ class _StepperIntFieldState extends State<_StepperIntField> {
         Expanded(
           child: TextField(
             controller: _controller,
-            keyboardType: TextInputType.number,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             textAlign: TextAlign.center,
             style: const TextStyle(fontSize: 14),
@@ -994,7 +1006,8 @@ class _StepButton extends StatelessWidget {
       borderRadius: BorderRadius.circular(14),
       child: ConstrainedBox(
         constraints: const BoxConstraints(minWidth: _minTouchWidth),
-        child: Center(child: Icon(icon, size: 22, color: Colors.white54)),
+        child:
+            Center(child: Icon(icon, size: 22, color: context.textSecondary)),
       ),
     );
   }
@@ -1083,8 +1096,8 @@ class _RestStopwatchSheetState extends State<_RestStopwatchSheet> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.hourglass_bottom,
-                    size: 20, color: Colors.white54),
+                Icon(Icons.hourglass_bottom,
+                    size: 20, color: context.textSecondary),
                 const SizedBox(width: 8),
                 Text(
                   AppLocalizations.of(context)?.workoutRestTimer ?? 'Descanso',

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
 import 'package:gym_tracker/domain/entities/exercise.dart';
 import 'package:gym_tracker/presentation/components/musclewiki_svg_preview.dart';
+import 'package:gym_tracker/presentation/theme/app_theme.dart';
 
 /// Bottom sheet showing full details of an exercise with add/remove toggle.
 class ExerciseDetailSheet extends StatelessWidget {
@@ -59,7 +60,7 @@ class ExerciseDetailSheet extends StatelessWidget {
           // Description
           Text(
             exercise.localizedDescriptionFor(languageCode),
-            style: const TextStyle(color: Colors.white70, fontSize: 14),
+            style: TextStyle(color: context.textSecondary, fontSize: 14),
           ),
           const SizedBox(height: 20),
 

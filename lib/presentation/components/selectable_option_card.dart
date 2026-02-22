@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gym_tracker/presentation/theme/app_theme.dart';
 
 /// Data model for a selectable option used in grid/list selection screens.
 class SelectableOption {
@@ -39,44 +40,48 @@ class SelectableOptionGridCard extends StatelessWidget {
         child: InkWell(
           borderRadius: BorderRadius.circular(16),
           onTap: onTap,
-          child: Stack(
-            children: [
-              Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(option.icon, size: 48, color: Colors.white),
-                    const SizedBox(height: 12),
-                    Text(
-                      option.label,
-                      style: Theme.of(context).textTheme.titleSmall,
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
-              ),
-              if (!option.enabled)
-                Positioned(
-                  bottom: 8,
-                  left: 0,
-                  right: 0,
-                  child: Center(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: Colors.white12,
-                        borderRadius: BorderRadius.circular(8),
+          child: ConstrainedBox(
+            constraints:
+                const BoxConstraints(minHeight: AppSizes.buttonHeightSmall),
+            child: Stack(
+              children: [
+                Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(option.icon, size: 48, color: Colors.white),
+                      const SizedBox(height: 12),
+                      Text(
+                        option.label,
+                        style: Theme.of(context).textTheme.titleSmall,
+                        textAlign: TextAlign.center,
                       ),
-                      child: Text(
-                        comingSoonLabel,
-                        style: const TextStyle(
-                            fontSize: 10, color: Colors.white54),
+                    ],
+                  ),
+                ),
+                if (!option.enabled)
+                  Positioned(
+                    bottom: 8,
+                    left: 0,
+                    right: 0,
+                    child: Center(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: Colors.white12,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          comingSoonLabel,
+                          style: TextStyle(
+                              fontSize: 10, color: context.textSecondary),
+                        ),
                       ),
                     ),
                   ),
-                ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -108,10 +113,10 @@ class SelectableOptionListCard extends StatelessWidget {
           leading: Icon(option.icon, color: Colors.white),
           title: Text(option.label),
           trailing: option.enabled
-              ? const Icon(Icons.chevron_right, color: Colors.white54)
+              ? Icon(Icons.chevron_right, color: context.textSecondary)
               : Text(
                   comingSoonLabel,
-                  style: const TextStyle(fontSize: 11, color: Colors.white54),
+                  style: TextStyle(fontSize: 11, color: context.textSecondary),
                 ),
           onTap: onTap,
         ),

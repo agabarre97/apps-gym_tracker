@@ -3,6 +3,7 @@ import 'package:gym_tracker/domain/entities/hiit_config.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
 import 'package:gym_tracker/presentation/components/time_wheel_picker.dart';
 import 'package:gym_tracker/presentation/utils/time_formatter.dart';
+import 'package:gym_tracker/presentation/theme/app_theme.dart';
 
 /// Screen for configuring HIIT routine parameters and naming the routine.
 class HiitConfigScreen extends StatefulWidget {
@@ -199,7 +200,7 @@ class _HiitConfigScreenState extends State<HiitConfigScreen> {
           Expanded(
             child: Text(
               label,
-              style: const TextStyle(fontSize: 15, color: Colors.white70),
+              style: TextStyle(fontSize: 15, color: context.textSecondary),
             ),
           ),
           TimeWheelPicker(
@@ -243,7 +244,8 @@ class _ConfigRow extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.remove_circle_outline),
               onPressed: onDecrement,
-              color: onDecrement != null ? Colors.white70 : Colors.white24,
+              color:
+                  onDecrement != null ? context.textSecondary : Colors.white24,
             ),
             SizedBox(
               width: 32,
@@ -257,7 +259,8 @@ class _ConfigRow extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.add_circle_outline),
               onPressed: onIncrement,
-              color: onIncrement != null ? Colors.white70 : Colors.white24,
+              color:
+                  onIncrement != null ? context.textSecondary : Colors.white24,
             ),
           ],
         ),

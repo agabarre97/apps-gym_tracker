@@ -16,6 +16,7 @@ import 'package:gym_tracker/domain/ports/routine_port.dart';
 import 'package:gym_tracker/domain/ports/storage_port.dart';
 import 'package:gym_tracker/domain/ports/training_day_port.dart';
 import 'package:gym_tracker/domain/ports/workout_session_port.dart';
+import 'package:gym_tracker/domain/ports/measurement_record_port.dart';
 import 'package:gym_tracker/domain/ports/mobility_session_port.dart';
 import 'package:gym_tracker/domain/ports/hiit_session_port.dart';
 import 'package:gym_tracker/domain/entities/workout_session.dart';
@@ -31,6 +32,7 @@ import 'package:gym_tracker/presentation/screens/workout/routine_picker_screen.d
 import 'package:gym_tracker/presentation/screens/workout/day_picker_screen.dart';
 import 'package:gym_tracker/presentation/screens/workout/workout_session_screen.dart';
 import 'package:uuid/uuid.dart';
+import 'package:gym_tracker/presentation/theme/app_theme.dart';
 
 // ── Unified training entry for the day view ──────────────────────
 
@@ -82,6 +84,7 @@ class LandingScreen extends StatefulWidget {
     required this.routinePort,
     required this.trainingDayPort,
     required this.workoutSessionPort,
+    this.measurementRecordPort,
     required this.mobilitySessionPort,
     required this.hiitSessionPort,
     required this.onLocaleChanged,
@@ -94,6 +97,7 @@ class LandingScreen extends StatefulWidget {
   final RoutinePort routinePort;
   final TrainingDayPort trainingDayPort;
   final WorkoutSessionPort workoutSessionPort;
+  final MeasurementRecordPort? measurementRecordPort;
   final MobilitySessionPort mobilitySessionPort;
   final HiitSessionPort hiitSessionPort;
   final ValueChanged<Locale> onLocaleChanged;
@@ -543,12 +547,12 @@ class _LandingScreenState extends State<LandingScreen> {
                     ];
 
                     return ListTile(
-                      leading: Icon(entry.icon, color: Colors.white70),
+                      leading: Icon(entry.icon, color: context.textSecondary),
                       title: Text(entry.displayName),
                       subtitle: Text(
                         subtitleParts.join(' · '),
-                        style: const TextStyle(
-                            fontSize: 12, color: Colors.white54),
+                        style: TextStyle(
+                            fontSize: 12, color: context.textSecondary),
                       ),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -571,8 +575,8 @@ class _LandingScreenState extends State<LandingScreen> {
                             },
                           ),
                           if (entry.type == _TrainingEntryType.workout)
-                            const Icon(Icons.chevron_right,
-                                color: Colors.white38),
+                            Icon(Icons.chevron_right,
+                                color: context.textSubtle),
                         ],
                       ),
                       onTap: entry.type == _TrainingEntryType.workout
@@ -750,6 +754,7 @@ class _LandingScreenState extends State<LandingScreen> {
             routinePort: widget.routinePort,
             allExercises: _allExercises,
             workoutSessionPort: widget.workoutSessionPort,
+            profilePort: widget.profilePort,
           ),
         ),
       );
@@ -780,6 +785,7 @@ class _LandingScreenState extends State<LandingScreen> {
           routinePort: widget.routinePort,
           trainingDayPort: widget.trainingDayPort,
           workoutSessionPort: widget.workoutSessionPort,
+          measurementRecordPort: widget.measurementRecordPort,
           mobilitySessionPort: widget.mobilitySessionPort,
           hiitSessionPort: widget.hiitSessionPort,
           onLocaleChanged: widget.onLocaleChanged,
@@ -792,6 +798,9 @@ class _LandingScreenState extends State<LandingScreen> {
   // ── Navigation ─────────────────────────────────────────────────
 
   Future<void> _goToProfile() async {
+    final measurementRecordPort = widget.measurementRecordPort;
+    if (measurementRecordPort == null) return;
+
     final profile = await widget.profilePort.loadProfile();
     if (!mounted || profile == null) return;
 
@@ -799,6 +808,8 @@ class _LandingScreenState extends State<LandingScreen> {
       MaterialPageRoute(
         builder: (_) => ProfileSummaryScreen(
           profile: profile,
+          profilePort: widget.profilePort,
+          measurementRecordPort: measurementRecordPort,
           storage: widget.storage,
           email: widget.authPort?.currentUser?.email,
           onSignOut: widget.authPort != null ? () => true : null,
@@ -833,11 +844,11 @@ class _LandingScreenState extends State<LandingScreen> {
                 children: [
                   // Avatar → profile
                   IconButton(
-                    icon: const CircleAvatar(
+                    icon: CircleAvatar(
                       radius: 16,
                       backgroundColor: Colors.white24,
-                      child:
-                          Icon(Icons.person, size: 18, color: Colors.white70),
+                      child: Icon(Icons.person,
+                          size: 18, color: context.textSecondary),
                     ),
                     onPressed: _goToProfile,
                   ),
@@ -892,8 +903,8 @@ class _LandingScreenState extends State<LandingScreen> {
                           icon: const Icon(Icons.visibility, size: 20),
                           label: Text(l10n.landingViewDetails),
                           style: OutlinedButton.styleFrom(
-                            foregroundColor: Colors.white70,
-                            side: const BorderSide(color: Colors.white54),
+                            foregroundColor: context.textSecondary,
+                            side: BorderSide(color: context.textSecondary),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
@@ -957,8 +968,8 @@ class _LandingScreenState extends State<LandingScreen> {
                             isDense: true,
                             filled: true,
                             fillColor: Colors.white.withValues(alpha: 0.08),
-                            prefixIcon: const Icon(Icons.tune,
-                                size: 18, color: Colors.white54),
+                            prefixIcon: Icon(Icons.tune,
+                                size: 18, color: context.textSecondary),
                             contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 12, vertical: 10),
                             enabledBorder: OutlineInputBorder(
@@ -981,7 +992,7 @@ class _LandingScreenState extends State<LandingScreen> {
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                           ),
-                          iconEnabledColor: Colors.white70,
+                          iconEnabledColor: context.textSecondary,
                           items: [
                             DropdownMenuItem<String?>(
                               value: null,
@@ -1019,7 +1030,7 @@ class _LandingScreenState extends State<LandingScreen> {
                           style: Theme.of(context)
                               .textTheme
                               .bodyMedium
-                              ?.copyWith(color: Colors.white38),
+                              ?.copyWith(color: context.textSubtle),
                         ),
                       ),
                     )
@@ -1070,20 +1081,21 @@ class _LandingScreenState extends State<LandingScreen> {
           shape: BoxShape.circle,
         ),
         selectedTextStyle: const TextStyle(color: Colors.white),
-        defaultTextStyle: const TextStyle(color: Colors.white70),
-        weekendTextStyle: const TextStyle(color: Colors.white54),
+        defaultTextStyle: TextStyle(color: context.textSecondary),
+        weekendTextStyle: TextStyle(color: context.textSecondary),
         outsideTextStyle: const TextStyle(color: Colors.white24),
       ),
-      headerStyle: const HeaderStyle(
+      headerStyle: HeaderStyle(
         formatButtonVisible: false,
         titleCentered: true,
         titleTextStyle: TextStyle(color: Colors.white, fontSize: 16),
-        leftChevronIcon: Icon(Icons.chevron_left, color: Colors.white70),
-        rightChevronIcon: Icon(Icons.chevron_right, color: Colors.white70),
+        leftChevronIcon: Icon(Icons.chevron_left, color: context.textSecondary),
+        rightChevronIcon:
+            Icon(Icons.chevron_right, color: context.textSecondary),
       ),
-      daysOfWeekStyle: const DaysOfWeekStyle(
-        weekdayStyle: TextStyle(color: Colors.white54, fontSize: 12),
-        weekendStyle: TextStyle(color: Colors.white38, fontSize: 12),
+      daysOfWeekStyle: DaysOfWeekStyle(
+        weekdayStyle: TextStyle(color: context.textSecondary, fontSize: 12),
+        weekendStyle: TextStyle(color: context.textSubtle, fontSize: 12),
       ),
       eventLoader: (day) {
         final norm = _normalise(day);
@@ -1135,15 +1147,15 @@ class _RoutineTile extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
         leading: Icon(RoutineTypeHelper.iconFor(routine.type),
-            color: Colors.white70),
+            color: context.textSecondary),
         title: Text(routine.name),
         subtitle: routine.days.isNotEmpty
             ? Text(
                 l10n.routineDaysCount('${routine.days.length}'),
-                style: const TextStyle(fontSize: 12, color: Colors.white38),
+                style: TextStyle(fontSize: 12, color: context.textSubtle),
               )
             : null,
-        trailing: const Icon(Icons.chevron_right, color: Colors.white38),
+        trailing: Icon(Icons.chevron_right, color: context.textSubtle),
         onTap: onTap,
       ),
     );
@@ -1274,42 +1286,46 @@ class _TimePickerRow extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.white24),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(label,
-                      style:
-                          const TextStyle(fontSize: 12, color: Colors.white54)),
-                  const SizedBox(height: 2),
-                  Text(
-                    value,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: hasValue ? Colors.white : Colors.white38,
+      child: ConstrainedBox(
+        constraints:
+            const BoxConstraints(minHeight: AppSizes.buttonHeightSmall),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.white24),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(label,
+                        style: TextStyle(
+                            fontSize: 12, color: context.textSecondary)),
+                    const SizedBox(height: 2),
+                    Text(
+                      value,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: hasValue ? Colors.white : context.textSubtle,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            if (onClear != null)
-              IconButton(
-                icon: const Icon(Icons.clear, size: 18, color: Colors.white38),
-                onPressed: onClear,
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
-              )
-            else
-              const Icon(Icons.access_time, size: 20, color: Colors.white38),
-          ],
+              if (onClear != null)
+                IconButton(
+                  icon: Icon(Icons.clear, size: 18, color: context.textSubtle),
+                  onPressed: onClear,
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                )
+              else
+                Icon(Icons.access_time, size: 20, color: context.textSubtle),
+            ],
+          ),
         ),
       ),
     );
@@ -1326,6 +1342,7 @@ class _SignedOutRedirect extends StatelessWidget {
     required this.routinePort,
     required this.trainingDayPort,
     required this.workoutSessionPort,
+    required this.measurementRecordPort,
     required this.mobilitySessionPort,
     required this.hiitSessionPort,
     required this.onLocaleChanged,
@@ -1338,6 +1355,7 @@ class _SignedOutRedirect extends StatelessWidget {
   final RoutinePort routinePort;
   final TrainingDayPort trainingDayPort;
   final WorkoutSessionPort workoutSessionPort;
+  final MeasurementRecordPort? measurementRecordPort;
   final MobilitySessionPort mobilitySessionPort;
   final HiitSessionPort hiitSessionPort;
   final ValueChanged<Locale> onLocaleChanged;
@@ -1356,6 +1374,7 @@ class _SignedOutRedirect extends StatelessWidget {
               routinePort: routinePort,
               trainingDayPort: trainingDayPort,
               workoutSessionPort: workoutSessionPort,
+              measurementRecordPort: measurementRecordPort,
               mobilitySessionPort: mobilitySessionPort,
               hiitSessionPort: hiitSessionPort,
               onLocaleChanged: onLocaleChanged,

@@ -9,7 +9,7 @@ class AppLocalizationsEs extends AppLocalizations {
   AppLocalizationsEs([String locale = 'es']) : super(locale);
 
   @override
-  String get sharedAppTitle => 'Gym Tracker';
+  String get sharedAppTitle => 'Gym: all in one';
 
   @override
   String get sharedNext => 'Siguiente';

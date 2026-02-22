@@ -73,6 +73,7 @@ void main() {
         buildTestableWidget(
           ExerciseProgressScreen(
             workoutSessionPort: workoutPort,
+            profile: sampleProfile(),
             routineId: 'r1',
             routineDayIndex: 0,
             exerciseKey: 'bench_press',

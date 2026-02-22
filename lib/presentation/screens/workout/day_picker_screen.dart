@@ -5,6 +5,7 @@ import 'package:gym_tracker/domain/entities/exercise.dart';
 import 'package:gym_tracker/domain/entities/routine.dart';
 import 'package:gym_tracker/domain/entities/muscle_group.dart';
 import 'package:gym_tracker/presentation/screens/routine/by_muscle_category_labels.dart';
+import 'package:gym_tracker/presentation/theme/app_theme.dart';
 
 /// Lets the user choose which day within the selected routine to train.
 class DayPickerScreen extends StatefulWidget {
@@ -124,8 +125,8 @@ class _DayPickerScreenState extends State<DayPickerScreen> {
                           const SizedBox(height: 4),
                           Text(
                             '${day.exerciseKeys.length} ${l10n.routineExercises}',
-                            style: const TextStyle(
-                                fontSize: 12, color: Colors.white38),
+                            style: TextStyle(
+                                fontSize: 12, color: context.textSubtle),
                           ),
                         ],
                       ),

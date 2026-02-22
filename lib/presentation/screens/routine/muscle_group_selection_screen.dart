@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
 import 'package:gym_tracker/domain/entities/muscle_group.dart';
+import 'package:gym_tracker/presentation/theme/app_theme.dart';
 
 /// Icon for each muscle group (presentation-layer concern).
 const Map<MuscleGroupCategory, IconData> muscleGroupIcons = {
@@ -97,7 +98,7 @@ class _MuscleGroupSelectionScreenState
                     avatar: Icon(
                       muscleGroupIcons[cat],
                       size: 18,
-                      color: isSelected ? Colors.black : Colors.white70,
+                      color: isSelected ? Colors.black : context.textSecondary,
                     ),
                     label: Text(labels[cat]!),
                     selected: isSelected,

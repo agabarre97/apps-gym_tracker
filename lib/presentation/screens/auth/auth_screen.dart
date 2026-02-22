@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gym_tracker/domain/ports/auth_port.dart';
 import 'package:gym_tracker/domain/ports/sync_port.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
+import 'package:gym_tracker/presentation/theme/app_theme.dart';
 
 /// Authentication screen with Sign In / Sign Up tabs and Google Sign-In.
 class AuthScreen extends StatefulWidget {
@@ -133,8 +134,8 @@ class _AuthScreenState extends State<AuthScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.fitness_center,
-                      size: 64, color: Colors.white70),
+                  Icon(Icons.fitness_center,
+                      size: 64, color: context.textSecondary),
                   const SizedBox(height: 12),
                   Text(
                     l10n.sharedAppTitle,
@@ -242,7 +243,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: Text(l10n.authOr,
-                            style: const TextStyle(color: Colors.white38)),
+                            style: TextStyle(color: context.textSubtle)),
                       ),
                       const Expanded(child: Divider(color: Colors.white24)),
                     ],

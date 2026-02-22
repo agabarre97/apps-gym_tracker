@@ -3,6 +3,7 @@ import 'package:gym_tracker/l10n/app_localizations.dart';
 import 'package:gym_tracker/domain/entities/exercise.dart';
 import 'package:gym_tracker/presentation/screens/routine/by_muscle_category_labels.dart';
 import 'package:gym_tracker/presentation/screens/routine/exercise_detail_sheet.dart';
+import 'package:gym_tracker/presentation/theme/app_theme.dart';
 
 /// Combined output of the unified category+exercise selection screen.
 class ExerciseSelectionResult {
@@ -203,7 +204,7 @@ class _ExerciseSelectionScreenState extends State<ExerciseSelectionScreen> {
                 ),
                 Text(
                   l10n.routineSelected('${_selectedKeys.length}'),
-                  style: const TextStyle(color: Colors.white54),
+                  style: TextStyle(color: context.textSecondary),
                 ),
               ],
             ),
@@ -237,11 +238,11 @@ class _ExerciseSelectionScreenState extends State<ExerciseSelectionScreen> {
               controller: _searchController,
               decoration: InputDecoration(
                 hintText: l10n.exerciseSearchHint,
-                hintStyle: const TextStyle(color: Colors.white38),
-                prefixIcon: const Icon(Icons.search, color: Colors.white54),
+                hintStyle: TextStyle(color: context.textSubtle),
+                prefixIcon: Icon(Icons.search, color: context.textSecondary),
                 suffixIcon: _searchQuery.isNotEmpty
                     ? IconButton(
-                        icon: const Icon(Icons.clear, color: Colors.white54),
+                        icon: Icon(Icons.clear, color: context.textSecondary),
                         onPressed: () {
                           _searchController.clear();
                           setState(() => _searchQuery = '');
@@ -280,7 +281,7 @@ class _ExerciseSelectionScreenState extends State<ExerciseSelectionScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                       side: isSelected
-                          ? const BorderSide(color: Colors.white38)
+                          ? BorderSide(color: context.textSubtle)
                           : BorderSide.none,
                     ),
                     child: InkWell(
@@ -303,7 +304,7 @@ class _ExerciseSelectionScreenState extends State<ExerciseSelectionScreen> {
                                       : Icons.radio_button_unchecked,
                                   color: isSelected
                                       ? Colors.greenAccent
-                                      : Colors.white38,
+                                      : context.textSubtle,
                                 ),
                               ),
                             ),
@@ -326,9 +327,9 @@ class _ExerciseSelectionScreenState extends State<ExerciseSelectionScreen> {
                                     localizedDescription,
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontSize: 12,
-                                      color: Colors.white54,
+                                      color: context.textSecondary,
                                     ),
                                   ),
                                 ],

@@ -8,6 +8,7 @@ import 'package:gym_tracker/domain/ports/routine_port.dart';
 import 'package:gym_tracker/domain/ports/storage_port.dart';
 import 'package:gym_tracker/domain/ports/training_day_port.dart';
 import 'package:gym_tracker/domain/ports/workout_session_port.dart';
+import 'package:gym_tracker/domain/ports/measurement_record_port.dart';
 import 'package:gym_tracker/domain/ports/mobility_session_port.dart';
 import 'package:gym_tracker/domain/ports/hiit_session_port.dart';
 import 'package:gym_tracker/presentation/screens/auth/auth_screen.dart';
@@ -28,6 +29,7 @@ class LoadingScreen extends StatefulWidget {
     required this.routinePort,
     required this.trainingDayPort,
     required this.workoutSessionPort,
+    this.measurementRecordPort,
     required this.mobilitySessionPort,
     required this.hiitSessionPort,
     required this.onLocaleChanged,
@@ -40,6 +42,7 @@ class LoadingScreen extends StatefulWidget {
   final RoutinePort routinePort;
   final TrainingDayPort trainingDayPort;
   final WorkoutSessionPort workoutSessionPort;
+  final MeasurementRecordPort? measurementRecordPort;
   final MobilitySessionPort mobilitySessionPort;
   final HiitSessionPort hiitSessionPort;
   final ValueChanged<Locale> onLocaleChanged;
@@ -103,6 +106,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
                   routinePort: widget.routinePort,
                   trainingDayPort: widget.trainingDayPort,
                   workoutSessionPort: widget.workoutSessionPort,
+                  measurementRecordPort: widget.measurementRecordPort,
                   mobilitySessionPort: widget.mobilitySessionPort,
                   hiitSessionPort: widget.hiitSessionPort,
                   onLocaleChanged: widget.onLocaleChanged,
@@ -124,6 +128,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
         routinePort: widget.routinePort,
         trainingDayPort: widget.trainingDayPort,
         workoutSessionPort: widget.workoutSessionPort,
+        measurementRecordPort: widget.measurementRecordPort,
         mobilitySessionPort: widget.mobilitySessionPort,
         hiitSessionPort: widget.hiitSessionPort,
         onLocaleChanged: widget.onLocaleChanged,
@@ -178,6 +183,7 @@ Future<void> _routeByProfile({
   required RoutinePort routinePort,
   required TrainingDayPort trainingDayPort,
   required WorkoutSessionPort workoutSessionPort,
+  required MeasurementRecordPort? measurementRecordPort,
   required MobilitySessionPort mobilitySessionPort,
   required HiitSessionPort hiitSessionPort,
   required ValueChanged<Locale> onLocaleChanged,
@@ -196,6 +202,7 @@ Future<void> _routeByProfile({
           routinePort: routinePort,
           trainingDayPort: trainingDayPort,
           workoutSessionPort: workoutSessionPort,
+          measurementRecordPort: measurementRecordPort,
           mobilitySessionPort: mobilitySessionPort,
           hiitSessionPort: hiitSessionPort,
           onLocaleChanged: onLocaleChanged,
@@ -208,6 +215,7 @@ Future<void> _routeByProfile({
           routinePort: routinePort,
           trainingDayPort: trainingDayPort,
           workoutSessionPort: workoutSessionPort,
+          measurementRecordPort: measurementRecordPort,
           mobilitySessionPort: mobilitySessionPort,
           hiitSessionPort: hiitSessionPort,
           onLocaleChanged: onLocaleChanged,
@@ -231,6 +239,7 @@ class _PostAuthRouter extends StatefulWidget {
     required this.routinePort,
     required this.trainingDayPort,
     required this.workoutSessionPort,
+    required this.measurementRecordPort,
     required this.mobilitySessionPort,
     required this.hiitSessionPort,
     required this.onLocaleChanged,
@@ -243,6 +252,7 @@ class _PostAuthRouter extends StatefulWidget {
   final RoutinePort routinePort;
   final TrainingDayPort trainingDayPort;
   final WorkoutSessionPort workoutSessionPort;
+  final MeasurementRecordPort? measurementRecordPort;
   final MobilitySessionPort mobilitySessionPort;
   final HiitSessionPort hiitSessionPort;
   final ValueChanged<Locale> onLocaleChanged;
@@ -264,6 +274,7 @@ class _PostAuthRouterState extends State<_PostAuthRouter> {
       routinePort: widget.routinePort,
       trainingDayPort: widget.trainingDayPort,
       workoutSessionPort: widget.workoutSessionPort,
+      measurementRecordPort: widget.measurementRecordPort,
       mobilitySessionPort: widget.mobilitySessionPort,
       hiitSessionPort: widget.hiitSessionPort,
       onLocaleChanged: widget.onLocaleChanged,

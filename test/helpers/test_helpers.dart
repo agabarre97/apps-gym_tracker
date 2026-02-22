@@ -10,10 +10,12 @@ import 'package:gym_tracker/domain/ports/storage_port.dart';
 import 'package:gym_tracker/domain/ports/sync_port.dart';
 import 'package:gym_tracker/domain/entities/workout_session.dart';
 import 'package:gym_tracker/domain/ports/training_day_port.dart';
+import 'package:gym_tracker/domain/entities/measurement_record.dart';
 import 'package:gym_tracker/domain/entities/mobility_session.dart';
 import 'package:gym_tracker/domain/ports/mobility_session_port.dart';
 import 'package:gym_tracker/domain/entities/hiit_session.dart';
 import 'package:gym_tracker/domain/ports/hiit_session_port.dart';
+import 'package:gym_tracker/domain/ports/measurement_record_port.dart';
 import 'package:gym_tracker/domain/ports/workout_session_port.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
 import 'package:gym_tracker/presentation/theme/app_theme.dart';
@@ -103,6 +105,23 @@ class FakeHiitSessionPort implements HiitSessionPort {
   @override
   Future<void> saveSessions(List<HiitSession> sessions) async =>
       _sessions = List.of(sessions);
+}
+
+/// In-memory implementation of [MeasurementRecordPort] for testing.
+class FakeMeasurementRecordPort implements MeasurementRecordPort {
+  List<MeasurementRecord> _records = [];
+
+  @override
+  Future<List<MeasurementRecord>> loadRecords() async => List.of(_records);
+
+  @override
+  Future<void> saveRecords(List<MeasurementRecord> records) async =>
+      _records = List.of(records);
+
+  @override
+  Future<void> addRecord(MeasurementRecord record) async {
+    _records = [..._records, record];
+  }
 }
 
 /// In-memory implementation of [ProfilePort] for testing.
@@ -244,6 +263,7 @@ UserProfile sampleProfile({
       weightGoal: weightGoal,
       targetWeightKg: weightGoal == 'maintain' ? null : 85.0,
       kcalPerDay: weightGoal == 'maintain' ? null : 2500,
+      goalHistory: [GoalPhase(startDate: '2026-01-01', weightGoal: weightGoal)],
     );
 
 /// Extension to create a profile with null optional fields.
@@ -257,5 +277,6 @@ extension UserProfileTestX on UserProfile {
         weightGoal: weightGoal,
         targetWeightKg: targetWeightKg,
         kcalPerDay: kcalPerDay,
+        goalHistory: goalHistory,
       );
 }

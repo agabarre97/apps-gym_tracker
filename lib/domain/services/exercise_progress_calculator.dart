@@ -97,10 +97,12 @@ class ExerciseProgressCalculator {
     required String exerciseKey,
     required int periodMonths,
     required ProgressMetric metric,
+    DateTime? cutoffDate,
     DateTime? now,
   }) {
     final today = now ?? DateTime.now();
-    final cutoff = DateTime(today.year, today.month - periodMonths, today.day);
+    final cutoff = cutoffDate ??
+        DateTime(today.year, today.month - periodMonths, today.day);
 
     final filtered = sessions.where((s) =>
         s.routineId == routineId &&

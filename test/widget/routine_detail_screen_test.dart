@@ -39,6 +39,7 @@ void main() {
             routinePort: FakeRoutinePort(),
             allExercises: exercises,
             workoutSessionPort: FakeWorkoutSessionPort(),
+            profilePort: FakeProfilePort(),
           ),
         ),
       );
@@ -57,6 +58,7 @@ void main() {
             routinePort: FakeRoutinePort(),
             allExercises: exercises,
             workoutSessionPort: FakeWorkoutSessionPort(),
+            profilePort: FakeProfilePort(),
           ),
         ),
       );
@@ -79,6 +81,7 @@ void main() {
             routinePort: FakeRoutinePort(),
             allExercises: exercises,
             workoutSessionPort: FakeWorkoutSessionPort(),
+            profilePort: FakeProfilePort(),
           ),
         ),
       );
@@ -132,6 +135,7 @@ void main() {
             routinePort: routinePort,
             allExercises: reorderExercises,
             workoutSessionPort: FakeWorkoutSessionPort(),
+            profilePort: FakeProfilePort(),
           ),
         ),
       );

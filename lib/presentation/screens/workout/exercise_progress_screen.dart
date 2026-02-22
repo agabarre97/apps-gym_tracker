@@ -2,10 +2,12 @@ import 'dart:math' as math;
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:gym_tracker/domain/entities/user_profile.dart';
 import 'package:gym_tracker/domain/entities/workout_session.dart';
 import 'package:gym_tracker/domain/ports/workout_session_port.dart';
 import 'package:gym_tracker/domain/services/exercise_progress_calculator.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
+import 'package:gym_tracker/presentation/theme/app_theme.dart';
 
 /// Displays historical progress for a single exercise within a specific
 /// routine + day.
@@ -21,6 +23,7 @@ class ExerciseProgressScreen extends StatefulWidget {
   const ExerciseProgressScreen({
     super.key,
     required this.workoutSessionPort,
+    required this.profile,
     required this.routineId,
     required this.routineDayIndex,
     required this.exerciseKey,
@@ -28,6 +31,7 @@ class ExerciseProgressScreen extends StatefulWidget {
   });
 
   final WorkoutSessionPort workoutSessionPort;
+  final UserProfile profile;
   final String routineId;
   final int routineDayIndex;
   final String exerciseKey;
@@ -37,9 +41,16 @@ class ExerciseProgressScreen extends StatefulWidget {
   State<ExerciseProgressScreen> createState() => _ExerciseProgressScreenState();
 }
 
+enum _PeriodUnit { days, months, years }
+
 class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
+  static const int _customPeriodSentinel = -1;
+
   List<WorkoutSession>? _sessions;
   int _periodMonths = 3;
+  int _customPeriodValue = 30;
+  _PeriodUnit _customPeriodUnit = _PeriodUnit.days;
+  bool _hasCustomPeriod = false;
   ProgressMetric _metric = ProgressMetric.volume;
 
   /// The two dates currently selected for comparison (newest first).
@@ -84,8 +95,24 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
       routineDayIndex: widget.routineDayIndex,
       exerciseKey: widget.exerciseKey,
       periodMonths: _periodMonths,
+      cutoffDate: _cutoffDate(),
       metric: _metric,
     );
+  }
+
+  DateTime _cutoffDate() {
+    final now = DateTime.now();
+    if (_periodMonths != _customPeriodSentinel) {
+      return DateTime(now.year, now.month - _periodMonths, now.day);
+    }
+    switch (_customPeriodUnit) {
+      case _PeriodUnit.days:
+        return now.subtract(Duration(days: _customPeriodValue));
+      case _PeriodUnit.months:
+        return DateTime(now.year, now.month - _customPeriodValue, now.day);
+      case _PeriodUnit.years:
+        return DateTime(now.year - _customPeriodValue, now.month, now.day);
+    }
   }
 
   // ── Helpers ──────────────────────────────────────────────────────
@@ -102,6 +129,14 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
   }
 
   String _periodLabel(AppLocalizations l10n, int months) {
+    if (months == _customPeriodSentinel) {
+      if (!_hasCustomPeriod) {
+        return Localizations.localeOf(context).languageCode == 'es'
+            ? 'Periodo personalizado'
+            : 'Custom period';
+      }
+      return _customPeriodLabel(l10n);
+    }
     switch (months) {
       case 1:
         return l10n.progressPeriod1m;
@@ -116,6 +151,78 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
     }
   }
 
+  String _customPeriodLabel(AppLocalizations l10n) {
+    final unit = switch (_customPeriodUnit) {
+      _PeriodUnit.days => 'd',
+      _PeriodUnit.months => l10n.progressPeriod1m.contains('mes') ? 'mes' : 'm',
+      _PeriodUnit.years => l10n.progressPeriod12m.contains('a') ? 'a' : 'y',
+    };
+    return '$_customPeriodValue $unit';
+  }
+
+  Future<void> _pickCustomPeriod(AppLocalizations l10n) async {
+    final valueCtrl =
+        TextEditingController(text: _customPeriodValue.toString());
+    var selected = _customPeriodUnit;
+    final result = await showDialog<({int value, _PeriodUnit unit})>(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setDialogState) => AlertDialog(
+          title: Text('${l10n.progressTitle} · ${l10n.sharedConfirm}'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: valueCtrl,
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
+                decoration: const InputDecoration(labelText: 'Cantidad'),
+              ),
+              const SizedBox(height: 12),
+              DropdownButtonFormField<_PeriodUnit>(
+                initialValue: selected,
+                items: const [
+                  DropdownMenuItem(
+                      value: _PeriodUnit.days, child: Text('Dias')),
+                  DropdownMenuItem(
+                      value: _PeriodUnit.months, child: Text('Meses')),
+                  DropdownMenuItem(
+                      value: _PeriodUnit.years, child: Text('Anios')),
+                ],
+                onChanged: (value) {
+                  if (value == null) return;
+                  setDialogState(() => selected = value);
+                },
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(),
+              child: Text(l10n.sharedCancel),
+            ),
+            FilledButton(
+              onPressed: () {
+                final parsed = int.tryParse(valueCtrl.text.trim());
+                if (parsed == null || parsed <= 0) return;
+                Navigator.of(ctx).pop((value: parsed, unit: selected));
+              },
+              child: Text(l10n.sharedSave),
+            ),
+          ],
+        ),
+      ),
+    );
+    valueCtrl.dispose();
+    if (result == null) return;
+    setState(() {
+      _customPeriodValue = result.value;
+      _customPeriodUnit = result.unit;
+      _hasCustomPeriod = true;
+      _periodMonths = _customPeriodSentinel;
+    });
+  }
+
   String _formatValue(double v) {
     if (v == v.roundToDouble()) return v.toInt().toString();
     // Show up to 2 decimals, trimming trailing zeros
@@ -128,6 +235,61 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
 
   String _formatDateFull(DateTime d) =>
       '${d.day.toString().padLeft(2, '0')}/${d.month.toString().padLeft(2, '0')}/${d.year}';
+
+  String _goalLabel(AppLocalizations l10n, String goal) {
+    switch (goal) {
+      case 'gain':
+        return l10n.sharedGain;
+      case 'lose':
+        return l10n.sharedLose;
+      default:
+        return l10n.sharedMaintain;
+    }
+  }
+
+  Color _goalColor(String goal) {
+    switch (goal) {
+      case 'gain':
+        return Colors.greenAccent.withValues(alpha: 0.12);
+      case 'lose':
+        return Colors.orangeAccent.withValues(alpha: 0.12);
+      default:
+        return Colors.lightBlueAccent.withValues(alpha: 0.12);
+    }
+  }
+
+  List<(String goal, int from, int to)> _goalBands(
+      List<ProgressDataPoint> points) {
+    if (points.isEmpty) return const [];
+    final phases = List<GoalPhase>.from(widget.profile.goalHistory)
+      ..sort((a, b) => a.startDate.compareTo(b.startDate));
+
+    String goalAt(DateTime date) {
+      String current = widget.profile.weightGoal;
+      for (final phase in phases) {
+        final start = DateTime.tryParse(phase.startDate);
+        if (start == null) continue;
+        if (!start.isAfter(date)) {
+          current = phase.weightGoal;
+        }
+      }
+      return current;
+    }
+
+    final pointGoals = points.map((p) => goalAt(p.date)).toList();
+    final bands = <(String goal, int from, int to)>[];
+    var start = 0;
+    var currentGoal = pointGoals.first;
+    for (var i = 1; i < pointGoals.length; i++) {
+      if (pointGoals[i] != currentGoal) {
+        bands.add((currentGoal, start, i - 1));
+        start = i;
+        currentGoal = pointGoals[i];
+      }
+    }
+    bands.add((currentGoal, start, pointGoals.length - 1));
+    return bands;
+  }
 
   // ── Build ────────────────────────────────────────────────────────
 
@@ -164,6 +326,8 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
                   _buildChart(result),
                   const SizedBox(height: 24),
                   _buildSummary(l10n, result),
+                  const SizedBox(height: 10),
+                  _buildGoalLegend(l10n, result),
                 ],
 
                 const SizedBox(height: 32),
@@ -212,7 +376,8 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
                 children: [
                   Text(
                     l10n.progressHeaviestSet,
-                    style: const TextStyle(fontSize: 12, color: Colors.white54),
+                    style:
+                        TextStyle(fontSize: 12, color: context.textSecondary),
                   ),
                   const SizedBox(height: 2),
                   Text(
@@ -225,7 +390,7 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
             ),
             Text(
               _formatDateFull(heaviest.date),
-              style: const TextStyle(fontSize: 12, color: Colors.white54),
+              style: TextStyle(fontSize: 12, color: context.textSecondary),
             ),
           ],
         ),
@@ -236,7 +401,7 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
   // ── Period chips ──
 
   Widget _buildPeriodSelector(AppLocalizations l10n) {
-    const periods = [1, 3, 6, 12];
+    const periods = [1, 3, 6, 12, _customPeriodSentinel];
     return Wrap(
       spacing: 8,
       children: periods.map((p) {
@@ -244,7 +409,13 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
         return ChoiceChip(
           label: Text(_periodLabel(l10n, p)),
           selected: selected,
-          onSelected: (_) => setState(() => _periodMonths = p),
+          onSelected: (_) {
+            if (p == _customPeriodSentinel) {
+              _pickCustomPeriod(l10n);
+              return;
+            }
+            setState(() => _periodMonths = p);
+          },
           selectedColor: Theme.of(context).colorScheme.primaryContainer,
         );
       }).toList(),
@@ -281,9 +452,38 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
       child: Center(
         child: Text(
           l10n.progressNoData,
-          style: const TextStyle(color: Colors.white54, fontSize: 14),
+          style: TextStyle(color: context.textSecondary, fontSize: 14),
         ),
       ),
+    );
+  }
+
+  Widget _buildGoalLegend(AppLocalizations l10n, ProgressResult result) {
+    final bands = _goalBands(result.points);
+    final uniqueGoals = bands.map((band) => band.$1).toSet().toList();
+    return Wrap(
+      spacing: 12,
+      runSpacing: 8,
+      children: uniqueGoals.map((goal) {
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 10,
+              height: 10,
+              decoration: BoxDecoration(
+                color: _goalColor(goal),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(width: 6),
+            Text(
+              _goalLabel(l10n, goal),
+              style: TextStyle(fontSize: 12, color: context.textSecondary),
+            ),
+          ],
+        );
+      }).toList(),
     );
   }
 
@@ -292,6 +492,7 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
   Widget _buildChart(ProgressResult result) {
     final spots = <FlSpot>[];
     final dateLabels = <int, String>{};
+    final goalBands = _goalBands(result.points);
 
     for (var i = 0; i < result.points.length; i++) {
       spots.add(FlSpot(i.toDouble(), result.points[i].value));
@@ -302,6 +503,17 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
       height: 220,
       child: LineChart(
         LineChartData(
+          rangeAnnotations: RangeAnnotations(
+            verticalRangeAnnotations: goalBands
+                .map(
+                  (band) => VerticalRangeAnnotation(
+                    x1: math.max(0, band.$2 - 0.5),
+                    x2: band.$3 + 0.5,
+                    color: _goalColor(band.$1),
+                  ),
+                )
+                .toList(),
+          ),
           gridData: FlGridData(
             show: true,
             drawVerticalLine: false,
@@ -332,7 +544,7 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
                     child: Text(
                       _formatValue(value),
                       style:
-                          const TextStyle(fontSize: 11, color: Colors.white54),
+                          TextStyle(fontSize: 11, color: context.textSecondary),
                     ),
                   );
                 },
@@ -353,7 +565,7 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
                     child: Text(
                       dateLabels[idx] ?? '',
                       style:
-                          const TextStyle(fontSize: 9, color: Colors.white54),
+                          TextStyle(fontSize: 9, color: context.textSecondary),
                     ),
                   );
                 },
@@ -483,7 +695,7 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(leftLabel,
-                  style: const TextStyle(fontSize: 11, color: Colors.white54)),
+                  style: TextStyle(fontSize: 11, color: context.textSecondary)),
               const SizedBox(height: 4),
               Text(leftValue,
                   style: const TextStyle(
@@ -496,7 +708,7 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(rightLabel,
-                  style: const TextStyle(fontSize: 11, color: Colors.white54)),
+                  style: TextStyle(fontSize: 11, color: context.textSecondary)),
               const SizedBox(height: 4),
               Text(rightValue,
                   style: const TextStyle(
@@ -604,7 +816,7 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
     if (data1 == null && data2 == null) {
       return Center(
         child: Text(l10n.progressNoData,
-            style: const TextStyle(color: Colors.white54)),
+            style: TextStyle(color: context.textSecondary)),
       );
     }
 
@@ -703,7 +915,7 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
                 leftTitles: AxisTitles(
                   axisNameWidget: Text(
                     l10n.progressCompareYLabel,
-                    style: const TextStyle(fontSize: 10, color: Colors.white38),
+                    style: TextStyle(fontSize: 10, color: context.textSubtle),
                   ),
                   axisNameSize: 20,
                   sideTitles: SideTitles(
@@ -714,8 +926,8 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
                       padding: const EdgeInsets.only(right: 4),
                       child: Text(
                         value.toInt().toString(),
-                        style: const TextStyle(
-                            fontSize: 10, color: Colors.white54),
+                        style: TextStyle(
+                            fontSize: 10, color: context.textSecondary),
                       ),
                     ),
                   ),
@@ -723,7 +935,7 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
                 bottomTitles: AxisTitles(
                   axisNameWidget: Text(
                     l10n.progressCompareXLabel,
-                    style: const TextStyle(fontSize: 10, color: Colors.white38),
+                    style: TextStyle(fontSize: 10, color: context.textSubtle),
                   ),
                   axisNameSize: 20,
                   sideTitles: SideTitles(
@@ -738,8 +950,8 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
                         padding: const EdgeInsets.only(top: 4),
                         child: Text(
                           _formatWeight(allWeights[idx]),
-                          style: const TextStyle(
-                              fontSize: 10, color: Colors.white54),
+                          style: TextStyle(
+                              fontSize: 10, color: context.textSecondary),
                         ),
                       );
                     },
@@ -881,7 +1093,7 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
         ),
         const SizedBox(width: 4),
         Text(label,
-            style: const TextStyle(fontSize: 11, color: Colors.white70)),
+            style: TextStyle(fontSize: 11, color: context.textSecondary)),
       ],
     );
   }

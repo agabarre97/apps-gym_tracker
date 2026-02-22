@@ -3,6 +3,7 @@ import 'package:gym_tracker/domain/entities/mobility_exercise_info.dart';
 import 'package:gym_tracker/domain/entities/mobility_routine.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
 import 'package:gym_tracker/presentation/components/mobility_exercise_tile.dart';
+import 'package:gym_tracker/presentation/theme/app_theme.dart';
 
 /// Shows a modal bottom sheet with detailed exercise information.
 Future<void> showMobilityExerciseDetailSheet(
@@ -83,7 +84,7 @@ class _MobilityExerciseDetailContent extends StatelessWidget {
             // Subtitle: duration + side info
             Text(
               '$duration  ·  $sideLabel',
-              style: const TextStyle(fontSize: 13, color: Colors.white54),
+              style: TextStyle(fontSize: 13, color: context.textSecondary),
             ),
             const Divider(height: 28),
 
@@ -173,9 +174,9 @@ class _NumberedItem extends StatelessWidget {
             width: 22,
             child: Text(
               '$index.',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 13,
-                color: Colors.white54,
+                color: context.textSecondary,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -183,7 +184,7 @@ class _NumberedItem extends StatelessWidget {
           Expanded(
             child: Text(
               text,
-              style: const TextStyle(fontSize: 13, color: Colors.white70),
+              style: TextStyle(fontSize: 13, color: context.textSecondary),
             ),
           ),
         ],
@@ -204,13 +205,13 @@ class _BulletItem extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(
+          SizedBox(
             width: 22,
             child: Text(
               '•',
               style: TextStyle(
                 fontSize: 13,
-                color: Colors.white54,
+                color: context.textSecondary,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -218,7 +219,7 @@ class _BulletItem extends StatelessWidget {
           Expanded(
             child: Text(
               text,
-              style: const TextStyle(fontSize: 13, color: Colors.white70),
+              style: TextStyle(fontSize: 13, color: context.textSecondary),
             ),
           ),
         ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gym_tracker/domain/entities/mobility_routine.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
+import 'package:gym_tracker/presentation/theme/app_theme.dart';
 
 /// Data-driven map from exercise keys to l10n getters.
 ///
@@ -100,7 +101,7 @@ class MobilityExerciseTile extends StatelessWidget {
       MobilityExerciseTileVariant.detailed =>
         _buildDetailed(context, name, sideLabel, duration),
       MobilityExerciseTileVariant.compact =>
-        _buildCompact(name, sideLabel, duration),
+        _buildCompact(context, name, sideLabel, duration),
     };
   }
 
@@ -146,7 +147,7 @@ class MobilityExerciseTile extends StatelessWidget {
                     Text(
                       sideLabel,
                       style:
-                          const TextStyle(fontSize: 11, color: Colors.white54),
+                          TextStyle(fontSize: 11, color: context.textSecondary),
                     ),
                   ],
                 ),
@@ -174,7 +175,8 @@ class MobilityExerciseTile extends StatelessWidget {
     );
   }
 
-  Widget _buildCompact(String name, String sideLabel, String duration) {
+  Widget _buildCompact(
+      BuildContext context, String name, String sideLabel, String duration) {
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
@@ -183,16 +185,16 @@ class MobilityExerciseTile extends StatelessWidget {
           backgroundColor: Colors.white12,
           child: Text(
             '${index + 1}',
-            style: const TextStyle(
+            style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.bold,
-                color: Colors.white70),
+                color: context.textSecondary),
           ),
         ),
         title: Text(name, style: const TextStyle(fontSize: 14)),
         subtitle: Text(
           sideLabel,
-          style: const TextStyle(fontSize: 11, color: Colors.white54),
+          style: TextStyle(fontSize: 11, color: context.textSecondary),
         ),
         trailing: Text(
           duration,

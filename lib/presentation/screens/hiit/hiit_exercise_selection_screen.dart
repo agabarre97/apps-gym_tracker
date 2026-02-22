@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gym_tracker/domain/entities/hiit_exercise.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
+import 'package:gym_tracker/presentation/theme/app_theme.dart';
 
 /// Maximum recommended HIIT exercises before a warning is shown.
 const int hiitMaxRecommendedExercises = 6;
@@ -90,7 +91,7 @@ class _HiitExerciseSelectionScreenState
                 ),
                 Text(
                   l10n.routineSelected('${_selectedKeys.length}'),
-                  style: const TextStyle(color: Colors.white54),
+                  style: TextStyle(color: context.textSecondary),
                 ),
               ],
             ),
@@ -114,7 +115,7 @@ class _HiitExerciseSelectionScreenState
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                       side: isSelected
-                          ? const BorderSide(color: Colors.white38)
+                          ? BorderSide(color: context.textSubtle)
                           : BorderSide.none,
                     ),
                     child: InkWell(
@@ -131,7 +132,7 @@ class _HiitExerciseSelectionScreenState
                                   : Icons.radio_button_unchecked,
                               color: isSelected
                                   ? Colors.greenAccent
-                                  : Colors.white38,
+                                  : context.textSubtle,
                             ),
                             const SizedBox(width: 12),
                             Expanded(
@@ -150,9 +151,9 @@ class _HiitExerciseSelectionScreenState
                                   const SizedBox(height: 4),
                                   Text(
                                     exercise.description,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontSize: 12,
-                                      color: Colors.white54,
+                                      color: context.textSecondary,
                                     ),
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,

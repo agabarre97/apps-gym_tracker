@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
+import 'package:gym_tracker/presentation/theme/app_theme.dart';
 
 /// Screen 1 of the onboarding flow — collects birth date, sex, weight, height,
 /// and gym experience.
@@ -20,6 +21,7 @@ class BasicInfoScreen extends StatefulWidget {
 class _BasicInfoScreenState extends State<BasicInfoScreen> {
   late final TextEditingController _weightCtrl;
   late final TextEditingController _heightCtrl;
+  late final TextEditingController _armSpanCtrl;
 
   static const _experienceOptions = ['<1', '1-3', '3-5', '>5'];
   static const _sexOptions = ['male', 'female'];
@@ -29,6 +31,7 @@ class _BasicInfoScreenState extends State<BasicInfoScreen> {
     super.initState();
     _weightCtrl = TextEditingController(text: _str(widget.data['weightKg']));
     _heightCtrl = TextEditingController(text: _str(widget.data['heightCm']));
+    _armSpanCtrl = TextEditingController(text: _str(widget.data['armSpanCm']));
   }
 
   String _str(dynamic v) => v == null ? '' : v.toString();
@@ -37,14 +40,17 @@ class _BasicInfoScreenState extends State<BasicInfoScreen> {
   void dispose() {
     _weightCtrl.dispose();
     _heightCtrl.dispose();
+    _armSpanCtrl.dispose();
     super.dispose();
   }
 
   void _saveNumericFields() {
     final weight = double.tryParse(_weightCtrl.text);
     final height = double.tryParse(_heightCtrl.text);
+    final armSpan = double.tryParse(_armSpanCtrl.text);
     widget.data['weightKg'] = weight;
     widget.data['heightCm'] = height;
+    widget.data['armSpanCm'] = armSpan;
     widget.onChanged();
   }
 
@@ -155,18 +161,22 @@ class _BasicInfoScreenState extends State<BasicInfoScreen> {
           InkWell(
             onTap: _pickBirthDate,
             borderRadius: BorderRadius.circular(12),
-            child: InputDecorator(
-              decoration: InputDecoration(
-                hintText: l10n.basicInfoBirthDateHint,
-                suffixIcon: const Icon(Icons.calendar_today),
-                border: const OutlineInputBorder(),
-              ),
-              child: Text(
-                birthDate != null
-                    ? _formatBirthDate(birthDate)
-                    : l10n.basicInfoBirthDateHint,
-                style: TextStyle(
-                  color: birthDate != null ? null : Colors.white54,
+            child: ConstrainedBox(
+              constraints:
+                  const BoxConstraints(minHeight: AppSizes.buttonHeightSmall),
+              child: InputDecorator(
+                decoration: InputDecoration(
+                  hintText: l10n.basicInfoBirthDateHint,
+                  suffixIcon: const Icon(Icons.calendar_today),
+                  border: const OutlineInputBorder(),
+                ),
+                child: Text(
+                  birthDate != null
+                      ? _formatBirthDate(birthDate)
+                      : l10n.basicInfoBirthDateHint,
+                  style: TextStyle(
+                    color: birthDate != null ? null : context.textSecondary,
+                  ),
                 ),
               ),
             ),
@@ -212,6 +222,16 @@ class _BasicInfoScreenState extends State<BasicInfoScreen> {
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: _validateHeight,
+            onChanged: (_) => _saveNumericFields(),
+          ),
+          const SizedBox(height: 16),
+
+          // ── Arm span ──
+          TextFormField(
+            controller: _armSpanCtrl,
+            decoration:
+                InputDecoration(labelText: l10n.advancedMeasures1ArmSpan),
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
             onChanged: (_) => _saveNumericFields(),
           ),
           const SizedBox(height: 24),

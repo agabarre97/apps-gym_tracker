@@ -61,7 +61,7 @@ void main() {
     }
 
     testWidgets(
-      'full flow: loading -> basic info -> skip advanced -> goals -> welcome -> landing',
+      'full flow: loading -> basic info -> optional advanced -> goals -> welcome -> landing',
       (tester) async {
         await tester.pumpWidget(buildApp());
 
@@ -71,7 +71,7 @@ void main() {
         // Wait for 2s delay + navigation
         await tester.pumpAndSettle(const Duration(seconds: 3));
 
-        // --- Basic Info screen (Step 1 of 5) ---
+        // --- Basic Info screen (Step 1 of 4) ---
         expect(find.text('Información básica'), findsOneWidget);
 
         // Select birth date via date picker
@@ -86,10 +86,11 @@ void main() {
         await tester.tap(find.text('Hombre'));
         await tester.pump();
 
-        // Fill required numeric fields (weight & height)
+        // Fill required numeric fields (weight, height, arm span)
         final textFields = find.byType(TextFormField);
         await tester.enterText(textFields.at(0), '80'); // Weight
         await tester.enterText(textFields.at(1), '180'); // Height
+        await tester.enterText(textFields.at(2), '182'); // Arm span
         await tester.pump();
 
         // Scroll down to reveal gym experience chips
@@ -105,21 +106,14 @@ void main() {
         await tester.tap(find.text('Siguiente'));
         await tester.pumpAndSettle();
 
-        // --- Advanced Measures 1 (Step 2 of 5) ---
+        // --- Advanced Measures (Step 2 of 4) ---
         expect(find.text('Medidas avanzadas 1'), findsOneWidget);
 
         // Skip
         await tester.tap(find.text('Omitir'));
         await tester.pumpAndSettle();
 
-        // --- Advanced Measures 2 (Step 3 of 5) ---
-        expect(find.text('Medidas avanzadas 2'), findsOneWidget);
-
-        // Skip
-        await tester.tap(find.text('Omitir'));
-        await tester.pumpAndSettle();
-
-        // --- Goals (Step 4 of 5) ---
+        // --- Goals (Step 3 of 4) ---
         expect(find.text('Objetivos'), findsOneWidget);
 
         // Fill target weight and kcal
@@ -132,7 +126,7 @@ void main() {
         await tester.tap(find.text('Siguiente'));
         await tester.pumpAndSettle();
 
-        // --- Welcome (Step 5 of 5) ---
+        // --- Welcome (Step 4 of 4) ---
         expect(find.text('Bienvenido'), findsOneWidget);
         expect(
           find.text('Es hora de construir. Cada repetición cuenta.'),

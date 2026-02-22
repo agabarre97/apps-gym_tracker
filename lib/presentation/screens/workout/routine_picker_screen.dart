@@ -3,6 +3,7 @@ import 'package:gym_tracker/l10n/app_localizations.dart';
 
 import 'package:gym_tracker/domain/entities/routine.dart';
 import 'package:gym_tracker/presentation/components/routine_type_helper.dart';
+import 'package:gym_tracker/presentation/theme/app_theme.dart';
 
 /// Lets the user choose a routine before starting a workout.
 class RoutinePickerScreen extends StatelessWidget {
@@ -25,7 +26,7 @@ class RoutinePickerScreen extends StatelessWidget {
           ? Center(
               child: Text(
                 l10n.workoutNoRoutines,
-                style: const TextStyle(color: Colors.white54),
+                style: TextStyle(color: context.textSecondary),
               ),
             )
           : ListView.builder(
@@ -37,17 +38,17 @@ class RoutinePickerScreen extends StatelessWidget {
                   margin: const EdgeInsets.only(bottom: 8),
                   child: ListTile(
                     leading: Icon(RoutineTypeHelper.iconFor(routine.type),
-                        color: Colors.white70),
+                        color: context.textSecondary),
                     title: Text(routine.name),
                     subtitle: routine.days.isNotEmpty
                         ? Text(
                             l10n.routineDaysCount('${routine.days.length}'),
-                            style: const TextStyle(
-                                fontSize: 12, color: Colors.white38),
+                            style: TextStyle(
+                                fontSize: 12, color: context.textSubtle),
                           )
                         : null,
                     trailing:
-                        const Icon(Icons.chevron_right, color: Colors.white38),
+                        Icon(Icons.chevron_right, color: context.textSubtle),
                     onTap: () => onRoutineSelected(routine),
                   ),
                 );

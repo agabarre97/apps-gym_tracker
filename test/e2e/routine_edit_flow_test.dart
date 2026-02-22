@@ -76,6 +76,7 @@ void main() {
             routinePort: routinePort,
             allExercises: allExercises,
             workoutSessionPort: FakeWorkoutSessionPort(),
+            profilePort: FakeProfilePort(),
           ),
         ),
       );
@@ -134,6 +135,7 @@ void main() {
             routinePort: routinePort,
             allExercises: allExercises,
             workoutSessionPort: FakeWorkoutSessionPort(),
+            profilePort: FakeProfilePort(),
           ),
         ),
       );

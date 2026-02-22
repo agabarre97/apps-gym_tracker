@@ -12,6 +12,7 @@ import 'package:gym_tracker/presentation/components/circular_timer_painter.dart'
 import 'package:gym_tracker/presentation/components/time_wheel_picker.dart';
 import 'package:gym_tracker/domain/entities/hiit_config.dart';
 import 'package:gym_tracker/presentation/utils/time_formatter.dart';
+import 'package:gym_tracker/presentation/theme/app_theme.dart';
 
 /// Full-screen HIIT timer with preview, countdown, exercise/rest phases,
 /// set rest, and completion.
@@ -426,11 +427,12 @@ class _HiitTimerScreenState extends State<HiitTimerScreen>
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
           child: Row(
             children: [
-              const Icon(Icons.timer_outlined, size: 20, color: Colors.white54),
+              Icon(Icons.timer_outlined,
+                  size: 20, color: context.textSecondary),
               const SizedBox(width: 8),
               Text(
                 '${l10n.hiitTotalDuration}: ${_formatDuration(_totalDurationSeconds)}',
-                style: const TextStyle(fontSize: 14, color: Colors.white54),
+                style: TextStyle(fontSize: 14, color: context.textSecondary),
               ),
             ],
           ),
@@ -469,16 +471,15 @@ class _HiitTimerScreenState extends State<HiitTimerScreen>
                   radius: 14,
                   backgroundColor: Colors.white12,
                   child: Text('${index + 1}',
-                      style:
-                          const TextStyle(fontSize: 12, color: Colors.white70)),
+                      style: TextStyle(
+                          fontSize: 12, color: context.textSecondary)),
                 ),
                 title: Text(exercise.name,
                     style: const TextStyle(color: Colors.white)),
                 subtitle: Text(exercise.description,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style:
-                        const TextStyle(fontSize: 12, color: Colors.white38)),
+                    style: TextStyle(fontSize: 12, color: context.textSubtle)),
               );
             },
           ),
@@ -520,7 +521,7 @@ class _HiitTimerScreenState extends State<HiitTimerScreen>
             const SizedBox(height: 12),
             Text(
               _currentExercise.name,
-              style: const TextStyle(fontSize: 16, color: Colors.white54),
+              style: TextStyle(fontSize: 16, color: context.textSecondary),
             ),
             const SizedBox(height: 40),
             SizedBox(
@@ -594,10 +595,10 @@ class _HiitTimerScreenState extends State<HiitTimerScreen>
           const SizedBox(height: 16),
           if (stepInfo.isNotEmpty)
             Text(stepInfo,
-                style: const TextStyle(fontSize: 14, color: Colors.white54)),
+                style: TextStyle(fontSize: 14, color: context.textSecondary)),
           if (stepInfo.isNotEmpty) const SizedBox(height: 4),
           Text(subtitle,
-              style: const TextStyle(fontSize: 14, color: Colors.white54)),
+              style: TextStyle(fontSize: 14, color: context.textSecondary)),
           const SizedBox(height: 8),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -621,9 +622,9 @@ class _HiitTimerScreenState extends State<HiitTimerScreen>
               ),
               child: Text(
                 l10n.hiitSetOf('${_setIndex + 1}', '$_sets'),
-                style: const TextStyle(
+                style: TextStyle(
                     fontSize: 14,
-                    color: Colors.white70,
+                    color: context.textSecondary,
                     fontWeight: FontWeight.w600),
               ),
             ),
@@ -679,13 +680,14 @@ class _HiitTimerScreenState extends State<HiitTimerScreen>
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.skip_next, size: 18, color: Colors.white38),
+                  Icon(Icons.skip_next, size: 18, color: context.textSubtle),
                   const SizedBox(width: 6),
                   Text(
                     isSetRest
                         ? '${l10n.hiitSetOf('${_setIndex + 2}', '$_sets')} — ${widget.exercises.first.name}'
                         : _nextExercise!.name,
-                    style: const TextStyle(fontSize: 14, color: Colors.white54),
+                    style:
+                        TextStyle(fontSize: 14, color: context.textSecondary),
                   ),
                 ],
               ),
@@ -726,7 +728,7 @@ class _HiitTimerScreenState extends State<HiitTimerScreen>
                     color: Colors.white)),
             const SizedBox(height: 12),
             Text(widget.routineName,
-                style: const TextStyle(fontSize: 16, color: Colors.white54)),
+                style: TextStyle(fontSize: 16, color: context.textSecondary)),
             const SizedBox(height: 48),
             FilledButton.icon(
               onPressed: () => Navigator.of(context).pop(true),

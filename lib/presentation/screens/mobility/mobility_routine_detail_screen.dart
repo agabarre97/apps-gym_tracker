@@ -14,6 +14,7 @@ import 'package:gym_tracker/presentation/components/mobility_exercise_detail_she
 import 'package:gym_tracker/presentation/components/mobility_exercise_tile.dart';
 import 'package:gym_tracker/presentation/components/pdf_share_helper.dart';
 import 'package:gym_tracker/presentation/screens/mobility/mobility_timer_screen.dart';
+import 'package:gym_tracker/presentation/theme/app_theme.dart';
 
 /// Detail screen for a mobility routine.
 ///
@@ -189,7 +190,7 @@ class _MobilityRoutineDetailScreenState
               ? Center(
                   child: Text(
                     l10n.mobilityRoutineNotFound,
-                    style: const TextStyle(color: Colors.white54),
+                    style: TextStyle(color: context.textSecondary),
                   ),
                 )
               : _buildContent(l10n),
@@ -206,19 +207,20 @@ class _MobilityRoutineDetailScreenState
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
           child: Row(
             children: [
-              const Icon(Icons.timer_outlined, size: 20, color: Colors.white54),
+              Icon(Icons.timer_outlined,
+                  size: 20, color: context.textSecondary),
               const SizedBox(width: 8),
               Text(
                 l10n.mobilityRoutineDuration('${mr.totalDurationMinutes}'),
-                style: const TextStyle(fontSize: 14, color: Colors.white54),
+                style: TextStyle(fontSize: 14, color: context.textSecondary),
               ),
               const SizedBox(width: 24),
-              const Icon(Icons.format_list_numbered,
-                  size: 20, color: Colors.white54),
+              Icon(Icons.format_list_numbered,
+                  size: 20, color: context.textSecondary),
               const SizedBox(width: 8),
               Text(
                 l10n.mobilityRoutineExerciseCount('${mr.exercises.length}'),
-                style: const TextStyle(fontSize: 14, color: Colors.white54),
+                style: TextStyle(fontSize: 14, color: context.textSecondary),
               ),
             ],
           ),

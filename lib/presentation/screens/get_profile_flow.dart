@@ -9,12 +9,12 @@ import 'package:gym_tracker/domain/ports/routine_port.dart';
 import 'package:gym_tracker/domain/ports/storage_port.dart';
 import 'package:gym_tracker/domain/ports/training_day_port.dart';
 import 'package:gym_tracker/domain/ports/workout_session_port.dart';
+import 'package:gym_tracker/domain/ports/measurement_record_port.dart';
 import 'package:gym_tracker/domain/ports/mobility_session_port.dart';
 import 'package:gym_tracker/domain/ports/hiit_session_port.dart';
 import 'package:gym_tracker/presentation/components/language_selector.dart';
 import 'package:gym_tracker/presentation/screens/landing_screen.dart';
-import 'package:gym_tracker/presentation/screens/profile/advanced_measures_1_screen.dart';
-import 'package:gym_tracker/presentation/screens/profile/advanced_measures_2_screen.dart';
+import 'package:gym_tracker/presentation/screens/profile/advanced_measures_screen.dart';
 import 'package:gym_tracker/presentation/screens/profile/basic_info_screen.dart';
 import 'package:gym_tracker/presentation/screens/profile/goals_screen.dart';
 import 'package:gym_tracker/presentation/screens/profile/welcome_screen.dart';
@@ -28,6 +28,7 @@ class GetProfileFlow extends StatefulWidget {
     required this.routinePort,
     required this.trainingDayPort,
     required this.workoutSessionPort,
+    this.measurementRecordPort,
     required this.mobilitySessionPort,
     required this.hiitSessionPort,
     required this.onLocaleChanged,
@@ -40,6 +41,7 @@ class GetProfileFlow extends StatefulWidget {
   final RoutinePort routinePort;
   final TrainingDayPort trainingDayPort;
   final WorkoutSessionPort workoutSessionPort;
+  final MeasurementRecordPort? measurementRecordPort;
   final MobilitySessionPort mobilitySessionPort;
   final HiitSessionPort hiitSessionPort;
   final ValueChanged<Locale> onLocaleChanged;
@@ -53,7 +55,7 @@ class GetProfileFlow extends StatefulWidget {
 class _GetProfileFlowState extends State<GetProfileFlow> {
   final PageController _pageCtrl = PageController();
   int _currentPage = 0;
-  static const _totalPages = 5;
+  static const _totalPages = 4;
 
   /// Shared mutable data map populated by each page.
   final Map<String, dynamic> _data = {};
@@ -100,6 +102,13 @@ class _GetProfileFlowState extends State<GetProfileFlow> {
     if (height == null || height is! double || height < 100 || height > 250) {
       return false;
     }
+    final armSpan = _data['armSpanCm'];
+    if (armSpan == null ||
+        armSpan is! double ||
+        armSpan < 100 ||
+        armSpan > 300) {
+      return false;
+    }
     if (exp == null || exp is! String || exp.isEmpty) return false;
     return true;
   }
@@ -121,6 +130,10 @@ class _GetProfileFlowState extends State<GetProfileFlow> {
   }
 
   Future<void> _onStart() async {
+    final now = DateTime.now();
+    final todayIso =
+        '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+    final goal = _data['weightGoal'] as String;
     final profile = UserProfile(
       birthDate: _data['birthDate'] as String,
       sex: _data['sex'] as String,
@@ -133,9 +146,10 @@ class _GetProfileFlowState extends State<GetProfileFlow> {
       waistPerimeterCm: _data['waistPerimeterCm'] as double?,
       quadPerimeterCm: _data['quadPerimeterCm'] as double?,
       calfPerimeterCm: _data['calfPerimeterCm'] as double?,
-      weightGoal: _data['weightGoal'] as String,
+      weightGoal: goal,
       targetWeightKg: _data['targetWeightKg'] as double?,
       kcalPerDay: _data['kcalPerDay'] as int?,
+      goalHistory: [GoalPhase(startDate: todayIso, weightGoal: goal)],
     );
 
     await widget.profilePort.saveProfile(profile);
@@ -151,6 +165,7 @@ class _GetProfileFlowState extends State<GetProfileFlow> {
           routinePort: widget.routinePort,
           trainingDayPort: widget.trainingDayPort,
           workoutSessionPort: widget.workoutSessionPort,
+          measurementRecordPort: widget.measurementRecordPort,
           mobilitySessionPort: widget.mobilitySessionPort,
           hiitSessionPort: widget.hiitSessionPort,
           onLocaleChanged: widget.onLocaleChanged,
@@ -194,11 +209,7 @@ class _GetProfileFlowState extends State<GetProfileFlow> {
                   data: _data,
                   onChanged: () => setState(() {}),
                 ),
-                AdvancedMeasures1Screen(
-                  data: _data,
-                  onChanged: () => setState(() {}),
-                ),
-                AdvancedMeasures2Screen(
+                AdvancedMeasuresScreen(
                   data: _data,
                   onChanged: () => setState(() {}),
                 ),
@@ -231,7 +242,7 @@ class _GetProfileFlowState extends State<GetProfileFlow> {
                     else
                       const SizedBox.shrink(),
                     // Skip (on advanced measure pages)
-                    if (_currentPage == 1 || _currentPage == 2)
+                    if (_currentPage == 1)
                       TextButton(
                         onPressed: _next,
                         child: Text(l10n.sharedSkip),
@@ -255,9 +266,8 @@ class _GetProfileFlowState extends State<GetProfileFlow> {
       case 0:
         return _isBasicInfoValid();
       case 1:
-      case 2:
         return true; // optional screens
-      case 3:
+      case 2:
         return _isGoalsValid();
       default:
         return false;

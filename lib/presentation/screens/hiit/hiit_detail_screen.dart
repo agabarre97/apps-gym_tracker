@@ -15,6 +15,7 @@ import 'package:gym_tracker/domain/entities/hiit_config.dart';
 import 'package:gym_tracker/presentation/screens/hiit/hiit_exercise_selection_screen.dart';
 import 'package:gym_tracker/presentation/screens/hiit/hiit_timer_screen.dart';
 import 'package:gym_tracker/presentation/utils/time_formatter.dart';
+import 'package:gym_tracker/presentation/theme/app_theme.dart';
 
 /// Detail screen for an existing HIIT routine.
 ///
@@ -365,26 +366,27 @@ class _HiitDetailScreenState extends State<HiitDetailScreen> {
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
           child: Row(
             children: [
-              const Icon(Icons.timer_outlined, size: 20, color: Colors.white54),
+              Icon(Icons.timer_outlined,
+                  size: 20, color: context.textSecondary),
               const SizedBox(width: 8),
               Text(
                 _formatDuration(_totalDurationSeconds),
-                style: const TextStyle(fontSize: 14, color: Colors.white54),
+                style: TextStyle(fontSize: 14, color: context.textSecondary),
               ),
               const SizedBox(width: 24),
-              const Icon(Icons.format_list_numbered,
-                  size: 20, color: Colors.white54),
+              Icon(Icons.format_list_numbered,
+                  size: 20, color: context.textSecondary),
               const SizedBox(width: 8),
               Text(
                 l10n.hiitExerciseCount('${exercises.length}'),
-                style: const TextStyle(fontSize: 14, color: Colors.white54),
+                style: TextStyle(fontSize: 14, color: context.textSecondary),
               ),
               const SizedBox(width: 24),
-              const Icon(Icons.repeat, size: 20, color: Colors.white54),
+              Icon(Icons.repeat, size: 20, color: context.textSecondary),
               const SizedBox(width: 8),
               Text(
                 l10n.hiitSetCount('$_sets'),
-                style: const TextStyle(fontSize: 14, color: Colors.white54),
+                style: TextStyle(fontSize: 14, color: context.textSecondary),
               ),
             ],
           ),
@@ -422,13 +424,13 @@ class _HiitDetailScreenState extends State<HiitDetailScreen> {
               Text(
                 l10n.hiitSelectExercises,
                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      color: Colors.white70,
+                      color: context.textSecondary,
                     ),
               ),
               IconButton(
                 icon: const Icon(Icons.edit_outlined, size: 20),
                 tooltip: l10n.hiitEditExercises,
-                color: Colors.white54,
+                color: context.textSecondary,
                 onPressed: _editExercises,
               ),
             ],
@@ -456,10 +458,10 @@ class _HiitDetailScreenState extends State<HiitDetailScreen> {
                         backgroundColor: Colors.white12,
                         child: Text(
                           '${index + 1}',
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white70),
+                              color: context.textSecondary),
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -475,8 +477,8 @@ class _HiitDetailScreenState extends State<HiitDetailScreen> {
                               const SizedBox(height: 2),
                               Text(
                                 exercise.description,
-                                style: const TextStyle(
-                                    fontSize: 12, color: Colors.white54),
+                                style: TextStyle(
+                                    fontSize: 12, color: context.textSecondary),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),

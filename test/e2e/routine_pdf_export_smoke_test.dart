@@ -38,6 +38,7 @@ void main() {
             routinePort: FakeRoutinePort(),
             allExercises: exercises,
             workoutSessionPort: FakeWorkoutSessionPort(),
+            profilePort: FakeProfilePort(),
           ),
         ),
       );

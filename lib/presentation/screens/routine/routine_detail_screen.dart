@@ -8,12 +8,14 @@ import 'package:gym_tracker/presentation/components/export_sheet.dart';
 import 'package:gym_tracker/presentation/components/pdf_share_helper.dart';
 import 'package:gym_tracker/domain/entities/exercise.dart';
 import 'package:gym_tracker/domain/entities/routine.dart';
+import 'package:gym_tracker/domain/ports/profile_port.dart';
 import 'package:gym_tracker/domain/ports/routine_port.dart';
 import 'package:gym_tracker/domain/ports/workout_session_port.dart';
 import 'package:gym_tracker/presentation/components/delete_routine_dialog.dart';
 import 'package:gym_tracker/presentation/screens/routine/by_muscle_category_labels.dart';
 import 'package:gym_tracker/presentation/screens/routine/exercise_selection_screen.dart';
 import 'package:gym_tracker/presentation/screens/workout/exercise_progress_screen.dart';
+import 'package:gym_tracker/presentation/theme/app_theme.dart';
 
 /// Read-only detail view for an existing routine.
 ///
@@ -28,6 +30,7 @@ class RoutineDetailScreen extends StatefulWidget {
     required this.routinePort,
     required this.allExercises,
     required this.workoutSessionPort,
+    required this.profilePort,
   });
 
   final Routine routine;
@@ -35,6 +38,7 @@ class RoutineDetailScreen extends StatefulWidget {
   final RoutinePort routinePort;
   final List<Exercise> allExercises;
   final WorkoutSessionPort workoutSessionPort;
+  final ProfilePort profilePort;
 
   @override
   State<RoutineDetailScreen> createState() => _RoutineDetailScreenState();
@@ -194,11 +198,14 @@ class _RoutineDetailScreenState extends State<RoutineDetailScreen> {
 
   // ── Progress ───────────────────────────────────────────────────
 
-  void _viewProgress(int dayIndex, String exerciseKey) {
+  Future<void> _viewProgress(int dayIndex, String exerciseKey) async {
+    final profile = await widget.profilePort.loadProfile();
+    if (!mounted || profile == null) return;
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => ExerciseProgressScreen(
           workoutSessionPort: widget.workoutSessionPort,
+          profile: profile,
           routineId: _routine.id,
           routineDayIndex: dayIndex,
           exerciseKey: exerciseKey,
@@ -261,7 +268,7 @@ class _RoutineDetailScreenState extends State<RoutineDetailScreen> {
                             icon: const Icon(Icons.edit, size: 16),
                             label: Text(l10n.routineEditDay),
                             style: TextButton.styleFrom(
-                              foregroundColor: Colors.white70,
+                              foregroundColor: context.textSecondary,
                               visualDensity: VisualDensity.compact,
                             ),
                             onPressed: () => _editDay(i),
@@ -270,8 +277,8 @@ class _RoutineDetailScreenState extends State<RoutineDetailScreen> {
                       ),
                       subtitle: Text(
                         '${day.exerciseKeys.length} ${l10n.routineExercises}',
-                        style: const TextStyle(
-                            color: Colors.white54, fontSize: 12),
+                        style: TextStyle(
+                            color: context.textSecondary, fontSize: 12),
                       ),
                       children: [
                         Padding(
@@ -308,10 +315,10 @@ class _RoutineDetailScreenState extends State<RoutineDetailScreen> {
                               leading: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  const Icon(
+                                  Icon(
                                     Icons.fitness_center,
                                     size: 16,
-                                    color: Colors.white54,
+                                    color: context.textSecondary,
                                   ),
                                   const SizedBox(width: 4),
                                   ReorderableDragStartListener(
@@ -321,7 +328,7 @@ class _RoutineDetailScreenState extends State<RoutineDetailScreen> {
                                       key: ValueKey(
                                           'routine-day-$i-drag-handle-$key'),
                                       size: 18,
-                                      color: Colors.white38,
+                                      color: context.textSubtle,
                                     ),
                                   ),
                                 ],

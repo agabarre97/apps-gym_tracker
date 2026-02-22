@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
+import 'package:gym_tracker/presentation/theme/app_theme.dart';
 
 /// Screen to choose how many days per week the routine will have.
 class DaysSelectionScreen extends StatefulWidget {
@@ -55,7 +56,7 @@ class _DaysSelectionScreenState extends State<DaysSelectionScreen> {
             const SizedBox(height: 8),
             Text(
               l10n.routineDaysCount('${_days.round()}'),
-              style: const TextStyle(fontSize: 18, color: Colors.white70),
+              style: TextStyle(fontSize: 18, color: context.textSecondary),
             ),
             const SizedBox(height: 32),
             Slider(

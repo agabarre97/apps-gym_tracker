@@ -128,7 +128,8 @@ class _GoalsScreenState extends State<GoalsScreen> {
                     ? l10n.goalsKcalToGain
                     : l10n.goalsKcalToLose,
               ),
-              keyboardType: TextInputType.number,
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: _validateKcal,

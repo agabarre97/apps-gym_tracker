@@ -101,7 +101,7 @@ abstract class AppLocalizations {
   /// No description provided for @sharedAppTitle.
   ///
   /// In es, this message translates to:
-  /// **'Gym Tracker'**
+  /// **'Gym: all in one'**
   String get sharedAppTitle;
 
   /// No description provided for @sharedNext.

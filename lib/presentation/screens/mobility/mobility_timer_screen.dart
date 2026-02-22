@@ -11,6 +11,7 @@ import 'package:gym_tracker/l10n/app_localizations.dart';
 import 'package:gym_tracker/presentation/components/circular_timer_painter.dart';
 import 'package:gym_tracker/presentation/components/mobility_exercise_tile.dart';
 import 'package:gym_tracker/presentation/utils/time_formatter.dart';
+import 'package:gym_tracker/presentation/theme/app_theme.dart';
 
 /// Full-screen mobility timer with preview, countdown, circular timer,
 /// rest periods, beeps, and early finish support.
@@ -431,7 +432,7 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
             const SizedBox(height: 12),
             Text(
               mobilityExerciseDisplayName(_currentExercise.key, l10n),
-              style: const TextStyle(fontSize: 16, color: Colors.white54),
+              style: TextStyle(fontSize: 16, color: context.textSecondary),
             ),
             const SizedBox(height: 40),
             SizedBox(
@@ -494,7 +495,7 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
         children: [
           const SizedBox(height: 16),
           Text(stepInfo,
-              style: const TextStyle(fontSize: 14, color: Colors.white54)),
+              style: TextStyle(fontSize: 14, color: context.textSecondary)),
           const SizedBox(height: 8),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -503,7 +504,7 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: isRest ? Colors.white38 : Colors.white,
+                color: isRest ? context.textSubtle : Colors.white,
               ),
               textAlign: TextAlign.center,
             ),
@@ -519,7 +520,7 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
               sideLabel,
               style: TextStyle(
                 fontSize: 14,
-                color: isRest ? Colors.orangeAccent : Colors.white70,
+                color: isRest ? Colors.orangeAccent : context.textSecondary,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -576,11 +577,12 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.skip_next, size: 18, color: Colors.white38),
+                  Icon(Icons.skip_next, size: 18, color: context.textSubtle),
                   const SizedBox(width: 6),
                   Text(
                     mobilityExerciseDisplayName(_nextExercise!.key, l10n),
-                    style: const TextStyle(fontSize: 14, color: Colors.white54),
+                    style:
+                        TextStyle(fontSize: 14, color: context.textSecondary),
                   ),
                 ],
               ),
@@ -621,7 +623,7 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
                     color: Colors.white)),
             const SizedBox(height: 12),
             Text(widget.routineName,
-                style: const TextStyle(fontSize: 16, color: Colors.white54)),
+                style: TextStyle(fontSize: 16, color: context.textSecondary)),
             const SizedBox(height: 48),
             FilledButton.icon(
               onPressed: () => Navigator.of(context).pop(true),

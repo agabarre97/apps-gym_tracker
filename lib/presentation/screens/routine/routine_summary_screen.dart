@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
 import 'package:gym_tracker/domain/entities/exercise.dart';
 import 'package:gym_tracker/presentation/screens/routine/by_muscle_category_labels.dart';
+import 'package:gym_tracker/presentation/theme/app_theme.dart';
 
 /// Final screen of the routine creation flow.
 ///
@@ -118,7 +119,7 @@ class _RoutineSummaryScreenState extends State<RoutineSummaryScreen> {
                               icon: const Icon(Icons.edit, size: 16),
                               label: Text(l10n.routineEditDay),
                               style: TextButton.styleFrom(
-                                foregroundColor: Colors.white70,
+                                foregroundColor: context.textSecondary,
                                 visualDensity: VisualDensity.compact,
                               ),
                               onPressed: () => widget.onEditDay!(i),
@@ -127,8 +128,8 @@ class _RoutineSummaryScreenState extends State<RoutineSummaryScreen> {
                       ),
                       subtitle: Text(
                         '${exerciseKeys.length} ${l10n.routineExercises}',
-                        style: const TextStyle(
-                            color: Colors.white54, fontSize: 12),
+                        style: TextStyle(
+                            color: context.textSecondary, fontSize: 12),
                       ),
                       children: [
                         Padding(
@@ -151,8 +152,8 @@ class _RoutineSummaryScreenState extends State<RoutineSummaryScreen> {
                         const Divider(height: 1),
                         ...exerciseKeys.map((key) => ListTile(
                               dense: true,
-                              leading: const Icon(Icons.fitness_center,
-                                  size: 16, color: Colors.white54),
+                              leading: Icon(Icons.fitness_center,
+                                  size: 16, color: context.textSecondary),
                               title: Text(_nameForKey(key),
                                   style: const TextStyle(fontSize: 13)),
                             )),

@@ -149,7 +149,7 @@ void main() {
       await tester.pumpWidget(buildScreen());
       await tester.pumpAndSettle();
 
-      expect(find.text('Gym Tracker'), findsOneWidget);
+      expect(find.text('Gym: all in one'), findsOneWidget);
     });
 
     testWidgets('password visibility toggle works', (tester) async {

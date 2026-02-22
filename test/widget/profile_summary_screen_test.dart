@@ -16,6 +16,8 @@ void main() {
       return buildTestableWidget(
         ProfileSummaryScreen(
           profile: profile,
+          profilePort: FakeProfilePort(),
+          measurementRecordPort: FakeMeasurementRecordPort(),
           storage: FakeStoragePort(),
           email: email,
           onSignOut: onSignOut,
