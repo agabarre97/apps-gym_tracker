@@ -1,4 +1,4 @@
-.PHONY: help run format test tests analyze clean gen-l10n build-apk build-ios pub-get lint check-format fix fix-snap test-coverage-check scrape-musclewiki scrape-musclewiki-full
+.PHONY: help run format test tests analyze clean gen-l10n build-apk build-apk-fast build-ios pub-get lint check-format fix fix-snap test-coverage-check scrape-musclewiki scrape-musclewiki-full
 
 ## ─── Default ────────────────────────────────────────────────────────────────
 
@@ -69,6 +69,9 @@ test-coverage-check: test-coverage ## Fail if line coverage below threshold
 
 build-apk: ## Build Android APK (release)
 	flutter build apk
+
+build-apk-fast: ## Build Android APK (release) without pub refresh
+	flutter build apk --no-pub
 
 build-ios: ## Build iOS (release, macOS only)
 	flutter build ios

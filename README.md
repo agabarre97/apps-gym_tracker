@@ -166,6 +166,23 @@ Physical iOS development requires **macOS + Xcode**. Follow the existing steps i
 - Synced cloud storage when authenticated
 - Works fully offline without auth
 
+#### Google Sign-In on Web (common setup issue)
+
+If Google login popup succeeds but the app fails right after, check browser console for:
+
+- `content-people.googleapis.com ... 403`
+
+This usually means **People API is not enabled** in the Google Cloud project linked to your OAuth Web client.
+
+Fix checklist:
+
+1. Open **Google Cloud Console** for the same Firebase/Auth project.
+2. Go to **APIs & Services -> Library** and enable **People API**.
+3. Verify OAuth setup:
+   - OAuth consent screen is configured.
+   - Test user is added (if app is in testing mode).
+   - Authorized JavaScript origins include your local URL (`http://localhost:<port>`).
+
 ---
 
 ## Makefile Commands

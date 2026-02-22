@@ -89,6 +89,19 @@ HOME="$HOME/tmp-sdk-home" ANDROID_SDK_ROOT="$HOME/.android-sdk" ANDROID_HOME="$H
 ANDROID_SDK_ROOT="$HOME/.android-sdk" ANDROID_HOME="$HOME/.android-sdk" make build-apk
 ```
 
+### 4.6 Fast repeat builds (recommended)
+After a successful first build, use cached dependency mode:
+
+```bash
+ANDROID_SDK_ROOT="$HOME/.android-sdk" ANDROID_HOME="$HOME/.android-sdk" make build-apk-fast
+```
+
+Equivalent direct command:
+
+```bash
+ANDROID_SDK_ROOT="$HOME/.android-sdk" ANDROID_HOME="$HOME/.android-sdk" flutter build apk --no-pub
+```
+
 ## 5) Last known failure point before handoff
 
 Before the last toolchain updates, build failed at `:share_plus:compileReleaseKotlin` due to Kotlin metadata mismatch:
@@ -104,10 +117,18 @@ This is why Kotlin plugin was upgraded to `2.2.0` and AGP/Gradle were updated.
    - `ANDROID_SDK_ROOT=$HOME/.android-sdk ANDROID_HOME=$HOME/.android-sdk make build-apk`
 2. Confirm APK exists:
    - `build/app/outputs/flutter-apk/app-release.apk`
-3. If build still fails, collect:
+3. For next iterations, prefer:
+   - `ANDROID_SDK_ROOT=$HOME/.android-sdk ANDROID_HOME=$HOME/.android-sdk make build-apk-fast`
+4. If build still fails, collect:
    - full console output
    - `android/settings.gradle`
    - `android/gradle/wrapper/gradle-wrapper.properties`
    - `android/app/build.gradle`
    - `android/local.properties`
+
+## 7) Build performance observed on this machine
+
+- Cold-ish build (`make build-apk`): ~3 minutes wall time.
+- Warm build (`flutter build apk --no-pub`): ~7 seconds wall time.
+- Recommendation: use one full build after toolchain changes, then switch to `--no-pub` for daily loops.
 
