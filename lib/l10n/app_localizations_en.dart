@@ -106,9 +106,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get authOr => 'OR';
 
   @override
-  String get loadingMotto => 'Improve yourself';
-
-  @override
   String get landingTrain => 'Train';
 
   @override
@@ -809,7 +806,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get basicInfoExpMoreThan5 => '>5 years';
 
   @override
-  String get advancedMeasures1Title => 'Advanced Measures 1';
+  String get advancedMeasures1Title => 'Advanced Measures';
 
   @override
   String get advancedMeasures1ArmSpan => 'Arm-to-arm span (cm)';

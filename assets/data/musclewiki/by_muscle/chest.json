@@ -1,5 +1,126 @@
 [
   {
+    "key": "dumbbell-inclined-press",
+    "name": {
+      "es": "Press inclinado con mancuernas",
+      "en": "Incline Dumbbell Press"
+    },
+    "short_description": {
+      "es": "1. Siéntate en un banco inclinado (30-45 grados) con una mancuerna en cada mano sobre los muslos. \n2. Empuja las pesas hacia arriba sobre el pecho con los brazos extendidos. \n3. Baja las mancuernas lentamente hacia los lados del pecho superior, manteniendo los codos a 45 grados. \n4. Empuja de nuevo hacia la posición inicial apretando el pecho.",
+      "en": "1. Sit on an incline bench (30-45 degrees) with a dumbbell in each hand resting on your thighs. \n2. Press the weights up over your chest with arms fully extended. \n3. Lower the dumbbells slowly towards the sides of your upper chest, keeping elbows at a 45-degree angle. \n4. Press back to the starting position while squeezing your chest."
+    },
+    "muscles_involved": [
+      "chest",
+      "shoulders",
+      "triceps"
+    ],
+    "muscles_source": "text_roles",
+    "muscles_confidence": "high",
+    "muscles_trace": {
+      "svg_detected_ids": [
+        "chest"
+      ],
+      "text_roles_detected": {
+        "primary": [
+          "chest"
+        ],
+        "secondary": [
+          "shoulders",
+          "triceps"
+        ],
+        "tertiary": []
+      },
+      "url_slug_inferred": null
+    },
+    "general_categories": [
+      "chest",
+      "dumbbells"
+    ],
+    "source_urls": {
+      "es": "",
+      "en": ""
+    }
+  },
+  {
+    "key": "dumbbell-flat-press",
+    "name": {
+      "es": "Press plano con mancuernas",
+      "en": "Flat Dumbbell Press"
+    },
+    "short_description": {
+      "es": "1. Acuéstate en un banco plano con las mancuernas a la altura del pecho. \n2. Empuja las mancuernas hacia el techo hasta extender los brazos completamente. \n3. Baja las pesas de forma controlada hasta que los codos queden ligeramente por debajo del nivel del banco. \n4. Mantén los pies apoyados firmemente en el suelo para mayor estabilidad.",
+      "en": "1. Lie on a flat bench with dumbbells held at chest level. \n2. Press the dumbbells toward the ceiling until arms are fully extended. \n3. Lower the weights in a controlled manner until elbows are slightly below bench level. \n4. Keep your feet firmly planted on the floor for stability."
+    },
+    "muscles_involved": [
+      "chest",
+      "triceps"
+    ],
+    "muscles_source": "text_roles",
+    "muscles_confidence": "high",
+    "muscles_trace": {
+      "svg_detected_ids": [
+        "chest"
+      ],
+      "text_roles_detected": {
+        "primary": [
+          "chest"
+        ],
+        "secondary": [
+          "triceps"
+        ],
+        "tertiary": [
+          "shoulders"
+        ]
+      },
+      "url_slug_inferred": null
+    },
+    "general_categories": [
+      "chest",
+      "dumbbells"
+    ],
+    "source_urls": {
+      "es": "",
+      "en": ""
+    }
+  },
+  {
+    "key": "cable-lower-chest-fly",
+    "name": {
+      "es": "Cruces en polea para inferior",
+      "en": "High-to-Low Cable Fly"
+    },
+    "short_description": {
+      "es": "1. Coloca las poleas en la posición más alta y sujeta los agarres. Da un paso hacia adelante. \n2. Con una ligera flexión de codos, lleva las manos hacia abajo y hacia el centro, cruzándolas ligeramente frente a la cintura. \n3. Aprieta la parte inferior del pecho al final del movimiento. \n4. Regresa lentamente a la posición inicial sintiendo el estiramiento en las fibras del pectoral.",
+      "en": "1. Set cables to the highest position and grab handles. Step forward. \n2. With a slight bend in elbows, bring hands down and inward, crossing slightly in front of your waist. \n3. Squeeze the lower chest at the bottom of the movement. \n4. Slowly return to the starting position feeling the stretch in the pectoral fibers."
+    },
+    "muscles_involved": [
+      "chest"
+    ],
+    "muscles_source": "text_roles",
+    "muscles_confidence": "high",
+    "muscles_trace": {
+      "svg_detected_ids": [
+        "chest"
+      ],
+      "text_roles_detected": {
+        "primary": [
+          "chest"
+        ],
+        "secondary": [],
+        "tertiary": []
+      },
+      "url_slug_inferred": null
+    },
+    "general_categories": [
+      "chest",
+      "cables"
+    ],
+    "source_urls": {
+      "es": "",
+      "en": ""
+    }
+  },
+  {
     "key": "barbell-bench-press",
     "name": {
       "es": "Press de banca con barra",

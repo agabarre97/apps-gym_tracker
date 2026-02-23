@@ -65,11 +65,8 @@ void main() {
       (tester) async {
         await tester.pumpWidget(buildApp());
 
-        // --- Loading screen ---
-        expect(find.text('Improve yourself'), findsOneWidget);
-
-        // Wait for 2s delay + navigation
-        await tester.pumpAndSettle(const Duration(seconds: 3));
+        // Wait for auth check + navigation
+        await tester.pumpAndSettle();
 
         // --- Basic Info screen (Step 1 of 4) ---
         expect(find.text('Información básica'), findsOneWidget);
@@ -107,7 +104,7 @@ void main() {
         await tester.pumpAndSettle();
 
         // --- Advanced Measures (Step 2 of 4) ---
-        expect(find.text('Medidas avanzadas 1'), findsOneWidget);
+        expect(find.text('Medidas avanzadas'), findsOneWidget);
 
         // Skip
         await tester.tap(find.text('Omitir'));

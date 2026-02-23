@@ -284,12 +284,6 @@ abstract class AppLocalizations {
   /// **'O'**
   String get authOr;
 
-  /// No description provided for @loadingMotto.
-  ///
-  /// In es, this message translates to:
-  /// **'Improve yourself'**
-  String get loadingMotto;
-
   /// No description provided for @landingTrain.
   ///
   /// In es, this message translates to:
@@ -1601,7 +1595,7 @@ abstract class AppLocalizations {
   /// No description provided for @advancedMeasures1Title.
   ///
   /// In es, this message translates to:
-  /// **'Medidas avanzadas 1'**
+  /// **'Medidas avanzadas'**
   String get advancedMeasures1Title;
 
   /// No description provided for @advancedMeasures1ArmSpan.

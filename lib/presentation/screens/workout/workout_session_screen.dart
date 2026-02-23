@@ -578,7 +578,7 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
                         const Padding(
                           padding: EdgeInsets.only(right: 8),
                           child: Icon(Icons.check_circle,
-                              color: Colors.greenAccent, size: 20),
+                              color: AppColors.success, size: 20),
                         ),
                       Expanded(
                         child: Text(
@@ -587,8 +587,8 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
                             fontSize: 15,
                             fontWeight: FontWeight.w600,
                             color: ex.completed
-                                ? Colors.greenAccent
-                                : Colors.white,
+                                ? AppColors.success
+                                : context.primary,
                           ),
                         ),
                       ),
@@ -610,13 +610,13 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
                       const SizedBox(height: 2),
                       Row(
                         children: [
-                          const Icon(Icons.hourglass_bottom,
-                              size: 12, color: Colors.white24),
+                          Icon(Icons.hourglass_bottom,
+                              size: 12, color: context.textSubtle),
                           const SizedBox(width: 4),
                           Text(
                             l10n.workoutAvgRest(avgRest),
-                            style: const TextStyle(
-                                fontSize: 11, color: Colors.white24),
+                            style: TextStyle(
+                                fontSize: 11, color: context.textSubtle),
                           ),
                         ],
                       ),
@@ -752,7 +752,7 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: s.completed ? Colors.greenAccent : Colors.transparent,
+                  color: s.completed ? AppColors.success : Colors.transparent,
                 ),
               ),
               child: Padding(
@@ -770,7 +770,7 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
                               child: Icon(
                                 Icons.task_alt,
                                 size: 14,
-                                color: Colors.greenAccent,
+                                color: AppColors.success,
                               ),
                             ),
                           Expanded(
@@ -1123,8 +1123,8 @@ class _RestStopwatchSheetState extends State<_RestStopwatchSheet> {
                 // Reset button (square icon)
                 _StopwatchButton(
                   icon: Icons.stop_rounded,
-                  color: Colors.white24,
-                  activeColor: Colors.redAccent,
+                  color: context.border,
+                  activeColor: AppColors.destructive,
                   isActive: hasElapsed && !isRunning,
                   onTap: hasElapsed ? _reset : null,
                 ),
@@ -1134,8 +1134,9 @@ class _RestStopwatchSheetState extends State<_RestStopwatchSheet> {
                   icon: isRunning
                       ? Icons.pause_rounded
                       : Icons.play_arrow_rounded,
-                  color: Colors.white24,
-                  activeColor: isRunning ? Colors.amber : Colors.greenAccent,
+                  color: context.border,
+                  activeColor:
+                      isRunning ? AppColors.restTimer : AppColors.success,
                   isActive: true,
                   onTap: isRunning ? _pause : _start,
                   large: true,

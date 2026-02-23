@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:gym_tracker/domain/entities/measurement_record.dart';
 import 'package:gym_tracker/domain/entities/user_profile.dart';
+import 'package:gym_tracker/domain/ports/measurement_record_port.dart';
 import 'package:gym_tracker/domain/ports/profile_port.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
 import 'package:gym_tracker/presentation/screens/profile/advanced_measures_screen.dart';
 import 'package:gym_tracker/presentation/screens/profile/basic_info_screen.dart';
 import 'package:gym_tracker/presentation/screens/profile/goals_screen.dart';
+import 'package:uuid/uuid.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({
     super.key,
     required this.profile,
     required this.profilePort,
+    required this.measurementRecordPort,
   });
 
   final UserProfile profile;
   final ProfilePort profilePort;
+  final MeasurementRecordPort measurementRecordPort;
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
@@ -58,6 +63,24 @@ class _EditProfileScreenState extends State<EditProfileScreen>
     return '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
   }
 
+  bool get _hasChanges {
+    final p = widget.profile;
+    return _data['birthDate'] != p.birthDate ||
+        _data['sex'] != p.sex ||
+        _data['weightKg'] != p.weightKg ||
+        _data['heightCm'] != p.heightCm ||
+        _data['armSpanCm'] != p.armSpanCm ||
+        _data['gymExperience'] != p.gymExperience ||
+        _data['bicepsPerimeterCm'] != p.bicepsPerimeterCm ||
+        _data['chestPerimeterCm'] != p.chestPerimeterCm ||
+        _data['waistPerimeterCm'] != p.waistPerimeterCm ||
+        _data['quadPerimeterCm'] != p.quadPerimeterCm ||
+        _data['calfPerimeterCm'] != p.calfPerimeterCm ||
+        _data['weightGoal'] != p.weightGoal ||
+        _data['targetWeightKg'] != p.targetWeightKg ||
+        _data['kcalPerDay'] != p.kcalPerDay;
+  }
+
   Future<void> _save() async {
     final updatedGoal =
         _data['weightGoal'] as String? ?? widget.profile.weightGoal;
@@ -84,6 +107,39 @@ class _EditProfileScreenState extends State<EditProfileScreen>
       kcalPerDay: _data['kcalPerDay'] as int?,
       goalHistory: history,
     );
+
+    final double? newWeight = updated.weightKg;
+    final double? newHeight = updated.heightCm;
+    final double? newArmSpan = updated.armSpanCm;
+    final double? newBiceps = updated.bicepsPerimeterCm;
+    final double? newChest = updated.chestPerimeterCm;
+    final double? newWaist = updated.waistPerimeterCm;
+    final double? newQuad = updated.quadPerimeterCm;
+    final double? newCalf = updated.calfPerimeterCm;
+
+    if (newWeight != widget.profile.weightKg ||
+        newHeight != widget.profile.heightCm ||
+        newArmSpan != widget.profile.armSpanCm ||
+        newBiceps != widget.profile.bicepsPerimeterCm ||
+        newChest != widget.profile.chestPerimeterCm ||
+        newWaist != widget.profile.waistPerimeterCm ||
+        newQuad != widget.profile.quadPerimeterCm ||
+        newCalf != widget.profile.calfPerimeterCm) {
+      final now = DateTime.now();
+      final record = MeasurementRecord(
+        id: const Uuid().v4(),
+        date: DateTime(now.year, now.month, now.day),
+        weightKg: newWeight,
+        heightCm: newHeight,
+        armSpanCm: newArmSpan,
+        bicepsPerimeterCm: newBiceps,
+        chestPerimeterCm: newChest,
+        waistPerimeterCm: newWaist,
+        quadPerimeterCm: newQuad,
+        calfPerimeterCm: newCalf,
+      );
+      await widget.measurementRecordPort.addRecord(record);
+    }
 
     await widget.profilePort.saveProfile(updated);
     if (!mounted) return;
@@ -126,7 +182,7 @@ class _EditProfileScreenState extends State<EditProfileScreen>
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
           child: FilledButton(
-            onPressed: _save,
+            onPressed: _hasChanges ? _save : null,
             child: Text(l10n.sharedSave),
           ),
         ),

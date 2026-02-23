@@ -47,37 +47,16 @@ void main() {
       );
     }
 
-    // ── Basic rendering ─────────────────────────────────────────
-
-    testWidgets('renders the motto text "Improve yourself"', (tester) async {
-      await tester.pumpWidget(buildScreen());
-      await tester.pump();
-
-      expect(find.text('Improve yourself'), findsOneWidget);
-
-      await tester.pumpAndSettle(const Duration(seconds: 3));
-    });
-
-    testWidgets('contains overlay container for readability', (tester) async {
-      await tester.pumpWidget(buildScreen());
-      await tester.pump();
-
-      expect(find.byType(Stack), findsAtLeast(1));
-
-      await tester.pumpAndSettle(const Duration(seconds: 3));
-    });
-
     // ── Navigation without auth (authPort == null) ──────────────
 
     testWidgets('navigates to onboarding when no auth and no profile',
         (tester) async {
       await tester.pumpWidget(buildScreen());
 
-      expect(find.text('Improve yourself'), findsOneWidget);
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pump(const Duration(milliseconds: 500));
 
-      await tester.pumpAndSettle(const Duration(seconds: 3));
-
-      expect(find.text('Improve yourself'), findsNothing);
+      expect(find.byType(LoadingScreen), findsNothing);
     });
 
     testWidgets('navigates to landing when no auth but profile completed',
@@ -86,9 +65,9 @@ void main() {
       await profilePort.markProfileCompleted();
 
       await tester.pumpWidget(buildScreen());
-      await tester.pumpAndSettle(const Duration(seconds: 3));
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pump(const Duration(milliseconds: 500));
 
-      expect(find.text('Improve yourself'), findsNothing);
       expect(find.byType(LoadingScreen), findsNothing);
     });
 
@@ -103,11 +82,10 @@ void main() {
         buildScreen(authPort: authPort, syncPort: syncPort),
       );
 
-      await tester.pump(const Duration(seconds: 3));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pump(const Duration(milliseconds: 500));
 
       expect(find.byType(AuthScreen), findsOneWidget);
-      expect(find.text('Improve yourself'), findsNothing);
     });
 
     // ── Navigation with auth (authenticated, no profile) ────────
@@ -123,11 +101,10 @@ void main() {
         buildScreen(authPort: authPort, syncPort: syncPort),
       );
 
-      await tester.pump(const Duration(seconds: 3));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pump(const Duration(milliseconds: 500));
 
       expect(find.byType(AuthScreen), findsNothing);
-      expect(find.text('Improve yourself'), findsNothing);
     });
 
     // ── Navigation with auth (authenticated, profile complete) ──
@@ -146,8 +123,8 @@ void main() {
         buildScreen(authPort: authPort, syncPort: syncPort),
       );
 
-      await tester.pump(const Duration(seconds: 3));
-      await tester.pump(const Duration(seconds: 1));
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pump(const Duration(milliseconds: 500));
 
       expect(find.byType(AuthScreen), findsNothing);
       expect(find.byType(LoadingScreen), findsNothing);
@@ -164,8 +141,8 @@ void main() {
         buildScreen(authPort: authPort, syncPort: syncPort),
       );
 
-      await tester.pump(const Duration(seconds: 3));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pump(const Duration(milliseconds: 500));
 
       expect(find.byType(AuthScreen), findsOneWidget);
 
@@ -179,9 +156,8 @@ void main() {
       );
 
       await tester.tap(find.widgetWithText(FilledButton, 'Iniciar sesión'));
-      await tester.pump();
-      await tester.pump(const Duration(seconds: 2));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pump(const Duration(milliseconds: 500));
 
       expect(find.byType(AuthScreen), findsNothing);
     });
@@ -198,8 +174,8 @@ void main() {
         buildScreen(authPort: authPort, syncPort: syncPort),
       );
 
-      await tester.pump(const Duration(seconds: 3));
-      await tester.pump(const Duration(seconds: 1));
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pump(const Duration(milliseconds: 500));
 
       expect(find.byType(AuthScreen), findsOneWidget);
 
@@ -213,9 +189,8 @@ void main() {
       );
 
       await tester.tap(find.widgetWithText(FilledButton, 'Iniciar sesión'));
-      await tester.pump();
-      await tester.pump(const Duration(seconds: 2));
-      await tester.pump(const Duration(seconds: 1));
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pump(const Duration(milliseconds: 500));
 
       expect(find.byType(AuthScreen), findsNothing);
       expect(find.byType(LoadingScreen), findsNothing);
@@ -245,13 +220,10 @@ void main() {
         ),
       );
 
-      expect(find.text('Improve yourself'), findsOneWidget);
-
-      await tester.pump(const Duration(seconds: 8));
-      await tester.pump(const Duration(seconds: 1));
+      await tester.pump(const Duration(seconds: 6));
+      await tester.pump();
 
       expect(find.byType(AuthScreen), findsOneWidget);
-      expect(find.text('Improve yourself'), findsNothing);
     });
   });
 }

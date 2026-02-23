@@ -37,7 +37,6 @@
   "authOr": "OR",
 
   "@@_LOADING": "Loading screen",
-  "loadingMotto": "Improve yourself",
 
   "@@_LANDING": "Landing screen",
   "landingTrain": "Train",
@@ -346,8 +345,8 @@
   "basicInfoExp3to5": "3-5 years",
   "basicInfoExpMoreThan5": ">5 years",
 
-  "@@_ADVANCED_MEASURES_1": "Advanced measures 1 screen",
-  "advancedMeasures1Title": "Advanced Measures 1",
+  "@@_ADVANCED_MEASURES_1": "Advanced measures screen",
+  "advancedMeasures1Title": "Advanced Measures",
   "advancedMeasures1ArmSpan": "Arm-to-arm span (cm)",
   "advancedMeasures1BicepsPerimeter": "Biceps perimeter (cm)",
   "advancedMeasures1ChestPerimeter": "Chest perimeter (cm)",

@@ -49,7 +49,6 @@
   "authOr": "O",
 
   "@@_LOADING": "Pantalla de carga",
-  "loadingMotto": "Improve yourself",
 
   "@@_LANDING": "Pantalla principal (landing)",
   "landingTrain": "Entrenar",
@@ -395,8 +394,8 @@
   "basicInfoExp3to5": "3-5 años",
   "basicInfoExpMoreThan5": ">5 años",
 
-  "@@_ADVANCED_MEASURES_1": "Pantalla de medidas avanzadas 1",
-  "advancedMeasures1Title": "Medidas avanzadas 1",
+  "@@_ADVANCED_MEASURES_1": "Pantalla de medidas avanzadas",
+  "advancedMeasures1Title": "Medidas avanzadas",
   "advancedMeasures1ArmSpan": "Envergadura brazo a brazo (cm)",
   "advancedMeasures1BicepsPerimeter": "Perímetro de bíceps (cm)",
   "advancedMeasures1ChestPerimeter": "Perímetro de pecho (cm)",

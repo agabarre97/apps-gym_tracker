@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
 
 import 'package:gym_tracker/domain/ports/auth_port.dart';
@@ -59,8 +60,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
   Future<void> _navigateAfterDelay() async {
-    await Future.delayed(const Duration(seconds: 2));
-    if (!mounted) return;
+    // Yield to let the widget mount
+    await Future.microtask(() {});
 
     // If auth is not configured (e.g. in tests), skip auth check
     final authPort = widget.authPort;
@@ -92,6 +93,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
   void _goToAuth() {
+    FlutterNativeSplash.remove();
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (_) => AuthScreen(
@@ -139,34 +141,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
-    return Scaffold(
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          // Gym background image
-          Image.asset(
-            'assets/images/gym_background.png',
-            fit: BoxFit.cover,
-          ),
-          // Dark overlay for readability
-          Container(color: Colors.black.withValues(alpha: 0.55)),
-          // Motto text
-          Center(
-            child: Text(
-              l10n.loadingMotto,
-              style: const TextStyle(
-                fontSize: 36,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                letterSpacing: 2,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ],
-      ),
+    return const Scaffold(
+      backgroundColor: Color(0xFF1A1A1A),
+      body: SizedBox.shrink(),
     );
   }
 }
@@ -224,6 +201,7 @@ Future<void> _routeByProfile({
         );
 
   if (!navigator.mounted) return;
+  FlutterNativeSplash.remove();
   navigator.pushReplacement(
     MaterialPageRoute(builder: (_) => destination),
   );

@@ -107,9 +107,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get authOr => 'O';
 
   @override
-  String get loadingMotto => 'Improve yourself';
-
-  @override
   String get landingTrain => 'Entrenar';
 
   @override
@@ -813,7 +810,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get basicInfoExpMoreThan5 => '>5 años';
 
   @override
-  String get advancedMeasures1Title => 'Medidas avanzadas 1';
+  String get advancedMeasures1Title => 'Medidas avanzadas';
 
   @override
   String get advancedMeasures1ArmSpan => 'Envergadura brazo a brazo (cm)';

@@ -67,6 +67,7 @@ class _ProfileSummaryScreenState extends State<ProfileSummaryScreen> {
         builder: (_) => EditProfileScreen(
           profile: _profile,
           profilePort: widget.profilePort,
+          measurementRecordPort: widget.measurementRecordPort,
         ),
       ),
     );
