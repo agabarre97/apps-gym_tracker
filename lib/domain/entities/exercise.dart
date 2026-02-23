@@ -112,10 +112,34 @@ class Exercise {
 
   List<String> get resolvedCategoryKeys {
     if (categoryKeys.isNotEmpty) return categoryKeys;
+    // Map muscle groups to category keys safely
+    final mapped = <String>{};
+    for (final group in muscleGroups) {
+      final key = _mapMuscleGroupToCategoryKey(group);
+      if (key != null) mapped.add(key);
+    }
+    if (mapped.isNotEmpty) return mapped.toList();
     return muscleGroups
         .map((group) => group.toLowerCase().replaceAll(' ', '-'))
         .toSet()
         .toList();
+  }
+
+  static String? _mapMuscleGroupToCategoryKey(String group) {
+    final g = group.toLowerCase();
+    if (g.contains('pectoral')) return 'chest';
+    if (g.contains('hombro') || g.contains('deltoide')) {
+      if (g.contains('posterior')) return 'rear-shoulders';
+      return 'front-shoulders'; // default shoulder to front
+    }
+    if (g.contains('tríceps') || g.contains('triceps')) return 'triceps';
+    if (g.contains('bíceps') || g.contains('biceps')) return 'biceps';
+    if (g.contains('antebrazo')) return 'forearms';
+    if (g.contains('dorsal') || g.contains('espalda')) return 'lats';
+    if (g.contains('cuádriceps') || g.contains('cuadriceps')) return 'quads';
+    if (g.contains('isquio') || g.contains('femoral')) return 'hamstrings';
+    if (g.contains('glúteo') || g.contains('gluteo')) return 'glutes';
+    return null;
   }
 
   /// Resolves an exercise key to its localized display name.

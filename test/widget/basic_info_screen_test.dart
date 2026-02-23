@@ -19,8 +19,8 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      // Two TextFormFields: weight and height
-      expect(find.byType(TextFormField), findsNWidgets(2));
+      // Three TextFormFields: birth date, weight, height
+      expect(find.byType(TextFormField), findsNWidgets(3));
       // 4 experience chips + 2 sex chips = 6 ChoiceChips
       expect(find.byType(ChoiceChip), findsNWidgets(6));
     });

@@ -744,6 +744,19 @@ class AppLocalizationsEs extends AppLocalizations {
   String get workoutNoRoutines => 'Crea una rutina primero';
 
   @override
+  String get workoutSessionInProgress => 'Entrenamiento en progreso';
+
+  @override
+  String get workoutSessionInProgressBody =>
+      'Tienes un entrenamiento sin finalizar hoy. ¿Quieres retomarlo?';
+
+  @override
+  String get workoutSessionNew => 'Nuevo';
+
+  @override
+  String get workoutSessionResume => 'Retomar';
+
+  @override
   String get workoutSaveChanges => 'Guardar entrenamiento';
 
   @override

@@ -1472,6 +1472,30 @@ abstract class AppLocalizations {
   /// **'Crea una rutina primero'**
   String get workoutNoRoutines;
 
+  /// No description provided for @workoutSessionInProgress.
+  ///
+  /// In es, this message translates to:
+  /// **'Entrenamiento en progreso'**
+  String get workoutSessionInProgress;
+
+  /// No description provided for @workoutSessionInProgressBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Tienes un entrenamiento sin finalizar hoy. ¿Quieres retomarlo?'**
+  String get workoutSessionInProgressBody;
+
+  /// No description provided for @workoutSessionNew.
+  ///
+  /// In es, this message translates to:
+  /// **'Nuevo'**
+  String get workoutSessionNew;
+
+  /// No description provided for @workoutSessionResume.
+  ///
+  /// In es, this message translates to:
+  /// **'Retomar'**
+  String get workoutSessionResume;
+
   /// No description provided for @workoutSaveChanges.
   ///
   /// In es, this message translates to:

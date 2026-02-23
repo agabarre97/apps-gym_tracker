@@ -1,68 +1,83 @@
-[
-  {
-    "key": "barbell-romanian-deadlift",
-    "name": {
-      "es": "Peso muerto rumano con barra",
-      "en": "Barbell Romanian Deadlift"
-    },
-    "short_description": {
-      "es": "1. Coloca las manos a la anchura de los hombros, con agarre prono doble o mixto. \n2. Empuja las caderas hacia atrás manteniendo las rodillas casi extendidas. Busca un estiramiento en los isquiotibiales. \n3. Cuando sientas el estiramiento, empuja las caderas hacia adelante hasta volver a la posición de pie.",
-      "en": "1. Take a shoulder width, double overhand or mixed grip. \n2. Push your hips back while leaving your knees mostly extended. Look for a stretch in your hamstrings. \n3. When you feel the stretch, push your hips forward until you're back in a standing position."
-    },
-    "muscles_involved": [
-      "glutes",
-      "hamstrings"
-    ],
-    "muscles_source": "svg",
-    "muscles_confidence": "high",
-    "muscles_trace": {
-      "svg_detected_ids": [
-        "glutes",
-        "hamstrings"
-      ],
-      "text_roles_detected": {
-        "primary": [],
-        "secondary": [],
-        "tertiary": []
-      },
-      "url_slug_inferred": null
-    },
-    "general_categories": [],
-    "source_urls": {
-      "es": "https://musclewiki.com/es-es/exercise/barbell-romanian-deadlift",
-      "en": "https://musclewiki.com/en-us/exercise/barbell-romanian-deadlift"
-    }
-  },
-  {
-    "key": "machine-seated-hamstring-curl",
-    "name": {
-      "es": "Curl de isquiotibiales sentado en máquina",
-      "en": "Machine Seated Hamstring Curl"
-    },
-    "short_description": {
-      "es": "1. Ajusta el respaldo y la almohadilla de los tobillos según tu altura. \n2. Desbloquea la almohadilla de las rodillas y bájala tanto como puedas. \n3. Flexiona las rodillas contra la resistencia, luego extiéndelas hasta sentir un estiramiento en los isquiotibiales.",
-      "en": "1. Adjust the back pad and ankle pad to suit your height. \n2. Disengage the knee pad and lower it as far as you can. \n3. Flex your knees against resistance, then extend until you feel a stretch in your hamstrings."
-    },
-    "muscles_involved": [
-      "hamstrings"
-    ],
-    "muscles_source": "svg",
-    "muscles_confidence": "high",
-    "muscles_trace": {
-      "svg_detected_ids": [
-        "hamstrings"
-      ],
-      "text_roles_detected": {
-        "primary": [],
-        "secondary": [],
-        "tertiary": []
-      },
-      "url_slug_inferred": null
-    },
-    "general_categories": [],
-    "source_urls": {
-      "es": "https://musclewiki.com/es-es/exercise/machine-seated-hamstring-curl",
-      "en": "https://musclewiki.com/en-us/exercise/machine-seated-hamstring-curl"
-    }
-  }
-]
+{
+    "category": "hamstrings",
+    "exercises": [
+        {
+            "key": "barbell-romanian-deadlift",
+            "name": {
+                "es": "Peso muerto rumano con barra",
+                "en": "Barbell Romanian Deadlift"
+            },
+            "short_description": {
+                "es": "1. Coloca las manos a la anchura de los hombros, con agarre prono doble o mixto. \n2. Empuja las caderas hacia atr\u00e1s manteniendo las rodillas casi extendidas. Busca un estiramiento en los isquiotibiales. \n3. Cuando sientas el estiramiento, empuja las caderas hacia adelante hasta volver a la posici\u00f3n de pie.",
+                "en": "1. Take a shoulder width, double overhand or mixed grip. \n2. Push your hips back while leaving your knees mostly extended. Look for a stretch in your hamstrings. \n3. When you feel the stretch, push your hips forward until you're back in a standing position."
+            },
+            "muscles_involved": [
+                "glutes",
+                "hamstrings"
+            ],
+            "muscles_source": "svg",
+            "muscles_confidence": "high",
+            "muscles_trace": {
+                "svg_detected_ids": [
+                    "glutes",
+                    "hamstrings"
+                ],
+                "text_roles_detected": {
+                    "primary": [],
+                    "secondary": [],
+                    "tertiary": []
+                },
+                "url_slug_inferred": null
+            },
+            "general_categories": [],
+            "source_urls": {
+                "es": "https://musclewiki.com/es-es/exercise/barbell-romanian-deadlift",
+                "en": "https://musclewiki.com/en-us/exercise/barbell-romanian-deadlift"
+            }
+        },
+        {
+            "key": "machine-seated-hamstring-curl",
+            "name": {
+                "es": "Curl de isquiotibiales sentado en m\u00e1quina",
+                "en": "Machine Seated Hamstring Curl"
+            },
+            "short_description": {
+                "es": "1. Ajusta el respaldo y la almohadilla de los tobillos seg\u00fan tu altura. \n2. Desbloquea la almohadilla de las rodillas y b\u00e1jala tanto como puedas. \n3. Flexiona las rodillas contra la resistencia, luego exti\u00e9ndelas hasta sentir un estiramiento en los isquiotibiales.",
+                "en": "1. Adjust the back pad and ankle pad to suit your height. \n2. Disengage the knee pad and lower it as far as you can. \n3. Flex your knees against resistance, then extend until you feel a stretch in your hamstrings."
+            },
+            "muscles_involved": [
+                "hamstrings"
+            ],
+            "muscles_source": "svg",
+            "muscles_confidence": "high",
+            "muscles_trace": {
+                "svg_detected_ids": [
+                    "hamstrings"
+                ],
+                "text_roles_detected": {
+                    "primary": [],
+                    "secondary": [],
+                    "tertiary": []
+                },
+                "url_slug_inferred": null
+            },
+            "general_categories": [],
+            "source_urls": {
+                "es": "https://musclewiki.com/es-es/exercise/machine-seated-hamstring-curl",
+                "en": "https://musclewiki.com/en-us/exercise/machine-seated-hamstring-curl"
+            }
+        },
+        {
+            "key": "peso_muerto_rumano_con_mancuerna"
+        },
+        {
+            "key": "femoral_sentado"
+        },
+        {
+            "key": "femoral_tumbado"
+        },
+        {
+            "key": "hiperextensiones_con_lastre"
+        }
+    ]
+}

@@ -43,7 +43,17 @@ abstract final class AssetDataLoader {
     for (final category in categoryNames) {
       final file = '$_byMuscleBasePath/$category.json';
       final raw = await rootBundle.loadString(file);
-      final list = jsonDecode(raw) as List;
+      final decoded = jsonDecode(raw);
+
+      List<dynamic> list;
+      if (decoded is Map<String, dynamic> && decoded.containsKey('exercises')) {
+        list = decoded['exercises'] as List<dynamic>;
+      } else if (decoded is List) {
+        list = decoded;
+      } else {
+        continue;
+      }
+
       for (final item in list.cast<Map<String, dynamic>>()) {
         final parsed = Exercise.fromJson(item);
         final existing = exercisesByKey[parsed.key];

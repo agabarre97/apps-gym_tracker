@@ -118,6 +118,7 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
 
   void _completeSet(int exIndex, int setIndex) {
     HapticFeedback.mediumImpact();
+    FocusManager.instance.primaryFocus?.unfocus();
     final completedAt = DateTime.now();
     final ex = _session.exercises[exIndex];
     final updatedSets = List<ExerciseSet>.from(ex.sets);
@@ -167,6 +168,11 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
   }
 
   void _reorderExercises(int oldIndex, int newIndex) {
+    if (oldIndex == _session.exercises.length ||
+        newIndex > _session.exercises.length) {
+      return; // Do not allow reordering the finish button
+    }
+
     if (newIndex > oldIndex) {
       newIndex -= 1;
     }
@@ -379,6 +385,14 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
             child: Text(l10n.workoutSaveNo),
           ),
           FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: context.border,
+              foregroundColor: context.textSecondary,
+            ),
+            onPressed: () => Navigator.pop(ctx, null),
+            child: Text(l10n.sharedCancel),
+          ),
+          FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
             child: Text(l10n.workoutSaveYes),
           ),
@@ -510,31 +524,41 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
             Expanded(
               child: ReorderableListView.builder(
                 padding: const EdgeInsets.all(16),
-                itemCount: _session.exercises.length,
+                itemCount: _session.exercises.length + 1, // +1 for the button
                 onReorder: _reorderExercises,
                 buildDefaultDragHandles: false,
-                itemBuilder: (context, index) =>
-                    _buildExerciseCard(index, l10n),
-              ),
-            ),
-            SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: SizedBox(
-                  width: double.infinity,
-                  height: 52,
-                  child: widget.trackTime
-                      ? FilledButton.icon(
-                          icon: const Icon(Icons.flag),
-                          label: Text(l10n.workoutFinish),
-                          onPressed: _confirmFinish,
-                        )
-                      : FilledButton.icon(
-                          icon: const Icon(Icons.save),
-                          label: Text(l10n.workoutSaveChanges),
-                          onPressed: _saveChanges,
+                itemBuilder: (context, index) {
+                  if (index == _session.exercises.length) {
+                    // Disable reordering for the finish button
+                    return ReorderableDragStartListener(
+                      key: const ValueKey('workout-finish-button'),
+                      index: index,
+                      enabled: false,
+                      child: SafeArea(
+                        top: false,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 16, bottom: 16),
+                          child: SizedBox(
+                            width: double.infinity,
+                            height: 52,
+                            child: widget.trackTime
+                                ? FilledButton.icon(
+                                    icon: const Icon(Icons.flag),
+                                    label: Text(l10n.workoutFinish),
+                                    onPressed: _confirmFinish,
+                                  )
+                                : FilledButton.icon(
+                                    icon: const Icon(Icons.save),
+                                    label: Text(l10n.workoutSaveChanges),
+                                    onPressed: _saveChanges,
+                                  ),
+                          ),
                         ),
-                ),
+                      ),
+                    );
+                  }
+                  return _buildExerciseCard(index, l10n);
+                },
               ),
             ),
           ],
@@ -552,7 +576,7 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
     final nextPendingSet = _nextPendingSetIndex(ex);
     final isSeriesProgressMode = !isViewMode && nextPendingSet != null;
 
-    return ReorderableDragStartListener(
+    return ReorderableDelayedDragStartListener(
       key: ValueKey('workout-exercise-card-${ex.exerciseKey}'),
       index: index,
       child: Card(

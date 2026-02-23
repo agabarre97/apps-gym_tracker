@@ -208,6 +208,45 @@ class _LandingScreenState extends State<LandingScreen> {
   /// Starts the Train flow (with time tracking) from the Train button.
   Future<void> _startTrainFlow() async {
     if (_routines.isEmpty) return;
+
+    // Check for pending session today
+    final todayNorm = _normalise(DateTime.now());
+    final pendingSession = _sessions
+        .where((s) =>
+            _normalise(s.date) == todayNorm &&
+            s.startTime != null &&
+            s.endTime == null)
+        .firstOrNull;
+
+    if (pendingSession != null) {
+      final l10n = AppLocalizations.of(context)!;
+      final resume = await showDialog<bool>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text(
+              l10n.workoutSessionInProgress ?? 'Entrenamiento en progreso'),
+          content: Text(l10n.workoutSessionInProgressBody ??
+              'Tienes un entrenamiento sin finalizar hoy. ¿Quieres retomarlo?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: Text(l10n.workoutSessionNew ?? 'Nuevo'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(ctx, true),
+              child: Text(l10n.workoutSessionResume ?? 'Retomar'),
+            ),
+          ],
+        ),
+      );
+
+      if (resume == true) {
+        if (!mounted) return;
+        await _navigateToWorkoutSession(pendingSession, trackTime: true);
+        return;
+      }
+    }
+
     await _startWorkoutFlow(trackTime: true, date: _normalise(DateTime.now()));
   }
 
@@ -489,7 +528,8 @@ class _LandingScreenState extends State<LandingScreen> {
     return l10n.landingTrainingTypeMobility;
   }
 
-  Future<void> _navigateToWorkoutSession(WorkoutSession session) async {
+  Future<void> _navigateToWorkoutSession(WorkoutSession session,
+      {bool trackTime = false}) async {
     String routineName = _routineNameForId(session.routineId);
 
     if (!mounted) return;
@@ -501,7 +541,7 @@ class _LandingScreenState extends State<LandingScreen> {
           allExercises: _allExercises,
           workoutSessionPort: widget.workoutSessionPort,
           routineName: routineName,
-          trackTime: false,
+          trackTime: trackTime,
         ),
       ),
     );

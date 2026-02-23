@@ -69,7 +69,13 @@ class _DayPickerScreenState extends State<DayPickerScreen> {
                 for (final exerciseKey in day.exerciseKeys) {
                   final exercise = exercisesByKey[exerciseKey];
                   if (exercise == null) continue;
-                  exerciseCategoryKeys.addAll(exercise.resolvedCategoryKeys);
+
+                  // Add all valid categories this exercise belongs to
+                  for (final key in exercise.resolvedCategoryKeys) {
+                    if (byMuscleCategoryOrder.contains(key)) {
+                      exerciseCategoryKeys.add(key);
+                    }
+                  }
                 }
 
                 // Backward-compatible fallback for legacy routines.

@@ -1,0 +1,44 @@
+{
+    "category": "core",
+    "exercises": [
+        {
+            "key": "rueda_abdominal"
+        },
+        {
+            "key": "dragon_fly"
+        },
+        {
+            "key": "plancha_abdominal"
+        },
+        {
+            "key": "laterales_unilateral"
+        },
+        {
+            "key": "crunch_rodillas_polea_alta"
+        },
+        {
+            "key": "cable_woodchop"
+        },
+        {
+            "key": "elevacion_piernas_colgado"
+        },
+        {
+            "key": "crunch_banco_declinado"
+        },
+        {
+            "key": "dead_bug"
+        },
+        {
+            "key": "hollow_body_hold"
+        },
+        {
+            "key": "crunch_bicicleta"
+        },
+        {
+            "key": "farmer_carry_unilateral"
+        },
+        {
+            "key": "sit_up_balon_medicinal"
+        }
+    ]
+}

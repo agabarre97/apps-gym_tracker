@@ -5,7 +5,6 @@ import 'data/datasources/local_storage_datasource.dart';
 import 'domain/ports/storage_port.dart';
 import 'presentation/screens/home_screen.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
