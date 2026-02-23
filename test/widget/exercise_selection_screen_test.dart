@@ -5,6 +5,16 @@ import 'package:gym_tracker/presentation/screens/routine/exercise_selection_scre
 
 import '../helpers/test_helpers.dart';
 
+class _TrackingCustomExercisePort extends FakeCustomExercisePort {
+  final List<String> deletedKeys = [];
+
+  @override
+  Future<void> deleteExercise(String key) async {
+    deletedKeys.add(key);
+    await super.deleteExercise(key);
+  }
+}
+
 void main() {
   group('ExerciseSelectionScreen', () {
     final exercises = [
@@ -247,6 +257,53 @@ void main() {
       // Both exercises visible again
       expect(find.text('Press en multipower'), findsOneWidget);
       expect(find.text('Cruce de poleas'), findsOneWidget);
+    });
+
+    testWidgets('tap delete icon + confirm deletes custom exercise from list',
+        (tester) async {
+      const customExercise = Exercise(
+        key: 'press_personalizado',
+        name: 'Press personalizado',
+        description: 'Ejercicio creado por el usuario.',
+        muscleGroups: ['Pectoral superior'],
+        difficulty: 5,
+        categoryKeys: ['chest'],
+      );
+      final customExercisePort = _TrackingCustomExercisePort();
+      await customExercisePort.saveExercises([customExercise]);
+
+      await tester.pumpWidget(
+        buildTestableWidget(
+          ExerciseSelectionScreen(
+            currentDay: 1,
+            totalDays: 1,
+            allExercises: [...exercises, customExercise],
+            availableCategories: const ['chest', 'lats'],
+            initialSelectedCategories: const ['chest'],
+            customExercisePort: customExercisePort,
+            onConfirmed: (_) {},
+            onBack: () {},
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Press personalizado'), findsOneWidget);
+      expect(find.byKey(const ValueKey('delete_press_personalizado')),
+          findsOneWidget);
+
+      await tester
+          .tap(find.byKey(const ValueKey('delete_press_personalizado')));
+      await tester.pumpAndSettle();
+
+      expect(find.text('¿Eliminar ejercicio?'), findsOneWidget);
+      expect(find.text('Eliminar'), findsOneWidget);
+
+      await tester.tap(find.text('Eliminar'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Press personalizado'), findsNothing);
+      expect(customExercisePort.deletedKeys, equals(['press_personalizado']));
     });
   });
 }

@@ -251,8 +251,6 @@ python3 scripts/musclewiki_scraper.py --urls-file "scripts/exersise-urls.txt" --
 ```
 assets/
 ├── data/
-│   ├── exercises_es.json         # Strength exercises (Spanish)
-│   ├── exercises_en.json         # Strength exercises (English)
 │   ├── hiit_exercises_es.json    # HIIT exercises (Spanish)
 │   ├── hiit_exercises_en.json    # HIIT exercises (English)
 │   ├── mobility_routines/        # Predefined mobility routines

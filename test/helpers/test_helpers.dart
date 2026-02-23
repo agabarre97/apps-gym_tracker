@@ -120,6 +120,11 @@ class FakeCustomExercisePort implements CustomExercisePort {
   Future<void> saveExercises(List<Exercise> exercises) async {
     _exercises = List.of(exercises);
   }
+
+  @override
+  Future<void> deleteExercise(String key) async {
+    _exercises = _exercises.where((exercise) => exercise.key != key).toList();
+  }
 }
 
 /// In-memory implementation of [MeasurementRecordPort] for testing.

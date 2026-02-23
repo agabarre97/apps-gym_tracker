@@ -24,16 +24,6 @@ class ByMuscleCatalog {
 abstract final class AssetDataLoader {
   static const String _byMuscleBasePath = 'assets/data/musclewiki/by_muscle';
 
-  /// Loads all exercises for the given [languageCode] (`'es'` or `'en'`).
-  static Future<List<Exercise>> loadExercises(String languageCode) async {
-    final file = languageCode == 'en'
-        ? 'assets/data/exercises_en.json'
-        : 'assets/data/exercises_es.json';
-    final raw = await rootBundle.loadString(file);
-    final list = jsonDecode(raw) as List;
-    return list.cast<Map<String, dynamic>>().map(Exercise.fromJson).toList();
-  }
-
   /// Loads `by_muscle` categories + exercises with de-dup by exercise key.
   static Future<ByMuscleCatalog> loadByMuscleCatalog(
       String languageCode) async {

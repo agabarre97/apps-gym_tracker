@@ -18,4 +18,12 @@ class CustomExerciseDatasource implements CustomExercisePort {
   @override
   Future<void> saveExercises(List<Exercise> exercises) =>
       _storage.set(_key, Exercise.listToJsonString(exercises));
+
+  @override
+  Future<void> deleteExercise(String key) async {
+    final exercises = await loadExercises();
+    final filteredExercises =
+        exercises.where((exercise) => exercise.key != key).toList();
+    await saveExercises(filteredExercises);
+  }
 }

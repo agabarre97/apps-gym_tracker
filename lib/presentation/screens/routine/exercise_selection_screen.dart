@@ -62,11 +62,13 @@ class ExerciseSelectionScreen extends StatefulWidget {
 class _ExerciseSelectionScreenState extends State<ExerciseSelectionScreen> {
   late final Set<String> _selectedCategories;
   late final Set<String> _selectedKeys;
+  final Set<String> _deletedCustomExerciseKeys = <String>{};
   late List<Exercise> _filteredExercises;
 
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
-  List<Exercise> _customExercises = const [];
+  List<Exercise> _customExercisesNewlyCreated = const [];
+  List<Exercise> _allCustomExercisesLoaded = const [];
   String? _lastCreatedExerciseKey;
 
   List<String> get _displayCategories {
@@ -83,6 +85,7 @@ class _ExerciseSelectionScreenState extends State<ExerciseSelectionScreen> {
     _selectedCategories = {...widget.initialSelectedCategories};
     _selectedKeys = {...widget.initialSelectedKeys};
     _recomputeFilteredExercises();
+    _loadAllCustomExercises();
   }
 
   @override
@@ -97,17 +100,40 @@ class _ExerciseSelectionScreenState extends State<ExerciseSelectionScreen> {
     final exercisesChanged = oldWidget.allExercises != widget.allExercises;
     final categoriesChanged =
         oldWidget.availableCategories != widget.availableCategories;
+    final customPortChanged =
+        oldWidget.customExercisePort != widget.customExercisePort;
+    if (customPortChanged) {
+      _loadAllCustomExercises();
+    }
     if (exercisesChanged || categoriesChanged) {
       setState(_recomputeFilteredExercises);
     }
   }
 
+  Future<void> _loadAllCustomExercises() async {
+    final customExercisePort = widget.customExercisePort;
+    if (customExercisePort == null) return;
+    final loadedCustomExercises = await customExercisePort.loadExercises();
+    if (!mounted) return;
+    setState(() {
+      _allCustomExercisesLoaded = loadedCustomExercises
+          .where(
+              (exercise) => !_deletedCustomExerciseKeys.contains(exercise.key))
+          .toList();
+      _recomputeFilteredExercises();
+    });
+  }
+
   void _recomputeFilteredExercises() {
     final mergedByKey = <String, Exercise>{
       for (final exercise in widget.allExercises) exercise.key: exercise,
-      for (final exercise in _customExercises) exercise.key: exercise,
+      for (final exercise in _allCustomExercisesLoaded) exercise.key: exercise,
+      for (final exercise in _customExercisesNewlyCreated)
+        exercise.key: exercise,
     };
-    _filteredExercises = mergedByKey.values.toList(growable: false);
+    _filteredExercises = mergedByKey.values
+        .where((exercise) => !_deletedCustomExerciseKeys.contains(exercise.key))
+        .toList(growable: false);
     if (_selectedCategories.isNotEmpty) {
       _filteredExercises = _filteredExercises.where((exercise) {
         return exercise.resolvedCategoryKeys.any(_selectedCategories.contains);
@@ -133,13 +159,18 @@ class _ExerciseSelectionScreenState extends State<ExerciseSelectionScreen> {
       MaterialPageRoute(
         builder: (_) => CreateCustomExerciseScreen(
           customExercisePort: customExercisePort,
-          allExercises: [...widget.allExercises, ..._customExercises],
+          allExercises: [
+            ...widget.allExercises,
+            ..._allCustomExercisesLoaded,
+            ..._customExercisesNewlyCreated,
+          ],
         ),
       ),
     );
     if (created == null || !mounted) return;
     setState(() {
-      _customExercises = [..._customExercises, created];
+      _customExercisesNewlyCreated = [..._customExercisesNewlyCreated, created];
+      _allCustomExercisesLoaded = [..._allCustomExercisesLoaded, created];
       _selectedKeys.add(created.key);
       _lastCreatedExerciseKey = created.key;
       _recomputeFilteredExercises();
@@ -185,6 +216,49 @@ class _ExerciseSelectionScreenState extends State<ExerciseSelectionScreen> {
         _selectedKeys.add(key);
       }
     });
+  }
+
+  bool _isCustomExercise(Exercise exercise) =>
+      _allCustomExercisesLoaded.any((item) => item.key == exercise.key) ||
+      _customExercisesNewlyCreated.any((item) => item.key == exercise.key);
+
+  Future<bool?> _confirmDeleteCustomExercise() {
+    final l10n = AppLocalizations.of(context)!;
+    return showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.customExerciseDeleteConfirmTitle),
+        content: Text(l10n.customExerciseDeleteConfirmBody),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text(l10n.customExerciseCancel),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text(l10n.customExerciseDelete),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _deleteCustomExercise(Exercise exercise) async {
+    setState(() {
+      _deletedCustomExerciseKeys.add(exercise.key);
+      _customExercisesNewlyCreated = _customExercisesNewlyCreated
+          .where((item) => item.key != exercise.key)
+          .toList();
+      _allCustomExercisesLoaded = _allCustomExercisesLoaded
+          .where((item) => item.key != exercise.key)
+          .toList();
+      _selectedKeys.remove(exercise.key);
+      if (_lastCreatedExerciseKey == exercise.key) {
+        _lastCreatedExerciseKey = null;
+      }
+      _recomputeFilteredExercises();
+    });
+    await widget.customExercisePort?.deleteExercise(exercise.key);
   }
 
   void _showDetail(Exercise exercise) {
@@ -346,11 +420,11 @@ class _ExerciseSelectionScreenState extends State<ExerciseSelectionScreen> {
                     itemCount: _displayedExercises.length,
                     itemBuilder: (context, index) {
                       final exercise = _displayedExercises[index];
+                      final isCustom = _isCustomExercise(exercise);
                       final isSelected = _selectedKeys.contains(exercise.key);
                       final localizedDescription =
                           exercise.localizedDescriptionFor(lang);
-
-                      return Padding(
+                      final card = Padding(
                         padding: const EdgeInsets.only(bottom: 6),
                         child: Card(
                           color: isSelected
@@ -412,12 +486,28 @@ class _ExerciseSelectionScreenState extends State<ExerciseSelectionScreen> {
                                       ],
                                     ),
                                   ),
+                                  if (isCustom)
+                                    IconButton(
+                                      key: ValueKey('delete_${exercise.key}'),
+                                      onPressed: () async {
+                                        final confirmed =
+                                            await _confirmDeleteCustomExercise();
+                                        if (confirmed == true) {
+                                          await _deleteCustomExercise(exercise);
+                                        }
+                                      },
+                                      icon: const Icon(Icons.delete_outline),
+                                      color: context.textSecondary,
+                                      tooltip: l10n.customExerciseDelete,
+                                    ),
                                 ],
                               ),
                             ),
                           ),
                         ),
                       );
+
+                      return card;
                     },
                   ),
           ),

@@ -42,4 +42,60 @@ void main() {
     expect(loaded.first.name, 'Custom Push Up');
     expect(loaded.first.categoryKeys, ['chest']);
   });
+
+  test('CustomExerciseDatasource deleteExercise removes only target exercise',
+      () async {
+    final storage = _InMemoryStoragePort();
+    final datasource = CustomExerciseDatasource(storage);
+
+    const exercises = [
+      Exercise(
+        key: 'custom_push_up',
+        name: 'Custom Push Up',
+        description: 'Desc',
+        muscleGroups: ['chest'],
+        difficulty: 2,
+        categoryKeys: ['chest'],
+      ),
+      Exercise(
+        key: 'custom_squat',
+        name: 'Custom Squat',
+        description: 'Desc',
+        muscleGroups: ['quads'],
+        difficulty: 2,
+        categoryKeys: ['quads'],
+      ),
+    ];
+
+    await datasource.saveExercises(exercises);
+    await datasource.deleteExercise('custom_push_up');
+    final loaded = await datasource.loadExercises();
+
+    expect(loaded.length, 1);
+    expect(loaded.first.key, 'custom_squat');
+  });
+
+  test('CustomExerciseDatasource deleteExercise is no-op for unknown key',
+      () async {
+    final storage = _InMemoryStoragePort();
+    final datasource = CustomExerciseDatasource(storage);
+
+    const exercises = [
+      Exercise(
+        key: 'custom_squat',
+        name: 'Custom Squat',
+        description: 'Desc',
+        muscleGroups: ['quads'],
+        difficulty: 2,
+        categoryKeys: ['quads'],
+      ),
+    ];
+
+    await datasource.saveExercises(exercises);
+    await datasource.deleteExercise('custom_missing');
+    final loaded = await datasource.loadExercises();
+
+    expect(loaded.length, 1);
+    expect(loaded.first.key, 'custom_squat');
+  });
 }

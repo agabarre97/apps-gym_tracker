@@ -280,6 +280,10 @@
   "customExerciseSaved": "Exercise saved",
   "customExerciseNoResults": "No exercises match your search",
   "customExerciseAddMuscleManual": "Add muscle",
+  "customExerciseDeleteConfirmTitle": "Delete exercise?",
+  "customExerciseDeleteConfirmBody": "This action cannot be undone. It will be permanently deleted.",
+  "customExerciseDelete": "Delete",
+  "customExerciseCancel": "Cancel",
 
   "@@_PROGRESS": "Exercise progress screen",
   "progressTitle": "Progress",

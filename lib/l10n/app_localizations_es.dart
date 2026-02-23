@@ -658,6 +658,19 @@ class AppLocalizationsEs extends AppLocalizations {
   String get customExerciseAddMuscleManual => 'Añadir músculo';
 
   @override
+  String get customExerciseDeleteConfirmTitle => '¿Eliminar ejercicio?';
+
+  @override
+  String get customExerciseDeleteConfirmBody =>
+      'Esta acción no se puede deshacer. Se eliminará de forma permanente.';
+
+  @override
+  String get customExerciseDelete => 'Eliminar';
+
+  @override
+  String get customExerciseCancel => 'Cancelar';
+
+  @override
   String get progressTitle => 'Progreso';
 
   @override

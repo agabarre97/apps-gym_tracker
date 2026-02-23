@@ -1304,6 +1304,30 @@ abstract class AppLocalizations {
   /// **'Añadir músculo'**
   String get customExerciseAddMuscleManual;
 
+  /// No description provided for @customExerciseDeleteConfirmTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Eliminar ejercicio?'**
+  String get customExerciseDeleteConfirmTitle;
+
+  /// No description provided for @customExerciseDeleteConfirmBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Esta acción no se puede deshacer. Se eliminará de forma permanente.'**
+  String get customExerciseDeleteConfirmBody;
+
+  /// No description provided for @customExerciseDelete.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar'**
+  String get customExerciseDelete;
+
+  /// No description provided for @customExerciseCancel.
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelar'**
+  String get customExerciseCancel;
+
   /// No description provided for @progressTitle.
   ///
   /// In es, this message translates to:

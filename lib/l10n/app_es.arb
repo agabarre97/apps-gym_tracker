@@ -313,6 +313,10 @@
   "customExerciseSaved": "Ejercicio guardado",
   "customExerciseNoResults": "No hay ejercicios para esta búsqueda",
   "customExerciseAddMuscleManual": "Añadir músculo",
+  "customExerciseDeleteConfirmTitle": "¿Eliminar ejercicio?",
+  "customExerciseDeleteConfirmBody": "Esta acción no se puede deshacer. Se eliminará de forma permanente.",
+  "customExerciseDelete": "Eliminar",
+  "customExerciseCancel": "Cancelar",
 
   "@@_PROGRESS": "Pantalla de progreso de ejercicio",
   "progressTitle": "Progreso",
