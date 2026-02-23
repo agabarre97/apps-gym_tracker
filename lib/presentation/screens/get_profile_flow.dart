@@ -12,6 +12,7 @@ import 'package:gym_tracker/domain/ports/workout_session_port.dart';
 import 'package:gym_tracker/domain/ports/measurement_record_port.dart';
 import 'package:gym_tracker/domain/ports/mobility_session_port.dart';
 import 'package:gym_tracker/domain/ports/hiit_session_port.dart';
+import 'package:gym_tracker/domain/ports/custom_exercise_port.dart';
 import 'package:gym_tracker/presentation/components/language_selector.dart';
 import 'package:gym_tracker/presentation/screens/landing_screen.dart';
 import 'package:gym_tracker/presentation/screens/profile/advanced_measures_screen.dart';
@@ -31,6 +32,7 @@ class GetProfileFlow extends StatefulWidget {
     this.measurementRecordPort,
     required this.mobilitySessionPort,
     required this.hiitSessionPort,
+    this.customExercisePort,
     required this.onLocaleChanged,
     this.authPort,
     this.syncedStorage,
@@ -44,6 +46,7 @@ class GetProfileFlow extends StatefulWidget {
   final MeasurementRecordPort? measurementRecordPort;
   final MobilitySessionPort mobilitySessionPort;
   final HiitSessionPort hiitSessionPort;
+  final CustomExercisePort? customExercisePort;
   final ValueChanged<Locale> onLocaleChanged;
   final AuthPort? authPort;
   final SyncPort? syncedStorage;
@@ -168,6 +171,7 @@ class _GetProfileFlowState extends State<GetProfileFlow> {
           measurementRecordPort: widget.measurementRecordPort,
           mobilitySessionPort: widget.mobilitySessionPort,
           hiitSessionPort: widget.hiitSessionPort,
+          customExercisePort: widget.customExercisePort,
           onLocaleChanged: widget.onLocaleChanged,
           authPort: widget.authPort,
           syncedStorage: widget.syncedStorage,

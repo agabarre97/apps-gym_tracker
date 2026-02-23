@@ -7,6 +7,7 @@ import 'package:gym_tracker/domain/entities/exercise.dart';
 import 'package:gym_tracker/domain/entities/hiit_config.dart';
 import 'package:gym_tracker/domain/entities/hiit_exercise.dart';
 import 'package:gym_tracker/domain/entities/routine.dart';
+import 'package:gym_tracker/domain/ports/custom_exercise_port.dart';
 import 'package:gym_tracker/domain/ports/routine_port.dart';
 import 'package:gym_tracker/presentation/screens/routine/routine_type_screen.dart';
 import 'package:gym_tracker/presentation/screens/routine/days_selection_screen.dart';
@@ -25,12 +26,14 @@ class CreateRoutineFlow extends StatefulWidget {
     super.key,
     required this.routinePort,
     required this.existingRoutines,
+    this.customExercisePort,
     @visibleForTesting this.preloadedExercises,
     @visibleForTesting this.preloadedHiitExercises,
   });
 
   final RoutinePort routinePort;
   final List<Routine> existingRoutines;
+  final CustomExercisePort? customExercisePort;
 
   /// Exercises injected for testing (skips asset loading).
   @visibleForTesting
@@ -100,7 +103,16 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
     } else {
       final lang = Localizations.localeOf(context).languageCode;
       final catalog = await AssetDataLoader.loadByMuscleCatalog(lang);
-      _allExercises = catalog.exercises;
+      final customExercises =
+          await widget.customExercisePort?.loadExercises() ??
+              const <Exercise>[];
+      final mergedByKey = <String, Exercise>{
+        for (final exercise in catalog.exercises) exercise.key: exercise,
+      };
+      for (final custom in customExercises) {
+        mergedByKey.putIfAbsent(custom.key, () => custom);
+      }
+      _allExercises = mergedByKey.values.toList(growable: false);
       _availableCategories = catalog.categories;
     }
     _exercisesLoaded = true;
@@ -329,6 +341,7 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
           totalDays: _numDays,
           allExercises: _allExercises,
           availableCategories: _availableCategories,
+          customExercisePort: widget.customExercisePort,
           initialSelectedCategories: categories,
           initialSelectedKeys: currentKeys,
           onConfirmed: (selectionResult) =>
@@ -505,6 +518,7 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
           totalDays: _numDays,
           allExercises: _allExercises,
           availableCategories: _availableCategories,
+          customExercisePort: widget.customExercisePort,
           initialSelectedCategories: _currentMuscleSelection,
           initialSelectedKeys: _currentExerciseSelection,
           onConfirmed: _onExercisesConfirmed,

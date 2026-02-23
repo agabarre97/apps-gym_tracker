@@ -7,6 +7,7 @@ import 'package:gym_tracker/l10n/app_localizations.dart';
 
 import 'package:gym_tracker/domain/entities/exercise.dart';
 import 'package:gym_tracker/domain/entities/workout_session.dart';
+import 'package:gym_tracker/domain/ports/custom_exercise_port.dart';
 import 'package:gym_tracker/domain/ports/workout_session_port.dart';
 import 'package:gym_tracker/presentation/screens/routine/exercise_selection_screen.dart';
 import 'package:gym_tracker/presentation/screens/routine/by_muscle_category_labels.dart';
@@ -22,12 +23,14 @@ class WorkoutSessionScreen extends StatefulWidget {
     required this.workoutSessionPort,
     required this.routineName,
     required this.trackTime,
+    this.customExercisePort,
   });
 
   final WorkoutSession session;
   final List<Exercise> allExercises;
   final WorkoutSessionPort workoutSessionPort;
   final String routineName;
+  final CustomExercisePort? customExercisePort;
 
   /// If true, an elapsed-time timer is displayed and start/end times recorded.
   final bool trackTime;
@@ -303,6 +306,7 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
           initialSelectedKeys: initialKeys,
           showDayProgress: false,
           titleOverride: l10n.routineSelectExercises,
+          customExercisePort: widget.customExercisePort,
           onConfirmed: (selectionResult) =>
               Navigator.of(context).pop(selectionResult),
           onBack: () => Navigator.of(context).pop(),

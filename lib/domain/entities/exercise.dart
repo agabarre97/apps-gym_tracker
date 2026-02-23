@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 /// A single exercise loaded from the JSON asset.
 class Exercise {
   const Exercise({
@@ -150,6 +152,33 @@ class Exercise {
       if (e.key == key) return e.name;
     }
     return key;
+  }
+
+  Map<String, dynamic> toJson() => {
+        'key': key,
+        'name':
+            localizedName.isNotEmpty ? localizedName : {'es': name, 'en': name},
+        'short_description': localizedShortDescription.isNotEmpty
+            ? localizedShortDescription
+            : {'es': description, 'en': description},
+        'grupo_muscular': muscleGroups,
+        'muscle_image': muscleImage,
+        'muscle_category_priority': muscleCategoryPriority,
+        'muscles_involved': musclesInvolved,
+        'muscles_confidence': musclesConfidence,
+        'category_keys': categoryKeys,
+      };
+
+  static String listToJsonString(List<Exercise> exercises) =>
+      jsonEncode(exercises.map((exercise) => exercise.toJson()).toList());
+
+  static List<Exercise> listFromJsonString(String jsonString) {
+    final raw = jsonDecode(jsonString);
+    if (raw is! List) return const [];
+    return raw
+        .whereType<Map<String, dynamic>>()
+        .map(Exercise.fromJson)
+        .toList();
   }
 }
 

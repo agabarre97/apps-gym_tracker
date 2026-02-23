@@ -613,6 +613,46 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routineImportError => 'Invalid JSON or wrong format';
 
   @override
+  String get customExerciseCreate => 'Create custom exercise';
+
+  @override
+  String get customExerciseCreateTitle => 'Create custom exercise';
+
+  @override
+  String get customExerciseCreatePersonalized => 'Create custom exercise';
+
+  @override
+  String get customExerciseName => 'Exercise name';
+
+  @override
+  String get customExerciseNameRequired => 'Name is required';
+
+  @override
+  String get customExerciseDescription => 'Short description (optional)';
+
+  @override
+  String get customExerciseMuscles => 'Muscle groups';
+
+  @override
+  String get customExerciseMusclesRequired =>
+      'Select at least one muscle group';
+
+  @override
+  String get customExerciseFront => 'Front';
+
+  @override
+  String get customExerciseBack => 'Back';
+
+  @override
+  String get customExerciseSaved => 'Exercise saved';
+
+  @override
+  String get customExerciseNoResults => 'No exercises match your search';
+
+  @override
+  String get customExerciseAddMuscleManual => 'Add muscle';
+
+  @override
   String get progressTitle => 'Progress';
 
   @override

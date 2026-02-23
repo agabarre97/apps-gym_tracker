@@ -8,6 +8,7 @@ import 'package:gym_tracker/presentation/components/export_sheet.dart';
 import 'package:gym_tracker/presentation/components/pdf_share_helper.dart';
 import 'package:gym_tracker/domain/entities/exercise.dart';
 import 'package:gym_tracker/domain/entities/routine.dart';
+import 'package:gym_tracker/domain/ports/custom_exercise_port.dart';
 import 'package:gym_tracker/domain/ports/profile_port.dart';
 import 'package:gym_tracker/domain/ports/routine_port.dart';
 import 'package:gym_tracker/domain/ports/workout_session_port.dart';
@@ -31,6 +32,7 @@ class RoutineDetailScreen extends StatefulWidget {
     required this.allExercises,
     required this.workoutSessionPort,
     required this.profilePort,
+    this.customExercisePort,
   });
 
   final Routine routine;
@@ -39,6 +41,7 @@ class RoutineDetailScreen extends StatefulWidget {
   final List<Exercise> allExercises;
   final WorkoutSessionPort workoutSessionPort;
   final ProfilePort profilePort;
+  final CustomExercisePort? customExercisePort;
 
   @override
   State<RoutineDetailScreen> createState() => _RoutineDetailScreenState();
@@ -147,6 +150,7 @@ class _RoutineDetailScreenState extends State<RoutineDetailScreen> {
           availableCategories: availableCategories,
           allExercises: widget.allExercises,
           initialSelectedKeys: day.exerciseKeys,
+          customExercisePort: widget.customExercisePort,
         ),
       ),
     );
@@ -400,6 +404,7 @@ class _EditDayExercisesScreen extends StatelessWidget {
     required this.availableCategories,
     required this.allExercises,
     required this.initialSelectedKeys,
+    this.customExercisePort,
   });
 
   final int dayIndex;
@@ -408,6 +413,7 @@ class _EditDayExercisesScreen extends StatelessWidget {
   final List<String> availableCategories;
   final List<Exercise> allExercises;
   final List<String> initialSelectedKeys;
+  final CustomExercisePort? customExercisePort;
 
   @override
   Widget build(BuildContext context) {
@@ -416,6 +422,7 @@ class _EditDayExercisesScreen extends StatelessWidget {
       totalDays: totalDays,
       allExercises: allExercises,
       availableCategories: availableCategories,
+      customExercisePort: customExercisePort,
       initialSelectedCategories: selectedCategories,
       initialSelectedKeys: initialSelectedKeys,
       onConfirmed: (result) =>

@@ -2,43 +2,199 @@
     "category": "core",
     "exercises": [
         {
-            "key": "rueda_abdominal"
+            "key": "rueda_abdominal",
+            "name": {
+                "es": "Rueda abdominal",
+                "en": "Ab wheel rollout"
+            },
+            "short_description": {
+                "es": "Extensión de core con rueda que trabaja la estabilización y la fuerza del abdomen en máxima elongación.",
+                "en": "Core extension with a wheel that builds stabilization and abdominal strength at maximum elongation."
+            },
+            "muscles_involved": [
+                "core"
+            ],
+            "muscles_confidence": "medium"
         },
         {
-            "key": "dragon_fly"
+            "key": "dragon_fly",
+            "name": {
+                "es": "Dragon fly",
+                "en": "Dragon flag"
+            },
+            "short_description": {
+                "es": "Elevación de piernas en banco o suelo controlando la bajada con énfasis excéntrico en el abdomen inferior.",
+                "en": "Leg raise on a bench or floor with controlled lowering, emphasizing eccentric loading on the lower abs."
+            },
+            "muscles_involved": [
+                "core"
+            ],
+            "muscles_confidence": "medium"
         },
         {
-            "key": "plancha_abdominal"
+            "key": "plancha_abdominal",
+            "name": {
+                "es": "Plancha abdominal",
+                "en": "Plank"
+            },
+            "short_description": {
+                "es": "Ejercicio isométrico de estabilidad que activa todo el core manteniendo la alineación corporal.",
+                "en": "Isometric stability exercise that activates the entire core while maintaining body alignment."
+            },
+            "muscles_involved": [
+                "core"
+            ],
+            "muscles_confidence": "medium"
         },
         {
-            "key": "laterales_unilateral"
+            "key": "laterales_unilateral",
+            "name": {
+                "es": "Laterales unilateral",
+                "en": "Unilateral side bend"
+            },
+            "short_description": {
+                "es": "Flexión lateral del tronco con mancuerna o polea que enfatiza los oblicuos de un lado a la vez.",
+                "en": "Lateral trunk flexion with dumbbell or cable, emphasizing one side of the obliques at a time."
+            },
+            "muscles_involved": [
+                "core"
+            ],
+            "muscles_confidence": "medium"
         },
         {
-            "key": "crunch_rodillas_polea_alta"
+            "key": "crunch_rodillas_polea_alta",
+            "name": {
+                "es": "Crunch de rodillas en polea alta",
+                "en": "Kneeling cable crunch"
+            },
+            "short_description": {
+                "es": "Flexión de columna en polea alta desde posición arrodillada con alta tensión continua sobre el recto abdominal.",
+                "en": "Spinal flexion on a high pulley from a kneeling position with continuous tension on the rectus abdominis."
+            },
+            "muscles_involved": [
+                "core"
+            ],
+            "muscles_confidence": "medium"
         },
         {
-            "key": "cable_woodchop"
+            "key": "cable_woodchop",
+            "name": {
+                "es": "Cable woodchop",
+                "en": "Cable woodchop"
+            },
+            "short_description": {
+                "es": "Rotación del tronco en polea que desarrolla fuerza rotacional y estabilidad del core.",
+                "en": "Trunk rotation on a cable machine that develops rotational strength and core stability."
+            },
+            "muscles_involved": [
+                "core"
+            ],
+            "muscles_confidence": "medium"
         },
         {
-            "key": "elevacion_piernas_colgado"
+            "key": "elevacion_piernas_colgado",
+            "name": {
+                "es": "Elevación de piernas colgado",
+                "en": "Hanging leg raise"
+            },
+            "short_description": {
+                "es": "Elevación de piernas suspendido de barra que enfatiza el abdomen inferior y la estabilización pélvica.",
+                "en": "Leg raise while hanging from a bar, emphasizing the lower abs and pelvic stabilization."
+            },
+            "muscles_involved": [
+                "core"
+            ],
+            "muscles_confidence": "medium"
         },
         {
-            "key": "crunch_banco_declinado"
+            "key": "crunch_banco_declinado",
+            "name": {
+                "es": "Crunch en banco declinado",
+                "en": "Decline bench crunch"
+            },
+            "short_description": {
+                "es": "Flexión de tronco sobre banco declinado que aumenta la resistencia del propio peso corporal.",
+                "en": "Trunk flexion on a decline bench that increases bodyweight resistance."
+            },
+            "muscles_involved": [
+                "core"
+            ],
+            "muscles_confidence": "medium"
         },
         {
-            "key": "dead_bug"
+            "key": "dead_bug",
+            "name": {
+                "es": "Dead bug",
+                "en": "Dead bug"
+            },
+            "short_description": {
+                "es": "Ejercicio de control motor y estabilidad que activa el core profundo mientras se mueven extremidades opuestas.",
+                "en": "Motor control and stability exercise that activates the deep core while moving opposite limbs."
+            },
+            "muscles_involved": [
+                "core"
+            ],
+            "muscles_confidence": "medium"
         },
         {
-            "key": "hollow_body_hold"
+            "key": "hollow_body_hold",
+            "name": {
+                "es": "Hollow body hold",
+                "en": "Hollow body hold"
+            },
+            "short_description": {
+                "es": "Posición isométrica que mantiene el cuerpo en forma de banana para máxima activación abdominal.",
+                "en": "Isometric position maintaining a banana shape for maximum abdominal activation."
+            },
+            "muscles_involved": [
+                "core"
+            ],
+            "muscles_confidence": "medium"
         },
         {
-            "key": "crunch_bicicleta"
+            "key": "crunch_bicicleta",
+            "name": {
+                "es": "Crunch bicicleta",
+                "en": "Bicycle crunch"
+            },
+            "short_description": {
+                "es": "Movimiento alterno de rotación y flexión que trabaja oblicuos y recto abdominal.",
+                "en": "Alternating rotation and flexion movement that works the obliques and rectus abdominis."
+            },
+            "muscles_involved": [
+                "core"
+            ],
+            "muscles_confidence": "medium"
         },
         {
-            "key": "farmer_carry_unilateral"
+            "key": "farmer_carry_unilateral",
+            "name": {
+                "es": "Farmer carry unilateral",
+                "en": "Unilateral farmer carry"
+            },
+            "short_description": {
+                "es": "Caminata cargando peso en un solo lado que desafía la estabilidad lateral del core.",
+                "en": "Single-side loaded walk that challenges lateral core stability."
+            },
+            "muscles_involved": [
+                "core"
+            ],
+            "muscles_confidence": "medium"
         },
         {
-            "key": "sit_up_balon_medicinal"
+            "key": "sit_up_balon_medicinal",
+            "name": {
+                "es": "Sit-up con balón medicinal",
+                "en": "Medicine ball sit-up"
+            },
+            "short_description": {
+                "es": "Flexión completa de tronco con carga externa para mayor estímulo de fuerza abdominal.",
+                "en": "Full trunk flexion with external load for greater abdominal strength stimulus."
+            },
+            "muscles_involved": [
+                "core"
+            ],
+            "muscles_confidence": "medium"
         }
     ]
 }

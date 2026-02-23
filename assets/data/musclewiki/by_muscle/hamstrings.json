@@ -8,7 +8,7 @@
                 "en": "Barbell Romanian Deadlift"
             },
             "short_description": {
-                "es": "1. Coloca las manos a la anchura de los hombros, con agarre prono doble o mixto. \n2. Empuja las caderas hacia atr\u00e1s manteniendo las rodillas casi extendidas. Busca un estiramiento en los isquiotibiales. \n3. Cuando sientas el estiramiento, empuja las caderas hacia adelante hasta volver a la posici\u00f3n de pie.",
+                "es": "1. Coloca las manos a la anchura de los hombros, con agarre prono doble o mixto. \n2. Empuja las caderas hacia atrás manteniendo las rodillas casi extendidas. Busca un estiramiento en los isquiotibiales. \n3. Cuando sientas el estiramiento, empuja las caderas hacia adelante hasta volver a la posición de pie.",
                 "en": "1. Take a shoulder width, double overhand or mixed grip. \n2. Push your hips back while leaving your knees mostly extended. Look for a stretch in your hamstrings. \n3. When you feel the stretch, push your hips forward until you're back in a standing position."
             },
             "muscles_involved": [
@@ -38,11 +38,11 @@
         {
             "key": "machine-seated-hamstring-curl",
             "name": {
-                "es": "Curl de isquiotibiales sentado en m\u00e1quina",
+                "es": "Curl de isquiotibiales sentado en máquina",
                 "en": "Machine Seated Hamstring Curl"
             },
             "short_description": {
-                "es": "1. Ajusta el respaldo y la almohadilla de los tobillos seg\u00fan tu altura. \n2. Desbloquea la almohadilla de las rodillas y b\u00e1jala tanto como puedas. \n3. Flexiona las rodillas contra la resistencia, luego exti\u00e9ndelas hasta sentir un estiramiento en los isquiotibiales.",
+                "es": "1. Ajusta el respaldo y la almohadilla de los tobillos según tu altura. \n2. Desbloquea la almohadilla de las rodillas y bájala tanto como puedas. \n3. Flexiona las rodillas contra la resistencia, luego extiéndelas hasta sentir un estiramiento en los isquiotibiales.",
                 "en": "1. Adjust the back pad and ankle pad to suit your height. \n2. Disengage the knee pad and lower it as far as you can. \n3. Flex your knees against resistance, then extend until you feel a stretch in your hamstrings."
             },
             "muscles_involved": [
@@ -68,16 +68,64 @@
             }
         },
         {
-            "key": "peso_muerto_rumano_con_mancuerna"
+            "key": "peso_muerto_rumano_con_mancuerna",
+            "name": {
+                "es": "Peso muerto rumano con mancuerna",
+                "en": "Dumbbell Romanian deadlift"
+            },
+            "short_description": {
+                "es": "Bisagra de cadera enfocada en isquiotibiales y glúteos.",
+                "en": "Hip hinge focused on hamstrings and glutes."
+            },
+            "muscles_involved": [
+                "hamstrings"
+            ],
+            "muscles_confidence": "medium"
         },
         {
-            "key": "femoral_sentado"
+            "key": "femoral_sentado",
+            "name": {
+                "es": "Femoral sentado",
+                "en": "Seated leg curl"
+            },
+            "short_description": {
+                "es": "Flexión de rodilla en máquina sentado para aislar isquiotibiales.",
+                "en": "Seated knee flexion on a machine to isolate the hamstrings."
+            },
+            "muscles_involved": [
+                "hamstrings"
+            ],
+            "muscles_confidence": "medium"
         },
         {
-            "key": "femoral_tumbado"
+            "key": "femoral_tumbado",
+            "name": {
+                "es": "Femoral tumbado",
+                "en": "Lying leg curl"
+            },
+            "short_description": {
+                "es": "Flexión de rodilla en máquina tumbado para trabajar isquiotibiales.",
+                "en": "Lying knee flexion on a machine to work the hamstrings."
+            },
+            "muscles_involved": [
+                "hamstrings"
+            ],
+            "muscles_confidence": "medium"
         },
         {
-            "key": "hiperextensiones_con_lastre"
+            "key": "hiperextensiones_con_lastre",
+            "name": {
+                "es": "Hiperextensiones con lastre",
+                "en": "Weighted hyperextensions"
+            },
+            "short_description": {
+                "es": "Extensión de cadera en banco romano para fortalecer la cadena posterior.",
+                "en": "Hip extension on a Roman bench to strengthen the posterior chain."
+            },
+            "muscles_involved": [
+                "hamstrings"
+            ],
+            "muscles_confidence": "medium"
         }
     ]
 }

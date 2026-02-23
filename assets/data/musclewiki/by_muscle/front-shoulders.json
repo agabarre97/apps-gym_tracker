@@ -8,7 +8,7 @@
                 "en": "Barbell Bench Press"
             },
             "short_description": {
-                "es": "1. Acu\u00e9state en el banco con los pies en el suelo. Con los brazos rectos, saca la barra. \n2. Baja la barra hasta la mitad del pecho. \n3. Sube la barra hasta que los codos est\u00e9n bloqueados.",
+                "es": "1. Acuéstate en el banco con los pies en el suelo. Con los brazos rectos, saca la barra. \n2. Baja la barra hasta la mitad del pecho. \n3. Sube la barra hasta que los codos estén bloqueados.",
                 "en": "1. Lay flat on the bench with your feet on the ground. With straight arms unrack the bar. \n2. Lower the bar to your mid chest \n3. Raise the bar until you've locked your elbows."
             },
             "muscles_involved": [
@@ -46,7 +46,7 @@
                 "en": "Cable Bar Face Pull"
             },
             "short_description": {
-                "es": "1. Frente a la polea, tira del peso hacia ti manteniendo los brazos paralelos al suelo. \n2. Lleva las manos hacia ambos lados de la cabeza y mant\u00e9n la posici\u00f3n. \n3. Regresa lentamente el peso a la posici\u00f3n inicial. Repite.",
+                "es": "1. Frente a la polea, tira del peso hacia ti manteniendo los brazos paralelos al suelo. \n2. Lleva las manos hacia ambos lados de la cabeza y mantén la posición. \n3. Regresa lentamente el peso a la posición inicial. Repite.",
                 "en": "1. Facing the pulley, pull the weight towards you while keeping your arms parallel to the ground. \n2. Pull your hands back to both sides of your head and hold the position. \n3. Slowly return weight to starting position. Repeat."
             },
             "muscles_involved": [
@@ -78,11 +78,11 @@
         {
             "key": "cable-high-single-arm-rear-delt-fly",
             "name": {
-                "es": "P\u00e1jaros unilaterales en polea alta (Deltoide posterior)",
+                "es": "Pájaros unilaterales en polea alta (Deltoide posterior)",
                 "en": "Cable High Single Arm Rear Delt Fly"
             },
             "short_description": {
-                "es": "1. Usa un accesorio de agarre o no uses ning\u00fan accesorio. El cable debe colocarse en la posici\u00f3n m\u00e1s alta. \n2. Da unos pasos atr\u00e1s, con el cable viniendo del lado opuesto al brazo que trabajas. \n3. Desde ah\u00ed, tus hombros deben realizar abducci\u00f3n y aducci\u00f3n en plano horizontal, mientras tus codos se mantienen en una posici\u00f3n fija.",
+                "es": "1. Usa un accesorio de agarre o no uses ningún accesorio. El cable debe colocarse en la posición más alta. \n2. Da unos pasos atrás, con el cable viniendo del lado opuesto al brazo que trabajas. \n3. Desde ahí, tus hombros deben realizar abducción y aducción en plano horizontal, mientras tus codos se mantienen en una posición fija.",
                 "en": "1. Use a handle attachment or no attachment at all. The cable should be set to the highest position. \n2. Step back, with the cable coming from the opposite side of the arm you are working. \n3. From there, your shoulders should abduct and adduct in a horizontal plane, while your elbows stay in a fixed position."
             },
             "muscles_involved": [
@@ -112,11 +112,11 @@
         {
             "key": "cable-low-single-arm-lateral-raise",
             "name": {
-                "es": "Elevaci\u00f3n lateral con cable (una mano, polea baja)",
+                "es": "Elevación lateral con cable (una mano, polea baja)",
                 "en": "Cable Low Single Arm Lateral Raise"
             },
             "short_description": {
-                "es": "1. Usa un agarre con la polea en la posici\u00f3n m\u00e1s baja de la m\u00e1quina. \n2. Realiza una abducci\u00f3n vertical del hombro, elevando el brazo recto hacia un lado. \n3. Eleva el brazo hasta que quede paralelo al suelo y vuelve a la posici\u00f3n inicial.",
+                "es": "1. Usa un agarre con la polea en la posición más baja de la máquina. \n2. Realiza una abducción vertical del hombro, elevando el brazo recto hacia un lado. \n3. Eleva el brazo hasta que quede paralelo al suelo y vuelve a la posición inicial.",
                 "en": "1. Use a handle attachment with the cable set all the way to the bottom of the machine. \n2. You should vertically abduct at the shoulder raising your arm straight out to the side. \n3. Raise until your arm is parallel with the ground and then back to the starting position."
             },
             "muscles_involved": [
@@ -150,7 +150,7 @@
                 "en": "Dumbbell Lateral Raise"
             },
             "short_description": {
-                "es": "1. P\u00e1rate erguido con las mancuernas a cada lado, palmas mirando hacia tus caderas. \n2. Eleva los brazos a ambos lados con una ligera flexi\u00f3n de los codos hasta que queden paralelos al suelo. Haz una pausa en la parte superior del movimiento. \n3. Baja lentamente los brazos hasta la posici\u00f3n inicial.",
+                "es": "1. Párate erguido con las mancuernas a cada lado, palmas mirando hacia tus caderas. \n2. Eleva los brazos a ambos lados con una ligera flexión de los codos hasta que queden paralelos al suelo. Haz una pausa en la parte superior del movimiento. \n3. Baja lentamente los brazos hasta la posición inicial.",
                 "en": "1. Stand up straight with dumbbells at either side, palms facing your hips. \n2. Raise your arms on either side with a slight bend in your elbow until they are parallel with the floor. Pause at the top of the motion. \n3. Slowly return your arms down to starting position."
             },
             "muscles_involved": [
@@ -180,11 +180,11 @@
         {
             "key": "dumbbell-rear-delt-fly",
             "name": {
-                "es": "P\u00e1jaros con mancuernas",
+                "es": "Pájaros con mancuernas",
                 "en": "Dumbbell Rear Delt Fly"
             },
             "short_description": {
-                "es": "1. Con una mancuerna en cada mano, flexiona las rodillas con los pies ligeramente hacia afuera. Arquea la espalda por encima de las rodillas y comienza con las pesas toc\u00e1ndose frente al pecho. \n2. Con los codos flexionados, eleva los brazos hasta el nivel de los hombros, haciendo una pausa al final del movimiento. \n3. Baja lentamente los brazos a la posici\u00f3n inicial.",
+                "es": "1. Con una mancuerna en cada mano, flexiona las rodillas con los pies ligeramente hacia afuera. Arquea la espalda por encima de las rodillas y comienza con las pesas tocándose frente al pecho. \n2. Con los codos flexionados, eleva los brazos hasta el nivel de los hombros, haciendo una pausa al final del movimiento. \n3. Baja lentamente los brazos a la posición inicial.",
                 "en": "1. With dumbbells in either hand, bend your knees with your feet slightly bowed out. Arch your back above your knees, and start with the weights touching in front of your chest. \n2. With bent elbows, raise your arms up to shoulder level, pausing at the at the end of the motion. \n3. Slowly lower your arms back to starting position."
             },
             "muscles_involved": [
@@ -214,11 +214,11 @@
         {
             "key": "dumbbell-seated-rear-delt-fly",
             "name": {
-                "es": "P\u00e1jaros sentados con mancuernas",
+                "es": "Pájaros sentados con mancuernas",
                 "en": "Dumbbell Seated Rear Delt Fly"
             },
             "short_description": {
-                "es": "1. Con una mancuerna en cada mano, flexiona las rodillas con los pies ligeramente girados hacia afuera. Arquea la espalda por encima de las rodillas y comienza con las mancuernas toc\u00e1ndose frente al pecho. \n2. Con los codos doblados, eleva los brazos hasta la altura de los hombros y haz una pausa al final del movimiento. \n3. Baja lentamente los brazos hasta la posici\u00f3n inicial.",
+                "es": "1. Con una mancuerna en cada mano, flexiona las rodillas con los pies ligeramente girados hacia afuera. Arquea la espalda por encima de las rodillas y comienza con las mancuernas tocándose frente al pecho. \n2. Con los codos doblados, eleva los brazos hasta la altura de los hombros y haz una pausa al final del movimiento. \n3. Baja lentamente los brazos hasta la posición inicial.",
                 "en": "1. With dumbbells in either hand, bend your knees with your feet slightly bowed out. Arch your back above your knees, and start with the weights touching in front of your chest. \n2. With bent elbows, raise your arms up to shoulder level, pausing at the at the end of the motion. \n3. Slowly lower your arms back to starting position."
             },
             "muscles_involved": [
@@ -252,7 +252,7 @@
                 "en": "Cable Rope Face Pulls"
             },
             "short_description": {
-                "es": "1. Frente a la polea, tira del peso hacia ti mientras mantienes los brazos paralelos al suelo. \n2. Lleva las manos hacia ambos lados de la cabeza y mant\u00e9n la posici\u00f3n. \n3. Regresa lentamente el peso a la posici\u00f3n inicial. Repite.",
+                "es": "1. Frente a la polea, tira del peso hacia ti mientras mantienes los brazos paralelos al suelo. \n2. Lleva las manos hacia ambos lados de la cabeza y mantén la posición. \n3. Regresa lentamente el peso a la posición inicial. Repite.",
                 "en": "1. Facing the pulley, pull the weight towards you while keeping your arms parallel to the ground. \n2. Pull your hands back to both sides of your head and hold the position. \n3. Slowly return weight to starting position. Repeat."
             },
             "muscles_involved": [
@@ -282,11 +282,11 @@
         {
             "key": "smith-machine-incline-bench-press",
             "name": {
-                "es": "Press de banca inclinado en m\u00e1quina Smith",
+                "es": "Press de banca inclinado en máquina Smith",
                 "en": "Smith Machine Incline Bench Press"
             },
             "short_description": {
-                "es": "1. Coloca el banco entre 30 y 45 grados. \n2. Acu\u00e9state en el banco con los pies en el suelo. Con los brazos extendidos, desengancha la barra del soporte. \n3. Baja la barra hasta la mitad del pecho. \n4. Sube la barra (lentamente y con control) hasta bloquear los codos.",
+                "es": "1. Coloca el banco entre 30 y 45 grados. \n2. Acuéstate en el banco con los pies en el suelo. Con los brazos extendidos, desengancha la barra del soporte. \n3. Baja la barra hasta la mitad del pecho. \n4. Sube la barra (lentamente y con control) hasta bloquear los codos.",
                 "en": "1. Position the bench between 30 and 45 degrees. \n2. Lay flat on the bench with your feet on the ground. With straight arms unrack the bar. \n3. Lower the bar to your mid chest \n4. Raise the bar (slowly and controlled) until you've locked your elbows."
             },
             "muscles_involved": [
@@ -318,7 +318,19 @@
             }
         },
         {
-            "key": "press_para_hombros"
+            "key": "press_para_hombros",
+            "name": {
+                "es": "Press para hombros",
+                "en": "Shoulder press"
+            },
+            "short_description": {
+                "es": "Press vertical para desarrollar el deltoide anterior y medio.",
+                "en": "Vertical press to develop the anterior and medial deltoid."
+            },
+            "muscles_involved": [
+                "front-shoulders"
+            ],
+            "muscles_confidence": "medium"
         }
     ]
 }

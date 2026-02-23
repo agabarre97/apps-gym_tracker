@@ -14,7 +14,9 @@ import 'package:gym_tracker/domain/entities/measurement_record.dart';
 import 'package:gym_tracker/domain/entities/mobility_session.dart';
 import 'package:gym_tracker/domain/ports/mobility_session_port.dart';
 import 'package:gym_tracker/domain/entities/hiit_session.dart';
+import 'package:gym_tracker/domain/entities/exercise.dart';
 import 'package:gym_tracker/domain/ports/hiit_session_port.dart';
+import 'package:gym_tracker/domain/ports/custom_exercise_port.dart';
 import 'package:gym_tracker/domain/ports/measurement_record_port.dart';
 import 'package:gym_tracker/domain/ports/workout_session_port.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
@@ -105,6 +107,19 @@ class FakeHiitSessionPort implements HiitSessionPort {
   @override
   Future<void> saveSessions(List<HiitSession> sessions) async =>
       _sessions = List.of(sessions);
+}
+
+/// In-memory implementation of [CustomExercisePort] for testing.
+class FakeCustomExercisePort implements CustomExercisePort {
+  List<Exercise> _exercises = [];
+
+  @override
+  Future<List<Exercise>> loadExercises() async => List.of(_exercises);
+
+  @override
+  Future<void> saveExercises(List<Exercise> exercises) async {
+    _exercises = List.of(exercises);
+  }
 }
 
 /// In-memory implementation of [MeasurementRecordPort] for testing.

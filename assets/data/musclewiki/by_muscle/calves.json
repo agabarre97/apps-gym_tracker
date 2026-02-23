@@ -1,0 +1,116 @@
+{
+  "category": "calves",
+  "exercises": [
+    {
+      "key": "gemelo_en_maquina_sentado",
+      "name": {
+        "es": "Gemelo en maquina sentado",
+        "en": "Seated calf raise machine"
+      },
+      "short_description": {
+        "es": "Elevacion de gemelos en maquina sentado para enfatizar el soleo.",
+        "en": "Seated calf raise machine exercise focused on the soleus."
+      },
+      "muscles_involved": [
+        "calves"
+      ],
+      "muscles_source": "manual",
+      "muscles_confidence": "high",
+      "muscles_trace": {
+        "svg_detected_ids": [
+          "calves"
+        ],
+        "text_roles_detected": {
+          "primary": [
+            "calves"
+          ],
+          "secondary": [],
+          "tertiary": []
+        },
+        "url_slug_inferred": null
+      },
+      "general_categories": [
+        "calves",
+        "machines"
+      ],
+      "source_urls": {
+        "es": "",
+        "en": ""
+      }
+    },
+    {
+      "key": "gemelo_en_maquina_multipower",
+      "name": {
+        "es": "Gemelo en maquina multipower",
+        "en": "Smith machine calf raise"
+      },
+      "short_description": {
+        "es": "Elevacion de talones de pie en multipower para trabajar los gemelos con carga guiada.",
+        "en": "Standing calf raise on a Smith machine with guided load."
+      },
+      "muscles_involved": [
+        "calves"
+      ],
+      "muscles_source": "manual",
+      "muscles_confidence": "high",
+      "muscles_trace": {
+        "svg_detected_ids": [
+          "calves"
+        ],
+        "text_roles_detected": {
+          "primary": [
+            "calves"
+          ],
+          "secondary": [],
+          "tertiary": []
+        },
+        "url_slug_inferred": null
+      },
+      "general_categories": [
+        "calves",
+        "machines"
+      ],
+      "source_urls": {
+        "es": "",
+        "en": ""
+      }
+    },
+    {
+      "key": "gemelo_en_maquina_de_sentadilla",
+      "name": {
+        "es": "Gemelo en maquina de sentadilla",
+        "en": "Squat machine calf raise"
+      },
+      "short_description": {
+        "es": "Elevacion de talones en maquina de sentadilla para carga alta en gemelos.",
+        "en": "Calf raise on a squat machine for high-load calf work."
+      },
+      "muscles_involved": [
+        "calves"
+      ],
+      "muscles_source": "manual",
+      "muscles_confidence": "high",
+      "muscles_trace": {
+        "svg_detected_ids": [
+          "calves"
+        ],
+        "text_roles_detected": {
+          "primary": [
+            "calves"
+          ],
+          "secondary": [],
+          "tertiary": []
+        },
+        "url_slug_inferred": null
+      },
+      "general_categories": [
+        "calves",
+        "machines"
+      ],
+      "source_urls": {
+        "es": "",
+        "en": ""
+      }
+    }
+  ]
+}

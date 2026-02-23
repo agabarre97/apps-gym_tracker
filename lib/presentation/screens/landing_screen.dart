@@ -14,6 +14,7 @@ import 'package:gym_tracker/domain/ports/profile_port.dart';
 import 'package:gym_tracker/domain/ports/sync_port.dart';
 import 'package:gym_tracker/domain/ports/routine_port.dart';
 import 'package:gym_tracker/domain/ports/storage_port.dart';
+import 'package:gym_tracker/domain/ports/custom_exercise_port.dart';
 import 'package:gym_tracker/domain/ports/training_day_port.dart';
 import 'package:gym_tracker/domain/ports/workout_session_port.dart';
 import 'package:gym_tracker/domain/ports/measurement_record_port.dart';
@@ -85,6 +86,7 @@ class LandingScreen extends StatefulWidget {
     required this.trainingDayPort,
     required this.workoutSessionPort,
     this.measurementRecordPort,
+    this.customExercisePort,
     required this.mobilitySessionPort,
     required this.hiitSessionPort,
     required this.onLocaleChanged,
@@ -98,6 +100,7 @@ class LandingScreen extends StatefulWidget {
   final TrainingDayPort trainingDayPort;
   final WorkoutSessionPort workoutSessionPort;
   final MeasurementRecordPort? measurementRecordPort;
+  final CustomExercisePort? customExercisePort;
   final MobilitySessionPort mobilitySessionPort;
   final HiitSessionPort hiitSessionPort;
   final ValueChanged<Locale> onLocaleChanged;
@@ -128,6 +131,8 @@ class _LandingScreenState extends State<LandingScreen> {
 
   Future<void> _loadData() async {
     final routines = await widget.routinePort.loadRoutines();
+    final customExercises =
+        await widget.customExercisePort?.loadExercises() ?? const <Exercise>[];
     final days = await widget.trainingDayPort.loadTrainingDays();
     final sessions = await widget.workoutSessionPort.loadSessions();
     final mobilitySessions = await widget.mobilitySessionPort.loadSessions();
@@ -136,9 +141,15 @@ class _LandingScreenState extends State<LandingScreen> {
     final lang = Localizations.localeOf(context).languageCode;
     final catalog = await AssetDataLoader.loadByMuscleCatalog(lang);
     if (!mounted) return;
+    final mergedByKey = <String, Exercise>{
+      for (final exercise in catalog.exercises) exercise.key: exercise,
+    };
+    for (final custom in customExercises) {
+      mergedByKey.putIfAbsent(custom.key, () => custom);
+    }
     setState(() {
       _routines = routines;
-      _allExercises = catalog.exercises;
+      _allExercises = mergedByKey.values.toList();
       _sessions = sessions;
       _mobilitySessions = mobilitySessions;
       _hiitSessions = hiitSessions;
@@ -178,6 +189,7 @@ class _LandingScreenState extends State<LandingScreen> {
         builder: (_) => CreateRoutineFlow(
           routinePort: widget.routinePort,
           existingRoutines: _routines,
+          customExercisePort: widget.customExercisePort,
         ),
       ),
     );
@@ -355,6 +367,7 @@ class _LandingScreenState extends State<LandingScreen> {
           workoutSessionPort: widget.workoutSessionPort,
           routineName: routine.name,
           trackTime: trackTime,
+          customExercisePort: widget.customExercisePort,
         ),
       ),
     );
@@ -542,6 +555,7 @@ class _LandingScreenState extends State<LandingScreen> {
           workoutSessionPort: widget.workoutSessionPort,
           routineName: routineName,
           trackTime: trackTime,
+          customExercisePort: widget.customExercisePort,
         ),
       ),
     );
@@ -795,6 +809,7 @@ class _LandingScreenState extends State<LandingScreen> {
             allExercises: _allExercises,
             workoutSessionPort: widget.workoutSessionPort,
             profilePort: widget.profilePort,
+            customExercisePort: widget.customExercisePort,
           ),
         ),
       );

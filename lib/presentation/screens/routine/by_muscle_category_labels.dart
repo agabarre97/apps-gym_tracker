@@ -1,5 +1,6 @@
 const List<String> byMuscleCategoryOrder = [
   'biceps',
+  'calves',
   'chest',
   'forearms',
   'front-shoulders',
@@ -12,6 +13,7 @@ const List<String> byMuscleCategoryOrder = [
 ];
 
 const Map<String, String> _categoryLabelEs = {
+  'calves': 'Gemelos',
   'chest': 'Pecho',
   'front-shoulders': 'Hombro frontal',
   'rear-shoulders': 'Hombro posterior',
@@ -25,6 +27,7 @@ const Map<String, String> _categoryLabelEs = {
 };
 
 const Map<String, String> _categoryLabelEn = {
+  'calves': 'Calves',
   'chest': 'Chest',
   'front-shoulders': 'Front Shoulders',
   'rear-shoulders': 'Rear Shoulders',

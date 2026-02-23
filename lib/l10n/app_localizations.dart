@@ -1226,6 +1226,84 @@ abstract class AppLocalizations {
   /// **'JSON no válido o formato incorrecto'**
   String get routineImportError;
 
+  /// No description provided for @customExerciseCreate.
+  ///
+  /// In es, this message translates to:
+  /// **'Crear ejercicio personalizado'**
+  String get customExerciseCreate;
+
+  /// No description provided for @customExerciseCreateTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Crear ejercicio personalizado'**
+  String get customExerciseCreateTitle;
+
+  /// No description provided for @customExerciseCreatePersonalized.
+  ///
+  /// In es, this message translates to:
+  /// **'Crear ejercicio personalizado'**
+  String get customExerciseCreatePersonalized;
+
+  /// No description provided for @customExerciseName.
+  ///
+  /// In es, this message translates to:
+  /// **'Nombre del ejercicio'**
+  String get customExerciseName;
+
+  /// No description provided for @customExerciseNameRequired.
+  ///
+  /// In es, this message translates to:
+  /// **'El nombre es obligatorio'**
+  String get customExerciseNameRequired;
+
+  /// No description provided for @customExerciseDescription.
+  ///
+  /// In es, this message translates to:
+  /// **'Descripción breve (opcional)'**
+  String get customExerciseDescription;
+
+  /// No description provided for @customExerciseMuscles.
+  ///
+  /// In es, this message translates to:
+  /// **'Grupos musculares'**
+  String get customExerciseMuscles;
+
+  /// No description provided for @customExerciseMusclesRequired.
+  ///
+  /// In es, this message translates to:
+  /// **'Selecciona al menos un grupo muscular'**
+  String get customExerciseMusclesRequired;
+
+  /// No description provided for @customExerciseFront.
+  ///
+  /// In es, this message translates to:
+  /// **'Frontal'**
+  String get customExerciseFront;
+
+  /// No description provided for @customExerciseBack.
+  ///
+  /// In es, this message translates to:
+  /// **'Posterior'**
+  String get customExerciseBack;
+
+  /// No description provided for @customExerciseSaved.
+  ///
+  /// In es, this message translates to:
+  /// **'Ejercicio guardado'**
+  String get customExerciseSaved;
+
+  /// No description provided for @customExerciseNoResults.
+  ///
+  /// In es, this message translates to:
+  /// **'No hay ejercicios para esta búsqueda'**
+  String get customExerciseNoResults;
+
+  /// No description provided for @customExerciseAddMuscleManual.
+  ///
+  /// In es, this message translates to:
+  /// **'Añadir músculo'**
+  String get customExerciseAddMuscleManual;
+
   /// No description provided for @progressTitle.
   ///
   /// In es, this message translates to:

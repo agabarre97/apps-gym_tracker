@@ -176,7 +176,11 @@ class MobilityExerciseTile extends StatelessWidget {
   }
 
   Widget _buildCompact(
-      BuildContext context, String name, String sideLabel, String duration) {
+    BuildContext context,
+    String name,
+    String sideLabel,
+    String duration,
+  ) {
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(

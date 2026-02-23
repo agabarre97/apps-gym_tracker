@@ -14,6 +14,7 @@ import 'package:gym_tracker/data/datasources/firebase_auth_datasource.dart';
 import 'package:gym_tracker/data/datasources/local_storage_datasource.dart';
 import 'package:gym_tracker/data/datasources/profile_datasource.dart';
 import 'package:gym_tracker/data/datasources/measurement_datasource.dart';
+import 'package:gym_tracker/data/datasources/custom_exercise_datasource.dart';
 import 'package:gym_tracker/data/datasources/routine_datasource.dart';
 import 'package:gym_tracker/data/datasources/synced_storage_datasource.dart';
 import 'package:gym_tracker/data/datasources/training_day_datasource.dart';
@@ -30,6 +31,7 @@ import 'package:gym_tracker/domain/ports/workout_session_port.dart';
 import 'package:gym_tracker/domain/ports/measurement_record_port.dart';
 import 'package:gym_tracker/domain/ports/mobility_session_port.dart';
 import 'package:gym_tracker/domain/ports/hiit_session_port.dart';
+import 'package:gym_tracker/domain/ports/custom_exercise_port.dart';
 import 'package:gym_tracker/firebase_options.dart';
 import 'package:gym_tracker/presentation/components/language_selector.dart';
 import 'package:gym_tracker/presentation/screens/loading_screen.dart';
@@ -86,6 +88,8 @@ void main() async {
   final MobilitySessionPort mobilitySessionPort =
       MobilitySessionDatasource(storage);
   final HiitSessionPort hiitSessionPort = HiitSessionDatasource(storage);
+  final CustomExercisePort customExercisePort =
+      CustomExerciseDatasource(storage);
 
   runApp(GymTrackerApp(
     storage: storage,
@@ -98,6 +102,7 @@ void main() async {
     measurementRecordPort: measurementRecordPort,
     mobilitySessionPort: mobilitySessionPort,
     hiitSessionPort: hiitSessionPort,
+    customExercisePort: customExercisePort,
   ));
 }
 
@@ -114,6 +119,7 @@ class GymTrackerApp extends StatefulWidget {
     required this.measurementRecordPort,
     required this.mobilitySessionPort,
     required this.hiitSessionPort,
+    required this.customExercisePort,
   });
 
   final StoragePort storage;
@@ -126,6 +132,7 @@ class GymTrackerApp extends StatefulWidget {
   final MeasurementRecordPort measurementRecordPort;
   final MobilitySessionPort mobilitySessionPort;
   final HiitSessionPort hiitSessionPort;
+  final CustomExercisePort customExercisePort;
 
   @override
   State<GymTrackerApp> createState() => _GymTrackerAppState();
@@ -180,6 +187,7 @@ class _GymTrackerAppState extends State<GymTrackerApp> {
         measurementRecordPort: widget.measurementRecordPort,
         mobilitySessionPort: widget.mobilitySessionPort,
         hiitSessionPort: widget.hiitSessionPort,
+        customExercisePort: widget.customExercisePort,
         onLocaleChanged: _setLocale,
       ),
     );

@@ -8,7 +8,7 @@
                 "en": "Barbell Bent Over Row"
             },
             "short_description": {
-                "es": "1. Agarra una barra con un agarre prono o supino al ancho de los hombros. \n2. Incl\u00ednate hacia adelante por las caderas manteniendo la espalda plana. \n3. Tira del peso hacia la parte superior del abdomen. \n4. Baja el peso de forma controlada y repite.",
+                "es": "1. Agarra una barra con un agarre prono o supino al ancho de los hombros. \n2. Inclínate hacia adelante por las caderas manteniendo la espalda plana. \n3. Tira del peso hacia la parte superior del abdomen. \n4. Baja el peso de forma controlada y repite.",
                 "en": "1. Grab a barbell with a shoulder width pronated or supinated grip. \n2. Bend forward at your hips while maintaining a flat back. \n3. Pull the weight toward your upper abdomen. \n4. Lower the weight in a controlled manner and repeat."
             },
             "muscles_involved": [
@@ -46,7 +46,7 @@
                 "en": "Cable Bent Over Bar Pullover"
             },
             "short_description": {
-                "es": "1. Puedes usar cualquier agarre. Ajusta el cable hasta la parte m\u00e1s alta de la m\u00e1quina. \n2. Sujeta el accesorio y da unos pasos hacia atr\u00e1s. Lleva los gl\u00fateos hacia atr\u00e1s hasta quedar ligeramente inclinado hacia adelante. \n3. Inicia el movimiento con los hombros, no con los codos. Imagina que intentas tirar del accesorio a trav\u00e9s de tus muslos en la parte m\u00e1s baja.",
+                "es": "1. Puedes usar cualquier agarre. Ajusta el cable hasta la parte más alta de la máquina. \n2. Sujeta el accesorio y da unos pasos hacia atrás. Lleva los glúteos hacia atrás hasta quedar ligeramente inclinado hacia adelante. \n3. Inicia el movimiento con los hombros, no con los codos. Imagina que intentas tirar del accesorio a través de tus muslos en la parte más baja.",
                 "en": "1. You can use any grip. Adjust the cable to the top position of the machine. \n2. Grasp the attachment and take a few steps back. Push your glutes back until you are slightly leaned forward. \n3. Initiate the movement with your shoulders, not your elbows. Imagine trying to pull the attachment through your thighs at the bottom."
             },
             "muscles_involved": [
@@ -74,7 +74,7 @@
         {
             "key": "machine-chest-supported-t-bar-row",
             "name": {
-                "es": "Remo en T con apoyo pectoral en m\u00e1quina",
+                "es": "Remo en T con apoyo pectoral en máquina",
                 "en": "Machine Chest Supported T Bar Row"
             },
             "short_description": {
@@ -142,11 +142,11 @@
         {
             "key": "narrow-pulldown",
             "name": {
-                "es": "Jal\u00f3n con agarre estrecho",
+                "es": "Jalón con agarre estrecho",
                 "en": "Narrow Pulldown"
             },
             "short_description": {
-                "es": "1. Usa el accesorio de barra recta. \n2. Sujeta el accesorio al sentarte en la m\u00e1quina y coloca las piernas bajo las almohadillas. \n3. Tira de la barra hasta la clav\u00edcula, luego vuelve a subirla hasta que los brazos est\u00e9n extendidos.",
+                "es": "1. Usa el accesorio de barra recta. \n2. Sujeta el accesorio al sentarte en la máquina y coloca las piernas bajo las almohadillas. \n3. Tira de la barra hasta la clavícula, luego vuelve a subirla hasta que los brazos estén extendidos.",
                 "en": "1. Use the straight bar attachment. \n2. Grasp the attachment as you sit in the machine and place your legs under the pads. \n3. Pull the bar to your clavicle, then return it up until your arms are extended."
             },
             "muscles_involved": [
@@ -176,11 +176,11 @@
         {
             "key": "neutral-pulldown",
             "name": {
-                "es": "Jal\u00f3n con agarre neutro",
+                "es": "Jalón con agarre neutro",
                 "en": "Neutral Pulldown"
             },
             "short_description": {
-                "es": "1. Sujeta el accesorio mientras te sientas en la m\u00e1quina y coloca las piernas bajo las almohadillas. \n2. Tira de la barra hasta la clav\u00edcula, luego vuelve a subir hasta que los brazos est\u00e9n extendidos.",
+                "es": "1. Sujeta el accesorio mientras te sientas en la máquina y coloca las piernas bajo las almohadillas. \n2. Tira de la barra hasta la clavícula, luego vuelve a subir hasta que los brazos estén extendidos.",
                 "en": "1. Use the V Bar attachment. \n2. Hold the attachment as you sit on the machine and put your legs under the leg pads. \n3. Pull the bar to your clavicle, then raise back up until your arm are extended."
             },
             "muscles_involved": [
@@ -214,7 +214,7 @@
                 "en": "Pull Ups"
             },
             "short_description": {
-                "es": "1. Sujeta la barra con un agarre prono, con los brazos y hombros completamente extendidos. \n2. Tira de tu cuerpo hacia arriba hasta que tu barbilla est\u00e9 por encima de la barra. \n3. Baja tu cuerpo de nuevo a la posici\u00f3n inicial.",
+                "es": "1. Sujeta la barra con un agarre prono, con los brazos y hombros completamente extendidos. \n2. Tira de tu cuerpo hacia arriba hasta que tu barbilla esté por encima de la barra. \n3. Baja tu cuerpo de nuevo a la posición inicial.",
                 "en": "1. Grasp the bar with an overhand grip, arms and shoulders fully extended. \n2. Pull your body up until your chin is above the bar. \n3. Lower your body back to starting position."
             },
             "muscles_involved": [
@@ -244,19 +244,184 @@
             }
         },
         {
-            "key": "remo_con_pectoral_apoyado_en_maquina"
+            "key": "remo_con_pectoral_apoyado_en_maquina",
+            "name": {
+                "es": "Remo con pectoral apoyado en máquina",
+                "en": "Chest-supported machine row"
+            },
+            "short_description": {
+                "es": "Remo guiado con el pecho apoyado para aislar la musculatura dorsal.",
+                "en": "Guided row with chest support to isolate the back muscles."
+            },
+            "muscles_involved": [
+                "lats"
+            ],
+            "muscles_confidence": "medium",
+            "muscles_source": "inference",
+            "muscles_trace": {
+                "svg_detected_ids": [
+                    "lats"
+                ],
+                "text_roles_detected": {
+                    "primary": [
+                        "lats"
+                    ],
+                    "secondary": [],
+                    "tertiary": []
+                },
+                "url_slug_inferred": null
+            },
+            "general_categories": [
+                "lats"
+            ],
+            "source_urls": {
+                "es": "",
+                "en": ""
+            }
         },
         {
-            "key": "jalon_abierto"
+            "key": "jalon_abierto",
+            "name": {
+                "es": "Jalón abierto",
+                "en": "Wide-grip lat pulldown"
+            },
+            "short_description": {
+                "es": "Tirón vertical con agarre amplio para trabajar la amplitud dorsal.",
+                "en": "Vertical pull with wide grip to work lat width."
+            },
+            "muscles_involved": [
+                "lats"
+            ],
+            "muscles_confidence": "medium",
+            "muscles_source": "inference",
+            "muscles_trace": {
+                "svg_detected_ids": [
+                    "lats"
+                ],
+                "text_roles_detected": {
+                    "primary": [
+                        "lats"
+                    ],
+                    "secondary": [],
+                    "tertiary": []
+                },
+                "url_slug_inferred": null
+            },
+            "general_categories": [
+                "lats"
+            ],
+            "source_urls": {
+                "es": "",
+                "en": ""
+            }
         },
         {
-            "key": "jalon_agarre_cerrado"
+            "key": "jalon_agarre_cerrado",
+            "name": {
+                "es": "Jalón agarre cerrado",
+                "en": "Close-grip lat pulldown"
+            },
+            "short_description": {
+                "es": "Tirón vertical con agarre cerrado enfatizando la parte media del dorsal.",
+                "en": "Vertical pull with close grip emphasizing the mid back."
+            },
+            "muscles_involved": [
+                "lats"
+            ],
+            "muscles_confidence": "medium",
+            "muscles_source": "inference",
+            "muscles_trace": {
+                "svg_detected_ids": [
+                    "lats"
+                ],
+                "text_roles_detected": {
+                    "primary": [
+                        "lats"
+                    ],
+                    "secondary": [],
+                    "tertiary": []
+                },
+                "url_slug_inferred": null
+            },
+            "general_categories": [
+                "lats"
+            ],
+            "source_urls": {
+                "es": "",
+                "en": ""
+            }
         },
         {
-            "key": "remo_en_polea_baja"
+            "key": "remo_en_polea_baja",
+            "name": {
+                "es": "Remo en polea baja",
+                "en": "Seated cable row"
+            },
+            "short_description": {
+                "es": "Remo horizontal hacia el ombligo para trabajar grosor dorsal.",
+                "en": "Horizontal row toward the navel to build back thickness."
+            },
+            "muscles_involved": [
+                "lats"
+            ],
+            "muscles_confidence": "medium",
+            "muscles_source": "inference",
+            "muscles_trace": {
+                "svg_detected_ids": [
+                    "lats"
+                ],
+                "text_roles_detected": {
+                    "primary": [
+                        "lats"
+                    ],
+                    "secondary": [],
+                    "tertiary": []
+                },
+                "url_slug_inferred": null
+            },
+            "general_categories": [
+                "lats"
+            ],
+            "source_urls": {
+                "es": "",
+                "en": ""
+            }
         },
         {
-            "key": "pullover_unilateral"
+            "key": "pullover_unilateral",
+            "name": {
+                "es": "Pullover unilateral",
+                "en": "Unilateral pullover"
+            },
+            "short_description": {
+                "es": "Pullover con mancuerna o polea realizado con un solo brazo para trabajar dorsal ancho, serrato y estabilidad escapular.",
+                "en": "Single-arm pullover with dumbbell or cable to work the lats, serratus, and scapular stability."
+            },
+            "muscles_involved": [
+                "lats"
+            ],
+            "muscles_confidence": "medium",
+            "muscles_source": "inference",
+            "muscles_trace": {
+                "svg_detected_ids": [
+                    "lats"
+                ],
+                "text_roles_detected": {
+                    "primary": [
+                        "lats"
+                    ],
+                    "secondary": [],
+                    "tertiary": []
+                },
+                "url_slug_inferred": null
+            },
+            "general_categories": [
+                "lats"
+            ],
+            "source_urls": {
+                "es": "",
+                "en": ""
+            }
         }
     ]
 }

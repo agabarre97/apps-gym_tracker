@@ -43,4 +43,30 @@ void main() {
       expect(exercise.difficulty, 3);
     });
   });
+
+  group('Exercise serialization', () {
+    test('round-trips with toJson and list serializers', () {
+      const original = Exercise(
+        key: 'custom_press',
+        name: 'Custom Press',
+        description: 'Custom description',
+        muscleGroups: ['chest', 'triceps'],
+        difficulty: 2,
+        localizedName: {'es': 'Press custom', 'en': 'Custom press'},
+        localizedShortDescription: {'es': 'Desc ES', 'en': 'Desc EN'},
+        musclesInvolved: ['chest', 'triceps'],
+        musclesConfidence: 'high',
+        categoryKeys: ['chest', 'triceps'],
+      );
+
+      final encoded = Exercise.listToJsonString(const [original]);
+      final decoded = Exercise.listFromJsonString(encoded);
+
+      expect(decoded, hasLength(1));
+      expect(decoded.first.key, original.key);
+      expect(decoded.first.localizedNameFor('es'), 'Press custom');
+      expect(decoded.first.localizedDescriptionFor('en'), 'Desc EN');
+      expect(decoded.first.categoryKeys, ['chest', 'triceps']);
+    });
+  });
 }

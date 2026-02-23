@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
 import 'package:gym_tracker/domain/entities/exercise.dart';
+import 'package:gym_tracker/domain/ports/custom_exercise_port.dart';
 import 'package:gym_tracker/presentation/screens/routine/by_muscle_category_labels.dart';
+import 'package:gym_tracker/presentation/screens/routine/create_custom_exercise_screen.dart';
 import 'package:gym_tracker/presentation/screens/routine/exercise_detail_sheet.dart';
 import 'package:gym_tracker/presentation/theme/app_theme.dart';
 
@@ -33,6 +35,7 @@ class ExerciseSelectionScreen extends StatefulWidget {
     this.titleOverride,
     this.initialSelectedCategories = const [],
     this.initialSelectedKeys = const [],
+    this.customExercisePort,
   });
 
   final int currentDay;
@@ -49,6 +52,7 @@ class ExerciseSelectionScreen extends StatefulWidget {
 
   /// Pre-selected exercise keys (used when navigating back or editing).
   final List<String> initialSelectedKeys;
+  final CustomExercisePort? customExercisePort;
 
   @override
   State<ExerciseSelectionScreen> createState() =>
@@ -62,6 +66,8 @@ class _ExerciseSelectionScreenState extends State<ExerciseSelectionScreen> {
 
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
+  List<Exercise> _customExercises = const [];
+  String? _lastCreatedExerciseKey;
 
   List<String> get _displayCategories {
     final incoming = widget.availableCategories.toSet();
@@ -97,7 +103,11 @@ class _ExerciseSelectionScreenState extends State<ExerciseSelectionScreen> {
   }
 
   void _recomputeFilteredExercises() {
-    _filteredExercises = List<Exercise>.from(widget.allExercises);
+    final mergedByKey = <String, Exercise>{
+      for (final exercise in widget.allExercises) exercise.key: exercise,
+      for (final exercise in _customExercises) exercise.key: exercise,
+    };
+    _filteredExercises = mergedByKey.values.toList(growable: false);
     if (_selectedCategories.isNotEmpty) {
       _filteredExercises = _filteredExercises.where((exercise) {
         return exercise.resolvedCategoryKeys.any(_selectedCategories.contains);
@@ -116,13 +126,44 @@ class _ExerciseSelectionScreenState extends State<ExerciseSelectionScreen> {
     });
   }
 
+  Future<void> _openCreateCustomExercise() async {
+    final customExercisePort = widget.customExercisePort;
+    if (customExercisePort == null) return;
+    final created = await Navigator.of(context).push<Exercise>(
+      MaterialPageRoute(
+        builder: (_) => CreateCustomExerciseScreen(
+          customExercisePort: customExercisePort,
+          allExercises: [...widget.allExercises, ..._customExercises],
+        ),
+      ),
+    );
+    if (created == null || !mounted) return;
+    setState(() {
+      _customExercises = [..._customExercises, created];
+      _selectedKeys.add(created.key);
+      _lastCreatedExerciseKey = created.key;
+      _recomputeFilteredExercises();
+      _searchQuery = '';
+      _searchController.clear();
+    });
+  }
+
   /// Exercises filtered by both category and search query.
   List<Exercise> get _displayedExercises {
-    if (_searchQuery.isEmpty) return _filteredExercises;
-    final query = _searchQuery.toLowerCase();
-    return _filteredExercises
-        .where((e) => e.name.toLowerCase().contains(query))
-        .toList();
+    final base = _searchQuery.isEmpty
+        ? List<Exercise>.from(_filteredExercises)
+        : _filteredExercises
+            .where((e) =>
+                e.name.toLowerCase().contains(_searchQuery.toLowerCase()))
+            .toList();
+    final lastCreatedKey = _lastCreatedExerciseKey;
+    if (lastCreatedKey == null) return base;
+    final createdIndex =
+        base.indexWhere((exercise) => exercise.key == lastCreatedKey);
+    if (createdIndex <= 0) return base;
+    final created = base.removeAt(createdIndex);
+    base.insert(0, created);
+    return base;
   }
 
   void _toggleCategory(String category, bool selected) {
@@ -262,89 +303,123 @@ class _ExerciseSelectionScreenState extends State<ExerciseSelectionScreen> {
             ),
           ),
           const SizedBox(height: 8),
-          Expanded(
-            child: ListView.builder(
+          if (widget.customExercisePort != null)
+            Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
-              itemCount: _displayedExercises.length,
-              itemBuilder: (context, index) {
-                final exercise = _displayedExercises[index];
-                final isSelected = _selectedKeys.contains(exercise.key);
-                final localizedDescription =
-                    exercise.localizedDescriptionFor(lang);
-
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 6),
-                  child: Card(
-                    color: isSelected
-                        ? Colors.white.withValues(alpha: 0.15)
-                        : null,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      side: isSelected
-                          ? BorderSide(color: context.textSubtle)
-                          : BorderSide.none,
-                    ),
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(12),
-                      onTap: () => _showDetail(exercise),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 14),
-                        child: Row(
-                          children: [
-                            // Checkbox — toggles selection directly
-                            GestureDetector(
-                              behavior: HitTestBehavior.opaque,
-                              onTap: () => _toggleExercise(exercise.key),
-                              child: Padding(
-                                padding: const EdgeInsets.only(right: 12),
-                                child: Icon(
-                                  isSelected
-                                      ? Icons.check_circle
-                                      : Icons.radio_button_unchecked,
-                                  color: isSelected
-                                      ? Colors.greenAccent
-                                      : context.textSubtle,
-                                ),
-                              ),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: TextButton.icon(
+                  onPressed: _openCreateCustomExercise,
+                  icon: const Icon(Icons.add_circle_outline),
+                  label: Text(l10n.customExerciseCreate),
+                ),
+              ),
+            ),
+          Expanded(
+            child: _displayedExercises.isEmpty
+                ? Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            l10n.customExerciseNoResults,
+                            style: TextStyle(color: context.textSecondary),
+                            textAlign: TextAlign.center,
+                          ),
+                          if (widget.customExercisePort != null) ...[
+                            const SizedBox(height: 12),
+                            FilledButton.icon(
+                              onPressed: _openCreateCustomExercise,
+                              icon: const Icon(Icons.add),
+                              label:
+                                  Text(l10n.customExerciseCreatePersonalized),
                             ),
-                            // Exercise info — shows detail
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                          ],
+                        ],
+                      ),
+                    ),
+                  )
+                : ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    itemCount: _displayedExercises.length,
+                    itemBuilder: (context, index) {
+                      final exercise = _displayedExercises[index];
+                      final isSelected = _selectedKeys.contains(exercise.key);
+                      final localizedDescription =
+                          exercise.localizedDescriptionFor(lang);
+
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 6),
+                        child: Card(
+                          color: isSelected
+                              ? Colors.white.withValues(alpha: 0.15)
+                              : null,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            side: isSelected
+                                ? BorderSide(color: context.textSubtle)
+                                : BorderSide.none,
+                          ),
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(12),
+                            onTap: () => _showDetail(exercise),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 14),
+                              child: Row(
                                 children: [
-                                  Text(
-                                    exercise.localizedNameFor(lang),
-                                    style: TextStyle(
-                                      fontWeight: isSelected
-                                          ? FontWeight.bold
-                                          : FontWeight.normal,
-                                      color: Colors.white,
+                                  GestureDetector(
+                                    behavior: HitTestBehavior.opaque,
+                                    onTap: () => _toggleExercise(exercise.key),
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(right: 12),
+                                      child: Icon(
+                                        isSelected
+                                            ? Icons.check_circle
+                                            : Icons.radio_button_unchecked,
+                                        color: isSelected
+                                            ? Colors.greenAccent
+                                            : context.textSubtle,
+                                      ),
                                     ),
                                   ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    localizedDescription,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: context.textSecondary,
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          exercise.localizedNameFor(lang),
+                                          style: TextStyle(
+                                            fontWeight: isSelected
+                                                ? FontWeight.bold
+                                                : FontWeight.normal,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          localizedDescription,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: context.textSecondary,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                            // TODO(difficulty): re-enable once difficulty data is reliable
-                            // _DifficultyIndicator(difficulty: exercise.difficulty),
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
           ),
           // Bottom bar
           SafeArea(
