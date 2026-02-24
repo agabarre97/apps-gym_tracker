@@ -267,10 +267,12 @@
     }
   },
   "routineSummaryTitle": "Resumen de rutina",
+  "routineExerciseConfigTitle": "Configura series, repeticiones objetivo y descanso",
   "routineNameHint": "Nombre de la rutina",
   "routineNameRequired": "Por favor, introduce un nombre para la rutina.",
   "routineNeedsExercises": "Añade al menos un ejercicio antes de guardar.",
   "routineSave": "Guardar rutina",
+  "routineTargetReps": "Reps objetivo",
   "routineDifficulty": "Dificultad",
   "routineMuscles": "Músculos",
   "routineDayLabel": "Día {day}",

@@ -96,6 +96,51 @@ void main() {
       expect(find.text('Rutina copiada al portapapeles'), findsOneWidget);
     });
 
+    testWidgets('editing day updates visible exercise config summary',
+        (tester) async {
+      final routinePort = FakeRoutinePort();
+      await tester.pumpWidget(
+        buildTestableWidget(
+          RoutineDetailScreen(
+            routine: routine,
+            allRoutines: const [routine],
+            routinePort: routinePort,
+            allExercises: exercises,
+            workoutSessionPort: FakeWorkoutSessionPort(),
+            profilePort: FakeProfilePort(),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byIcon(Icons.edit).first);
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Confirmar'));
+      await tester.pumpAndSettle();
+
+      await tester
+          .tap(find.byKey(const ValueKey('exercise_config_rest_press_banca')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('routine_rest_preset_90')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('routine_rest_save')));
+      await tester.pumpAndSettle();
+
+      final nextButton = tester.widget<FilledButton>(
+        find.byKey(const ValueKey('exercise_config_next')),
+      );
+      nextButton.onPressed!.call();
+      await tester.pumpAndSettle();
+
+      expect(find.textContaining('01:30'), findsOneWidget);
+
+      final saved = await routinePort.loadRoutines();
+      expect(
+          saved.first.days.first.configForExercise('press_banca')!.restSeconds,
+          90);
+    });
+
     testWidgets('reordering a day exercises persists new exerciseKeys order',
         (tester) async {
       final routinePort = FakeRoutinePort();

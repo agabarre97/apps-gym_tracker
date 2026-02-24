@@ -539,6 +539,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routineSummaryTitle => 'Routine summary';
 
   @override
+  String get routineExerciseConfigTitle =>
+      'Configure sets, target reps and rest';
+
+  @override
   String get routineNameHint => 'Routine name';
 
   @override
@@ -550,6 +554,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get routineSave => 'Save routine';
+
+  @override
+  String get routineTargetReps => 'Target reps';
 
   @override
   String get routineDifficulty => 'Difficulty';

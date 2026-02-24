@@ -104,6 +104,22 @@ void main() {
       await tester.tap(find.text('Confirmar'));
       await tester.pumpAndSettle();
 
+      // Configure rest for the newly added exercise.
+      await tester.tap(
+          find.byKey(const ValueKey('exercise_config_rest_press_inclinado')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('routine_rest_preset_90')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('routine_rest_save')));
+      await tester.pumpAndSettle();
+
+      // Confirm exercise config step.
+      final nextButton = tester.widget<FilledButton>(
+        find.byKey(const ValueKey('exercise_config_next')),
+      );
+      nextButton.onPressed!.call();
+      await tester.pumpAndSettle();
+
       // Updated routine detail should reflect replacement.
       expect(find.text('Press inclinado'), findsOneWidget);
 
@@ -111,6 +127,10 @@ void main() {
       expect(saved, hasLength(1));
       expect(saved.first.days.first.exerciseKeys, contains('press_inclinado'));
       expect(saved.first.days.first.exerciseKeys.length, 2);
+      final savedConfigs = saved.first.days.first.exerciseConfigs;
+      final inclinadoConfig = savedConfigs
+          .firstWhere((config) => config.exerciseKey == 'press_inclinado');
+      expect(inclinadoConfig.restSeconds, 90);
     });
 
     testWidgets('reordered day exercises are used for future workout sessions',

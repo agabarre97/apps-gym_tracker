@@ -13,6 +13,23 @@ class WorkoutSessionBuilder {
     return session.startTime ?? session.date;
   }
 
+  static List<ExerciseSet> _buildSetsFromConfig({
+    required RoutineExerciseConfig config,
+    required List<ExerciseSet> previousSets,
+  }) {
+    return List<ExerciseSet>.generate(
+      config.sets,
+      (index) {
+        if (index < previousSets.length) {
+          final previous = previousSets[index];
+          return ExerciseSet(reps: previous.reps, weight: previous.weight);
+        }
+        return ExerciseSet(reps: config.targetReps, weight: 0);
+      },
+      growable: false,
+    );
+  }
+
   /// Builds a [WorkoutSession] for the given [routine] and [dayIndex],
   /// auto-filling exercise sets from the latest matching session in
   /// [previousSessions] that is not later than the target session time.
@@ -48,21 +65,29 @@ class WorkoutSessionBuilder {
 
     // Build exercise list
     final exercises = day.exerciseKeys.map((key) {
+      final config =
+          day.configForExercise(key) ?? RoutineExerciseConfig(exerciseKey: key);
       if (prevSession != null) {
         final prevEx =
             prevSession.exercises.where((e) => e.exerciseKey == key).toList();
         if (prevEx.isNotEmpty) {
           return WorkoutExercise(
             exerciseKey: key,
-            sets: prevEx.first.sets
-                .map((s) => ExerciseSet(reps: s.reps, weight: s.weight))
-                .toList(),
+            sets: _buildSetsFromConfig(
+              config: config,
+              previousSets: prevEx.first.sets,
+            ),
             notes: '',
             completed: false,
+            restSeconds: config.restSeconds,
           );
         }
       }
-      return WorkoutExercise.empty(key);
+      return WorkoutExercise(
+        exerciseKey: key,
+        sets: _buildSetsFromConfig(config: config, previousSets: const []),
+        restSeconds: config.restSeconds,
+      );
     }).toList();
 
     return WorkoutSession(

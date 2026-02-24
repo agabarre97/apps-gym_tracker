@@ -13,6 +13,19 @@ void main() {
         RoutineDay(
           muscleGroups: ['pectoral'],
           exerciseKeys: ['bench_press', 'incline_press'],
+          exerciseConfigs: [
+            RoutineExerciseConfig(
+              exerciseKey: 'bench_press',
+              sets: 4,
+              targetReps: 8,
+              restSeconds: 120,
+            ),
+            RoutineExerciseConfig(
+              exerciseKey: 'incline_press',
+              sets: 2,
+              targetReps: 12,
+            ),
+          ],
         ),
       ],
     );
@@ -33,8 +46,12 @@ void main() {
       expect(session.startTime, isNull);
       expect(session.exercises.length, 2);
       expect(session.exercises[0].exerciseKey, 'bench_press');
-      expect(session.exercises[0].sets.length, 3); // default empty sets
+      expect(session.exercises[0].sets.length, 4);
+      expect(session.exercises[0].sets.first.reps, 8);
+      expect(session.exercises[0].restSeconds, 120);
       expect(session.exercises[1].exerciseKey, 'incline_press');
+      expect(session.exercises[1].sets.length, 2);
+      expect(session.exercises[1].sets.first.reps, 12);
     });
 
     test('records startTime when trackTime is true', () {
@@ -88,18 +105,22 @@ void main() {
 
       // bench_press should be pre-filled from previous session
       final benchSets = session.exercises[0].sets;
-      expect(benchSets.length, 2);
+      expect(benchSets.length, 4);
       expect(benchSets[0].reps, 10);
       expect(benchSets[0].weight, 80);
       expect(benchSets[1].reps, 8);
       expect(benchSets[1].weight, 85);
+      expect(benchSets[2].reps, 8);
+      expect(benchSets[3].reps, 8);
       // Notes and completed should NOT carry over
       expect(session.exercises[0].notes, '');
       expect(session.exercises[0].completed, false);
 
-      // incline_press has no previous data — should be empty default
+      // incline_press has no previous data — should use routine defaults
       expect(session.exercises[1].exerciseKey, 'incline_press');
-      expect(session.exercises[1].sets.length, 3);
+      expect(session.exercises[1].sets.length, 2);
+      expect(session.exercises[1].sets.first.reps, 12);
+      expect(session.exercises[0].restSeconds, 120);
     });
 
     test('picks the latest previous session when multiple exist', () {
@@ -171,9 +192,42 @@ void main() {
         previousSessions: [differentRoutine],
       );
 
-      // Should be empty sets since the previous session is for a different routine
-      expect(session.exercises[0].sets.length, 3);
-      expect(session.exercises[0].sets[0].reps, 0);
+      // Should use routine defaults since previous is for another routine.
+      expect(session.exercises[0].sets.length, 4);
+      expect(session.exercises[0].sets[0].reps, 8);
+    });
+
+    test('trims previous sets to configured set count', () {
+      final previous = WorkoutSession(
+        id: 'prev-many',
+        routineId: 'r1',
+        routineDayIndex: 0,
+        date: DateTime(2026, 2, 14),
+        exercises: [
+          const WorkoutExercise(
+            exerciseKey: 'incline_press',
+            sets: [
+              ExerciseSet(reps: 12, weight: 30),
+              ExerciseSet(reps: 10, weight: 32.5),
+              ExerciseSet(reps: 8, weight: 35),
+            ],
+          ),
+        ],
+      );
+
+      final session = WorkoutSessionBuilder.build(
+        id: 'session-trim',
+        routine: routine,
+        dayIndex: 0,
+        date: DateTime(2026, 2, 16),
+        trackTime: false,
+        previousSessions: [previous],
+      );
+
+      final incline = session.exercises[1];
+      expect(incline.sets.length, 2);
+      expect(incline.sets[0].weight, 30);
+      expect(incline.sets[1].weight, 32.5);
     });
 
     test('uses day 16 as reference when creating on day 18', () {

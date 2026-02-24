@@ -138,6 +138,8 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.text('Confirmar'));
       await tester.pumpAndSettle();
+      await tester.tap(find.text('Siguiente'));
+      await tester.pumpAndSettle();
 
       // Now on day 2 exercises. Tap back -> should restore day 1 state
       await tester.tap(find.byIcon(Icons.arrow_back));
@@ -177,6 +179,8 @@ void main() {
 
       // Confirm exercises → moves to day 2 muscle groups
       await tester.tap(find.text('Confirmar'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Siguiente'));
       await tester.pumpAndSettle();
 
       // Day 2 unified screen is shown

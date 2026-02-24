@@ -87,6 +87,48 @@ void main() {
 
       expect(restored.muscleGroups, ['pectoral', 'hombro']);
       expect(restored.exerciseKeys.length, 2);
+      expect(restored.exerciseConfigs.length, 2);
+      expect(restored.exerciseConfigs.first.exerciseKey, 'press_en_multipower');
+      expect(restored.exerciseConfigs.first.sets, 3);
+      expect(restored.exerciseConfigs.first.targetReps, 10);
+    });
+
+    test('fromJson creates default configs when exerciseConfigs is absent', () {
+      final day = RoutineDay.fromJson({
+        'muscleGroups': ['pectoral'],
+        'exerciseKeys': ['press_banca', 'fondos'],
+      });
+      expect(day.exerciseConfigs.length, 2);
+      expect(day.exerciseConfigs[0].exerciseKey, 'press_banca');
+      expect(day.exerciseConfigs[0].sets, 3);
+      expect(day.exerciseConfigs[0].targetReps, 10);
+      expect(day.exerciseConfigs[0].restSeconds, isNull);
+    });
+
+    test('fromJson normalizes partial configs to all exercise keys', () {
+      final day = RoutineDay.fromJson({
+        'muscleGroups': ['pectoral'],
+        'exerciseKeys': ['press_banca', 'fondos'],
+        'exerciseConfigs': [
+          {
+            'exerciseKey': 'press_banca',
+            'sets': 4,
+            'targetReps': 8,
+            'restSeconds': 120,
+          },
+        ],
+      });
+      expect(day.exerciseConfigs.length, 2);
+      final press = day.configForExercise('press_banca');
+      expect(press, isNotNull);
+      expect(press!.sets, 4);
+      expect(press.targetReps, 8);
+      expect(press.restSeconds, 120);
+      final fondos = day.configForExercise('fondos');
+      expect(fondos, isNotNull);
+      expect(fondos!.sets, 3);
+      expect(fondos.targetReps, 10);
+      expect(fondos.restSeconds, isNull);
     });
   });
 

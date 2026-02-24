@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gym_tracker/domain/entities/exercise.dart';
+import 'package:gym_tracker/domain/entities/routine.dart';
 import 'package:gym_tracker/presentation/screens/routine/routine_summary_screen.dart';
 
 import '../helpers/test_helpers.dart';
@@ -47,6 +48,23 @@ void main() {
               ['press_multipower', 'extension_triceps'],
               ['jalon_abierto', 'remo_polea'],
             ],
+            dayExerciseConfigs: const [
+              [
+                RoutineExerciseConfig(
+                    exerciseKey: 'press_multipower', sets: 4, targetReps: 8),
+                RoutineExerciseConfig(
+                    exerciseKey: 'extension_triceps', sets: 3, targetReps: 12),
+              ],
+              [
+                RoutineExerciseConfig(
+                    exerciseKey: 'jalon_abierto',
+                    sets: 4,
+                    targetReps: 10,
+                    restSeconds: 90),
+                RoutineExerciseConfig(
+                    exerciseKey: 'remo_polea', sets: 3, targetReps: 10),
+              ],
+            ],
             allExercises: _mockExercises,
             onSave: (_) async {},
             onBack: () {},
@@ -77,6 +95,12 @@ void main() {
             dayExerciseKeys: const [
               ['press_multipower'],
             ],
+            dayExerciseConfigs: const [
+              [
+                RoutineExerciseConfig(
+                    exerciseKey: 'press_multipower', sets: 3, targetReps: 10),
+              ],
+            ],
             allExercises: _mockExercises,
             onSave: (_) async {},
             onBack: () {},
@@ -99,6 +123,12 @@ void main() {
             ],
             dayExerciseKeys: const [
               ['press_multipower'],
+            ],
+            dayExerciseConfigs: const [
+              [
+                RoutineExerciseConfig(
+                    exerciseKey: 'press_multipower', sets: 3, targetReps: 10),
+              ],
             ],
             allExercises: _mockExercises,
             onSave: (_) async {},

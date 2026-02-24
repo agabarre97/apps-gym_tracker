@@ -25,10 +25,56 @@ enum RoutineType {
 }
 
 /// A single day within a routine.
+class RoutineExerciseConfig {
+  const RoutineExerciseConfig({
+    required this.exerciseKey,
+    this.sets = 3,
+    this.targetReps = 10,
+    this.restSeconds,
+  });
+
+  final String exerciseKey;
+  final int sets;
+  final int targetReps;
+  final int? restSeconds;
+
+  Map<String, dynamic> toJson() => {
+        'exerciseKey': exerciseKey,
+        'sets': sets,
+        'targetReps': targetReps,
+        if (restSeconds != null) 'restSeconds': restSeconds,
+      };
+
+  factory RoutineExerciseConfig.fromJson(Map<String, dynamic> json) =>
+      RoutineExerciseConfig(
+        exerciseKey: json['exerciseKey'] as String,
+        sets: json['sets'] as int? ?? 3,
+        targetReps: json['targetReps'] as int? ?? 10,
+        restSeconds: json['restSeconds'] as int?,
+      );
+
+  RoutineExerciseConfig copyWith({
+    String? exerciseKey,
+    int? sets,
+    int? targetReps,
+    int? restSeconds,
+    bool clearRestSeconds = false,
+  }) =>
+      RoutineExerciseConfig(
+        exerciseKey: exerciseKey ?? this.exerciseKey,
+        sets: sets ?? this.sets,
+        targetReps: targetReps ?? this.targetReps,
+        restSeconds:
+            clearRestSeconds ? null : (restSeconds ?? this.restSeconds),
+      );
+}
+
+/// A single day within a routine.
 class RoutineDay {
   const RoutineDay({
     required this.muscleGroups,
     required this.exerciseKeys,
+    this.exerciseConfigs = const [],
   });
 
   /// Category keys (e.g. 'pectoral', 'espalda').
@@ -37,18 +83,79 @@ class RoutineDay {
   /// Locale-independent exercise keys selected for this day.
   final List<String> exerciseKeys;
 
+  /// Per-exercise default setup for workouts generated from this routine day.
+  final List<RoutineExerciseConfig> exerciseConfigs;
+
   Map<String, dynamic> toJson() => {
         'muscleGroups': muscleGroups,
         'exerciseKeys': exerciseKeys,
+        if (exerciseConfigs.isNotEmpty)
+          'exerciseConfigs': exerciseConfigs.map((c) => c.toJson()).toList(),
       };
 
-  factory RoutineDay.fromJson(Map<String, dynamic> json) => RoutineDay(
-        muscleGroups: (json['muscleGroups'] as List).cast<String>(),
-        // Backward compat: read old 'exerciseNames' if 'exerciseKeys' absent
-        exerciseKeys: json['exerciseKeys'] != null
-            ? (json['exerciseKeys'] as List).cast<String>()
-            : (json['exerciseNames'] as List?)?.cast<String>() ?? [],
-      );
+  factory RoutineDay.fromJson(Map<String, dynamic> json) {
+    final exerciseKeys = json['exerciseKeys'] != null
+        ? (json['exerciseKeys'] as List).cast<String>()
+        : (json['exerciseNames'] as List?)?.cast<String>() ?? [];
+    final rawConfigs = (json['exerciseConfigs'] as List?)
+            ?.cast<Map<String, dynamic>>()
+            .map(RoutineExerciseConfig.fromJson)
+            .toList() ??
+        const <RoutineExerciseConfig>[];
+    final mergedConfigs = _normalizeExerciseConfigs(
+      exerciseKeys: exerciseKeys,
+      provided: rawConfigs,
+    );
+
+    return RoutineDay(
+      muscleGroups: (json['muscleGroups'] as List).cast<String>(),
+      // Backward compat: read old 'exerciseNames' if 'exerciseKeys' absent
+      exerciseKeys: exerciseKeys,
+      exerciseConfigs: mergedConfigs,
+    );
+  }
+
+  RoutineDay copyWith({
+    List<String>? muscleGroups,
+    List<String>? exerciseKeys,
+    List<RoutineExerciseConfig>? exerciseConfigs,
+  }) {
+    final nextExerciseKeys = exerciseKeys ?? this.exerciseKeys;
+    final nextConfigs = _normalizeExerciseConfigs(
+      exerciseKeys: nextExerciseKeys,
+      provided: exerciseConfigs ?? this.exerciseConfigs,
+    );
+    return RoutineDay(
+      muscleGroups: muscleGroups ?? this.muscleGroups,
+      exerciseKeys: nextExerciseKeys,
+      exerciseConfigs: nextConfigs,
+    );
+  }
+
+  RoutineExerciseConfig? configForExercise(String exerciseKey) {
+    for (final config in exerciseConfigs) {
+      if (config.exerciseKey == exerciseKey) return config;
+    }
+    return null;
+  }
+
+  static List<RoutineExerciseConfig> _normalizeExerciseConfigs({
+    required List<String> exerciseKeys,
+    required List<RoutineExerciseConfig> provided,
+  }) {
+    final byKey = <String, RoutineExerciseConfig>{
+      for (final config in provided) config.exerciseKey: config,
+    };
+    return exerciseKeys
+        .map(
+          (key) =>
+              byKey[key] ??
+              RoutineExerciseConfig(
+                exerciseKey: key,
+              ),
+        )
+        .toList(growable: false);
+  }
 }
 
 /// A named workout routine with type and per-day exercise selection.

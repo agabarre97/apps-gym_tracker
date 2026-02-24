@@ -12,6 +12,7 @@ import 'package:gym_tracker/domain/ports/routine_port.dart';
 import 'package:gym_tracker/presentation/screens/routine/routine_type_screen.dart';
 import 'package:gym_tracker/presentation/screens/routine/days_selection_screen.dart';
 import 'package:gym_tracker/presentation/screens/routine/exercise_selection_screen.dart';
+import 'package:gym_tracker/presentation/screens/routine/exercise_config_screen.dart';
 import 'package:gym_tracker/presentation/screens/routine/routine_summary_screen.dart';
 import 'package:gym_tracker/presentation/screens/routine/mobility_subtype_screen.dart';
 import 'package:gym_tracker/presentation/screens/routine/mobility_option_screen.dart';
@@ -77,10 +78,12 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
   // Completed days
   final List<List<String>> _dayMuscleGroups = [];
   final List<List<String>> _dayExerciseKeys = [];
+  final List<List<RoutineExerciseConfig>> _dayExerciseConfigs = [];
 
   // Current day in-progress state
   List<String> _currentMuscleSelection = [];
   List<String> _currentExerciseSelection = [];
+  List<RoutineExerciseConfig> _currentExerciseConfigs = [];
   List<String> _availableCategories = [];
 
   // All exercises (loaded once)
@@ -266,22 +269,46 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
       _currentDayIndex = 0;
       _dayMuscleGroups.clear();
       _dayExerciseKeys.clear();
+      _dayExerciseConfigs.clear();
       _currentMuscleSelection = [];
       _currentExerciseSelection = [];
+      _currentExerciseConfigs = [];
       _step = _Step.exercises;
     });
   }
 
+  List<RoutineExerciseConfig> _buildConfigsForKeys(
+    List<String> exerciseKeys, {
+    List<RoutineExerciseConfig> previous = const [],
+  }) {
+    final byKey = <String, RoutineExerciseConfig>{
+      for (final config in previous) config.exerciseKey: config,
+    };
+    return exerciseKeys
+        .map((key) => byKey[key] ?? RoutineExerciseConfig(exerciseKey: key))
+        .toList(growable: false);
+  }
+
   void _onExercisesConfirmed(ExerciseSelectionResult result) {
     setState(() {
-      // Save completed day
-      _dayMuscleGroups.add(List.of(result.selectedCategories));
-      _dayExerciseKeys.add(List.of(result.selectedExerciseKeys));
+      _currentMuscleSelection = List.of(result.selectedCategories);
+      _currentExerciseSelection = List.of(result.selectedExerciseKeys);
+      _currentExerciseConfigs = _buildConfigsForKeys(
+        _currentExerciseSelection,
+        previous: _currentExerciseConfigs,
+      );
+      _step = _Step.exerciseConfig;
+    });
+  }
 
-      // Clear current-day state
+  void _onExerciseConfigConfirmed(List<RoutineExerciseConfig> configs) {
+    setState(() {
+      _dayMuscleGroups.add(List.of(_currentMuscleSelection));
+      _dayExerciseKeys.add(List.of(_currentExerciseSelection));
+      _dayExerciseConfigs.add(List.of(configs));
       _currentMuscleSelection = [];
       _currentExerciseSelection = [];
-
+      _currentExerciseConfigs = [];
       if (_currentDayIndex < _numDays - 1) {
         _currentDayIndex++;
         _step = _Step.exercises;
@@ -352,9 +379,29 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
     );
 
     if (result == null) return;
+    if (!mounted) return;
+    final configured =
+        await Navigator.of(context).push<List<RoutineExerciseConfig>>(
+      MaterialPageRoute(
+        builder: (_) => ExerciseConfigScreen(
+          currentDay: dayIndex + 1,
+          totalDays: _numDays,
+          exerciseKeys: result.selectedExerciseKeys,
+          allExercises: _allExercises,
+          initialConfigs: _buildConfigsForKeys(
+            result.selectedExerciseKeys,
+            previous: _dayExerciseConfigs[dayIndex],
+          ),
+          onConfirmed: (configs) => Navigator.of(context).pop(configs),
+          onBack: () => Navigator.of(context).pop(),
+        ),
+      ),
+    );
+    if (configured == null || !mounted) return;
     setState(() {
       _dayMuscleGroups[dayIndex] = result.selectedCategories;
       _dayExerciseKeys[dayIndex] = result.selectedExerciseKeys;
+      _dayExerciseConfigs[dayIndex] = configured;
     });
   }
 
@@ -376,6 +423,7 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
       days.add(RoutineDay(
         muscleGroups: _dayMuscleGroups[i],
         exerciseKeys: _dayExerciseKeys[i],
+        exerciseConfigs: _dayExerciseConfigs[i],
       ));
     }
 
@@ -435,23 +483,32 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
 
         case _Step.days:
           _step = _Step.type;
+          return;
 
         case _Step.exercises:
           if (_currentDayIndex > 0 && _dayExerciseKeys.isNotEmpty) {
             _currentDayIndex--;
             _currentMuscleSelection = _dayMuscleGroups.removeLast();
             _currentExerciseSelection = _dayExerciseKeys.removeLast();
+            _currentExerciseConfigs = _dayExerciseConfigs.removeLast();
             _step = _Step.exercises;
           } else {
             _step = _Step.days;
           }
+          return;
+
+        case _Step.exerciseConfig:
+          _step = _Step.exercises;
+          return;
 
         case _Step.summary:
           // Go back to last day's exercise selection.
           _currentDayIndex = _numDays - 1;
           _currentMuscleSelection = _dayMuscleGroups.removeLast();
           _currentExerciseSelection = _dayExerciseKeys.removeLast();
+          _currentExerciseConfigs = _dayExerciseConfigs.removeLast();
           _step = _Step.exercises;
+          return;
       }
     });
   }
@@ -539,11 +596,23 @@ class _CreateRoutineFlowState extends State<CreateRoutineFlow> {
           onSave: _onHiitSave,
           onBack: _goBack,
         );
+      case _Step.exerciseConfig:
+        return ExerciseConfigScreen(
+          key: ValueKey('exercise_config_$_currentDayIndex'),
+          currentDay: _currentDayIndex + 1,
+          totalDays: _numDays,
+          exerciseKeys: _currentExerciseSelection,
+          allExercises: _allExercises,
+          initialConfigs: _currentExerciseConfigs,
+          onConfirmed: _onExerciseConfigConfirmed,
+          onBack: _goBack,
+        );
       case _Step.summary:
         return RoutineSummaryScreen(
           type: _selectedType!,
           dayMuscleGroups: _dayMuscleGroups,
           dayExerciseKeys: _dayExerciseKeys,
+          dayExerciseConfigs: _dayExerciseConfigs,
           allExercises: _allExercises,
           onSave: _onSave,
           onBack: _goBack,
@@ -562,5 +631,6 @@ enum _Step {
   hiitConfig,
   days,
   exercises,
+  exerciseConfig,
   summary,
 }

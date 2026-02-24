@@ -542,6 +542,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get routineSummaryTitle => 'Resumen de rutina';
 
   @override
+  String get routineExerciseConfigTitle =>
+      'Configura series, repeticiones objetivo y descanso';
+
+  @override
   String get routineNameHint => 'Nombre de la rutina';
 
   @override
@@ -554,6 +558,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get routineSave => 'Guardar rutina';
+
+  @override
+  String get routineTargetReps => 'Reps objetivo';
 
   @override
   String get routineDifficulty => 'Dificultad';

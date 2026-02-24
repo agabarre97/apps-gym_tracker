@@ -14,9 +14,11 @@ import 'package:gym_tracker/domain/ports/routine_port.dart';
 import 'package:gym_tracker/domain/ports/workout_session_port.dart';
 import 'package:gym_tracker/presentation/components/delete_routine_dialog.dart';
 import 'package:gym_tracker/presentation/screens/routine/by_muscle_category_labels.dart';
+import 'package:gym_tracker/presentation/screens/routine/exercise_config_screen.dart';
 import 'package:gym_tracker/presentation/screens/routine/exercise_selection_screen.dart';
 import 'package:gym_tracker/presentation/screens/workout/exercise_progress_screen.dart';
 import 'package:gym_tracker/presentation/theme/app_theme.dart';
+import 'package:gym_tracker/presentation/utils/time_formatter.dart';
 
 /// Read-only detail view for an existing routine.
 ///
@@ -61,6 +63,18 @@ class _RoutineDetailScreenState extends State<RoutineDetailScreen> {
   /// Resolves an exercise key to its localized display name.
   String _nameForKey(String key) =>
       Exercise.nameForKey(widget.allExercises, key);
+
+  List<RoutineExerciseConfig> _buildConfigsForKeys(
+    List<String> exerciseKeys, {
+    List<RoutineExerciseConfig> previous = const [],
+  }) {
+    final byKey = <String, RoutineExerciseConfig>{
+      for (final config in previous) config.exerciseKey: config,
+    };
+    return exerciseKeys
+        .map((key) => byKey[key] ?? RoutineExerciseConfig(exerciseKey: key))
+        .toList(growable: false);
+  }
 
   // ── Export ──────────────────────────────────────────────────────
 
@@ -141,27 +155,50 @@ class _RoutineDetailScreenState extends State<RoutineDetailScreen> {
     final categories = day.muscleGroups;
     final availableCategories = byMuscleCategoryOrder;
 
-    final result = await Navigator.of(context).push<List<String>>(
+    final selectionResult =
+        await Navigator.of(context).push<ExerciseSelectionResult>(
       MaterialPageRoute(
-        builder: (_) => _EditDayExercisesScreen(
-          dayIndex: dayIndex,
+        builder: (_) => ExerciseSelectionScreen(
+          currentDay: dayIndex + 1,
           totalDays: _routine.days.length,
-          selectedCategories: categories,
+          initialSelectedCategories: categories,
           availableCategories: availableCategories,
           allExercises: widget.allExercises,
-          initialSelectedKeys: day.exerciseKeys,
           customExercisePort: widget.customExercisePort,
+          initialSelectedKeys: day.exerciseKeys,
+          onConfirmed: (result) => Navigator.of(context).pop(result),
+          onBack: () => Navigator.of(context).pop(),
         ),
       ),
     );
 
-    if (result == null || !mounted) return;
+    if (selectionResult == null || !mounted) return;
 
-    // Update just this day's exercises
+    final configured =
+        await Navigator.of(context).push<List<RoutineExerciseConfig>>(
+      MaterialPageRoute(
+        builder: (_) => ExerciseConfigScreen(
+          currentDay: dayIndex + 1,
+          totalDays: _routine.days.length,
+          exerciseKeys: selectionResult.selectedExerciseKeys,
+          allExercises: widget.allExercises,
+          initialConfigs: _buildConfigsForKeys(
+            selectionResult.selectedExerciseKeys,
+            previous: day.exerciseConfigs,
+          ),
+          onConfirmed: (configs) => Navigator.of(context).pop(configs),
+          onBack: () => Navigator.of(context).pop(),
+        ),
+      ),
+    );
+    if (configured == null || !mounted) return;
+
+    // Update this day with selected exercises and their configuration.
     final newDays = List<RoutineDay>.from(_routine.days);
     newDays[dayIndex] = RoutineDay(
-      muscleGroups: day.muscleGroups,
-      exerciseKeys: result,
+      muscleGroups: selectionResult.selectedCategories,
+      exerciseKeys: selectionResult.selectedExerciseKeys,
+      exerciseConfigs: configured,
     );
 
     final updatedRoutine = _routine.copyWith(days: newDays);
@@ -193,6 +230,11 @@ class _RoutineDetailScreenState extends State<RoutineDetailScreen> {
     updatedDays[dayIndex] = RoutineDay(
       muscleGroups: day.muscleGroups,
       exerciseKeys: reorderedKeys,
+      exerciseConfigs: reorderedKeys
+          .map((key) =>
+              day.configForExercise(key) ??
+              RoutineExerciseConfig(exerciseKey: key))
+          .toList(growable: false),
     );
     final updatedRoutine = _routine.copyWith(days: updatedDays);
 
@@ -341,6 +383,20 @@ class _RoutineDetailScreenState extends State<RoutineDetailScreen> {
                                 _nameForKey(key),
                                 style: const TextStyle(fontSize: 13),
                               ),
+                              subtitle: () {
+                                final config = day.configForExercise(key);
+                                if (config == null) return null;
+                                final restLabel = config.restSeconds == null
+                                    ? l10n.mobilityRestOff
+                                    : TimeFormatter.mmss(config.restSeconds!);
+                                return Text(
+                                  '${config.sets} ${l10n.workoutSets.toLowerCase()} · ${config.targetReps} ${l10n.workoutReps.toLowerCase()} · ${l10n.workoutRestTimer.toLowerCase()}: ${restLabel.toLowerCase()}',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: context.textSubtle,
+                                  ),
+                                );
+                              }(),
                               trailing: TextButton(
                                 style: TextButton.styleFrom(
                                   foregroundColor: Colors.white60,
@@ -390,44 +446,6 @@ class _RoutineDetailScreenState extends State<RoutineDetailScreen> {
           ),
         ],
       ),
-    );
-  }
-}
-
-// ── Private wrapper to return exercise keys from the selection screen ────
-
-class _EditDayExercisesScreen extends StatelessWidget {
-  const _EditDayExercisesScreen({
-    required this.dayIndex,
-    required this.totalDays,
-    required this.selectedCategories,
-    required this.availableCategories,
-    required this.allExercises,
-    required this.initialSelectedKeys,
-    this.customExercisePort,
-  });
-
-  final int dayIndex;
-  final int totalDays;
-  final List<String> selectedCategories;
-  final List<String> availableCategories;
-  final List<Exercise> allExercises;
-  final List<String> initialSelectedKeys;
-  final CustomExercisePort? customExercisePort;
-
-  @override
-  Widget build(BuildContext context) {
-    return ExerciseSelectionScreen(
-      currentDay: dayIndex + 1,
-      totalDays: totalDays,
-      allExercises: allExercises,
-      availableCategories: availableCategories,
-      customExercisePort: customExercisePort,
-      initialSelectedCategories: selectedCategories,
-      initialSelectedKeys: initialSelectedKeys,
-      onConfirmed: (result) =>
-          Navigator.of(context).pop(result.selectedExerciseKeys),
-      onBack: () => Navigator.of(context).pop(),
     );
   }
 }

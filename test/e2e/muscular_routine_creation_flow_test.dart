@@ -104,6 +104,8 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.text('Confirmar'));
       await tester.pumpAndSettle();
+      await tester.tap(find.text('Siguiente'));
+      await tester.pumpAndSettle();
 
       // Day 2: lats (Dorsales) + search "jalón".
       await tester.tap(find.text('Dorsales'));
@@ -115,6 +117,8 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.text('Confirmar'));
       await tester.pumpAndSettle();
+      await tester.tap(find.text('Siguiente'));
+      await tester.pumpAndSettle();
 
       // Day 3: select any muscle group and one exercise.
       await tester.tap(find.byType(FilterChip).first);
@@ -122,6 +126,8 @@ void main() {
       await tester.tap(find.byIcon(Icons.radio_button_unchecked).first);
       await tester.pumpAndSettle();
       await tester.tap(find.text('Confirmar'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Siguiente'));
       await tester.pumpAndSettle();
 
       // Summary + save.
@@ -137,6 +143,8 @@ void main() {
       expect(saved.first.days[0].exerciseKeys, contains('press_banca'));
       expect(saved.first.days[1].exerciseKeys, contains('jalon_pecho'));
       expect(saved.first.days[2].exerciseKeys.length, 1);
+      expect(saved.first.days[0].exerciseConfigs, isNotEmpty);
+      expect(saved.first.days[0].exerciseConfigs.first.sets, greaterThan(0));
     });
   });
 }

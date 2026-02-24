@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
 import 'package:gym_tracker/domain/entities/exercise.dart';
+import 'package:gym_tracker/domain/entities/routine.dart';
 import 'package:gym_tracker/presentation/screens/routine/by_muscle_category_labels.dart';
 import 'package:gym_tracker/presentation/theme/app_theme.dart';
+import 'package:gym_tracker/presentation/utils/time_formatter.dart';
 
 /// Final screen of the routine creation flow.
 ///
@@ -14,6 +16,7 @@ class RoutineSummaryScreen extends StatefulWidget {
     required this.type,
     required this.dayMuscleGroups,
     required this.dayExerciseKeys,
+    required this.dayExerciseConfigs,
     required this.allExercises,
     required this.onSave,
     required this.onBack,
@@ -23,7 +26,9 @@ class RoutineSummaryScreen extends StatefulWidget {
   final String type;
   final List<List<String>> dayMuscleGroups;
   final List<List<String>> dayExerciseKeys;
+  final List<List<RoutineExerciseConfig>> dayExerciseConfigs;
   final List<Exercise> allExercises;
+
   final Future<void> Function(String name) onSave;
   final VoidCallback onBack;
 
@@ -48,6 +53,14 @@ class _RoutineSummaryScreenState extends State<RoutineSummaryScreen> {
   String _nameForKey(String key) {
     final match = widget.allExercises.where((e) => e.key == key);
     return match.isNotEmpty ? match.first.name : key;
+  }
+
+  RoutineExerciseConfig? _configForExercise(int dayIndex, String exerciseKey) {
+    if (dayIndex >= widget.dayExerciseConfigs.length) return null;
+    for (final config in widget.dayExerciseConfigs[dayIndex]) {
+      if (config.exerciseKey == exerciseKey) return config;
+    }
+    return null;
   }
 
   Future<void> _handleSave() async {
@@ -150,13 +163,28 @@ class _RoutineSummaryScreenState extends State<RoutineSummaryScreen> {
                         ),
                         const SizedBox(height: 8),
                         const Divider(height: 1),
-                        ...exerciseKeys.map((key) => ListTile(
-                              dense: true,
-                              leading: Icon(Icons.fitness_center,
-                                  size: 16, color: context.textSecondary),
-                              title: Text(_nameForKey(key),
-                                  style: const TextStyle(fontSize: 13)),
-                            )),
+                        ...exerciseKeys.map((key) {
+                          final config = _configForExercise(i, key);
+                          final subtitle = config == null
+                              ? null
+                              : '${config.sets} ${l10n.workoutSets.toLowerCase()} · ${config.targetReps} ${l10n.workoutReps.toLowerCase()} · ${l10n.workoutRestTimer.toLowerCase()}: ${config.restSeconds == null ? l10n.mobilityRestOff.toLowerCase() : TimeFormatter.mmss(config.restSeconds!)}';
+                          return ListTile(
+                            dense: true,
+                            leading: Icon(Icons.fitness_center,
+                                size: 16, color: context.textSecondary),
+                            title: Text(_nameForKey(key),
+                                style: const TextStyle(fontSize: 13)),
+                            subtitle: subtitle == null
+                                ? null
+                                : Text(
+                                    subtitle,
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      color: context.textSubtle,
+                                    ),
+                                  ),
+                          );
+                        }),
                         const SizedBox(height: 8),
                       ],
                     ),

@@ -1088,6 +1088,12 @@ abstract class AppLocalizations {
   /// **'Resumen de rutina'**
   String get routineSummaryTitle;
 
+  /// No description provided for @routineExerciseConfigTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Configura series, repeticiones objetivo y descanso'**
+  String get routineExerciseConfigTitle;
+
   /// No description provided for @routineNameHint.
   ///
   /// In es, this message translates to:
@@ -1111,6 +1117,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Guardar rutina'**
   String get routineSave;
+
+  /// No description provided for @routineTargetReps.
+  ///
+  /// In es, this message translates to:
+  /// **'Reps objetivo'**
+  String get routineTargetReps;
 
   /// No description provided for @routineDifficulty.
   ///
