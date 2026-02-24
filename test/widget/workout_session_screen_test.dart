@@ -399,6 +399,170 @@ void main() {
       expect(controller?.text, '6');
     });
 
+    testWidgets('rest config chip allows setting duration per exercise',
+        (tester) async {
+      await port.saveSessions([session]);
+      await tester.pumpWidget(
+        buildTestableWidget(
+          WorkoutSessionScreen(
+            session: session,
+            allExercises: exercises,
+            workoutSessionPort: port,
+            routineName: 'Test Routine',
+            trackTime: true,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Press banca'));
+      await tester.pumpAndSettle();
+
+      await tester.scrollToAndTap(
+          find.byKey(const ValueKey('rest_config_button_press_banca')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('rest_preset_90')));
+      await tester.tap(find.byKey(const ValueKey('rest_config_save')));
+      await tester.pumpAndSettle();
+
+      expect(find.textContaining('01:30'), findsOneWidget);
+    });
+
+    testWidgets('finishing set starts auto rest and shows floating pill',
+        (tester) async {
+      final sessionWithRest = WorkoutSession(
+        id: 'session-rest',
+        routineId: 'r1',
+        routineDayIndex: 0,
+        date: DateTime(2026, 2, 13),
+        startTime: DateTime.now().subtract(const Duration(minutes: 2)),
+        exercises: const [
+          WorkoutExercise(
+            exerciseKey: 'press_banca',
+            restSeconds: 90,
+            sets: [ExerciseSet(reps: 8, weight: 60)],
+          ),
+        ],
+      );
+
+      await tester.pumpWidget(
+        buildTestableWidget(
+          WorkoutSessionScreen(
+            session: sessionWithRest,
+            allExercises: exercises,
+            workoutSessionPort: port,
+            routineName: 'Test Routine',
+            trackTime: true,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Press banca'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Finalizar serie 1'));
+      await tester.pump();
+
+      expect(
+          find.byKey(const ValueKey('workout_auto_rest_pill')), findsOneWidget);
+
+      final saved = await port.loadSessions();
+      expect(saved, hasLength(1));
+      expect(saved.first.activeRestEndTime, isNotNull);
+    });
+
+    testWidgets('floating pill supports +30s and skip', (tester) async {
+      final sessionWithActiveRest = WorkoutSession(
+        id: 'session-active-rest',
+        routineId: 'r1',
+        routineDayIndex: 0,
+        date: DateTime(2026, 2, 13),
+        startTime: DateTime.now().subtract(const Duration(minutes: 1)),
+        activeRestEndTime: DateTime.now().add(const Duration(seconds: 70)),
+        exercises: const [
+          WorkoutExercise(
+            exerciseKey: 'press_banca',
+            sets: [ExerciseSet(reps: 8, weight: 60)],
+          ),
+        ],
+      );
+
+      await tester.pumpWidget(
+        buildTestableWidget(
+          WorkoutSessionScreen(
+            session: sessionWithActiveRest,
+            allExercises: exercises,
+            workoutSessionPort: port,
+            routineName: 'Test Routine',
+            trackTime: true,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final initialTimeText = tester
+          .widget<Text>(find.descendant(
+            of: find.byKey(const ValueKey('workout_auto_rest_time')),
+            matching: find.byType(Text),
+          ))
+          .data!;
+
+      await tester.tap(find.byKey(const ValueKey('workout_auto_rest_add_30')));
+      await tester.pump();
+
+      final updatedTimeText = tester
+          .widget<Text>(find.descendant(
+            of: find.byKey(const ValueKey('workout_auto_rest_time')),
+            matching: find.byType(Text),
+          ))
+          .data!;
+      expect(updatedTimeText, isNot(equals(initialTimeText)));
+
+      await tester.tap(find.byKey(const ValueKey('workout_auto_rest_skip')));
+      await tester.pumpAndSettle();
+
+      expect(
+          find.byKey(const ValueKey('workout_auto_rest_pill')), findsNothing);
+      final saved = await port.loadSessions();
+      expect(saved.first.activeRestEndTime, isNull);
+    });
+
+    testWidgets('rest timer is restored from activeRestEndTime',
+        (tester) async {
+      final recoverableSession = WorkoutSession(
+        id: 'session-recover',
+        routineId: 'r1',
+        routineDayIndex: 0,
+        date: DateTime(2026, 2, 13),
+        startTime: DateTime.now().subtract(const Duration(minutes: 5)),
+        activeRestEndTime: DateTime.now().add(const Duration(seconds: 45)),
+        exercises: const [
+          WorkoutExercise(
+            exerciseKey: 'press_banca',
+            sets: [ExerciseSet(reps: 8, weight: 60)],
+          ),
+        ],
+      );
+
+      await tester.pumpWidget(
+        buildTestableWidget(
+          WorkoutSessionScreen(
+            session: recoverableSession,
+            allExercises: exercises,
+            workoutSessionPort: port,
+            routineName: 'Test Routine',
+            trackTime: true,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+          find.byKey(const ValueKey('workout_auto_rest_pill')), findsOneWidget);
+      expect(
+          find.byKey(const ValueKey('workout_auto_rest_time')), findsOneWidget);
+    });
+
     testWidgets(
         'add exercise picker filters by category and appends new exercise',
         (tester) async {

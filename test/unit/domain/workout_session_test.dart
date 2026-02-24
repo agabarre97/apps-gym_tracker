@@ -63,6 +63,7 @@ void main() {
         ],
         notes: 'buena forma',
         completed: true,
+        restSeconds: 90,
       );
       final json = ex.toJson();
       final restored = WorkoutExercise.fromJson(json);
@@ -72,6 +73,7 @@ void main() {
       expect(restored.sets[1].weight, 65);
       expect(restored.notes, 'buena forma');
       expect(restored.completed, true);
+      expect(restored.restSeconds, 90);
     });
 
     test('empty factory creates 3 sets with 0 values', () {
@@ -85,10 +87,25 @@ void main() {
 
     test('copyWith', () {
       final ex = WorkoutExercise.empty('curl_biceps');
-      final updated = ex.copyWith(completed: true, notes: 'test');
+      final updated = ex.copyWith(
+        completed: true,
+        notes: 'test',
+        restSeconds: 120,
+      );
       expect(updated.completed, true);
       expect(updated.notes, 'test');
+      expect(updated.restSeconds, 120);
       expect(updated.sets.length, 3);
+    });
+
+    test('copyWith clearRestSeconds removes rest configuration', () {
+      const ex = WorkoutExercise(
+        exerciseKey: 'curl_biceps',
+        sets: [ExerciseSet(reps: 10, weight: 30)],
+        restSeconds: 45,
+      );
+      final updated = ex.copyWith(clearRestSeconds: true);
+      expect(updated.restSeconds, isNull);
     });
   });
 
@@ -103,6 +120,7 @@ void main() {
         date: DateTime(2026, 2, 13),
         startTime: DateTime(2026, 2, 13, 10, 0, 0),
         endTime: DateTime(2026, 2, 13, 11, 30, 0),
+        activeRestEndTime: DateTime(2026, 2, 13, 10, 7, 30),
         exercises: [
           const WorkoutExercise(
             exerciseKey: 'press_banca',
@@ -112,6 +130,7 @@ void main() {
             ],
             notes: 'notes here',
             completed: true,
+            restSeconds: 75,
           ),
           WorkoutExercise.empty('curl_biceps'),
         ],
@@ -127,9 +146,11 @@ void main() {
       expect(restored.date, DateTime(2026, 2, 13));
       expect(restored.startTime, DateTime(2026, 2, 13, 10, 0, 0));
       expect(restored.endTime, DateTime(2026, 2, 13, 11, 30, 0));
+      expect(restored.activeRestEndTime, DateTime(2026, 2, 13, 10, 7, 30));
       expect(restored.exercises.length, 2);
       expect(restored.exercises[0].exerciseKey, 'press_banca');
       expect(restored.exercises[0].completed, true);
+      expect(restored.exercises[0].restSeconds, 75);
       expect(restored.exercises[1].exerciseKey, 'curl_biceps');
     });
 
@@ -137,11 +158,13 @@ void main() {
       final noTime = session.copyWith(
         clearStartTime: true,
         clearEndTime: true,
+        clearActiveRestEndTime: true,
       );
       final json = noTime.toJson();
       final restored = WorkoutSession.fromJson(json);
       expect(restored.startTime, isNull);
       expect(restored.endTime, isNull);
+      expect(restored.activeRestEndTime, isNull);
     });
 
     test('listFromJsonString / listToJsonString', () {

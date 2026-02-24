@@ -59,6 +59,7 @@ class WorkoutExercise {
     required this.sets,
     this.notes = '',
     this.completed = false,
+    this.restSeconds,
   });
 
   /// Locale-independent exercise identifier.
@@ -73,11 +74,15 @@ class WorkoutExercise {
   /// Whether the user has marked this exercise as done.
   final bool completed;
 
+  /// Optional rest countdown configured for this exercise (in seconds).
+  final int? restSeconds;
+
   Map<String, dynamic> toJson() => {
         'exerciseKey': exerciseKey,
         'sets': sets.map((s) => s.toJson()).toList(),
         'notes': notes,
         'completed': completed,
+        if (restSeconds != null) 'restSeconds': restSeconds,
       };
 
   factory WorkoutExercise.fromJson(Map<String, dynamic> json) =>
@@ -89,6 +94,7 @@ class WorkoutExercise {
             .toList(),
         notes: json['notes'] as String? ?? '',
         completed: json['completed'] as bool? ?? false,
+        restSeconds: json['restSeconds'] as int?,
       );
 
   WorkoutExercise copyWith({
@@ -96,12 +102,16 @@ class WorkoutExercise {
     List<ExerciseSet>? sets,
     String? notes,
     bool? completed,
+    int? restSeconds,
+    bool clearRestSeconds = false,
   }) =>
       WorkoutExercise(
         exerciseKey: exerciseKey ?? this.exerciseKey,
         sets: sets ?? this.sets,
         notes: notes ?? this.notes,
         completed: completed ?? this.completed,
+        restSeconds:
+            clearRestSeconds ? null : (restSeconds ?? this.restSeconds),
       );
 
   /// Creates default exercise with 3 empty sets.
@@ -120,6 +130,7 @@ class WorkoutSession {
     required this.date,
     this.startTime,
     this.endTime,
+    this.activeRestEndTime,
     required this.exercises,
   });
 
@@ -141,6 +152,9 @@ class WorkoutSession {
   /// When the workout ended (null for in-progress or retroactive).
   final DateTime? endTime;
 
+  /// Absolute deadline for the active auto-rest countdown in this session.
+  final DateTime? activeRestEndTime;
+
   /// Exercise data for this session.
   final List<WorkoutExercise> exercises;
 
@@ -151,6 +165,7 @@ class WorkoutSession {
         'date': '${date.year}-${_pad(date.month)}-${_pad(date.day)}',
         'startTime': startTime?.toIso8601String(),
         'endTime': endTime?.toIso8601String(),
+        'activeRestEndTime': activeRestEndTime?.toIso8601String(),
         'exercises': exercises.map((e) => e.toJson()).toList(),
       };
 
@@ -171,6 +186,9 @@ class WorkoutSession {
       endTime: json['endTime'] != null
           ? DateTime.parse(json['endTime'] as String)
           : null,
+      activeRestEndTime: json['activeRestEndTime'] != null
+          ? DateTime.parse(json['activeRestEndTime'] as String)
+          : null,
       exercises: (json['exercises'] as List)
           .cast<Map<String, dynamic>>()
           .map(WorkoutExercise.fromJson)
@@ -185,9 +203,11 @@ class WorkoutSession {
     DateTime? date,
     DateTime? startTime,
     DateTime? endTime,
+    DateTime? activeRestEndTime,
     List<WorkoutExercise>? exercises,
     bool clearStartTime = false,
     bool clearEndTime = false,
+    bool clearActiveRestEndTime = false,
   }) =>
       WorkoutSession(
         id: id ?? this.id,
@@ -196,6 +216,9 @@ class WorkoutSession {
         date: date ?? this.date,
         startTime: clearStartTime ? null : (startTime ?? this.startTime),
         endTime: clearEndTime ? null : (endTime ?? this.endTime),
+        activeRestEndTime: clearActiveRestEndTime
+            ? null
+            : (activeRestEndTime ?? this.activeRestEndTime),
         exercises: exercises ?? this.exercises,
       );
 

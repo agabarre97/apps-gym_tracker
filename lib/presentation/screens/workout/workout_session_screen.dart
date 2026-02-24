@@ -47,7 +47,11 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
   late final String _originalJson;
 
   Timer? _timer;
+  Timer? _autoRestTicker;
   Duration _elapsed = Duration.zero;
+  Duration _autoRestRemaining = Duration.zero;
+  Duration _pausedAutoRestRemaining = Duration.zero;
+  bool _isAutoRestPaused = false;
 
   /// Index of the currently expanded exercise (-1 = none).
   int _expandedIndex = -1;
@@ -93,6 +97,7 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
         });
       });
     }
+    _restoreAutoRestIfNeeded();
     _lifecycleListener = AppLifecycleListener(
       onHide: _persistSession,
       onPause: _persistSession,
@@ -103,6 +108,7 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
   @override
   void dispose() {
     _timer?.cancel();
+    _autoRestTicker?.cancel();
     _lifecycleListener.dispose();
     for (final c in _notesControllers.values) {
       c.dispose();
@@ -124,6 +130,20 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
 
   Future<void> _persistSession() =>
       widget.workoutSessionPort.upsertSession(_session);
+
+  void _restoreAutoRestIfNeeded() {
+    final deadline = _session.activeRestEndTime;
+    if (!widget.trackTime || deadline == null) return;
+    final now = DateTime.now();
+    final remaining = deadline.difference(now);
+    if (remaining <= Duration.zero) {
+      _session = _session.copyWith(clearActiveRestEndTime: true);
+      unawaited(_persistSession());
+      return;
+    }
+    _autoRestRemaining = remaining;
+    _startAutoRestTicker();
+  }
 
   // ── Exercise actions ───────────────────────────────────────────
 
@@ -148,6 +168,7 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
     );
     _setCompletionTimes[(exIndex, setIndex)] = completedAt;
     _updateExerciseSets(exIndex, updatedSets);
+    _startAutoRestIfConfigured(ex.restSeconds);
     _persistSession();
   }
 
@@ -296,6 +317,142 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
       weight: weight,
     );
     _updateExerciseSets(exIndex, newSets);
+  }
+
+  void _setExerciseRestSeconds(int exIndex, int? restSeconds) {
+    final ex = _session.exercises[exIndex];
+    final list = List<WorkoutExercise>.from(_session.exercises);
+    list[exIndex] = ex.copyWith(
+      restSeconds: restSeconds,
+      clearRestSeconds: restSeconds == null,
+    );
+    setState(() {
+      _session = _session.copyWith(exercises: list);
+    });
+    unawaited(_persistSession());
+  }
+
+  Future<void> _openRestConfigSheet(int exIndex) async {
+    final selected = await showModalBottomSheet<int?>(
+      context: context,
+      isDismissible: true,
+      showDragHandle: true,
+      builder: (_) => _RestConfigSheet(
+        initialSeconds: _session.exercises[exIndex].restSeconds,
+      ),
+    );
+    if (!mounted || selected == null) return;
+    if (selected < 0) {
+      _setExerciseRestSeconds(exIndex, null);
+      return;
+    }
+    _setExerciseRestSeconds(exIndex, selected);
+  }
+
+  bool get _hasAutoRestRunning =>
+      _session.activeRestEndTime != null || _isAutoRestPaused;
+
+  Duration get _currentAutoRestDuration {
+    if (_isAutoRestPaused) return _pausedAutoRestRemaining;
+    return _autoRestRemaining;
+  }
+
+  void _startAutoRestIfConfigured(int? restSeconds) {
+    if (!widget.trackTime || restSeconds == null || restSeconds <= 0) return;
+    final deadline = DateTime.now().add(Duration(seconds: restSeconds));
+    setState(() {
+      _isAutoRestPaused = false;
+      _pausedAutoRestRemaining = Duration.zero;
+      _autoRestRemaining = Duration(seconds: restSeconds);
+      _session = _session.copyWith(activeRestEndTime: deadline);
+    });
+    _startAutoRestTicker();
+    unawaited(_persistSession());
+  }
+
+  void _startAutoRestTicker() {
+    _autoRestTicker?.cancel();
+    _autoRestTicker = Timer.periodic(const Duration(milliseconds: 250), (_) {
+      final deadline = _session.activeRestEndTime;
+      if (!mounted || deadline == null) return;
+      final remaining = deadline.difference(DateTime.now());
+      if (remaining <= Duration.zero) {
+        _completeAutoRest();
+        return;
+      }
+      setState(() {
+        _autoRestRemaining = remaining;
+      });
+    });
+  }
+
+  void _completeAutoRest() {
+    _autoRestTicker?.cancel();
+    HapticFeedback.heavyImpact();
+    if (!mounted) return;
+    setState(() {
+      _isAutoRestPaused = false;
+      _pausedAutoRestRemaining = Duration.zero;
+      _autoRestRemaining = Duration.zero;
+      _session = _session.copyWith(clearActiveRestEndTime: true);
+    });
+    unawaited(_persistSession());
+  }
+
+  void _skipAutoRest() {
+    _autoRestTicker?.cancel();
+    setState(() {
+      _isAutoRestPaused = false;
+      _pausedAutoRestRemaining = Duration.zero;
+      _autoRestRemaining = Duration.zero;
+      _session = _session.copyWith(clearActiveRestEndTime: true);
+    });
+    unawaited(_persistSession());
+  }
+
+  void _toggleAutoRestPause() {
+    if (!_hasAutoRestRunning) return;
+    if (_isAutoRestPaused) {
+      final resumedDeadline = DateTime.now().add(_pausedAutoRestRemaining);
+      setState(() {
+        _isAutoRestPaused = false;
+        _session = _session.copyWith(activeRestEndTime: resumedDeadline);
+        _autoRestRemaining = _pausedAutoRestRemaining;
+      });
+      _startAutoRestTicker();
+      unawaited(_persistSession());
+      return;
+    }
+
+    final deadline = _session.activeRestEndTime;
+    if (deadline == null) return;
+    final remaining = deadline.difference(DateTime.now());
+    setState(() {
+      _isAutoRestPaused = true;
+      _pausedAutoRestRemaining =
+          remaining > Duration.zero ? remaining : Duration.zero;
+      _session = _session.copyWith(clearActiveRestEndTime: true);
+    });
+    _autoRestTicker?.cancel();
+    unawaited(_persistSession());
+  }
+
+  void _addThirtySecondsToAutoRest() {
+    if (!_hasAutoRestRunning) return;
+    if (_isAutoRestPaused) {
+      setState(() {
+        _pausedAutoRestRemaining += const Duration(seconds: 30);
+      });
+      return;
+    }
+    final deadline = _session.activeRestEndTime;
+    if (deadline == null) return;
+    final extended = deadline.add(const Duration(seconds: 30));
+    setState(() {
+      _session = _session.copyWith(activeRestEndTime: extended);
+      _autoRestRemaining = extended.difference(DateTime.now());
+    });
+    unawaited(_persistSession());
   }
 
   Future<void> _openAddExercisePicker() async {
@@ -548,49 +705,147 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
               ),
           ],
         ),
-        body: Column(
+        body: Stack(
           children: [
-            Expanded(
-              child: ReorderableListView.builder(
-                padding: const EdgeInsets.all(16),
-                itemCount: _session.exercises.length + 1, // +1 for the button
-                onReorder: _reorderExercises,
-                buildDefaultDragHandles: false,
-                itemBuilder: (context, index) {
-                  if (index == _session.exercises.length) {
-                    // Disable reordering for the finish button
-                    return ReorderableDragStartListener(
-                      key: const ValueKey('workout-finish-button'),
-                      index: index,
-                      enabled: false,
-                      child: SafeArea(
-                        top: false,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 16, bottom: 16),
-                          child: SizedBox(
-                            width: double.infinity,
-                            height: 52,
-                            child: widget.trackTime
-                                ? FilledButton.icon(
-                                    icon: const Icon(Icons.flag),
-                                    label: Text(l10n.workoutFinish),
-                                    onPressed: _confirmFinish,
-                                  )
-                                : FilledButton.icon(
-                                    icon: const Icon(Icons.save),
-                                    label: Text(l10n.workoutSaveChanges),
-                                    onPressed: _saveChanges,
-                                  ),
+            Column(
+              children: [
+                Expanded(
+                  child: ReorderableListView.builder(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: _session.exercises.length + 1, // +1 for button
+                    onReorder: _reorderExercises,
+                    buildDefaultDragHandles: false,
+                    itemBuilder: (context, index) {
+                      if (index == _session.exercises.length) {
+                        // Disable reordering for the finish button
+                        return ReorderableDragStartListener(
+                          key: const ValueKey('workout-finish-button'),
+                          index: index,
+                          enabled: false,
+                          child: SafeArea(
+                            top: false,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 16, bottom: 16),
+                              child: SizedBox(
+                                width: double.infinity,
+                                height: 52,
+                                child: widget.trackTime
+                                    ? FilledButton.icon(
+                                        icon: const Icon(Icons.flag),
+                                        label: Text(l10n.workoutFinish),
+                                        onPressed: _confirmFinish,
+                                      )
+                                    : FilledButton.icon(
+                                        icon: const Icon(Icons.save),
+                                        label: Text(l10n.workoutSaveChanges),
+                                        onPressed: _saveChanges,
+                                      ),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    );
-                  }
-                  return _buildExerciseCard(index, l10n);
+                        );
+                      }
+                      return _buildExerciseCard(index, l10n);
+                    },
+                  ),
+                ),
+              ],
+            ),
+            Positioned(
+              left: 16,
+              right: 16,
+              bottom: 20,
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 220),
+                transitionBuilder: (child, animation) {
+                  return FadeTransition(
+                    opacity: animation,
+                    child: SlideTransition(
+                      position: Tween<Offset>(
+                        begin: const Offset(0, 0.08),
+                        end: Offset.zero,
+                      ).animate(animation),
+                      child: child,
+                    ),
+                  );
                 },
+                child: _hasAutoRestRunning &&
+                        _currentAutoRestDuration > Duration.zero
+                    ? _buildAutoRestPill(l10n)
+                    : const SizedBox.shrink(
+                        key: ValueKey('workout_auto_rest_pill_hidden'),
+                      ),
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAutoRestPill(AppLocalizations l10n) {
+    final seconds = _currentAutoRestDuration.inSeconds;
+    return Center(
+      child: Material(
+        color: Colors.transparent,
+        child: DecoratedBox(
+          key: const ValueKey('workout_auto_rest_pill'),
+          decoration: BoxDecoration(
+            color: const Color(0xFF242427),
+            borderRadius: BorderRadius.circular(999),
+            border: Border.all(color: context.border),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.hourglass_bottom,
+                  size: 18,
+                  color: context.textSecondary,
+                ),
+                const SizedBox(width: 8),
+                InkWell(
+                  key: const ValueKey('workout_auto_rest_time'),
+                  borderRadius: BorderRadius.circular(14),
+                  onTap: _toggleAutoRestPause,
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                    child: Text(
+                      TimeFormatter.mmss(seconds),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        color: context.primary,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                TextButton(
+                  key: const ValueKey('workout_auto_rest_add_30'),
+                  onPressed: _addThirtySecondsToAutoRest,
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    minimumSize: const Size(0, AppSizes.buttonHeightSmall),
+                  ),
+                  child: const Text('+30s'),
+                ),
+                const SizedBox(width: 4),
+                TextButton(
+                  key: const ValueKey('workout_auto_rest_skip'),
+                  onPressed: _skipAutoRest,
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    minimumSize: const Size(0, AppSizes.buttonHeightSmall),
+                  ),
+                  child: Text(l10n.sharedSkip),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -724,6 +979,21 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
                         ),
                       ],
                     ),
+                    if (widget.trackTime) ...[
+                      const SizedBox(height: 8),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: OutlinedButton.icon(
+                          key: ValueKey('rest_config_button_${ex.exerciseKey}'),
+                          onPressed: () => _openRestConfigSheet(index),
+                          icon: const Icon(Icons.hourglass_bottom, size: 16),
+                          label: Text(
+                            '${l10n.workoutRestTimer}: ${ex.restSeconds == null ? l10n.mobilityRestOff : TimeFormatter.mmss(ex.restSeconds!)}',
+                            style: const TextStyle(fontSize: 13),
+                          ),
+                        ),
+                      ),
+                    ],
                     const SizedBox(height: 8),
                     // Notes
                     TextField(
@@ -1073,6 +1343,119 @@ class _StepButton extends StatelessWidget {
         constraints: const BoxConstraints(minWidth: _minTouchWidth),
         child:
             Center(child: Icon(icon, size: 22, color: context.textSecondary)),
+      ),
+    );
+  }
+}
+
+class _RestConfigSheet extends StatefulWidget {
+  const _RestConfigSheet({this.initialSeconds});
+
+  final int? initialSeconds;
+
+  @override
+  State<_RestConfigSheet> createState() => _RestConfigSheetState();
+}
+
+class _RestConfigSheetState extends State<_RestConfigSheet> {
+  static const _presets = [30, 60, 90, 120, 180];
+  late TextEditingController _manualController;
+  int? _selectedSeconds;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedSeconds = widget.initialSeconds;
+    _manualController =
+        TextEditingController(text: widget.initialSeconds?.toString() ?? '');
+  }
+
+  @override
+  void dispose() {
+    _manualController.dispose();
+    super.dispose();
+  }
+
+  void _setSelected(int seconds) {
+    setState(() {
+      _selectedSeconds = seconds;
+      _manualController.text = seconds.toString();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final isValidSelection = (_selectedSeconds ?? 0) > 0;
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              l10n.workoutRestTimer,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+            ),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: _presets
+                  .map(
+                    (seconds) => ChoiceChip(
+                      key: ValueKey('rest_preset_$seconds'),
+                      label: Text(TimeFormatter.mmss(seconds)),
+                      selected: _selectedSeconds == seconds,
+                      onSelected: (_) => _setSelected(seconds),
+                    ),
+                  )
+                  .toList(),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              key: const ValueKey('rest_manual_seconds_field'),
+              controller: _manualController,
+              keyboardType: TextInputType.number,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              decoration: InputDecoration(
+                labelText: '${l10n.workoutRestTimer} (s)',
+                border: const OutlineInputBorder(),
+                isDense: true,
+              ),
+              onChanged: (value) {
+                final parsed = int.tryParse(value);
+                setState(() {
+                  _selectedSeconds = parsed;
+                });
+              },
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text(l10n.sharedCancel),
+                ),
+                const SizedBox(width: 8),
+                TextButton(
+                  key: const ValueKey('rest_config_disable'),
+                  onPressed: () => Navigator.of(context).pop(-1),
+                  child: Text(l10n.mobilityRestOff),
+                ),
+                const Spacer(),
+                FilledButton(
+                  key: const ValueKey('rest_config_save'),
+                  onPressed: isValidSelection
+                      ? () => Navigator.of(context).pop(_selectedSeconds)
+                      : null,
+                  child: Text(l10n.sharedSave),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
