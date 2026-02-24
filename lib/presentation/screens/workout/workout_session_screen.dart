@@ -10,6 +10,7 @@ import 'package:gym_tracker/domain/entities/workout_session.dart';
 import 'package:gym_tracker/domain/ports/custom_exercise_port.dart';
 import 'package:gym_tracker/domain/ports/workout_session_port.dart';
 import 'package:gym_tracker/presentation/screens/routine/exercise_selection_screen.dart';
+import 'package:gym_tracker/presentation/screens/routine/exercise_detail_sheet.dart';
 import 'package:gym_tracker/presentation/screens/routine/by_muscle_category_labels.dart';
 import 'package:gym_tracker/presentation/utils/time_formatter.dart';
 import 'package:gym_tracker/presentation/theme/app_theme.dart';
@@ -111,6 +112,13 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
 
   String _nameForKey(String key) =>
       Exercise.nameForKey(widget.allExercises, key);
+
+  Exercise? _exerciseForKey(String key) {
+    for (final exercise in widget.allExercises) {
+      if (exercise.key == key) return exercise;
+    }
+    return null;
+  }
 
   // ── Persistence ────────────────────────────────────────────────
 
@@ -440,6 +448,23 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
     );
   }
 
+  void _showExerciseDetail(WorkoutExercise workoutExercise) {
+    final exercise = _exerciseForKey(workoutExercise.exerciseKey);
+    if (exercise == null) return;
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: const Color(0xFF2C2C2E),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (_) => ExerciseDetailSheet(
+        exercise: exercise,
+        showSelectionAction: false,
+      ),
+    );
+  }
+
   // ── Elapsed time format ────────────────────────────────────────
 
   /// Brief summary for a completed exercise, e.g. "3x12 @ 60kg".
@@ -620,6 +645,13 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
                           ),
                         ),
                       ),
+                      IconButton(
+                        key: ValueKey(
+                            'workout_exercise_detail_${ex.exerciseKey}'),
+                        icon: const Icon(Icons.info_outline, size: 20),
+                        color: context.textSecondary,
+                        onPressed: () => _showExerciseDetail(ex),
+                      ),
                       Icon(
                         isExpanded ? Icons.expand_less : Icons.expand_more,
                         color: context.textSecondary,
@@ -753,6 +785,7 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
           children: [
             const SizedBox(width: 52),
             Expanded(
+              flex: 5,
               child: Text(l10n.workoutReps,
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -760,7 +793,9 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
                       fontWeight: FontWeight.w600,
                       color: context.textSecondary)),
             ),
+            const SizedBox(width: 6),
             Expanded(
+              flex: 6,
               child: Text(l10n.workoutWeight,
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -812,6 +847,7 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
                       ),
                     ),
                     Expanded(
+                      flex: 5,
                       child: _StepperIntField(
                         value: s.reps,
                         step: 1,
@@ -820,6 +856,7 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
                     ),
                     const SizedBox(width: 6),
                     Expanded(
+                      flex: 6,
                       child: _StepperDoubleField(
                         value: s.weight,
                         step: 1.25,

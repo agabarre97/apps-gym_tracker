@@ -289,6 +289,68 @@ void main() {
       expect(find.byIcon(Icons.remove), findsWidgets);
     });
 
+    testWidgets('tapping detail icon opens exercise detail sheet in session',
+        (tester) async {
+      await tester.pumpWidget(
+        buildTestableWidget(
+          WorkoutSessionScreen(
+            session: session,
+            allExercises: exercises,
+            workoutSessionPort: port,
+            routineName: 'Test Routine',
+            trackTime: true,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(
+          find.byKey(const ValueKey('workout_exercise_detail_press_banca')));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Press de banca plano'), findsOneWidget);
+      expect(find.text('Pectoral'), findsOneWidget);
+      expect(find.byType(OutlinedButton), findsNothing);
+    });
+
+    testWidgets('weight field is wider than reps field', (tester) async {
+      final singleSetSession = WorkoutSession(
+        id: 'session-3',
+        routineId: 'r1',
+        routineDayIndex: 0,
+        date: DateTime(2026, 2, 13),
+        exercises: const [
+          WorkoutExercise(
+            exerciseKey: 'press_banca',
+            sets: [ExerciseSet(reps: 8, weight: 62.25)],
+          ),
+        ],
+      );
+
+      await tester.pumpWidget(
+        buildTestableWidget(
+          WorkoutSessionScreen(
+            session: singleSetSession,
+            allExercises: exercises,
+            workoutSessionPort: port,
+            routineName: 'Test Routine',
+            trackTime: false,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Press banca'));
+      await tester.pumpAndSettle();
+
+      final repsField = find.byType(TextField).first;
+      final weightField = find.byType(TextField).at(1);
+      final repsWidth = tester.getSize(repsField).width;
+      final weightWidth = tester.getSize(weightField).width;
+
+      expect(weightWidth, greaterThan(repsWidth));
+    });
+
     testWidgets('tapping + reps increments the value', (tester) async {
       // Create session with a single exercise and 1 set at reps=5
       final singleSession = WorkoutSession(

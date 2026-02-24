@@ -9,13 +9,15 @@ class ExerciseDetailSheet extends StatelessWidget {
   const ExerciseDetailSheet({
     super.key,
     required this.exercise,
-    required this.isSelected,
-    required this.onToggle,
+    this.isSelected = false,
+    this.onToggle,
+    this.showSelectionAction = true,
   });
 
   final Exercise exercise;
   final bool isSelected;
-  final VoidCallback onToggle;
+  final VoidCallback? onToggle;
+  final bool showSelectionAction;
 
   @override
   Widget build(BuildContext context) {
@@ -96,34 +98,34 @@ class ExerciseDetailSheet extends StatelessWidget {
           // TODO(difficulty): re-enable difficulty row once data is reliable
           const SizedBox(height: 24),
 
-          // Add / Remove button
-          SizedBox(
-            width: double.infinity,
-            height: 48,
-            child: isSelected
-                ? OutlinedButton.icon(
-                    icon: const Icon(Icons.remove_circle_outline),
-                    label: Text(l10n.routineRemove),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.redAccent,
-                      side: const BorderSide(color: Colors.redAccent),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+          if (showSelectionAction)
+            SizedBox(
+              width: double.infinity,
+              height: 48,
+              child: isSelected
+                  ? OutlinedButton.icon(
+                      icon: const Icon(Icons.remove_circle_outline),
+                      label: Text(l10n.routineRemove),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.redAccent,
+                        side: const BorderSide(color: Colors.redAccent),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
-                    ),
-                    onPressed: onToggle,
-                  )
-                : FilledButton.icon(
-                    icon: const Icon(Icons.add_circle_outline),
-                    label: Text(l10n.routineAdd),
-                    style: FilledButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                      onPressed: onToggle,
+                    )
+                  : FilledButton.icon(
+                      icon: const Icon(Icons.add_circle_outline),
+                      label: Text(l10n.routineAdd),
+                      style: FilledButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
+                      onPressed: onToggle,
                     ),
-                    onPressed: onToggle,
-                  ),
-          ),
+            ),
         ],
       ),
     );
