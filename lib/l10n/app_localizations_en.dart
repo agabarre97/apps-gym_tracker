@@ -803,8 +803,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get workoutSessionInProgress => 'Workout in progress';
 
   @override
-  String get workoutSessionInProgressBody =>
-      'You have an unfinished workout today. Do you want to resume it?';
+  String get workoutSessionInProgressBody => 'You have an unfinished workout';
 
   @override
   String get workoutSessionNew => 'New';

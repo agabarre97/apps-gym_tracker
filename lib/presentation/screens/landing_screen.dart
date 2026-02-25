@@ -156,6 +156,11 @@ class _LandingScreenState extends State<LandingScreen> {
       _trainingDays = days.map((d) => _normalise(d.date)).toSet();
       _loading = false;
     });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _checkPendingSessionAndPrompt();
+    });
   }
 
   DateTime _normalise(DateTime d) => DateTime(d.year, d.month, d.day);
@@ -217,11 +222,7 @@ class _LandingScreenState extends State<LandingScreen> {
 
   // ── Workout flow ──────────────────────────────────────────────
 
-  /// Starts the Train flow (with time tracking) from the Train button.
-  Future<void> _startTrainFlow() async {
-    if (_routines.isEmpty) return;
-
-    // Check for pending session today
+  Future<bool> _checkPendingSessionAndPrompt() async {
     final todayNorm = _normalise(DateTime.now());
     final pendingSession = _sessions
         .where((s) =>
@@ -230,34 +231,41 @@ class _LandingScreenState extends State<LandingScreen> {
             s.endTime == null)
         .firstOrNull;
 
-    if (pendingSession != null) {
-      final l10n = AppLocalizations.of(context)!;
-      final resume = await showDialog<bool>(
-        context: context,
-        builder: (ctx) => AlertDialog(
+    if (pendingSession == null) return false;
+
+    final l10n = AppLocalizations.of(context)!;
+    final resume = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => PopScope(
+        canPop: false,
+        child: AlertDialog(
           title: Text(
               l10n.workoutSessionInProgress ?? 'Entrenamiento en progreso'),
           content: Text(l10n.workoutSessionInProgressBody ??
-              'Tienes un entrenamiento sin finalizar hoy. ¿Quieres retomarlo?'),
+              'Tienes un entrenamiento sin finalizar'),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(ctx, false),
-              child: Text(l10n.workoutSessionNew ?? 'Nuevo'),
-            ),
             FilledButton(
               onPressed: () => Navigator.pop(ctx, true),
               child: Text(l10n.workoutSessionResume ?? 'Retomar'),
             ),
           ],
         ),
-      );
+      ),
+    );
 
-      if (resume == true) {
-        if (!mounted) return;
-        await _navigateToWorkoutSession(pendingSession, trackTime: true);
-        return;
-      }
-    }
+    if (resume != true) return true;
+    if (!mounted) return true;
+
+    await _navigateToWorkoutSession(pendingSession, trackTime: true);
+    return true;
+  }
+
+  /// Starts the Train flow (with time tracking) from the Train button.
+  Future<void> _startTrainFlow() async {
+    if (_routines.isEmpty) return;
+    final resumed = await _checkPendingSessionAndPrompt();
+    if (resumed) return;
 
     await _startWorkoutFlow(trackTime: true, date: _normalise(DateTime.now()));
   }

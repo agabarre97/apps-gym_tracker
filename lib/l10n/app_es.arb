@@ -375,7 +375,7 @@
   "workoutElapsed": "Tiempo",
   "workoutNoRoutines": "Crea una rutina primero",
   "workoutSessionInProgress": "Entrenamiento en progreso",
-  "workoutSessionInProgressBody": "Tienes un entrenamiento sin finalizar hoy. ¿Quieres retomarlo?",
+  "workoutSessionInProgressBody": "Tienes un entrenamiento sin finalizar",
   "workoutSessionNew": "Nuevo",
   "workoutSessionResume": "Retomar",
   "workoutSaveChanges": "Guardar entrenamiento",

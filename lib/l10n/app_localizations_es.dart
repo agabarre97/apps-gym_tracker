@@ -809,7 +809,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get workoutSessionInProgressBody =>
-      'Tienes un entrenamiento sin finalizar hoy. ¿Quieres retomarlo?';
+      'Tienes un entrenamiento sin finalizar';
 
   @override
   String get workoutSessionNew => 'Nuevo';
