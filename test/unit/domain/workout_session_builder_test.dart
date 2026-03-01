@@ -16,14 +16,20 @@ void main() {
           exerciseConfigs: [
             RoutineExerciseConfig(
               exerciseKey: 'bench_press',
-              sets: 4,
-              targetReps: 8,
               restSeconds: 120,
+              setConfigs: [
+                RoutineSetConfig(targetReps: 8),
+                RoutineSetConfig(targetReps: 8),
+                RoutineSetConfig(targetReps: 8),
+                RoutineSetConfig(targetReps: 8),
+              ],
             ),
             RoutineExerciseConfig(
               exerciseKey: 'incline_press',
-              sets: 2,
-              targetReps: 12,
+              setConfigs: [
+                RoutineSetConfig(targetReps: 12),
+                RoutineSetConfig(targetReps: 12),
+              ],
             ),
           ],
         ),
@@ -48,6 +54,7 @@ void main() {
       expect(session.exercises[0].exerciseKey, 'bench_press');
       expect(session.exercises[0].sets.length, 4);
       expect(session.exercises[0].sets.first.reps, 8);
+      expect(session.exercises[0].sets.first.plannedRestSeconds, 120);
       expect(session.exercises[0].restSeconds, 120);
       expect(session.exercises[1].exerciseKey, 'incline_press');
       expect(session.exercises[1].sets.length, 2);
@@ -112,6 +119,7 @@ void main() {
       expect(benchSets[1].weight, 85);
       expect(benchSets[2].reps, 8);
       expect(benchSets[3].reps, 8);
+      expect(benchSets[0].plannedRestSeconds, 120);
       // Notes and completed should NOT carry over
       expect(session.exercises[0].notes, '');
       expect(session.exercises[0].completed, false);

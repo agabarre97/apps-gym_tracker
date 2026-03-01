@@ -31,7 +31,8 @@ Widget buildLandingScreenWidget({
   );
 }
 
-final today = DateTime(2026, 2, 16);
+final _now = DateTime.now();
+final today = DateTime(_now.year, _now.month, 1);
 
 Future<void> selectToday(WidgetTester tester) async {
   await tester.pumpAndSettle();
@@ -39,7 +40,7 @@ Future<void> selectToday(WidgetTester tester) async {
   final calendar = find.byType(TableCalendar<dynamic>);
   final dayFinder = find.descendant(
     of: calendar,
-    matching: find.text('16'),
+    matching: find.text('1'),
   );
   await tester.tap(dayFinder.first);
   await tester.pumpAndSettle();

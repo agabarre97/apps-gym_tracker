@@ -25,45 +25,117 @@ enum RoutineType {
 }
 
 /// A single day within a routine.
+class RoutineSetConfig {
+  const RoutineSetConfig({
+    this.targetReps = 10,
+    this.restSeconds,
+    this.dropSetCount = 0,
+    this.dropSetReps,
+  });
+
+  final int targetReps;
+  final int? restSeconds;
+  final int dropSetCount;
+  final int? dropSetReps;
+
+  bool get hasDropSet => dropSetCount > 0;
+
+  Map<String, dynamic> toJson() => {
+        'targetReps': targetReps,
+        if (restSeconds != null) 'restSeconds': restSeconds,
+        if (dropSetCount > 0) 'dropSetCount': dropSetCount,
+        if (dropSetReps != null) 'dropSetReps': dropSetReps,
+      };
+
+  factory RoutineSetConfig.fromJson(Map<String, dynamic> json) =>
+      RoutineSetConfig(
+        targetReps: json['targetReps'] as int? ?? 10,
+        restSeconds: json['restSeconds'] as int?,
+        dropSetCount: json['dropSetCount'] as int? ?? 0,
+        dropSetReps: json['dropSetReps'] as int?,
+      );
+
+  RoutineSetConfig copyWith({
+    int? targetReps,
+    int? restSeconds,
+    int? dropSetCount,
+    int? dropSetReps,
+    bool clearRestSeconds = false,
+    bool clearDropSetReps = false,
+  }) =>
+      RoutineSetConfig(
+        targetReps: targetReps ?? this.targetReps,
+        restSeconds:
+            clearRestSeconds ? null : (restSeconds ?? this.restSeconds),
+        dropSetCount: dropSetCount ?? this.dropSetCount,
+        dropSetReps:
+            clearDropSetReps ? null : (dropSetReps ?? this.dropSetReps),
+      );
+}
+
+/// A single exercise configuration within a routine day.
 class RoutineExerciseConfig {
   const RoutineExerciseConfig({
     required this.exerciseKey,
-    this.sets = 3,
-    this.targetReps = 10,
+    this.setConfigs = const [],
     this.restSeconds,
   });
 
   final String exerciseKey;
-  final int sets;
-  final int targetReps;
+  final List<RoutineSetConfig> setConfigs;
   final int? restSeconds;
 
+  /// Backward-compatible aggregate getters used by legacy UI summaries.
+  int get sets => setConfigs.length;
+  int get targetReps => setConfigs.isEmpty ? 10 : setConfigs.first.targetReps;
   Map<String, dynamic> toJson() => {
         'exerciseKey': exerciseKey,
-        'sets': sets,
-        'targetReps': targetReps,
         if (restSeconds != null) 'restSeconds': restSeconds,
+        if (setConfigs.isNotEmpty)
+          'setConfigs': setConfigs.map((c) => c.toJson()).toList(),
       };
 
-  factory RoutineExerciseConfig.fromJson(Map<String, dynamic> json) =>
-      RoutineExerciseConfig(
+  factory RoutineExerciseConfig.fromJson(Map<String, dynamic> json) {
+    final rawSetConfigs = (json['setConfigs'] as List?)
+            ?.cast<Map<String, dynamic>>()
+            .map(RoutineSetConfig.fromJson)
+            .toList() ??
+        const <RoutineSetConfig>[];
+    if (rawSetConfigs.isNotEmpty) {
+      return RoutineExerciseConfig(
         exerciseKey: json['exerciseKey'] as String,
-        sets: json['sets'] as int? ?? 3,
-        targetReps: json['targetReps'] as int? ?? 10,
-        restSeconds: json['restSeconds'] as int?,
+        setConfigs: rawSetConfigs,
+        restSeconds:
+            json['restSeconds'] as int? ?? rawSetConfigs.first.restSeconds,
       );
+    }
+
+    // Backward compatibility for previous schema.
+    final sets = json['sets'] as int? ?? 3;
+    final targetReps = json['targetReps'] as int? ?? 10;
+    final restSeconds = json['restSeconds'] as int?;
+    return RoutineExerciseConfig(
+      exerciseKey: json['exerciseKey'] as String,
+      restSeconds: restSeconds,
+      setConfigs: List<RoutineSetConfig>.generate(
+        sets,
+        (_) => RoutineSetConfig(
+          targetReps: targetReps,
+        ),
+        growable: false,
+      ),
+    );
+  }
 
   RoutineExerciseConfig copyWith({
     String? exerciseKey,
-    int? sets,
-    int? targetReps,
+    List<RoutineSetConfig>? setConfigs,
     int? restSeconds,
     bool clearRestSeconds = false,
   }) =>
       RoutineExerciseConfig(
         exerciseKey: exerciseKey ?? this.exerciseKey,
-        sets: sets ?? this.sets,
-        targetReps: targetReps ?? this.targetReps,
+        setConfigs: setConfigs ?? this.setConfigs,
         restSeconds:
             clearRestSeconds ? null : (restSeconds ?? this.restSeconds),
       );
@@ -152,6 +224,11 @@ class RoutineDay {
               byKey[key] ??
               RoutineExerciseConfig(
                 exerciseKey: key,
+                setConfigs: const [
+                  RoutineSetConfig(),
+                  RoutineSetConfig(),
+                  RoutineSetConfig(),
+                ],
               ),
         )
         .toList(growable: false);

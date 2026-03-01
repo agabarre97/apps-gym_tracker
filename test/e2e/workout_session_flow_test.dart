@@ -70,20 +70,29 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      // Expand first exercise.
+      // Open first exercise in focused editor.
       await tester.tap(find.text('Press banca'));
       await tester.pumpAndSettle();
-      expect(find.text('Serie 1'), findsOneWidget);
 
-      // Increase reps (+1) and weight (+1.25) on first set.
-      final addButtons = find.byIcon(Icons.add);
-      await tester.tap(addButtons.at(0)); // reps +1
+      expect(find.textContaining('Serie 1'), findsOneWidget);
+
+      // Update first set values directly in focused fields.
+      final inputFields = find.byType(TextField);
+      await tester.enterText(inputFields.at(0), '9');
       await tester.pumpAndSettle();
-      await tester.tap(addButtons.at(1)); // weight +1.25
+      await tester.enterText(inputFields.at(1), '61.25');
       await tester.pumpAndSettle();
 
-      // Save the edited exercise in retroactive mode.
-      await tester.scrollToAndTap(find.text('Guardar'));
+      // Complete both sets so exercise is marked as completed.
+      // Complete all main sets currently pending.
+      while (tester.any(find.byIcon(Icons.task_alt_outlined))) {
+        await tester.tap(find.byIcon(Icons.task_alt_outlined).first);
+        await tester.pumpAndSettle();
+      }
+
+      // Save edited exercise and return to summary.
+      await tester.tap(find.byIcon(Icons.save));
+      await tester.pumpAndSettle();
 
       // Save full session changes.
       await tester.tap(find.text('Guardar entrenamiento'));

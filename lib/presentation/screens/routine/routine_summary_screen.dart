@@ -4,7 +4,6 @@ import 'package:gym_tracker/domain/entities/exercise.dart';
 import 'package:gym_tracker/domain/entities/routine.dart';
 import 'package:gym_tracker/presentation/screens/routine/by_muscle_category_labels.dart';
 import 'package:gym_tracker/presentation/theme/app_theme.dart';
-import 'package:gym_tracker/presentation/utils/time_formatter.dart';
 
 /// Final screen of the routine creation flow.
 ///
@@ -63,6 +62,21 @@ class _RoutineSummaryScreenState extends State<RoutineSummaryScreen> {
     return null;
   }
 
+  String _configSummary(RoutineExerciseConfig config, AppLocalizations l10n) {
+    if (config.setConfigs.isEmpty) return '';
+    final totalSeries = config.setConfigs.length;
+    final reps = config.setConfigs.map((set) => set.targetReps).toList();
+    final minReps = reps.reduce((a, b) => a < b ? a : b);
+    final maxReps = reps.reduce((a, b) => a > b ? a : b);
+    final dropSets = config.setConfigs.fold<int>(
+      0,
+      (sum, set) => sum + set.dropSetCount,
+    );
+    final repsLabel = minReps == maxReps ? '$minReps' : '$minReps-$maxReps';
+    final dropLabel = dropSets > 0 ? ' · Drop: $dropSets' : '';
+    return '$totalSeries ${l10n.workoutSets.toLowerCase()} · $repsLabel ${l10n.workoutReps.toLowerCase()}$dropLabel';
+  }
+
   Future<void> _handleSave() async {
     final name = _nameController.text.trim();
     if (name.isEmpty) return;
@@ -105,8 +119,11 @@ class _RoutineSummaryScreenState extends State<RoutineSummaryScreen> {
 
                 // Day summaries
                 ...List.generate(widget.dayMuscleGroups.length, (i) {
-                  final groups = widget.dayMuscleGroups[i];
                   final exerciseKeys = widget.dayExerciseKeys[i];
+                  final groups = Exercise.categoriesForDay(
+                    allExercises: widget.allExercises,
+                    exerciseKeysForDay: exerciseKeys,
+                  );
 
                   return Card(
                     margin: const EdgeInsets.only(bottom: 12),
@@ -167,7 +184,7 @@ class _RoutineSummaryScreenState extends State<RoutineSummaryScreen> {
                           final config = _configForExercise(i, key);
                           final subtitle = config == null
                               ? null
-                              : '${config.sets} ${l10n.workoutSets.toLowerCase()} · ${config.targetReps} ${l10n.workoutReps.toLowerCase()} · ${l10n.workoutRestTimer.toLowerCase()}: ${config.restSeconds == null ? l10n.mobilityRestOff.toLowerCase() : TimeFormatter.mmss(config.restSeconds!)}';
+                              : _configSummary(config, l10n);
                           return ListTile(
                             dense: true,
                             leading: Icon(Icons.fitness_center,

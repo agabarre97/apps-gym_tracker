@@ -51,18 +51,36 @@ void main() {
             dayExerciseConfigs: const [
               [
                 RoutineExerciseConfig(
-                    exerciseKey: 'press_multipower', sets: 4, targetReps: 8),
+                    exerciseKey: 'press_multipower',
+                    setConfigs: [
+                      RoutineSetConfig(targetReps: 8),
+                      RoutineSetConfig(targetReps: 8),
+                      RoutineSetConfig(targetReps: 8),
+                      RoutineSetConfig(targetReps: 8)
+                    ]),
                 RoutineExerciseConfig(
-                    exerciseKey: 'extension_triceps', sets: 3, targetReps: 12),
+                    exerciseKey: 'extension_triceps',
+                    setConfigs: [
+                      RoutineSetConfig(targetReps: 12),
+                      RoutineSetConfig(targetReps: 12),
+                      RoutineSetConfig(targetReps: 12)
+                    ]),
               ],
               [
                 RoutineExerciseConfig(
                     exerciseKey: 'jalon_abierto',
-                    sets: 4,
-                    targetReps: 10,
+                    setConfigs: [
+                      RoutineSetConfig(targetReps: 10),
+                      RoutineSetConfig(targetReps: 10),
+                      RoutineSetConfig(targetReps: 10),
+                      RoutineSetConfig(targetReps: 10)
+                    ],
                     restSeconds: 90),
-                RoutineExerciseConfig(
-                    exerciseKey: 'remo_polea', sets: 3, targetReps: 10),
+                RoutineExerciseConfig(exerciseKey: 'remo_polea', setConfigs: [
+                  RoutineSetConfig(targetReps: 10),
+                  RoutineSetConfig(targetReps: 10),
+                  RoutineSetConfig(targetReps: 10)
+                ]),
               ],
             ],
             allExercises: _mockExercises,
@@ -98,7 +116,12 @@ void main() {
             dayExerciseConfigs: const [
               [
                 RoutineExerciseConfig(
-                    exerciseKey: 'press_multipower', sets: 3, targetReps: 10),
+                    exerciseKey: 'press_multipower',
+                    setConfigs: [
+                      RoutineSetConfig(targetReps: 10),
+                      RoutineSetConfig(targetReps: 10),
+                      RoutineSetConfig(targetReps: 10)
+                    ]),
               ],
             ],
             allExercises: _mockExercises,
@@ -127,7 +150,12 @@ void main() {
             dayExerciseConfigs: const [
               [
                 RoutineExerciseConfig(
-                    exerciseKey: 'press_multipower', sets: 3, targetReps: 10),
+                    exerciseKey: 'press_multipower',
+                    setConfigs: [
+                      RoutineSetConfig(targetReps: 10),
+                      RoutineSetConfig(targetReps: 10),
+                      RoutineSetConfig(targetReps: 10)
+                    ]),
               ],
             ],
             allExercises: _mockExercises,

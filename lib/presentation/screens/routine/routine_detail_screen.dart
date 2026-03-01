@@ -18,7 +18,6 @@ import 'package:gym_tracker/presentation/screens/routine/exercise_config_screen.
 import 'package:gym_tracker/presentation/screens/routine/exercise_selection_screen.dart';
 import 'package:gym_tracker/presentation/screens/workout/exercise_progress_screen.dart';
 import 'package:gym_tracker/presentation/theme/app_theme.dart';
-import 'package:gym_tracker/presentation/utils/time_formatter.dart';
 
 /// Read-only detail view for an existing routine.
 ///
@@ -74,6 +73,21 @@ class _RoutineDetailScreenState extends State<RoutineDetailScreen> {
     return exerciseKeys
         .map((key) => byKey[key] ?? RoutineExerciseConfig(exerciseKey: key))
         .toList(growable: false);
+  }
+
+  String _configSummary(RoutineExerciseConfig config, AppLocalizations l10n) {
+    if (config.setConfigs.isEmpty) return '';
+    final totalSeries = config.setConfigs.length;
+    final reps = config.setConfigs.map((set) => set.targetReps).toList();
+    final minReps = reps.reduce((a, b) => a < b ? a : b);
+    final maxReps = reps.reduce((a, b) => a > b ? a : b);
+    final dropSets = config.setConfigs.fold<int>(
+      0,
+      (sum, set) => sum + set.dropSetCount,
+    );
+    final repsLabel = minReps == maxReps ? '$minReps' : '$minReps-$maxReps';
+    final dropLabel = dropSets > 0 ? ' · Drop: $dropSets' : '';
+    return '$totalSeries ${l10n.workoutSets.toLowerCase()} · $repsLabel ${l10n.workoutReps.toLowerCase()}$dropLabel';
   }
 
   // ── Export ──────────────────────────────────────────────────────
@@ -288,7 +302,10 @@ class _RoutineDetailScreenState extends State<RoutineDetailScreen> {
                 // Day summaries
                 ...List.generate(_routine.days.length, (i) {
                   final day = _routine.days[i];
-                  final groups = day.muscleGroups;
+                  final groups = Exercise.categoriesForDay(
+                    allExercises: widget.allExercises,
+                    exerciseKeysForDay: day.exerciseKeys,
+                  );
 
                   return Card(
                     margin: const EdgeInsets.only(bottom: 12),
@@ -386,11 +403,8 @@ class _RoutineDetailScreenState extends State<RoutineDetailScreen> {
                               subtitle: () {
                                 final config = day.configForExercise(key);
                                 if (config == null) return null;
-                                final restLabel = config.restSeconds == null
-                                    ? l10n.mobilityRestOff
-                                    : TimeFormatter.mmss(config.restSeconds!);
                                 return Text(
-                                  '${config.sets} ${l10n.workoutSets.toLowerCase()} · ${config.targetReps} ${l10n.workoutReps.toLowerCase()} · ${l10n.workoutRestTimer.toLowerCase()}: ${restLabel.toLowerCase()}',
+                                  _configSummary(config, l10n),
                                   style: TextStyle(
                                     fontSize: 11,
                                     color: context.textSubtle,

@@ -1,21 +1,17 @@
 import 'dart:async';
-import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:gym_tracker/l10n/app_localizations.dart';
-
 import 'package:gym_tracker/domain/entities/exercise.dart';
 import 'package:gym_tracker/domain/entities/workout_session.dart';
 import 'package:gym_tracker/domain/ports/custom_exercise_port.dart';
 import 'package:gym_tracker/domain/ports/workout_session_port.dart';
-import 'package:gym_tracker/presentation/screens/routine/exercise_selection_screen.dart';
-import 'package:gym_tracker/presentation/screens/routine/exercise_detail_sheet.dart';
+import 'package:gym_tracker/l10n/app_localizations.dart';
 import 'package:gym_tracker/presentation/screens/routine/by_muscle_category_labels.dart';
-import 'package:gym_tracker/presentation/utils/time_formatter.dart';
+import 'package:gym_tracker/presentation/screens/routine/exercise_selection_screen.dart';
+import 'package:gym_tracker/presentation/screens/workout/focused_exercise_screen.dart';
 import 'package:gym_tracker/presentation/theme/app_theme.dart';
+import 'package:gym_tracker/presentation/utils/time_formatter.dart';
 
-/// Main workout screen showing exercise cards with sets/reps/weight editing.
 class WorkoutSessionScreen extends StatefulWidget {
   const WorkoutSessionScreen({
     super.key,
@@ -32,8 +28,6 @@ class WorkoutSessionScreen extends StatefulWidget {
   final WorkoutSessionPort workoutSessionPort;
   final String routineName;
   final CustomExercisePort? customExercisePort;
-
-  /// If true, an elapsed-time timer is displayed and start/end times recorded.
   final bool trackTime;
 
   @override
@@ -42,46 +36,10 @@ class WorkoutSessionScreen extends StatefulWidget {
 
 class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
   late WorkoutSession _session;
-
-  /// Snapshot of the original session JSON to detect changes (view mode).
   late final String _originalJson;
-
-  Timer? _timer;
-  Timer? _autoRestTicker;
-  Duration _elapsed = Duration.zero;
-  Duration _autoRestRemaining = Duration.zero;
-  Duration _pausedAutoRestRemaining = Duration.zero;
-  bool _isAutoRestPaused = false;
-
-  /// Index of the currently expanded exercise (-1 = none).
-  int _expandedIndex = -1;
-
-  /// Completion timestamp per (exerciseIndex, setIndex).
-  ///
-  /// Used to compute rest time as the interval between the end of
-  /// consecutive sets.
-  final Map<(int, int), DateTime> _setCompletionTimes = {};
-
-  /// One TextEditingController per exercise key for the notes field.
-  ///
-  /// Created lazily and disposed in [dispose] to avoid leaking controllers
-  /// that were previously created inside [build].
-  final Map<String, TextEditingController> _notesControllers = {};
-
-  /// Persists the session whenever the app is sent to background or
-  /// detached (e.g. home button, incoming call) so data is not lost.
   late final AppLifecycleListener _lifecycleListener;
-
-  TextEditingController _notesControllerFor(WorkoutExercise ex) =>
-      _notesControllers.putIfAbsent(
-        ex.exerciseKey,
-        () => TextEditingController(text: ex.notes ?? ''),
-      );
-
-  /// Whether the session has been modified from its original state (view mode).
-  bool get _hasChanges {
-    return WorkoutSession.listToJsonString([_session]) != _originalJson;
-  }
+  Timer? _timer;
+  Duration _elapsed = Duration.zero;
 
   @override
   void initState() {
@@ -97,7 +55,6 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
         });
       });
     }
-    _restoreAutoRestIfNeeded();
     _lifecycleListener = AppLifecycleListener(
       onHide: _persistSession,
       onPause: _persistSession,
@@ -108,365 +65,47 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
   @override
   void dispose() {
     _timer?.cancel();
-    _autoRestTicker?.cancel();
     _lifecycleListener.dispose();
-    for (final c in _notesControllers.values) {
-      c.dispose();
-    }
     super.dispose();
   }
 
-  String _nameForKey(String key) =>
-      Exercise.nameForKey(widget.allExercises, key);
-
-  Exercise? _exerciseForKey(String key) {
-    for (final exercise in widget.allExercises) {
-      if (exercise.key == key) return exercise;
-    }
-    return null;
-  }
-
-  // ── Persistence ────────────────────────────────────────────────
+  bool get _hasChanges =>
+      WorkoutSession.listToJsonString([_session]) != _originalJson;
 
   Future<void> _persistSession() =>
       widget.workoutSessionPort.upsertSession(_session);
 
-  void _restoreAutoRestIfNeeded() {
-    final deadline = _session.activeRestEndTime;
-    if (!widget.trackTime || deadline == null) return;
-    final now = DateTime.now();
-    final remaining = deadline.difference(now);
-    if (remaining <= Duration.zero) {
-      _session = _session.copyWith(clearActiveRestEndTime: true);
-      unawaited(_persistSession());
-      return;
-    }
-    _autoRestRemaining = remaining;
-    _startAutoRestTicker();
-  }
+  String _nameForKey(String key) =>
+      Exercise.nameForKey(widget.allExercises, key);
 
-  // ── Exercise actions ───────────────────────────────────────────
-
-  void _completeSet(int exIndex, int setIndex) {
-    HapticFeedback.mediumImpact();
-    FocusManager.instance.primaryFocus?.unfocus();
-    final completedAt = DateTime.now();
-    final ex = _session.exercises[exIndex];
-    final updatedSets = List<ExerciseSet>.from(ex.sets);
-    int? restSeconds;
-    if (setIndex > 0) {
-      final previousCompletion = _setCompletionTimes[(exIndex, setIndex - 1)];
-      if (previousCompletion != null) {
-        final diff = completedAt.difference(previousCompletion).inSeconds;
-        if (diff > 0) restSeconds = diff;
-      }
-    }
-    updatedSets[setIndex] = updatedSets[setIndex].copyWith(
-      completed: true,
-      estimatedRestSeconds: restSeconds,
-      clearRest: setIndex == 0,
-    );
-    _setCompletionTimes[(exIndex, setIndex)] = completedAt;
-    _updateExerciseSets(exIndex, updatedSets);
-    _startAutoRestIfConfigured(ex.restSeconds);
-    _persistSession();
-  }
-
-  int? _nextPendingSetIndex(WorkoutExercise exercise) {
-    for (var index = 0; index < exercise.sets.length; index++) {
-      if (!exercise.sets[index].completed) {
-        return index;
-      }
-    }
-    return null;
-  }
-
-  void _completeNextPendingSet(int exIndex) {
-    final ex = _session.exercises[exIndex];
-    final setIndex = _nextPendingSetIndex(ex);
-    if (setIndex == null) return;
-    _completeSet(exIndex, setIndex);
-  }
-
-  int _mapIndexAfterReorder(int index, int oldIndex, int newIndex) {
-    if (index == oldIndex) return newIndex;
-    if (oldIndex < newIndex && index > oldIndex && index <= newIndex) {
-      return index - 1;
-    }
-    if (oldIndex > newIndex && index >= newIndex && index < oldIndex) {
-      return index + 1;
-    }
-    return index;
-  }
-
-  void _reorderExercises(int oldIndex, int newIndex) {
-    if (oldIndex == _session.exercises.length ||
-        newIndex > _session.exercises.length) {
-      return; // Do not allow reordering the finish button
-    }
-
-    if (newIndex > oldIndex) {
-      newIndex -= 1;
-    }
-    if (oldIndex == newIndex) return;
-
-    setState(() {
-      final updatedExercises = List<WorkoutExercise>.from(_session.exercises);
-      final movedExercise = updatedExercises.removeAt(oldIndex);
-      updatedExercises.insert(newIndex, movedExercise);
-
-      if (_expandedIndex >= 0) {
-        _expandedIndex = _mapIndexAfterReorder(
-          _expandedIndex,
-          oldIndex,
-          newIndex,
-        );
-      }
-
-      final updatedCompletionTimes = <(int, int), DateTime>{};
-      for (final entry in _setCompletionTimes.entries) {
-        final (exerciseIndex, setIndex) = entry.key;
-        final mappedExerciseIndex = _mapIndexAfterReorder(
-          exerciseIndex,
-          oldIndex,
-          newIndex,
-        );
-        updatedCompletionTimes[(mappedExerciseIndex, setIndex)] = entry.value;
-      }
-      _setCompletionTimes
-        ..clear()
-        ..addAll(updatedCompletionTimes);
-
-      _session = _session.copyWith(exercises: updatedExercises);
-    });
-
-    unawaited(_persistSession());
-  }
-
-  void _finishExercise(int index) {
-    setState(() {
-      final ex = _session.exercises[index];
-      final completedSets = ex.sets
-          .map((set) => set.completed ? set : set.copyWith(completed: true))
-          .toList();
-      final updated = ex.copyWith(
-        completed: true,
-        sets: completedSets,
-      );
-      final list = List<WorkoutExercise>.from(_session.exercises);
-      list[index] = updated;
-      _session = _session.copyWith(exercises: list);
-      _expandedIndex = -1;
-    });
-    _persistSession();
-  }
-
-  void _saveExercise(int index) {
-    setState(() {
-      final exercise = _session.exercises[index];
-      final updated = exercise.copyWith(completed: true);
-      final updatedExercises = List<WorkoutExercise>.from(_session.exercises);
-      updatedExercises[index] = updated;
-      _session = _session.copyWith(exercises: updatedExercises);
-      _expandedIndex = -1;
-    });
-    _persistSession();
-  }
-
-  void _updateExerciseSets(int exIndex, List<ExerciseSet> newSets) {
-    setState(() {
-      final ex = _session.exercises[exIndex];
-      final updated = ex.copyWith(sets: newSets);
-      final list = List<WorkoutExercise>.from(_session.exercises);
-      list[exIndex] = updated;
-      _session = _session.copyWith(exercises: list);
-    });
-  }
-
-  void _updateExerciseNotes(int exIndex, String notes) {
-    final ex = _session.exercises[exIndex];
-    final updated = ex.copyWith(notes: notes);
-    final list = List<WorkoutExercise>.from(_session.exercises);
-    list[exIndex] = updated;
-    setState(() {
-      _session = _session.copyWith(exercises: list);
-    });
-  }
-
-  void _addSet(int exIndex) {
-    final ex = _session.exercises[exIndex];
-    final newSets = List<ExerciseSet>.from(ex.sets)
-      ..add(const ExerciseSet(reps: 0, weight: 0));
-    _updateExerciseSets(exIndex, newSets);
-  }
-
-  void _removeSet(int exIndex) {
-    final ex = _session.exercises[exIndex];
-    if (ex.sets.length <= 1) return;
-    final lastIdx = ex.sets.length - 1;
-    _setCompletionTimes.remove((exIndex, lastIdx));
-    final newSets = List<ExerciseSet>.from(ex.sets)..removeLast();
-    _updateExerciseSets(exIndex, newSets);
-  }
-
-  void _updateSet(int exIndex, int setIndex, {int? reps, double? weight}) {
-    final ex = _session.exercises[exIndex];
-    final newSets = List<ExerciseSet>.from(ex.sets);
-    newSets[setIndex] = newSets[setIndex].copyWith(
-      reps: reps,
-      weight: weight,
-    );
-    _updateExerciseSets(exIndex, newSets);
-  }
-
-  void _setExerciseRestSeconds(int exIndex, int? restSeconds) {
-    final ex = _session.exercises[exIndex];
-    final list = List<WorkoutExercise>.from(_session.exercises);
-    list[exIndex] = ex.copyWith(
-      restSeconds: restSeconds,
-      clearRestSeconds: restSeconds == null,
-    );
-    setState(() {
-      _session = _session.copyWith(exercises: list);
-    });
-    unawaited(_persistSession());
-  }
-
-  Future<void> _openRestConfigSheet(int exIndex) async {
-    final selected = await showModalBottomSheet<int?>(
-      context: context,
-      isDismissible: true,
-      showDragHandle: true,
-      builder: (_) => _RestConfigSheet(
-        initialSeconds: _session.exercises[exIndex].restSeconds,
+  Future<void> _openExercise(int index) async {
+    final updatedExercise = await Navigator.of(context).push<WorkoutExercise>(
+      MaterialPageRoute(
+        builder: (_) => FocusedExerciseScreen(
+          exerciseName: _nameForKey(_session.exercises[index].exerciseKey),
+          exercise: _session.exercises[index],
+        ),
       ),
     );
-    if (!mounted || selected == null) return;
-    if (selected < 0) {
-      _setExerciseRestSeconds(exIndex, null);
-      return;
-    }
-    _setExerciseRestSeconds(exIndex, selected);
-  }
-
-  bool get _hasAutoRestRunning =>
-      _session.activeRestEndTime != null || _isAutoRestPaused;
-
-  Duration get _currentAutoRestDuration {
-    if (_isAutoRestPaused) return _pausedAutoRestRemaining;
-    return _autoRestRemaining;
-  }
-
-  void _startAutoRestIfConfigured(int? restSeconds) {
-    if (!widget.trackTime || restSeconds == null || restSeconds <= 0) return;
-    final deadline = DateTime.now().add(Duration(seconds: restSeconds));
+    if (updatedExercise == null || !mounted) return;
+    final updated = List<WorkoutExercise>.from(_session.exercises)
+      ..[index] = updatedExercise;
     setState(() {
-      _isAutoRestPaused = false;
-      _pausedAutoRestRemaining = Duration.zero;
-      _autoRestRemaining = Duration(seconds: restSeconds);
-      _session = _session.copyWith(activeRestEndTime: deadline);
+      _session = _session.copyWith(exercises: updated);
     });
-    _startAutoRestTicker();
-    unawaited(_persistSession());
-  }
-
-  void _startAutoRestTicker() {
-    _autoRestTicker?.cancel();
-    _autoRestTicker = Timer.periodic(const Duration(milliseconds: 250), (_) {
-      final deadline = _session.activeRestEndTime;
-      if (!mounted || deadline == null) return;
-      final remaining = deadline.difference(DateTime.now());
-      if (remaining <= Duration.zero) {
-        _completeAutoRest();
-        return;
-      }
-      setState(() {
-        _autoRestRemaining = remaining;
-      });
-    });
-  }
-
-  void _completeAutoRest() {
-    _autoRestTicker?.cancel();
-    HapticFeedback.heavyImpact();
-    if (!mounted) return;
-    setState(() {
-      _isAutoRestPaused = false;
-      _pausedAutoRestRemaining = Duration.zero;
-      _autoRestRemaining = Duration.zero;
-      _session = _session.copyWith(clearActiveRestEndTime: true);
-    });
-    unawaited(_persistSession());
-  }
-
-  void _skipAutoRest() {
-    _autoRestTicker?.cancel();
-    setState(() {
-      _isAutoRestPaused = false;
-      _pausedAutoRestRemaining = Duration.zero;
-      _autoRestRemaining = Duration.zero;
-      _session = _session.copyWith(clearActiveRestEndTime: true);
-    });
-    unawaited(_persistSession());
-  }
-
-  void _toggleAutoRestPause() {
-    if (!_hasAutoRestRunning) return;
-    if (_isAutoRestPaused) {
-      final resumedDeadline = DateTime.now().add(_pausedAutoRestRemaining);
-      setState(() {
-        _isAutoRestPaused = false;
-        _session = _session.copyWith(activeRestEndTime: resumedDeadline);
-        _autoRestRemaining = _pausedAutoRestRemaining;
-      });
-      _startAutoRestTicker();
-      unawaited(_persistSession());
-      return;
-    }
-
-    final deadline = _session.activeRestEndTime;
-    if (deadline == null) return;
-    final remaining = deadline.difference(DateTime.now());
-    setState(() {
-      _isAutoRestPaused = true;
-      _pausedAutoRestRemaining =
-          remaining > Duration.zero ? remaining : Duration.zero;
-      _session = _session.copyWith(clearActiveRestEndTime: true);
-    });
-    _autoRestTicker?.cancel();
-    unawaited(_persistSession());
-  }
-
-  void _addThirtySecondsToAutoRest() {
-    if (!_hasAutoRestRunning) return;
-    if (_isAutoRestPaused) {
-      setState(() {
-        _pausedAutoRestRemaining += const Duration(seconds: 30);
-      });
-      return;
-    }
-    final deadline = _session.activeRestEndTime;
-    if (deadline == null) return;
-    final extended = deadline.add(const Duration(seconds: 30));
-    setState(() {
-      _session = _session.copyWith(activeRestEndTime: extended);
-      _autoRestRemaining = extended.difference(DateTime.now());
-    });
-    unawaited(_persistSession());
+    await _persistSession();
   }
 
   Future<void> _openAddExercisePicker() async {
     final l10n = AppLocalizations.of(context)!;
     final initialKeys = _session.exercises.map((e) => e.exerciseKey).toList();
-    final availableCategories = byMuscleCategoryOrder;
-
     final result = await Navigator.of(context).push<ExerciseSelectionResult>(
       MaterialPageRoute(
         builder: (_) => ExerciseSelectionScreen(
           currentDay: 1,
           totalDays: 1,
           allExercises: widget.allExercises,
-          availableCategories: availableCategories,
+          availableCategories: byMuscleCategoryOrder,
           initialSelectedCategories: const [],
           initialSelectedKeys: initialKeys,
           showDayProgress: false,
@@ -478,31 +117,22 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
         ),
       ),
     );
-
     if (result == null) return;
 
-    final existingByKey = {
-      for (final exercise in _session.exercises) exercise.exerciseKey: exercise,
-    };
-    final updatedExercises = List<WorkoutExercise>.from(_session.exercises);
-
+    final existingKeys = _session.exercises.map((e) => e.exerciseKey).toSet();
+    final updated = List<WorkoutExercise>.from(_session.exercises);
     for (final key in result.selectedExerciseKeys) {
-      if (!existingByKey.containsKey(key)) {
-        updatedExercises.add(WorkoutExercise.empty(key));
+      if (!existingKeys.contains(key)) {
+        updated.add(WorkoutExercise.empty(key));
       }
     }
-
-    if (updatedExercises.length == _session.exercises.length) return;
-
+    if (updated.length == _session.exercises.length) return;
     setState(() {
-      _session = _session.copyWith(exercises: updatedExercises);
+      _session = _session.copyWith(exercises: updated);
     });
     await _persistSession();
   }
 
-  // ── Finish / Save ───────────────────────────────────────────────
-
-  /// Live workout mode: confirm before finishing.
   Future<void> _confirmFinish() async {
     final l10n = AppLocalizations.of(context)!;
     final confirm = await showDialog<bool>(
@@ -523,13 +153,10 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
       ),
     );
     if (confirm != true || !mounted) return;
-
     _session = _session.copyWith(endTime: DateTime.now());
     await _persistSession();
-
-    if (mounted) {
-      Navigator.of(context).pop(true);
-    }
+    if (!mounted) return;
+    Navigator.of(context).pop(true);
   }
 
   Future<void> _discardSessionIfExists() async {
@@ -539,7 +166,6 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
     await widget.workoutSessionPort.saveSessions(updated);
   }
 
-  /// Live workout mode: prompt save/discard when leaving with back button.
   Future<void> _confirmExitTraining() async {
     final l10n = AppLocalizations.of(context)!;
     final shouldSave = await showDialog<bool>(
@@ -569,101 +195,77 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
       ),
     );
     if (shouldSave == null || !mounted) return;
-
     if (shouldSave) {
       _session = _session.copyWith(endTime: DateTime.now());
       await _persistSession();
     } else {
       await _discardSessionIfExists();
     }
-
-    if (mounted) {
-      Navigator.of(context).pop(true);
-    }
+    if (!mounted) return;
+    Navigator.of(context).pop(true);
   }
 
-  /// View/edit mode (calendar): just save and go back.
   Future<void> _saveChanges() async {
     _session = _session.copyWith(
       exercises: _session.exercises
-          .map((exercise) => exercise.copyWith(completed: true))
+          .map(
+            (exercise) => exercise.copyWith(
+              completed: exercise.sets.every((set) => set.completed),
+            ),
+          )
           .toList(),
     );
     await _persistSession();
-    if (mounted) {
-      Navigator.of(context).pop(true);
-    }
+    if (!mounted) return;
+    Navigator.of(context).pop(true);
   }
 
-  // ── Rest stopwatch ─────────────────────────────────────────────
-
-  void _showRestStopwatch() {
-    showModalBottomSheet(
-      context: context,
-      isDismissible: true,
-      builder: (_) => const _RestStopwatchSheet(),
-    );
-  }
-
-  void _showExerciseDetail(WorkoutExercise workoutExercise) {
-    final exercise = _exerciseForKey(workoutExercise.exerciseKey);
-    if (exercise == null) return;
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: const Color(0xFF2C2C2E),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (_) => ExerciseDetailSheet(
-        exercise: exercise,
-        showSelectionAction: false,
-      ),
-    );
-  }
-
-  // ── Elapsed time format ────────────────────────────────────────
-
-  /// Brief summary for a completed exercise, e.g. "3x12 @ 60kg".
   String _briefSummary(WorkoutExercise ex) {
     if (ex.sets.isEmpty) return '';
-    final parts = <String>[];
-    for (final s in ex.sets) {
-      final w = s.weight == s.weight.truncateToDouble()
-          ? s.weight.toInt().toString()
-          : s.weight
+    return ex.sets.map((set) {
+      final weight = set.weight == set.weight.truncateToDouble()
+          ? set.weight.toInt().toString()
+          : set.weight
               .toStringAsFixed(2)
               .replaceAll(RegExp(r'0+$'), '')
               .replaceAll(RegExp(r'\.$'), '');
-      parts.add('${s.reps}x${w}kg');
-    }
-    return parts.join(' | ');
+      return '${set.reps}x$weight';
+    }).join(' | ');
   }
 
-  /// Compute average rest seconds for an exercise (ignoring first set and nulls).
+  String _plannedSummary(WorkoutExercise ex, AppLocalizations l10n) {
+    if (ex.sets.isEmpty) return '';
+    final targetReps = ex.sets
+        .map((set) => set.targetReps ?? set.reps)
+        .where((value) => value > 0)
+        .toList();
+    final drops = ex.sets.where((set) => set.isDropSet).length;
+    final repsLabel = targetReps.isEmpty
+        ? '-'
+        : targetReps.length == 1
+            ? '${targetReps.first}'
+            : '${targetReps.reduce((a, b) => a < b ? a : b)}-${targetReps.reduce((a, b) => a > b ? a : b)}';
+    final dropLabel = drops > 0 ? ' · Drop: $drops' : '';
+    return '${ex.sets.length} ${l10n.workoutSets.toLowerCase()} · $repsLabel ${l10n.workoutReps.toLowerCase()}$dropLabel';
+  }
+
   String? _averageRestLabel(WorkoutExercise ex) {
     final rests = ex.sets
-        .where((s) =>
-            s.estimatedRestSeconds != null && s.estimatedRestSeconds! > 0)
-        .map((s) => s.estimatedRestSeconds!)
+        .where((set) => (set.estimatedRestSeconds ?? 0) > 0)
+        .map((set) => set.estimatedRestSeconds!)
         .toList();
     if (rests.isEmpty) return null;
     final avg = (rests.reduce((a, b) => a + b) / rests.length).round();
     return Duration(seconds: avg).toRestLabel();
   }
 
-  // ── Build ──────────────────────────────────────────────────────
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-
     return PopScope(
       canPop: !widget.trackTime,
       onPopInvokedWithResult: (didPop, _) {
-        if (!didPop && widget.trackTime) {
-          _confirmExitTraining();
-        }
+        if (!didPop && widget.trackTime) _confirmExitTraining();
       },
       child: Scaffold(
         appBar: AppBar(
@@ -672,970 +274,89 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
             IconButton(
               onPressed: _openAddExercisePicker,
               icon: const Icon(Icons.add),
-              tooltip: l10n.workoutAddSet,
+              tooltip: l10n.routineSelectExercises,
             ),
             if (widget.trackTime)
               Padding(
                 padding: const EdgeInsets.only(right: 16),
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(8),
-                  onTap: _showRestStopwatch,
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(
-                        minHeight: AppSizes.buttonHeightSmall),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.timer_outlined,
-                              size: 18, color: context.textSecondary),
-                          const SizedBox(width: 4),
-                          Text(
-                            _elapsed.toHumanReadable(),
-                            style: TextStyle(
-                                color: context.textSecondary, fontSize: 14),
-                          ),
-                        ],
-                      ),
-                    ),
+                child: Center(
+                  child: Text(
+                    _elapsed.toHumanReadable(),
+                    style: TextStyle(color: context.textSecondary),
                   ),
                 ),
               ),
           ],
         ),
-        body: Stack(
+        body: ListView(
+          padding: const EdgeInsets.all(16),
           children: [
-            Column(
-              children: [
-                Expanded(
-                  child: ReorderableListView.builder(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: _session.exercises.length + 1, // +1 for button
-                    onReorder: _reorderExercises,
-                    buildDefaultDragHandles: false,
-                    itemBuilder: (context, index) {
-                      if (index == _session.exercises.length) {
-                        // Disable reordering for the finish button
-                        return ReorderableDragStartListener(
-                          key: const ValueKey('workout-finish-button'),
-                          index: index,
-                          enabled: false,
-                          child: SafeArea(
-                            top: false,
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 16, bottom: 16),
-                              child: SizedBox(
-                                width: double.infinity,
-                                height: 52,
-                                child: widget.trackTime
-                                    ? FilledButton.icon(
-                                        icon: const Icon(Icons.flag),
-                                        label: Text(l10n.workoutFinish),
-                                        onPressed: _confirmFinish,
-                                      )
-                                    : FilledButton.icon(
-                                        icon: const Icon(Icons.save),
-                                        label: Text(l10n.workoutSaveChanges),
-                                        onPressed: _saveChanges,
-                                      ),
-                              ),
-                            ),
-                          ),
-                        );
-                      }
-                      return _buildExerciseCard(index, l10n);
-                    },
+            ...List.generate(_session.exercises.length, (index) {
+              final exercise = _session.exercises[index];
+              final avgRest = _averageRestLabel(exercise);
+              return Card(
+                margin: const EdgeInsets.only(bottom: 10),
+                child: ListTile(
+                  leading: Icon(
+                    exercise.completed
+                        ? Icons.check_circle
+                        : Icons.fitness_center,
+                    color: exercise.completed
+                        ? AppColors.success
+                        : context.textSecondary,
                   ),
-                ),
-              ],
-            ),
-            Positioned(
-              left: 16,
-              right: 16,
-              bottom: 20,
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 220),
-                transitionBuilder: (child, animation) {
-                  return FadeTransition(
-                    opacity: animation,
-                    child: SlideTransition(
-                      position: Tween<Offset>(
-                        begin: const Offset(0, 0.08),
-                        end: Offset.zero,
-                      ).animate(animation),
-                      child: child,
-                    ),
-                  );
-                },
-                child: _hasAutoRestRunning &&
-                        _currentAutoRestDuration > Duration.zero
-                    ? _buildAutoRestPill(l10n)
-                    : const SizedBox.shrink(
-                        key: ValueKey('workout_auto_rest_pill_hidden'),
-                      ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAutoRestPill(AppLocalizations l10n) {
-    final seconds = _currentAutoRestDuration.inSeconds;
-    return Center(
-      child: Material(
-        color: Colors.transparent,
-        child: DecoratedBox(
-          key: const ValueKey('workout_auto_rest_pill'),
-          decoration: BoxDecoration(
-            color: const Color(0xFF242427),
-            borderRadius: BorderRadius.circular(999),
-            border: Border.all(color: context.border),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  Icons.hourglass_bottom,
-                  size: 18,
-                  color: context.textSecondary,
-                ),
-                const SizedBox(width: 8),
-                InkWell(
-                  key: const ValueKey('workout_auto_rest_time'),
-                  borderRadius: BorderRadius.circular(14),
-                  onTap: _toggleAutoRestPause,
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                    child: Text(
-                      TimeFormatter.mmss(seconds),
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        color: context.primary,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                TextButton(
-                  key: const ValueKey('workout_auto_rest_add_30'),
-                  onPressed: _addThirtySecondsToAutoRest,
-                  style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    minimumSize: const Size(0, AppSizes.buttonHeightSmall),
-                  ),
-                  child: const Text('+30s'),
-                ),
-                const SizedBox(width: 4),
-                TextButton(
-                  key: const ValueKey('workout_auto_rest_skip'),
-                  onPressed: _skipAutoRest,
-                  style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    minimumSize: const Size(0, AppSizes.buttonHeightSmall),
-                  ),
-                  child: Text(l10n.sharedSkip),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildExerciseCard(int index, AppLocalizations l10n) {
-    final ex = _session.exercises[index];
-    final isExpanded = _expandedIndex == index;
-    final name = _nameForKey(ex.exerciseKey);
-    final avgRest = _averageRestLabel(ex);
-    final isViewMode = !widget.trackTime;
-    final nextPendingSet = _nextPendingSetIndex(ex);
-    final isSeriesProgressMode = !isViewMode && nextPendingSet != null;
-
-    return ReorderableDelayedDragStartListener(
-      key: ValueKey('workout-exercise-card-${ex.exerciseKey}'),
-      index: index,
-      child: Card(
-        margin: const EdgeInsets.only(bottom: 12),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(12),
-          onTap: () => setState(() {
-            _expandedIndex = isExpanded ? -1 : index;
-          }),
-          child: ConstrainedBox(
-            constraints:
-                const BoxConstraints(minHeight: AppSizes.buttonHeightSmall),
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // ── Header: name + check ──
-                  Row(
+                  title: Text(_nameForKey(exercise.exerciseKey)),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (ex.completed)
-                        const Padding(
-                          padding: EdgeInsets.only(right: 8),
-                          child: Icon(Icons.check_circle,
-                              color: AppColors.success, size: 20),
-                        ),
-                      Expanded(
-                        child: Text(
-                          name,
+                      const SizedBox(height: 2),
+                      Text(
+                        exercise.completed
+                            ? _briefSummary(exercise)
+                            : _plannedSummary(exercise, l10n),
+                        style: TextStyle(
+                            fontSize: 12, color: context.textSecondary),
+                      ),
+                      if (avgRest != null)
+                        Text(
+                          l10n.workoutAvgRest(avgRest),
                           style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                            color: ex.completed
-                                ? AppColors.success
-                                : context.primary,
-                          ),
+                              fontSize: 11, color: context.textSubtle),
                         ),
-                      ),
-                      IconButton(
-                        key: ValueKey(
-                            'workout_exercise_detail_${ex.exerciseKey}'),
-                        icon: const Icon(Icons.info_outline, size: 20),
-                        color: context.textSecondary,
-                        onPressed: () => _showExerciseDetail(ex),
-                      ),
-                      Icon(
-                        isExpanded ? Icons.expand_less : Icons.expand_more,
-                        color: context.textSecondary,
-                      ),
                     ],
                   ),
-
-                  // ── Brief summary when completed & collapsed ──
-                  if (ex.completed && !isExpanded) ...[
-                    const SizedBox(height: 6),
-                    Text(
-                      _briefSummary(ex),
-                      style: TextStyle(fontSize: 12, color: context.textSubtle),
+                  trailing: FilledButton.tonalIcon(
+                    onPressed: () => _openExercise(index),
+                    icon: Icon(
+                      exercise.completed ? Icons.edit : Icons.play_arrow,
                     ),
-                    if (avgRest != null) ...[
-                      const SizedBox(height: 2),
-                      Row(
-                        children: [
-                          Icon(Icons.hourglass_bottom,
-                              size: 12, color: context.textSubtle),
-                          const SizedBox(width: 4),
-                          Text(
-                            l10n.workoutAvgRest(avgRest),
-                            style: TextStyle(
-                                fontSize: 11, color: context.textSubtle),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ],
-
-                  // ── Expanded content ──
-                  if (isExpanded) ...[
-                    const Divider(height: 20),
-                    _buildSetsTable(index, ex, l10n),
-                    const SizedBox(height: 8),
-                    // Average rest summary
-                    if (avgRest != null) ...[
-                      Row(
-                        children: [
-                          Icon(Icons.hourglass_bottom,
-                              size: 14, color: context.textSubtle),
-                          const SizedBox(width: 4),
-                          Text(
-                            l10n.workoutAvgRest(avgRest),
-                            style: TextStyle(
-                                fontSize: 12, color: context.textSubtle),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                    ],
-                    // Add / Remove set
-                    Row(
-                      children: [
-                        TextButton.icon(
-                          icon: const Icon(Icons.add, size: 16),
-                          label: Text(l10n.workoutAddSet,
-                              style: const TextStyle(fontSize: 13)),
-                          onPressed: () => _addSet(index),
-                        ),
-                        const SizedBox(width: 8),
-                        TextButton.icon(
-                          icon: const Icon(Icons.remove, size: 16),
-                          label: Text(l10n.workoutRemoveSet,
-                              style: const TextStyle(fontSize: 13)),
-                          onPressed: ex.sets.length > 1
-                              ? () => _removeSet(index)
-                              : null,
-                        ),
-                      ],
+                    label: Text(
+                      exercise.completed
+                          ? l10n.routineEditDay
+                          : l10n.sharedStart,
                     ),
-                    if (widget.trackTime) ...[
-                      const SizedBox(height: 8),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: OutlinedButton.icon(
-                          key: ValueKey('rest_config_button_${ex.exerciseKey}'),
-                          onPressed: () => _openRestConfigSheet(index),
-                          icon: const Icon(Icons.hourglass_bottom, size: 16),
-                          label: Text(
-                            '${l10n.workoutRestTimer}: ${ex.restSeconds == null ? l10n.mobilityRestOff : TimeFormatter.mmss(ex.restSeconds!)}',
-                            style: const TextStyle(fontSize: 13),
-                          ),
-                        ),
-                      ),
-                    ],
-                    const SizedBox(height: 8),
-                    // Notes
-                    TextField(
-                      decoration: InputDecoration(
-                        labelText: l10n.workoutNotes,
-                        border: const OutlineInputBorder(),
-                        isDense: true,
-                      ),
-                      controller: _notesControllerFor(ex),
-                      maxLines: 2,
-                      onChanged: (v) => _updateExerciseNotes(index, v),
+                  ),
+                  onTap: () => _openExercise(index),
+                ),
+              );
+            }),
+            const SizedBox(height: 8),
+            SizedBox(
+              height: 52,
+              child: widget.trackTime
+                  ? FilledButton.icon(
+                      icon: const Icon(Icons.flag),
+                      label: Text(l10n.workoutFinish),
+                      onPressed: _confirmFinish,
+                    )
+                  : FilledButton.icon(
+                      icon: const Icon(Icons.save),
+                      label: Text(l10n.workoutSaveChanges),
+                      onPressed: _hasChanges ? _saveChanges : null,
                     ),
-                    const SizedBox(height: 12),
-                    // Save button
-                    SizedBox(
-                      width: double.infinity,
-                      child: FilledButton.icon(
-                        icon: Icon(
-                          isSeriesProgressMode
-                              ? Icons.task_alt_outlined
-                              : Icons.check_circle_outline,
-                          size: 18,
-                        ),
-                        label: Text(
-                          isViewMode
-                              ? l10n.workoutSaveExercise
-                              : isSeriesProgressMode
-                                  ? l10n
-                                      .workoutFinishSet('${nextPendingSet + 1}')
-                                  : l10n.workoutFinishExercise,
-                        ),
-                        onPressed: ex.completed
-                            ? null
-                            : isViewMode
-                                ? () => _saveExercise(index)
-                                : isSeriesProgressMode
-                                    ? () => _completeNextPendingSet(index)
-                                    : () => _finishExercise(index),
-                      ),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  // ── Sets table ─────────────────────────────────────────────────
-
-  Widget _buildSetsTable(
-      int exIndex, WorkoutExercise ex, AppLocalizations l10n) {
-    return Column(
-      children: [
-        // Header row
-        Row(
-          children: [
-            const SizedBox(width: 52),
-            Expanded(
-              flex: 5,
-              child: Text(l10n.workoutReps,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: context.textSecondary)),
-            ),
-            const SizedBox(width: 6),
-            Expanded(
-              flex: 6,
-              child: Text(l10n.workoutWeight,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: context.textSecondary)),
             ),
           ],
         ),
-        const SizedBox(height: 4),
-        // Set rows
-        ...List.generate(ex.sets.length, (setIdx) {
-          final s = ex.sets[setIdx];
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 6),
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: s.completed ? AppColors.success : Colors.transparent,
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 46,
-                      child: Row(
-                        children: [
-                          if (s.completed)
-                            const Padding(
-                              padding: EdgeInsets.only(right: 4),
-                              child: Icon(
-                                Icons.task_alt,
-                                size: 14,
-                                color: AppColors.success,
-                              ),
-                            ),
-                          Expanded(
-                            child: Text(
-                              l10n.workoutSet('${setIdx + 1}'),
-                              style: TextStyle(
-                                  fontSize: 11, color: context.textSecondary),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      flex: 5,
-                      child: _StepperIntField(
-                        value: s.reps,
-                        step: 1,
-                        onChanged: (v) => _updateSet(exIndex, setIdx, reps: v),
-                      ),
-                    ),
-                    const SizedBox(width: 6),
-                    Expanded(
-                      flex: 6,
-                      child: _StepperDoubleField(
-                        value: s.weight,
-                        step: 1.25,
-                        onChanged: (v) =>
-                            _updateSet(exIndex, setIdx, weight: v),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        }),
-      ],
-    );
-  }
-}
-
-// ── Stepper field widgets ──────────────────────────────────────────
-
-/// Integer field with -/+ buttons (step of 1, minimum 0).
-class _StepperIntField extends StatefulWidget {
-  const _StepperIntField({
-    required this.value,
-    required this.step,
-    required this.onChanged,
-  });
-
-  final int value;
-  final int step;
-  final ValueChanged<int> onChanged;
-
-  @override
-  State<_StepperIntField> createState() => _StepperIntFieldState();
-}
-
-class _StepperIntFieldState extends State<_StepperIntField> {
-  late TextEditingController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller =
-        TextEditingController(text: widget.value == 0 ? '' : '${widget.value}');
-  }
-
-  @override
-  void didUpdateWidget(_StepperIntField old) {
-    super.didUpdateWidget(old);
-    if (old.value != widget.value) {
-      final text = widget.value == 0 ? '' : '${widget.value}';
-      if (_controller.text != text) {
-        _controller.text = text;
-        _controller.selection =
-            TextSelection.collapsed(offset: _controller.text.length);
-      }
-    }
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  void _decrement() {
-    final newVal = math.max(0, widget.value - widget.step);
-    widget.onChanged(newVal);
-  }
-
-  void _increment() {
-    widget.onChanged(widget.value + widget.step);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        _StepButton(icon: Icons.remove, onTap: _decrement),
-        Expanded(
-          child: TextField(
-            controller: _controller,
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 14),
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              isDense: true,
-              contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-            ),
-            onChanged: (v) => widget.onChanged(int.tryParse(v) ?? 0),
-          ),
-        ),
-        _StepButton(icon: Icons.add, onTap: _increment),
-      ],
-    );
-  }
-}
-
-/// Double field with -/+ buttons (step of 1.25, minimum 0, max 2 decimals).
-class _StepperDoubleField extends StatefulWidget {
-  const _StepperDoubleField({
-    required this.value,
-    required this.step,
-    required this.onChanged,
-  });
-
-  final double value;
-  final double step;
-  final ValueChanged<double> onChanged;
-
-  @override
-  State<_StepperDoubleField> createState() => _StepperDoubleFieldState();
-}
-
-class _StepperDoubleFieldState extends State<_StepperDoubleField> {
-  late TextEditingController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = TextEditingController(text: _display(widget.value));
-  }
-
-  @override
-  void didUpdateWidget(_StepperDoubleField old) {
-    super.didUpdateWidget(old);
-    if (old.value != widget.value) {
-      final text = _display(widget.value);
-      if (_controller.text != text) {
-        _controller.text = text;
-        _controller.selection =
-            TextSelection.collapsed(offset: _controller.text.length);
-      }
-    }
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  static String _display(double v) {
-    if (v == 0) return '';
-    if (v == v.truncateToDouble()) return v.toInt().toString();
-    // Show up to 2 decimals, trimming trailing zeros
-    final s = v.toStringAsFixed(2);
-    return s.replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
-  }
-
-  void _decrement() {
-    final newVal = math.max(0.0, widget.value - widget.step);
-    // Round to 2 decimal places to avoid floating-point drift
-    widget.onChanged(_round2(newVal));
-  }
-
-  void _increment() {
-    widget.onChanged(_round2(widget.value + widget.step));
-  }
-
-  static double _round2(double v) => (v * 100).roundToDouble() / 100;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        _StepButton(icon: Icons.remove, onTap: _decrement),
-        Expanded(
-          child: TextField(
-            controller: _controller,
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            inputFormatters: [_DecimalInputFormatter()],
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 14),
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              isDense: true,
-              contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-            ),
-            onChanged: (v) {
-              final parsed = double.tryParse(v) ?? 0;
-              widget.onChanged(_round2(parsed));
-            },
-          ),
-        ),
-        _StepButton(icon: Icons.add, onTap: _increment),
-      ],
-    );
-  }
-}
-
-/// Small circular tap-target used as the +/- step button.
-class _StepButton extends StatelessWidget {
-  const _StepButton({required this.icon, required this.onTap});
-
-  final IconData icon;
-  final VoidCallback onTap;
-
-  // 44 dp is the Material minimum touch-target width; height is left
-  // unconstrained so the button matches its sibling TextField height and
-  // the expanded card stays within the ReorderableListView bounds.
-  static const _minTouchWidth = 44.0;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(14),
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(minWidth: _minTouchWidth),
-        child:
-            Center(child: Icon(icon, size: 22, color: context.textSecondary)),
-      ),
-    );
-  }
-}
-
-class _RestConfigSheet extends StatefulWidget {
-  const _RestConfigSheet({this.initialSeconds});
-
-  final int? initialSeconds;
-
-  @override
-  State<_RestConfigSheet> createState() => _RestConfigSheetState();
-}
-
-class _RestConfigSheetState extends State<_RestConfigSheet> {
-  static const _presets = [30, 60, 90, 120, 180];
-  late TextEditingController _manualController;
-  int? _selectedSeconds;
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedSeconds = widget.initialSeconds;
-    _manualController =
-        TextEditingController(text: widget.initialSeconds?.toString() ?? '');
-  }
-
-  @override
-  void dispose() {
-    _manualController.dispose();
-    super.dispose();
-  }
-
-  void _setSelected(int seconds) {
-    setState(() {
-      _selectedSeconds = seconds;
-      _manualController.text = seconds.toString();
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final isValidSelection = (_selectedSeconds ?? 0) > 0;
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              l10n.workoutRestTimer,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-            ),
-            const SizedBox(height: 12),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: _presets
-                  .map(
-                    (seconds) => ChoiceChip(
-                      key: ValueKey('rest_preset_$seconds'),
-                      label: Text(TimeFormatter.mmss(seconds)),
-                      selected: _selectedSeconds == seconds,
-                      onSelected: (_) => _setSelected(seconds),
-                    ),
-                  )
-                  .toList(),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              key: const ValueKey('rest_manual_seconds_field'),
-              controller: _manualController,
-              keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              decoration: InputDecoration(
-                labelText: '${l10n.workoutRestTimer} (s)',
-                border: const OutlineInputBorder(),
-                isDense: true,
-              ),
-              onChanged: (value) {
-                final parsed = int.tryParse(value);
-                setState(() {
-                  _selectedSeconds = parsed;
-                });
-              },
-            ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text(l10n.sharedCancel),
-                ),
-                const SizedBox(width: 8),
-                TextButton(
-                  key: const ValueKey('rest_config_disable'),
-                  onPressed: () => Navigator.of(context).pop(-1),
-                  child: Text(l10n.mobilityRestOff),
-                ),
-                const Spacer(),
-                FilledButton(
-                  key: const ValueKey('rest_config_save'),
-                  onPressed: isValidSelection
-                      ? () => Navigator.of(context).pop(_selectedSeconds)
-                      : null,
-                  child: Text(l10n.sharedSave),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/// Input formatter that allows at most one decimal separator and up to 2 decimal
-/// places. Rejects invalid input and keeps the previous valid text.
-class _DecimalInputFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(
-    TextEditingValue oldValue,
-    TextEditingValue newValue,
-  ) {
-    final text = newValue.text;
-    if (text.isEmpty) return newValue;
-    // Allow only digits and at most one dot
-    if (!RegExp(r'^\d*\.?\d{0,2}$').hasMatch(text)) {
-      return oldValue;
-    }
-    return newValue;
-  }
-}
-
-// ── Rest stopwatch bottom sheet ─────────────────────────────────────
-
-/// A standalone stopwatch widget displayed as a bottom sheet. It tracks rest
-/// time between sets with centisecond precision and provides play, pause, and
-/// reset controls. Completely independent from the session elapsed timer.
-class _RestStopwatchSheet extends StatefulWidget {
-  const _RestStopwatchSheet();
-
-  @override
-  State<_RestStopwatchSheet> createState() => _RestStopwatchSheetState();
-}
-
-class _RestStopwatchSheetState extends State<_RestStopwatchSheet> {
-  final Stopwatch _stopwatch = Stopwatch();
-  Timer? _ticker;
-
-  // 100 ms gives smooth centisecond updates at ~10 fps while cutting redraws by 3×.
-  static const _tickInterval = Duration(milliseconds: 100);
-
-  @override
-  void dispose() {
-    _ticker?.cancel();
-    _stopwatch.stop();
-    super.dispose();
-  }
-
-  void _start() {
-    _stopwatch.start();
-    _ticker?.cancel();
-    _ticker = Timer.periodic(_tickInterval, (_) {
-      if (mounted) setState(() {});
-    });
-    setState(() {});
-  }
-
-  void _pause() {
-    _stopwatch.stop();
-    _ticker?.cancel();
-    setState(() {});
-  }
-
-  void _reset() {
-    _stopwatch
-      ..stop()
-      ..reset();
-    _ticker?.cancel();
-    setState(() {});
-  }
-
-  String _formatStopwatch() => _stopwatch.elapsed.toStopwatch();
-
-  @override
-  Widget build(BuildContext context) {
-    final isRunning = _stopwatch.isRunning;
-    final hasElapsed = _stopwatch.elapsedMilliseconds > 0;
-
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.hourglass_bottom,
-                    size: 20, color: context.textSecondary),
-                const SizedBox(width: 8),
-                Text(
-                  AppLocalizations.of(context)?.workoutRestTimer ?? 'Descanso',
-                  style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            const SizedBox(height: 28),
-            Text(
-              _formatStopwatch(),
-              style: const TextStyle(
-                fontSize: 56,
-                fontWeight: FontWeight.w300,
-                fontFamily: 'monospace',
-                letterSpacing: 2,
-              ),
-            ),
-            const SizedBox(height: 28),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Reset button (square icon)
-                _StopwatchButton(
-                  icon: Icons.stop_rounded,
-                  color: context.border,
-                  activeColor: AppColors.destructive,
-                  isActive: hasElapsed && !isRunning,
-                  onTap: hasElapsed ? _reset : null,
-                ),
-                const SizedBox(width: 32),
-                // Play / Pause button
-                _StopwatchButton(
-                  icon: isRunning
-                      ? Icons.pause_rounded
-                      : Icons.play_arrow_rounded,
-                  color: context.border,
-                  activeColor:
-                      isRunning ? AppColors.restTimer : AppColors.success,
-                  isActive: true,
-                  onTap: isRunning ? _pause : _start,
-                  large: true,
-                ),
-                const SizedBox(width: 32),
-                // Invisible spacer to keep play/pause centered
-                const SizedBox(width: 48),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/// Circular button used in the rest stopwatch controls.
-class _StopwatchButton extends StatelessWidget {
-  const _StopwatchButton({
-    required this.icon,
-    required this.color,
-    required this.activeColor,
-    required this.isActive,
-    this.onTap,
-    this.large = false,
-  });
-
-  final IconData icon;
-  final Color color;
-  final Color activeColor;
-  final bool isActive;
-  final VoidCallback? onTap;
-  final bool large;
-
-  @override
-  Widget build(BuildContext context) {
-    final size = large ? 64.0 : 48.0;
-    final iconSize = large ? 32.0 : 24.0;
-    final effectiveColor = isActive ? activeColor : color;
-
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(size / 2),
-      child: Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(color: effectiveColor, width: 2),
-        ),
-        child: Icon(icon, size: iconSize, color: effectiveColor),
       ),
     );
   }

@@ -3,19 +3,21 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gym_tracker/domain/entities/exercise.dart';
 import 'package:gym_tracker/domain/entities/workout_session.dart';
 import 'package:gym_tracker/presentation/screens/workout/workout_session_screen.dart';
+import 'package:gym_tracker/presentation/utils/time_formatter.dart';
 
 import '../helpers/test_helpers.dart';
 
 void main() {
   group('Rest stopwatch E2E', () {
-    testWidgets('opens from session timer and supports play/pause/reset',
+    testWidgets('shows elapsed timer label in live workout mode',
         (tester) async {
+      final startTime = DateTime.now();
       final session = WorkoutSession(
         id: 's1',
         routineId: 'r1',
         routineDayIndex: 0,
-        date: DateTime(2026, 2, 16),
-        startTime: DateTime(2026, 2, 16, 10, 0, 0),
+        date: DateTime(startTime.year, startTime.month, startTime.day),
+        startTime: startTime,
         exercises: const [
           WorkoutExercise(
             exerciseKey: 'press_banca',
@@ -46,25 +48,25 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      await tester.tap(find.byIcon(Icons.timer_outlined));
-      await tester.pumpAndSettle();
+      String extractTimerLabel() {
+        final textWidgets = tester.widgetList<Text>(find.byType(Text));
+        for (final text in textWidgets) {
+          final value = text.data;
+          if (value != null && RegExp(r'^\d+[hms]').hasMatch(value)) {
+            return value;
+          }
+        }
+        return '';
+      }
 
-      expect(find.text('00:00.00'), findsOneWidget);
+      final initialLabel = extractTimerLabel();
+      expect(initialLabel, isNotEmpty);
 
-      // Play
-      await tester.tap(find.byIcon(Icons.play_arrow_rounded));
-      await tester.pump(const Duration(milliseconds: 250));
+      await tester.pump(const Duration(seconds: 2));
 
-      // Pause
-      await tester.tap(find.byIcon(Icons.pause_rounded));
-      await tester.pumpAndSettle();
-
-      expect(find.text('00:00.00'), findsNothing);
-
-      // Reset
-      await tester.tap(find.byIcon(Icons.stop_rounded));
-      await tester.pumpAndSettle();
-      expect(find.text('00:00.00'), findsOneWidget);
+      final updatedLabel = extractTimerLabel();
+      expect(updatedLabel, isNotEmpty);
+      expect(RegExp(r'^\d+[hms]').hasMatch(updatedLabel), isTrue);
     });
   });
 }

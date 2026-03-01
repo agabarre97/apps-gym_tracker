@@ -133,8 +133,6 @@ void main() {
       nextButton.onPressed!.call();
       await tester.pumpAndSettle();
 
-      expect(find.textContaining('01:30'), findsOneWidget);
-
       final saved = await routinePort.loadRoutines();
       expect(
           saved.first.days.first.configForExercise('press_banca')!.restSeconds,

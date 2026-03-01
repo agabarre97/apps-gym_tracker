@@ -8,7 +8,8 @@ import 'package:table_calendar/table_calendar.dart';
 
 import '../helpers/test_helpers.dart';
 
-final _today = DateTime(2026, 2, 16);
+final _now = DateTime.now();
+final _today = DateTime(_now.year, _now.month, 1);
 
 Widget _buildWidget({
   required FakeRoutinePort routinePort,
@@ -34,7 +35,7 @@ Future<void> _selectToday(WidgetTester tester) async {
   final calendar = find.byType(TableCalendar<dynamic>);
   final dayFinder = find.descendant(
     of: calendar,
-    matching: find.text('16'),
+    matching: find.text('1'),
   );
   await tester.tap(dayFinder.first);
   await tester.pumpAndSettle();

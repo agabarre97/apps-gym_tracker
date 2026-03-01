@@ -16,14 +16,15 @@ void main() {
     final mobilitySessionPort = FakeMobilitySessionPort();
     final hiitSessionPort = FakeHiitSessionPort();
 
+    final _now = DateTime.now();
+    final todayDate = DateTime(_now.year, _now.month, 1);
+
     await routinePort.saveRoutines([
       const Routine(id: 'r1', name: 'Dummy', type: 'musculacion', days: []),
     ]);
-    await trainingDayPort
-        .saveTrainingDays([TrainingDay(date: DateTime(2026, 2, 16))]);
+    await trainingDayPort.saveTrainingDays([TrainingDay(date: todayDate)]);
     await hiitSessionPort.saveSessions([
-      HiitSession(
-          id: 'h2', routineName: 'HIIT Evening', date: DateTime(2026, 2, 16)),
+      HiitSession(id: 'h2', routineName: 'HIIT Evening', date: todayDate),
     ]);
 
     await tester.pumpWidget(buildTestableWidget(
@@ -43,7 +44,7 @@ void main() {
     final calendar = find.byType(TableCalendar<dynamic>);
     final dayFinder = find.descendant(
       of: calendar,
-      matching: find.text('16'),
+      matching: find.text('1'),
     );
     await tester.tap(dayFinder.first);
     await tester.pumpAndSettle();

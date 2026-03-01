@@ -8,7 +8,8 @@ import 'package:table_calendar/table_calendar.dart';
 
 import '../helpers/test_helpers.dart';
 
-final _today = DateTime(2026, 2, 16);
+final _now = DateTime.now();
+final _today = DateTime(_now.year, _now.month, 1);
 
 void main() {
   testWidgets('Delete training confirmation dialog removes session',
@@ -45,7 +46,7 @@ void main() {
     final calendar = find.byType(TableCalendar<dynamic>);
     final dayFinder = find.descendant(
       of: calendar,
-      matching: find.text('16'),
+      matching: find.text('1'),
     );
     await tester.tap(dayFinder.first);
     await tester.pumpAndSettle();

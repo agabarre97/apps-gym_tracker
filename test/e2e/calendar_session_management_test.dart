@@ -9,7 +9,8 @@ import 'package:table_calendar/table_calendar.dart';
 
 import '../helpers/test_helpers.dart';
 
-final _day = DateTime(2026, 2, 16);
+final _now = DateTime.now();
+final _day = DateTime(_now.year, _now.month, 1);
 
 void main() {
   group('Calendar session management E2E', () {
@@ -71,7 +72,7 @@ void main() {
 
       final calendar = find.byType(TableCalendar<dynamic>);
       final dayFinder =
-          find.descendant(of: calendar, matching: find.text('16')).first;
+          find.descendant(of: calendar, matching: find.text('1')).first;
       await tester.tap(dayFinder);
       await tester.pumpAndSettle();
 

@@ -17,17 +17,51 @@ class WorkoutSessionBuilder {
     required RoutineExerciseConfig config,
     required List<ExerciseSet> previousSets,
   }) {
-    return List<ExerciseSet>.generate(
-      config.sets,
-      (index) {
-        if (index < previousSets.length) {
-          final previous = previousSets[index];
-          return ExerciseSet(reps: previous.reps, weight: previous.weight);
+    final expandedSetConfigs = <RoutineSetConfig>[];
+    final parentSetNumberByIndex = <int?>[];
+
+    for (var setIndex = 0; setIndex < config.setConfigs.length; setIndex++) {
+      final setConfig = config.setConfigs[setIndex];
+      final parentNumber = setIndex + 1;
+      expandedSetConfigs.add(setConfig);
+      parentSetNumberByIndex.add(null);
+      if (setConfig.dropSetCount > 0) {
+        for (var dropIndex = 0;
+            dropIndex < setConfig.dropSetCount;
+            dropIndex++) {
+          expandedSetConfigs.add(
+            setConfig.copyWith(
+              targetReps: setConfig.dropSetReps ?? setConfig.targetReps,
+              clearRestSeconds: true,
+            ),
+          );
+          parentSetNumberByIndex.add(parentNumber);
         }
-        return ExerciseSet(reps: config.targetReps, weight: 0);
-      },
-      growable: false,
-    );
+      }
+    }
+
+    if (expandedSetConfigs.isEmpty) {
+      expandedSetConfigs.addAll(const [
+        RoutineSetConfig(),
+        RoutineSetConfig(),
+        RoutineSetConfig(),
+      ]);
+      parentSetNumberByIndex.addAll(const [null, null, null]);
+    }
+
+    return List<ExerciseSet>.generate(expandedSetConfigs.length, (index) {
+      final target = expandedSetConfigs[index];
+      final previous = index < previousSets.length ? previousSets[index] : null;
+      final isDropSet = parentSetNumberByIndex[index] != null;
+      return ExerciseSet(
+        reps: previous?.reps ?? target.targetReps,
+        weight: previous?.weight ?? 0,
+        targetReps: target.targetReps,
+        plannedRestSeconds: config.restSeconds ?? target.restSeconds,
+        isDropSet: isDropSet,
+        dropParentSetNumber: parentSetNumberByIndex[index],
+      );
+    }, growable: false);
   }
 
   /// Builds a [WorkoutSession] for the given [routine] and [dayIndex],

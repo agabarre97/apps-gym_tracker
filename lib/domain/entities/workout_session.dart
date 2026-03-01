@@ -5,6 +5,10 @@ class ExerciseSet {
   const ExerciseSet({
     required this.reps,
     required this.weight,
+    this.targetReps,
+    this.plannedRestSeconds,
+    this.isDropSet = false,
+    this.dropParentSetNumber,
     this.estimatedRestSeconds,
     this.completed = false,
   });
@@ -13,6 +17,10 @@ class ExerciseSet {
 
   /// Weight in kilograms (decimals allowed, max 2 decimal places).
   final double weight;
+  final int? targetReps;
+  final int? plannedRestSeconds;
+  final bool isDropSet;
+  final int? dropParentSetNumber;
 
   /// Estimated rest time in seconds before this set was started.
   /// Computed from the time between the last edit of the previous set and
@@ -23,6 +31,12 @@ class ExerciseSet {
   Map<String, dynamic> toJson() => {
         'reps': reps,
         'weight': weight,
+        if (targetReps != null) 'targetReps': targetReps,
+        if (plannedRestSeconds != null)
+          'plannedRestSeconds': plannedRestSeconds,
+        if (isDropSet) 'isDropSet': isDropSet,
+        if (dropParentSetNumber != null)
+          'dropParentSetNumber': dropParentSetNumber,
         if (estimatedRestSeconds != null)
           'estimatedRestSeconds': estimatedRestSeconds,
         if (completed) 'completed': completed,
@@ -31,6 +45,10 @@ class ExerciseSet {
   factory ExerciseSet.fromJson(Map<String, dynamic> json) => ExerciseSet(
         reps: json['reps'] as int,
         weight: (json['weight'] as num).toDouble(),
+        targetReps: json['targetReps'] as int?,
+        plannedRestSeconds: json['plannedRestSeconds'] as int?,
+        isDropSet: json['isDropSet'] as bool? ?? false,
+        dropParentSetNumber: json['dropParentSetNumber'] as int?,
         estimatedRestSeconds: json['estimatedRestSeconds'] as int?,
         completed: json['completed'] as bool? ?? false,
       );
@@ -38,13 +56,24 @@ class ExerciseSet {
   ExerciseSet copyWith({
     int? reps,
     double? weight,
+    int? targetReps,
+    int? plannedRestSeconds,
+    bool? isDropSet,
+    int? dropParentSetNumber,
     int? estimatedRestSeconds,
     bool? completed,
     bool clearRest = false,
+    bool clearDropParentSetNumber = false,
   }) =>
       ExerciseSet(
         reps: reps ?? this.reps,
         weight: weight ?? this.weight,
+        targetReps: targetReps ?? this.targetReps,
+        plannedRestSeconds: plannedRestSeconds ?? this.plannedRestSeconds,
+        isDropSet: isDropSet ?? this.isDropSet,
+        dropParentSetNumber: clearDropParentSetNumber
+            ? null
+            : (dropParentSetNumber ?? this.dropParentSetNumber),
         estimatedRestSeconds: clearRest
             ? null
             : (estimatedRestSeconds ?? this.estimatedRestSeconds),

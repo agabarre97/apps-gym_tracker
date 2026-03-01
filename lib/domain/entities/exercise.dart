@@ -154,6 +154,22 @@ class Exercise {
     return key;
   }
 
+  static List<String> categoriesForDay({
+    required List<Exercise> allExercises,
+    required List<String> exerciseKeysForDay,
+  }) {
+    final categories = <String>{};
+    for (final key in exerciseKeysForDay) {
+      for (final e in allExercises) {
+        if (e.key == key) {
+          categories.addAll(e.resolvedCategoryKeys);
+          break;
+        }
+      }
+    }
+    return categories.toList();
+  }
+
   Map<String, dynamic> toJson() => {
         'key': key,
         'name':

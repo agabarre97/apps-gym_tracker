@@ -5,6 +5,7 @@ import 'package:gym_tracker/domain/entities/routine.dart';
 import 'package:gym_tracker/domain/services/workout_session_builder.dart';
 import 'package:gym_tracker/presentation/screens/routine/routine_detail_screen.dart';
 
+import '../helpers/scroll_helpers.dart';
 import '../helpers/test_helpers.dart';
 
 void main() {
@@ -104,9 +105,13 @@ void main() {
       await tester.tap(find.text('Confirmar'));
       await tester.pumpAndSettle();
 
+      expect(find.text('Configura series, repeticiones objetivo y descanso'),
+          findsOneWidget);
+
       // Configure rest for the newly added exercise.
-      await tester.tap(
-          find.byKey(const ValueKey('exercise_config_rest_press_inclinado')));
+      final restKey = const ValueKey('exercise_config_rest_press_inclinado');
+      await tester.scrollDownTo(find.byKey(restKey));
+      await tester.tap(find.byKey(restKey));
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const ValueKey('routine_rest_preset_90')));
       await tester.pumpAndSettle();

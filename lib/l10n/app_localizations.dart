@@ -1595,7 +1595,7 @@ abstract class AppLocalizations {
   /// No description provided for @workoutSessionInProgressBody.
   ///
   /// In es, this message translates to:
-  /// **'Tienes un entrenamiento sin finalizar hoy. ¿Quieres retomarlo?'**
+  /// **'Tienes un entrenamiento sin finalizar'**
   String get workoutSessionInProgressBody;
 
   /// No description provided for @workoutSessionNew.
