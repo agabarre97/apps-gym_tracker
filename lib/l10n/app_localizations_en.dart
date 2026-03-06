@@ -809,7 +809,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get workoutSessionNew => 'New';
 
   @override
-  String get workoutSessionResume => 'Resume';
+  String get workoutDiscardSession => 'Discard';
+
+  @override
+  String get workoutDiscardSessionConfirmTitle => 'Discard Workout';
+
+  @override
+  String get workoutDiscardSessionConfirmBody =>
+      'Are you sure you want to discard this workout? All progress will be lost.';
+
+  @override
+  String get landingContinueTraining => 'Resume workout';
 
   @override
   String get workoutSaveChanges => 'Save workout';

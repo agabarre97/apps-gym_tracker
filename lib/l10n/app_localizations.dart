@@ -1604,11 +1604,29 @@ abstract class AppLocalizations {
   /// **'Nuevo'**
   String get workoutSessionNew;
 
-  /// No description provided for @workoutSessionResume.
+  /// No description provided for @workoutDiscardSession.
   ///
   /// In es, this message translates to:
-  /// **'Retomar'**
-  String get workoutSessionResume;
+  /// **'Descartar'**
+  String get workoutDiscardSession;
+
+  /// No description provided for @workoutDiscardSessionConfirmTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Descartar entrenamiento'**
+  String get workoutDiscardSessionConfirmTitle;
+
+  /// No description provided for @workoutDiscardSessionConfirmBody.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Seguro que quieres descartar este entrenamiento? Se perderá todo el progreso.'**
+  String get workoutDiscardSessionConfirmBody;
+
+  /// No description provided for @landingContinueTraining.
+  ///
+  /// In es, this message translates to:
+  /// **'Continuar entrenamiento'**
+  String get landingContinueTraining;
 
   /// No description provided for @workoutSaveChanges.
   ///

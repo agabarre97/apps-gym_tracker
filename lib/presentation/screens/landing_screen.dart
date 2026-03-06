@@ -159,7 +159,7 @@ class _LandingScreenState extends State<LandingScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      _checkPendingSessionAndPrompt();
+      // We no longer prompt on startup, just show the button state.
     });
   }
 
@@ -222,50 +222,25 @@ class _LandingScreenState extends State<LandingScreen> {
 
   // ── Workout flow ──────────────────────────────────────────────
 
-  Future<bool> _checkPendingSessionAndPrompt() async {
+  WorkoutSession? get _pendingSession {
     final todayNorm = _normalise(DateTime.now());
-    final pendingSession = _sessions
+    return _sessions
         .where((s) =>
             _normalise(s.date) == todayNorm &&
             s.startTime != null &&
             s.endTime == null)
         .firstOrNull;
-
-    if (pendingSession == null) return false;
-
-    final l10n = AppLocalizations.of(context)!;
-    final resume = await showDialog<bool>(
-      context: context,
-      barrierDismissible: false,
-      builder: (ctx) => PopScope(
-        canPop: false,
-        child: AlertDialog(
-          title: Text(
-              l10n.workoutSessionInProgress ?? 'Entrenamiento en progreso'),
-          content: Text(l10n.workoutSessionInProgressBody ??
-              'Tienes un entrenamiento sin finalizar'),
-          actions: [
-            FilledButton(
-              onPressed: () => Navigator.pop(ctx, true),
-              child: Text(l10n.workoutSessionResume ?? 'Retomar'),
-            ),
-          ],
-        ),
-      ),
-    );
-
-    if (resume != true) return true;
-    if (!mounted) return true;
-
-    await _navigateToWorkoutSession(pendingSession, trackTime: true);
-    return true;
   }
 
   /// Starts the Train flow (with time tracking) from the Train button.
   Future<void> _startTrainFlow() async {
     if (_routines.isEmpty) return;
-    final resumed = await _checkPendingSessionAndPrompt();
-    if (resumed) return;
+
+    final pending = _pendingSession;
+    if (pending != null) {
+      await _navigateToWorkoutSession(pending, trackTime: true);
+      return;
+    }
 
     await _startWorkoutFlow(trackTime: true, date: _normalise(DateTime.now()));
   }
@@ -382,6 +357,8 @@ class _LandingScreenState extends State<LandingScreen> {
 
     if (result == true && mounted) {
       await _markDayTrained(date);
+    }
+    if (mounted) {
       _loadData();
     }
   }
@@ -568,7 +545,7 @@ class _LandingScreenState extends State<LandingScreen> {
       ),
     );
 
-    if (result == true && mounted) {
+    if (mounted) {
       _loadData();
     }
   }
@@ -986,8 +963,12 @@ class _LandingScreenState extends State<LandingScreen> {
                     height: 56,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: Colors.black,
+                        backgroundColor: _pendingSession != null
+                            ? Theme.of(context).colorScheme.primary
+                            : Colors.white,
+                        foregroundColor: _pendingSession != null
+                            ? Theme.of(context).colorScheme.onPrimary
+                            : Colors.black,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
@@ -997,7 +978,9 @@ class _LandingScreenState extends State<LandingScreen> {
                         ),
                       ),
                       onPressed: _startTrainFlow,
-                      child: Text(l10n.landingTrain),
+                      child: Text(_pendingSession != null
+                          ? l10n.landingContinueTraining
+                          : l10n.landingTrain),
                     ),
                   ),
                   const SizedBox(height: 28),

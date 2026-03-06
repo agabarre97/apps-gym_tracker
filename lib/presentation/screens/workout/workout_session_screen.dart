@@ -63,6 +63,9 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
       onPause: _persistSession,
       onDetach: _persistSession,
     );
+    if (widget.trackTime) {
+      _persistSession();
+    }
     _loadHistory();
   }
 
@@ -105,6 +108,16 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
           exercise: _session.exercises[index],
           enableTimer: widget.enableExerciseTimer,
           isActiveWorkout: widget.trackTime,
+          onExerciseUpdated: (updated) {
+            // Continuous save during active workouts
+            if (!widget.trackTime) return;
+            final exercises = List<WorkoutExercise>.from(_session.exercises)
+              ..[index] = updated;
+            setState(() {
+              _session = _session.copyWith(exercises: exercises);
+            });
+            _persistSession();
+          },
         ),
       ),
     );
@@ -242,50 +255,36 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
     Navigator.of(context).pop(true);
   }
 
-  Future<void> _discardSessionIfExists() async {
-    final all = await widget.workoutSessionPort.loadSessions();
-    final updated = all.where((session) => session.id != _session.id).toList();
-    if (updated.length == all.length) return;
-    await widget.workoutSessionPort.saveSessions(updated);
-  }
-
-  Future<void> _confirmExitTraining() async {
+  Future<void> _confirmDiscardSession() async {
     final l10n = AppLocalizations.of(context)!;
-    final shouldSave = await showDialog<bool>(
+    final confirm = await showDialog<bool>(
       context: context,
-      barrierDismissible: false,
       builder: (ctx) => AlertDialog(
-        title: Text(l10n.workoutFinish),
-        content: Text(l10n.workoutSavePrompt),
+        title: Text(l10n.workoutDiscardSessionConfirmTitle),
+        content: Text(l10n.workoutDiscardSessionConfirmBody),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: Text(l10n.workoutSaveNo),
-          ),
-          FilledButton(
-            style: FilledButton.styleFrom(
-              backgroundColor: context.border,
-              foregroundColor: context.textSecondary,
-            ),
-            onPressed: () => Navigator.pop(ctx, null),
             child: Text(l10n.sharedCancel),
           ),
           FilledButton(
+            style: FilledButton.styleFrom(backgroundColor: Colors.redAccent),
             onPressed: () => Navigator.pop(ctx, true),
-            child: Text(l10n.workoutSaveYes),
+            child: Text(l10n.workoutDiscardSession),
           ),
         ],
       ),
     );
-    if (shouldSave == null || !mounted) return;
-    if (shouldSave) {
-      _session = _session.copyWith(endTime: DateTime.now());
-      await _persistSession();
-    } else {
-      await _discardSessionIfExists();
+    if (confirm != true || !mounted) return;
+
+    final all = await widget.workoutSessionPort.loadSessions();
+    final updated = all.where((session) => session.id != _session.id).toList();
+    if (updated.length != all.length) {
+      await widget.workoutSessionPort.saveSessions(updated);
     }
+
     if (!mounted) return;
-    Navigator.of(context).pop(true);
+    Navigator.of(context).pop(false);
   }
 
   Future<void> _saveChanges() async {
@@ -345,141 +344,139 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return PopScope(
-      canPop: !widget.trackTime,
-      onPopInvokedWithResult: (didPop, _) {
-        if (!didPop && widget.trackTime) _confirmExitTraining();
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(widget.routineName),
-          actions: [
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.routineName),
+        actions: [
+          IconButton(
+            onPressed: _openAddExercisePicker,
+            icon: const Icon(Icons.add),
+            tooltip: l10n.routineSelectExercises,
+          ),
+          if (widget.trackTime) ...[
             IconButton(
-              onPressed: _openAddExercisePicker,
-              icon: const Icon(Icons.add),
-              tooltip: l10n.routineSelectExercises,
-            ),
-            if (widget.trackTime)
-              Padding(
-                padding: const EdgeInsets.only(right: 16),
-                child: Center(
-                  child: Text(
-                    _elapsed.toHumanReadable(),
-                    style: TextStyle(color: context.textSecondary),
-                  ),
-                ),
-              ),
-          ],
-        ),
-        body: Column(
-          children: [
-            Expanded(
-              child: ReorderableListView.builder(
-                padding: const EdgeInsets.all(16),
-                buildDefaultDragHandles: false,
-                itemCount: _session.exercises.length,
-                onReorder: _reorderExercises,
-                itemBuilder: (context, index) {
-                  final exercise = _session.exercises[index];
-                  final avgRest = _averageRestLabel(exercise);
-                  return Card(
-                    key: ValueKey('${exercise.exerciseKey}_$index'),
-                    margin: const EdgeInsets.only(bottom: 10),
-                    child: ListTile(
-                      leading: ReorderableDragStartListener(
-                        index: index,
-                        child: Icon(
-                          Icons.drag_handle,
-                          color: context.textSecondary,
-                        ),
-                      ),
-                      title: Row(
-                        children: [
-                          Icon(
-                            exercise.completed
-                                ? Icons.check_circle
-                                : Icons.fitness_center,
-                            color: exercise.completed
-                                ? AppColors.success
-                                : context.textSecondary,
-                            size: 18,
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Text(_nameForKey(exercise.exerciseKey)),
-                          ),
-                        ],
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 2),
-                          Text(
-                            exercise.completed
-                                ? _briefSummary(exercise)
-                                : _plannedSummary(exercise, l10n),
-                            style: TextStyle(
-                                fontSize: 12, color: context.textSecondary),
-                          ),
-                          if (avgRest != null)
-                            Text(
-                              l10n.workoutAvgRest(avgRest),
-                              style: TextStyle(
-                                  fontSize: 11, color: context.textSubtle),
-                            ),
-                        ],
-                      ),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            onPressed: () => _confirmDeleteExercise(index),
-                            icon: const Icon(Icons.delete_outline,
-                                color: Colors.redAccent),
-                            visualDensity: VisualDensity.compact,
-                            tooltip: l10n.workoutDeleteExercise,
-                          ),
-                          FilledButton.tonalIcon(
-                            onPressed: () => _openExercise(index),
-                            icon: Icon(
-                              exercise.completed
-                                  ? Icons.edit
-                                  : Icons.play_arrow,
-                            ),
-                            label: Text(
-                              exercise.completed
-                                  ? l10n.routineEditDay
-                                  : l10n.sharedStart,
-                            ),
-                          ),
-                        ],
-                      ),
-                      onTap: () => _openExercise(index),
-                    ),
-                  );
-                },
-              ),
+              onPressed: _confirmDiscardSession,
+              icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
+              tooltip: l10n.workoutDiscardSession,
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-              child: SizedBox(
-                width: double.infinity,
-                height: 52,
-                child: widget.trackTime
-                    ? FilledButton.icon(
-                        icon: const Icon(Icons.flag),
-                        label: Text(l10n.workoutFinish),
-                        onPressed: _confirmFinish,
-                      )
-                    : FilledButton.icon(
-                        icon: const Icon(Icons.save),
-                        label: Text(l10n.workoutSaveChanges),
-                        onPressed: _hasChanges ? _saveChanges : null,
-                      ),
+              padding: const EdgeInsets.only(right: 16),
+              child: Center(
+                child: Text(
+                  _elapsed.toHumanReadable(),
+                  style: TextStyle(color: context.textSecondary),
+                ),
               ),
             ),
           ],
-        ),
+        ],
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: ReorderableListView.builder(
+              padding: const EdgeInsets.all(16),
+              buildDefaultDragHandles: false,
+              itemCount: _session.exercises.length,
+              onReorder: _reorderExercises,
+              itemBuilder: (context, index) {
+                final exercise = _session.exercises[index];
+                final avgRest = _averageRestLabel(exercise);
+                return Card(
+                  key: ValueKey('${exercise.exerciseKey}_$index'),
+                  margin: const EdgeInsets.only(bottom: 10),
+                  child: ListTile(
+                    leading: ReorderableDragStartListener(
+                      index: index,
+                      child: Icon(
+                        Icons.drag_handle,
+                        color: context.textSecondary,
+                      ),
+                    ),
+                    title: Row(
+                      children: [
+                        Icon(
+                          exercise.completed
+                              ? Icons.check_circle
+                              : Icons.fitness_center,
+                          color: exercise.completed
+                              ? AppColors.success
+                              : context.textSecondary,
+                          size: 18,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(_nameForKey(exercise.exerciseKey)),
+                        ),
+                      ],
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 2),
+                        Text(
+                          exercise.completed
+                              ? _briefSummary(exercise)
+                              : _plannedSummary(exercise, l10n),
+                          style: TextStyle(
+                              fontSize: 12, color: context.textSecondary),
+                        ),
+                        if (avgRest != null)
+                          Text(
+                            l10n.workoutAvgRest(avgRest),
+                            style: TextStyle(
+                                fontSize: 11, color: context.textSubtle),
+                          ),
+                      ],
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          onPressed: () => _confirmDeleteExercise(index),
+                          icon: const Icon(Icons.delete_outline,
+                              color: Colors.redAccent),
+                          visualDensity: VisualDensity.compact,
+                          tooltip: l10n.workoutDeleteExercise,
+                        ),
+                        FilledButton.tonalIcon(
+                          onPressed: () => _openExercise(index),
+                          icon: Icon(
+                            exercise.completed ? Icons.edit : Icons.play_arrow,
+                          ),
+                          label: Text(
+                            exercise.completed
+                                ? l10n.routineEditDay
+                                : l10n.sharedStart,
+                          ),
+                        ),
+                      ],
+                    ),
+                    onTap: () => _openExercise(index),
+                  ),
+                );
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+            child: SizedBox(
+              width: double.infinity,
+              height: 52,
+              child: widget.trackTime
+                  ? FilledButton.icon(
+                      icon: const Icon(Icons.flag),
+                      label: Text(l10n.workoutFinish),
+                      onPressed: _confirmFinish,
+                    )
+                  : FilledButton.icon(
+                      icon: const Icon(Icons.save),
+                      label: Text(l10n.workoutSaveChanges),
+                      onPressed: _hasChanges ? _saveChanges : null,
+                    ),
+            ),
+          ),
+        ],
       ),
     );
   }

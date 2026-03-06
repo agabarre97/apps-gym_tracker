@@ -90,8 +90,8 @@ void main() {
         await tester.scrollToAndTap(find.byIcon(Icons.task_alt_outlined).first);
       }
 
-      // Save exercise and navigate back.
-      await tester.scrollToAndTap(find.byIcon(Icons.save));
+      // Finish exercise and navigate back.
+      await tester.scrollToAndTap(find.text('Finalizar ejercicio'));
 
       // Save full session.
       await tester.tap(find.text('Guardar entrenamiento'));

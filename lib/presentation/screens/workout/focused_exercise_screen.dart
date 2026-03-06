@@ -15,6 +15,7 @@ class FocusedExerciseScreen extends StatefulWidget {
     required this.exercise,
     this.enableTimer = true,
     this.isActiveWorkout = true,
+    this.onExerciseUpdated,
   });
 
   final String exerciseName;
@@ -27,6 +28,10 @@ class FocusedExerciseScreen extends StatefulWidget {
   /// When `false` (viewing a completed workout), hides the exercise stopwatch,
   /// the rest configuration card, and disables rest countdown timers.
   final bool isActiveWorkout;
+
+  /// Optional callback invoked immediately whenever the exercise is modified
+  /// (e.g. set completed, reps changed). Useful for continuous background saving.
+  final ValueChanged<WorkoutExercise>? onExerciseUpdated;
 
   @override
   State<FocusedExerciseScreen> createState() => _FocusedExerciseScreenState();
@@ -94,6 +99,7 @@ class _FocusedExerciseScreenState extends State<FocusedExerciseScreen> {
         completed: updatedSets.every((set) => set.completed),
       );
     });
+    widget.onExerciseUpdated?.call(_exercise);
   }
 
   void _updateSetNotes(int setIndex, String notes) {
@@ -102,6 +108,7 @@ class _FocusedExerciseScreenState extends State<FocusedExerciseScreen> {
     setState(() {
       _exercise = _exercise.copyWith(sets: updatedSets);
     });
+    widget.onExerciseUpdated?.call(_exercise);
   }
 
   void _saveEditedSet(int setIndex) {
@@ -114,6 +121,7 @@ class _FocusedExerciseScreenState extends State<FocusedExerciseScreen> {
         completed: updatedSets.every((set) => set.completed),
       );
     });
+    widget.onExerciseUpdated?.call(_exercise);
   }
 
   void _setExerciseRest(int? seconds) {
@@ -123,6 +131,7 @@ class _FocusedExerciseScreenState extends State<FocusedExerciseScreen> {
         clearRestSeconds: seconds == null,
       );
     });
+    widget.onExerciseUpdated?.call(_exercise);
   }
 
   Future<void> _configureExerciseRest() async {
@@ -251,6 +260,7 @@ class _FocusedExerciseScreenState extends State<FocusedExerciseScreen> {
         completed: updatedSets.every((item) => item.completed),
       );
     });
+    widget.onExerciseUpdated?.call(_exercise);
 
     final restSeconds = _exercise.restSeconds ?? set.plannedRestSeconds;
     if (widget.isActiveWorkout && restSeconds != null && restSeconds > 0) {
@@ -278,6 +288,7 @@ class _FocusedExerciseScreenState extends State<FocusedExerciseScreen> {
     setState(() {
       _exercise = _exercise.copyWith(sets: updatedSets, completed: false);
     });
+    widget.onExerciseUpdated?.call(_exercise);
   }
 
   void _insertDropSetAfter(int setIndex) {
@@ -304,6 +315,7 @@ class _FocusedExerciseScreenState extends State<FocusedExerciseScreen> {
     setState(() {
       _exercise = _exercise.copyWith(sets: updatedSets, completed: false);
     });
+    widget.onExerciseUpdated?.call(_exercise);
   }
 
   void _toggleDropSet(int setIndex) {
@@ -324,6 +336,7 @@ class _FocusedExerciseScreenState extends State<FocusedExerciseScreen> {
     setState(() {
       _exercise = _exercise.copyWith(sets: updatedSets, completed: false);
     });
+    widget.onExerciseUpdated?.call(_exercise);
   }
 
   void _deleteSeries(int setIndex) {
@@ -359,6 +372,7 @@ class _FocusedExerciseScreenState extends State<FocusedExerciseScreen> {
     setState(() {
       _exercise = _exercise.copyWith(sets: updatedSets, completed: false);
     });
+    widget.onExerciseUpdated?.call(_exercise);
   }
 
   Future<void> _showAddSetSheet({int? sourceIndex}) async {
@@ -621,10 +635,9 @@ class _FocusedExerciseScreenState extends State<FocusedExerciseScreen> {
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
           child: SizedBox(
             height: 52,
-            child: FilledButton.icon(
+            child: FilledButton(
               onPressed: _saving ? null : _saveAndReturn,
-              icon: const Icon(Icons.save),
-              label: Text(l10n.workoutSaveExercise),
+              child: Text(l10n.workoutFinishExercise),
             ),
           ),
         ),
