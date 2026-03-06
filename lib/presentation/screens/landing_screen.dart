@@ -621,7 +621,11 @@ class _LandingScreenState extends State<LandingScreen> {
                       onTap: entry.type == _TrainingEntryType.workout
                           ? () {
                               Navigator.pop(ctx);
-                              _navigateToWorkoutSession(entry.workoutSession!);
+                              final ws = entry.workoutSession!;
+                              final isPending =
+                                  ws.startTime != null && ws.endTime == null;
+                              _navigateToWorkoutSession(ws,
+                                  trackTime: isPending);
                             }
                           : null,
                     );
