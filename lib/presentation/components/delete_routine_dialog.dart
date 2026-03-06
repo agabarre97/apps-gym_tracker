@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gym_tracker/l10n/app_localizations.dart';
+import 'package:gym_tracker/presentation/theme/app_theme.dart';
 
 /// Shows a confirmation dialog for deleting a routine.
 ///
@@ -22,7 +23,7 @@ Future<bool?> showDeleteRoutineDialog(
         ),
         TextButton(
           onPressed: () => Navigator.pop(ctx, true),
-          style: TextButton.styleFrom(foregroundColor: Colors.redAccent),
+          style: TextButton.styleFrom(foregroundColor: AppColors.destructive),
           child: Text(l10n.routineDelete),
         ),
       ],

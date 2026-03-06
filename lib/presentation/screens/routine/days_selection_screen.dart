@@ -47,10 +47,10 @@ class _DaysSelectionScreenState extends State<DaysSelectionScreen> {
           children: [
             Text(
               '${_days.round()}',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 72,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: context.textPrimary,
               ),
             ),
             const SizedBox(height: 8),
@@ -65,8 +65,8 @@ class _DaysSelectionScreenState extends State<DaysSelectionScreen> {
               max: 7,
               divisions: 6,
               label: '${_days.round()}',
-              activeColor: Colors.white,
-              inactiveColor: Colors.white24,
+              activeColor: context.textPrimary,
+              inactiveColor: context.dividerSubtle,
               onChanged: (v) => setState(() => _days = v),
             ),
             const SizedBox(height: 48),

@@ -413,7 +413,7 @@ class _RoutineDetailScreenState extends State<RoutineDetailScreen> {
                               }(),
                               trailing: TextButton(
                                 style: TextButton.styleFrom(
-                                  foregroundColor: Colors.white60,
+                                  foregroundColor: context.textDisabled,
                                   visualDensity: VisualDensity.compact,
                                   padding:
                                       const EdgeInsets.symmetric(horizontal: 8),
@@ -447,8 +447,8 @@ class _RoutineDetailScreenState extends State<RoutineDetailScreen> {
                   icon: const Icon(Icons.delete_outline),
                   label: Text(l10n.routineDelete),
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: Colors.redAccent,
-                    side: const BorderSide(color: Colors.redAccent),
+                    foregroundColor: AppColors.destructive,
+                    side: const BorderSide(color: AppColors.destructive),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),

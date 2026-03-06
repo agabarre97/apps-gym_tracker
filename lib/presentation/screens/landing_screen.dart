@@ -598,7 +598,7 @@ class _LandingScreenState extends State<LandingScreen> {
                         children: [
                           IconButton(
                             icon: const Icon(Icons.delete_outline,
-                                color: Colors.redAccent, size: 20),
+                                color: AppColors.destructive, size: 20),
                             tooltip: l10n.landingDeleteTrainingConfirm,
                             onPressed: () async {
                               final navigator = Navigator.of(ctx);
@@ -672,7 +672,8 @@ class _LandingScreenState extends State<LandingScreen> {
             child: Text(l10n.sharedCancel),
           ),
           FilledButton(
-            style: FilledButton.styleFrom(backgroundColor: Colors.redAccent),
+            style:
+                FilledButton.styleFrom(backgroundColor: AppColors.destructive),
             onPressed: () => Navigator.pop(ctx, true),
             child: Text(l10n.landingDeleteTrainingConfirm),
           ),
@@ -890,7 +891,7 @@ class _LandingScreenState extends State<LandingScreen> {
                   IconButton(
                     icon: CircleAvatar(
                       radius: 16,
-                      backgroundColor: Colors.white24,
+                      backgroundColor: context.dividerSubtle,
                       child: Icon(Icons.person,
                           size: 18, color: context.textSecondary),
                     ),
@@ -928,8 +929,8 @@ class _LandingScreenState extends State<LandingScreen> {
                         icon: const Icon(Icons.add, size: 20),
                         label: Text(l10n.landingAddTraining),
                         style: OutlinedButton.styleFrom(
-                          foregroundColor: Colors.greenAccent,
-                          side: const BorderSide(color: Colors.greenAccent),
+                          foregroundColor: AppColors.success,
+                          side: const BorderSide(color: AppColors.success),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -969,7 +970,7 @@ class _LandingScreenState extends State<LandingScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: _pendingSession != null
                             ? Theme.of(context).colorScheme.primary
-                            : Colors.white,
+                            : context.textPrimary,
                         foregroundColor: _pendingSession != null
                             ? Theme.of(context).colorScheme.onPrimary
                             : Colors.black,
@@ -1017,7 +1018,7 @@ class _LandingScreenState extends State<LandingScreen> {
                           decoration: InputDecoration(
                             isDense: true,
                             filled: true,
-                            fillColor: Colors.white.withValues(alpha: 0.08),
+                            fillColor: context.inputFill,
                             prefixIcon: Icon(Icons.tune,
                                 size: 18, color: context.textSecondary),
                             contentPadding: const EdgeInsets.symmetric(
@@ -1025,20 +1026,20 @@ class _LandingScreenState extends State<LandingScreen> {
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
                               borderSide:
-                                  const BorderSide(color: Colors.white24),
+                                  BorderSide(color: context.dividerSubtle),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
                               borderSide:
-                                  const BorderSide(color: Colors.greenAccent),
+                                  const BorderSide(color: AppColors.success),
                             ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          dropdownColor: const Color(0xFF2C2C2E),
-                          style: const TextStyle(
-                            color: Colors.white,
+                          dropdownColor: AppColors.darkSurface,
+                          style: TextStyle(
+                            color: context.textPrimary,
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                           ),
@@ -1048,7 +1049,7 @@ class _LandingScreenState extends State<LandingScreen> {
                               value: null,
                               child: Text(
                                 l10n.landingFilterAll,
-                                style: const TextStyle(color: Colors.white),
+                                style: TextStyle(color: context.textPrimary),
                               ),
                             ),
                             ..._availableTypes.map(
@@ -1056,7 +1057,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                 value: type,
                                 child: Text(
                                   _typeLabelFor(type, l10n),
-                                  style: const TextStyle(color: Colors.white),
+                                  style: TextStyle(color: context.textPrimary),
                                 ),
                               ),
                             ),
@@ -1118,27 +1119,27 @@ class _LandingScreenState extends State<LandingScreen> {
       calendarStyle: CalendarStyle(
         // Trained-day marker
         markerDecoration: const BoxDecoration(
-          color: Colors.greenAccent,
+          color: AppColors.success,
           shape: BoxShape.circle,
         ),
         todayDecoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.15),
+          color: context.selectionHighlight,
           shape: BoxShape.circle,
         ),
-        todayTextStyle: const TextStyle(color: Colors.white),
-        selectedDecoration: const BoxDecoration(
-          color: Colors.white24,
+        todayTextStyle: TextStyle(color: context.textPrimary),
+        selectedDecoration: BoxDecoration(
+          color: context.dividerSubtle,
           shape: BoxShape.circle,
         ),
-        selectedTextStyle: const TextStyle(color: Colors.white),
+        selectedTextStyle: TextStyle(color: context.textPrimary),
         defaultTextStyle: TextStyle(color: context.textSecondary),
         weekendTextStyle: TextStyle(color: context.textSecondary),
-        outsideTextStyle: const TextStyle(color: Colors.white24),
+        outsideTextStyle: TextStyle(color: context.dividerSubtle),
       ),
       headerStyle: HeaderStyle(
         formatButtonVisible: false,
         titleCentered: true,
-        titleTextStyle: TextStyle(color: Colors.white, fontSize: 16),
+        titleTextStyle: TextStyle(color: context.textPrimary, fontSize: 16),
         leftChevronIcon: Icon(Icons.chevron_left, color: context.textSecondary),
         rightChevronIcon:
             Icon(Icons.chevron_right, color: context.textSecondary),
@@ -1167,7 +1168,7 @@ class _LandingScreenState extends State<LandingScreen> {
                 width: 7,
                 height: 7,
                 decoration: const BoxDecoration(
-                  color: Colors.greenAccent,
+                  color: AppColors.success,
                   shape: BoxShape.circle,
                 ),
               ),
@@ -1342,7 +1343,7 @@ class _TimePickerRow extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.white24),
+            border: Border.all(color: context.dividerSubtle),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Row(
@@ -1359,7 +1360,8 @@ class _TimePickerRow extends StatelessWidget {
                       value,
                       style: TextStyle(
                         fontSize: 16,
-                        color: hasValue ? Colors.white : context.textSubtle,
+                        color:
+                            hasValue ? context.textPrimary : context.textSubtle,
                       ),
                     ),
                   ],

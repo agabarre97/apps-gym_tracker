@@ -283,8 +283,8 @@ class _MobilityRoutineDetailScreenState
                     icon: const Icon(Icons.delete_outline, size: 18),
                     label: Text(l10n.routineDelete),
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.redAccent,
-                      side: const BorderSide(color: Colors.redAccent),
+                      foregroundColor: AppColors.destructive,
+                      side: const BorderSide(color: AppColors.destructive),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),

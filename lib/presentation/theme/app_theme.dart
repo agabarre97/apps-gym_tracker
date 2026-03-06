@@ -5,10 +5,13 @@ import 'package:flutter/material.dart';
 /// All hardcoded colours, spacings and sizes used across screens
 /// are collected here so changes propagate consistently.
 abstract final class AppColors {
-  // Shared colors
-  static const success = Color(0xFF34C759);
+  // Shared semantic colors
+  static const success = Color(0xFF4DD0B8);
   static const destructive = Color(0xFFFF3B30);
+  static const warning = Color(0xFFFF9F0A);
+  static const info = Color(0xFF64D2FF);
   static const restTimer = Color(0xFF007AFF);
+  static const highlight = Color(0xFFFFD60A);
 
   // Dark Theme Colors
   static const darkScaffoldBg = Color(0xFF1C1C1E);
@@ -29,6 +32,20 @@ abstract final class AppColors {
   static const lightTextSecondary = Color(0xFF3C3C43); // ~60% opacity
   static const lightTextSubtle = Color(0x4D3C3C43); // ~30% opacity
   static const lightBorder = Color(0xFFE5E5EA);
+
+  // Structural overlays (dark)
+  static const darkBgSubtle = Color(0x1FFFFFFF); // ~12% white
+  static const darkDividerSubtle = Color(0x3DFFFFFF); // ~24% white
+  static const darkTextDisabled = Color(0x99FFFFFF); // ~60% white
+  static const darkInputFill = Color(0x14FFFFFF); // ~8% white
+  static const darkSelectionHighlight = Color(0x26FFFFFF); // ~15% white
+
+  // Structural overlays (light)
+  static const lightBgSubtle = Color(0x0A000000); // ~4% black
+  static const lightDividerSubtle = Color(0x1F000000); // ~12% black
+  static const lightTextDisabled = Color(0x61000000); // ~38% black
+  static const lightInputFill = Color(0x08000000); // ~3% black
+  static const lightSelectionHighlight = Color(0x14000000); // ~8% black
 
   // Legacy aliases (deprecated, to be migrated)
   static const scaffoldBg = darkScaffoldBg;
@@ -77,6 +94,25 @@ extension ThemeColors on BuildContext {
   Color get textSubtle =>
       isDarkMode ? AppColors.darkTextSubtle : AppColors.lightTextSubtle;
   Color get border => isDarkMode ? AppColors.darkBorder : AppColors.lightBorder;
+
+  // Structural overlays
+  Color get bgSubtle =>
+      isDarkMode ? AppColors.darkBgSubtle : AppColors.lightBgSubtle;
+  Color get dividerSubtle =>
+      isDarkMode ? AppColors.darkDividerSubtle : AppColors.lightDividerSubtle;
+  Color get textDisabled =>
+      isDarkMode ? AppColors.darkTextDisabled : AppColors.lightTextDisabled;
+  Color get inputFill =>
+      isDarkMode ? AppColors.darkInputFill : AppColors.lightInputFill;
+  Color get selectionHighlight => isDarkMode
+      ? AppColors.darkSelectionHighlight
+      : AppColors.lightSelectionHighlight;
+
+  // Semantic convenience getters (theme-independent)
+  Color get success => AppColors.success;
+  Color get destructive => AppColors.destructive;
+  Color get warning => AppColors.warning;
+  Color get info => AppColors.info;
 }
 
 /// Builds the app's dark theme using the centralized design tokens.

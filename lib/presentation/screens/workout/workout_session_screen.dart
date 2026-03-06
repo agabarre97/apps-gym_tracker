@@ -268,7 +268,8 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
             child: Text(l10n.sharedCancel),
           ),
           FilledButton(
-            style: FilledButton.styleFrom(backgroundColor: Colors.redAccent),
+            style:
+                FilledButton.styleFrom(backgroundColor: AppColors.destructive),
             onPressed: () => Navigator.pop(ctx, true),
             child: Text(l10n.workoutDiscardSession),
           ),
@@ -356,7 +357,8 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
           if (widget.trackTime) ...[
             IconButton(
               onPressed: _confirmDiscardSession,
-              icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
+              icon: const Icon(Icons.delete_outline,
+                  color: AppColors.destructive),
               tooltip: l10n.workoutDiscardSession,
             ),
             Padding(
@@ -435,7 +437,7 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
                         IconButton(
                           onPressed: () => _confirmDeleteExercise(index),
                           icon: const Icon(Icons.delete_outline,
-                              color: Colors.redAccent),
+                              color: AppColors.destructive),
                           visualDensity: VisualDensity.compact,
                           tooltip: l10n.workoutDeleteExercise,
                         ),

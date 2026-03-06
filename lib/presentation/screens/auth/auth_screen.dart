@@ -232,20 +232,20 @@ class _AuthScreenState extends State<AuthScreen> {
                         : () => setState(() => _isSignUp = !_isSignUp),
                     child: Text(
                       _isSignUp ? l10n.authSignIn : l10n.authSignUp,
-                      style: const TextStyle(color: Colors.white60),
+                      style: TextStyle(color: context.textDisabled),
                     ),
                   ),
 
                   const SizedBox(height: 16),
                   Row(
                     children: [
-                      const Expanded(child: Divider(color: Colors.white24)),
+                      Expanded(child: Divider(color: context.dividerSubtle)),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: Text(l10n.authOr,
                             style: TextStyle(color: context.textSubtle)),
                       ),
-                      const Expanded(child: Divider(color: Colors.white24)),
+                      Expanded(child: Divider(color: context.dividerSubtle)),
                     ],
                   ),
                   const SizedBox(height: 16),

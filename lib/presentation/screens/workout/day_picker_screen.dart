@@ -47,10 +47,10 @@ class _DayPickerScreenState extends State<DayPickerScreen> {
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
             child: Text(
               widget.routine.name,
-              style: const TextStyle(
+              style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white),
+                  color: context.textPrimary),
             ),
           ),
 
@@ -96,7 +96,7 @@ class _DayPickerScreenState extends State<DayPickerScreen> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                     side: isSelected
-                        ? const BorderSide(color: Colors.greenAccent, width: 2)
+                        ? const BorderSide(color: AppColors.success, width: 2)
                         : BorderSide.none,
                   ),
                   child: InkWell(
@@ -109,10 +109,10 @@ class _DayPickerScreenState extends State<DayPickerScreen> {
                         children: [
                           Text(
                             l10n.routineDayLabel('${index + 1}'),
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
-                              color: Colors.white,
+                              color: context.textPrimary,
                             ),
                           ),
                           const SizedBox(height: 8),

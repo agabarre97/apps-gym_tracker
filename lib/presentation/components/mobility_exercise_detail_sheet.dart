@@ -14,7 +14,7 @@ Future<void> showMobilityExerciseDetailSheet(
   return showModalBottomSheet(
     context: context,
     isScrollControlled: true,
-    backgroundColor: const Color(0xFF2C2C2E),
+    backgroundColor: AppColors.darkSurface,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
     ),
@@ -63,7 +63,7 @@ class _MobilityExerciseDetailContent extends StatelessWidget {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Colors.white24,
+                  color: context.dividerSubtle,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -73,10 +73,10 @@ class _MobilityExerciseDetailContent extends StatelessWidget {
             // Title
             Text(
               name,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: context.textPrimary,
               ),
             ),
             const SizedBox(height: 6),
@@ -151,7 +151,7 @@ class _SectionHeader extends StatelessWidget {
       style: const TextStyle(
         fontSize: 15,
         fontWeight: FontWeight.w600,
-        color: Colors.greenAccent,
+        color: AppColors.success,
       ),
     );
   }

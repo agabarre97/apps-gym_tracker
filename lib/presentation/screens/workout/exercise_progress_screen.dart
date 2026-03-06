@@ -254,11 +254,11 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
   Color _goalColor(String goal) {
     switch (goal) {
       case 'gain':
-        return Colors.greenAccent.withValues(alpha: 0.12);
+        return AppColors.success.withValues(alpha: 0.12);
       case 'lose':
-        return Colors.orangeAccent.withValues(alpha: 0.12);
+        return AppColors.warning.withValues(alpha: 0.12);
       default:
-        return Colors.lightBlueAccent.withValues(alpha: 0.12);
+        return AppColors.info.withValues(alpha: 0.12);
     }
   }
 
@@ -372,7 +372,7 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
         padding: const EdgeInsets.all(16),
         child: Row(
           children: [
-            Icon(Icons.emoji_events, color: Colors.amber.shade400, size: 28),
+            Icon(Icons.emoji_events, color: AppColors.warning, size: 28),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
@@ -522,8 +522,8 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
             show: true,
             drawVerticalLine: false,
             horizontalInterval: _calculateYInterval(result),
-            getDrawingHorizontalLine: (_) => const FlLine(
-              color: Colors.white12,
+            getDrawingHorizontalLine: (_) => FlLine(
+              color: context.bgSubtle,
               strokeWidth: 1,
             ),
           ),
@@ -610,7 +610,8 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
                     : '';
                 return LineTooltipItem(
                   '$label\n${_formatValue(s.y)}',
-                  const TextStyle(fontSize: 12, color: Colors.white),
+                  const TextStyle(
+                      fontSize: 12, color: AppColors.darkTextPrimary),
                 );
               }).toList(),
             ),
@@ -774,7 +775,7 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
                 label: l10n.progressDay2,
                 selected: _comparedDates.length >= 2 ? _comparedDates[1] : null,
                 availableDates: allDates,
-                color: Colors.orangeAccent,
+                color: AppColors.warning,
                 formatDate: _formatDateFull,
                 onChanged: (d) {
                   setState(() {
@@ -836,7 +837,7 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
     if (allWeights.isEmpty) return const SizedBox.shrink();
 
     final primaryColor = Theme.of(context).colorScheme.primary;
-    const secondaryColor = Colors.orangeAccent;
+    const secondaryColor = AppColors.warning;
 
     // Day 1 wider (behind), Day 2 narrower (front), centered overlap.
     const widthDay1 = 28.0;
@@ -906,8 +907,8 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
                 show: true,
                 drawVerticalLine: false,
                 horizontalInterval: _niceInterval(maxY * 1.25),
-                getDrawingHorizontalLine: (_) => const FlLine(
-                  color: Colors.white12,
+                getDrawingHorizontalLine: (_) => FlLine(
+                  color: context.bgSubtle,
                   strokeWidth: 1,
                 ),
               ),
@@ -995,13 +996,15 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
                     if (sets.length == 1) {
                       return BarTooltipItem(
                         '$date\n${sets[0].reps} reps',
-                        const TextStyle(fontSize: 11, color: Colors.white),
+                        const TextStyle(
+                            fontSize: 11, color: AppColors.darkTextPrimary),
                       );
                     }
                     final breakdown = sets.map((s) => '${s.reps}').join(' + ');
                     return BarTooltipItem(
                       '$date\n$breakdown = $total reps',
-                      const TextStyle(fontSize: 11, color: Colors.white),
+                      const TextStyle(
+                          fontSize: 11, color: AppColors.darkTextPrimary),
                     );
                   },
                 ),
@@ -1179,7 +1182,7 @@ class _DatePickerSheet extends StatelessWidget {
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: Colors.white24,
+              color: context.dividerSubtle,
               borderRadius: BorderRadius.circular(2),
             ),
           ),

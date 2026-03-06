@@ -123,13 +123,13 @@ class MobilityExerciseTile extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 16,
-                backgroundColor: Colors.greenAccent.withAlpha(30),
+                backgroundColor: AppColors.success.withAlpha(30),
                 child: Text(
                   '${index + 1}',
                   style: const TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.bold,
-                    color: Colors.greenAccent,
+                    color: AppColors.success,
                   ),
                 ),
               ),
@@ -156,14 +156,14 @@ class MobilityExerciseTile extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: Colors.greenAccent.withAlpha(20),
+                  color: AppColors.success.withAlpha(20),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
                   duration,
                   style: const TextStyle(
                     fontSize: 12,
-                    color: Colors.greenAccent,
+                    color: AppColors.success,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -186,7 +186,7 @@ class MobilityExerciseTile extends StatelessWidget {
       child: ListTile(
         leading: CircleAvatar(
           radius: 16,
-          backgroundColor: Colors.white12,
+          backgroundColor: context.bgSubtle,
           child: Text(
             '${index + 1}',
             style: TextStyle(
@@ -202,7 +202,7 @@ class MobilityExerciseTile extends StatelessWidget {
         ),
         trailing: Text(
           duration,
-          style: const TextStyle(fontSize: 13, color: Colors.greenAccent),
+          style: const TextStyle(fontSize: 13, color: AppColors.success),
         ),
       ),
     );

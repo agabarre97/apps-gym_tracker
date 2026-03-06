@@ -141,7 +141,7 @@ class _HiitConfigScreenState extends State<HiitConfigScreen> {
 
           // Total duration
           Card(
-            color: Colors.white.withValues(alpha: 0.08),
+            color: context.inputFill,
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Row(
@@ -155,7 +155,7 @@ class _HiitConfigScreenState extends State<HiitConfigScreen> {
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Colors.greenAccent,
+                      color: AppColors.success,
                     ),
                   ),
                 ],
@@ -244,8 +244,9 @@ class _ConfigRow extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.remove_circle_outline),
               onPressed: onDecrement,
-              color:
-                  onDecrement != null ? context.textSecondary : Colors.white24,
+              color: onDecrement != null
+                  ? context.textSecondary
+                  : context.dividerSubtle,
             ),
             SizedBox(
               width: 32,
@@ -259,8 +260,9 @@ class _ConfigRow extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.add_circle_outline),
               onPressed: onIncrement,
-              color:
-                  onIncrement != null ? context.textSecondary : Colors.white24,
+              color: onIncrement != null
+                  ? context.textSecondary
+                  : context.dividerSubtle,
             ),
           ],
         ),

@@ -468,8 +468,8 @@ class _FocusedExerciseScreenState extends State<FocusedExerciseScreen> {
                 onTap: () => Navigator.of(ctx).pop('insert_drop'),
               ),
             ListTile(
-              leading:
-                  const Icon(Icons.delete_outline, color: Colors.redAccent),
+              leading: const Icon(Icons.delete_outline,
+                  color: AppColors.destructive),
               title: const Text('Eliminar serie'),
               onTap: () => Navigator.of(ctx).pop('delete'),
             ),
@@ -695,7 +695,7 @@ class _SeriesCard extends StatelessWidget {
       margin: EdgeInsets.only(bottom: 8, left: compact ? 20 : 0),
       decoration: BoxDecoration(
         color: isCompleted
-            ? AppColors.success.withValues(alpha: 0.12)
+            ? AppColors.success.withValues(alpha: 0.08)
             : context.card,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(

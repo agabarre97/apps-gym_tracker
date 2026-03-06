@@ -41,7 +41,7 @@ class ExerciseDetailSheet extends StatelessWidget {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: Colors.white24,
+                color: context.dividerSubtle,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -51,10 +51,10 @@ class ExerciseDetailSheet extends StatelessWidget {
           // Title
           Text(
             exercise.localizedNameFor(languageCode),
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: context.textPrimary,
             ),
           ),
           const SizedBox(height: 16),
@@ -69,9 +69,9 @@ class ExerciseDetailSheet extends StatelessWidget {
           // Muscle groups
           Text(
             l10n.routineMuscles,
-            style: const TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.w600,
-              color: Colors.white,
+              color: context.textPrimary,
             ),
           ),
           const SizedBox(height: 8),
@@ -107,8 +107,8 @@ class ExerciseDetailSheet extends StatelessWidget {
                       icon: const Icon(Icons.remove_circle_outline),
                       label: Text(l10n.routineRemove),
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.redAccent,
-                        side: const BorderSide(color: Colors.redAccent),
+                        foregroundColor: AppColors.destructive,
+                        side: const BorderSide(color: AppColors.destructive),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),

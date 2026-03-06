@@ -102,12 +102,12 @@ class _MuscleGroupSelectionScreenState
                     ),
                     label: Text(labels[cat]!),
                     selected: isSelected,
-                    selectedColor: Colors.white,
+                    selectedColor: context.textPrimary,
                     checkmarkColor: Colors.black,
                     labelStyle: TextStyle(
-                      color: isSelected ? Colors.black : Colors.white,
+                      color: isSelected ? Colors.black : context.textPrimary,
                     ),
-                    backgroundColor: Colors.white12,
+                    backgroundColor: context.bgSubtle,
                     onSelected: (v) {
                       setState(() {
                         if (v) {

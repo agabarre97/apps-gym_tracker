@@ -271,7 +271,7 @@ class _HiitTimerScreenState extends State<HiitTimerScreen>
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            style: TextButton.styleFrom(foregroundColor: Colors.redAccent),
+            style: TextButton.styleFrom(foregroundColor: AppColors.destructive),
             child: Text(l10n.hiitFinishEarly),
           ),
         ],
@@ -397,7 +397,7 @@ class _HiitTimerScreenState extends State<HiitTimerScreen>
               onPressed: _confirmFinishEarly,
               child: Text(
                 l10n.hiitFinishEarly,
-                style: const TextStyle(color: Colors.redAccent),
+                style: const TextStyle(color: AppColors.destructive),
               ),
             ),
           if (showSettings)
@@ -469,13 +469,13 @@ class _HiitTimerScreenState extends State<HiitTimerScreen>
                 dense: true,
                 leading: CircleAvatar(
                   radius: 14,
-                  backgroundColor: Colors.white12,
+                  backgroundColor: context.bgSubtle,
                   child: Text('${index + 1}',
                       style: TextStyle(
                           fontSize: 12, color: context.textSecondary)),
                 ),
                 title: Text(exercise.name,
-                    style: const TextStyle(color: Colors.white)),
+                    style: TextStyle(color: context.textPrimary)),
                 subtitle: Text(exercise.description,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -512,10 +512,10 @@ class _HiitTimerScreenState extends State<HiitTimerScreen>
           children: [
             Text(
               l10n.hiitGetReady,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: context.textPrimary,
               ),
             ),
             const SizedBox(height: 12),
@@ -533,8 +533,8 @@ class _HiitTimerScreenState extends State<HiitTimerScreen>
                   return CustomPaint(
                     painter: CircularTimerPainter(
                       progress: 1.0 - _progressAnim.value,
-                      color: Colors.amberAccent,
-                      backgroundColor: Colors.white12,
+                      color: AppColors.warning,
+                      backgroundColor: context.bgSubtle,
                       strokeWidth: 10,
                     ),
                     child: child,
@@ -546,7 +546,7 @@ class _HiitTimerScreenState extends State<HiitTimerScreen>
                     style: const TextStyle(
                       fontSize: 72,
                       fontWeight: FontWeight.w300,
-                      color: Colors.amberAccent,
+                      color: AppColors.warning,
                     ),
                   ),
                 ),
@@ -572,16 +572,16 @@ class _HiitTimerScreenState extends State<HiitTimerScreen>
     if (isExercise) {
       title = _currentExercise.name;
       subtitle = l10n.hiitSetOf('${_setIndex + 1}', '$_sets');
-      timerColor = Colors.greenAccent;
+      timerColor = AppColors.success;
     } else if (isExerciseRest) {
       title = l10n.hiitRest;
       subtitle = l10n.hiitExerciseOf(
           '${_exerciseIndex + 1}', '${widget.exercises.length}');
-      timerColor = Colors.orangeAccent;
+      timerColor = AppColors.warning;
     } else {
       title = l10n.hiitSetComplete;
       subtitle = l10n.hiitSetRest;
-      timerColor = Colors.blueAccent;
+      timerColor = AppColors.info;
     }
 
     final stepInfo = isExercise
@@ -607,7 +607,7 @@ class _HiitTimerScreenState extends State<HiitTimerScreen>
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: isExercise ? Colors.white : timerColor,
+                color: isExercise ? context.textPrimary : timerColor,
               ),
               textAlign: TextAlign.center,
             ),
@@ -617,7 +617,7 @@ class _HiitTimerScreenState extends State<HiitTimerScreen>
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
               decoration: BoxDecoration(
-                color: Colors.white12,
+                color: context.bgSubtle,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
@@ -642,7 +642,7 @@ class _HiitTimerScreenState extends State<HiitTimerScreen>
                       painter: CircularTimerPainter(
                         progress: 1.0 - _progressAnim.value,
                         color: timerColor,
-                        backgroundColor: Colors.white12,
+                        backgroundColor: context.bgSubtle,
                         strokeWidth: 10,
                       ),
                       child: child,
@@ -654,10 +654,10 @@ class _HiitTimerScreenState extends State<HiitTimerScreen>
                       children: [
                         Text(
                           _formatSeconds(_remainingSeconds),
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 56,
                             fontWeight: FontWeight.w300,
-                            color: Colors.white,
+                            color: context.textPrimary,
                           ),
                         ),
                         if (!isExercise)
@@ -699,7 +699,7 @@ class _HiitTimerScreenState extends State<HiitTimerScreen>
             child: IconButton.filled(
               iconSize: 48,
               style: IconButton.styleFrom(
-                backgroundColor: Colors.white24,
+                backgroundColor: context.dividerSubtle,
                 padding: const EdgeInsets.all(16),
               ),
               icon: Icon(_paused ? Icons.play_arrow : Icons.pause),
@@ -719,13 +719,13 @@ class _HiitTimerScreenState extends State<HiitTimerScreen>
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.check_circle, size: 80, color: Colors.greenAccent),
+            const Icon(Icons.check_circle, size: 80, color: AppColors.success),
             const SizedBox(height: 24),
             Text(l10n.hiitComplete,
-                style: const TextStyle(
+                style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white)),
+                    color: context.textPrimary)),
             const SizedBox(height: 12),
             Text(widget.routineName,
                 style: TextStyle(fontSize: 16, color: context.textSecondary)),

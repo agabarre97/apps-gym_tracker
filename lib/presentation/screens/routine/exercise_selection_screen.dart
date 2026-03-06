@@ -266,7 +266,7 @@ class _ExerciseSelectionScreenState extends State<ExerciseSelectionScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: const Color(0xFF2C2C2E),
+      backgroundColor: AppColors.darkSurface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -335,12 +335,12 @@ class _ExerciseSelectionScreenState extends State<ExerciseSelectionScreen> {
                 return FilterChip(
                   label: Text(categoryLabelForLocale(category, lang)),
                   selected: isSelected,
-                  selectedColor: Colors.white,
+                  selectedColor: context.textPrimary,
                   showCheckmark: false,
                   labelStyle: TextStyle(
-                    color: isSelected ? Colors.black : Colors.white,
+                    color: isSelected ? Colors.black : context.textPrimary,
                   ),
-                  backgroundColor: Colors.white12,
+                  backgroundColor: context.bgSubtle,
                   onSelected: (selected) => _toggleCategory(category, selected),
                 );
               }).toList(),
@@ -365,14 +365,14 @@ class _ExerciseSelectionScreenState extends State<ExerciseSelectionScreen> {
                       )
                     : null,
                 filled: true,
-                fillColor: Colors.white.withValues(alpha: 0.08),
+                fillColor: context.inputFill,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide.none,
                 ),
                 contentPadding: const EdgeInsets.symmetric(vertical: 10),
               ),
-              style: const TextStyle(color: Colors.white),
+              style: TextStyle(color: context.textPrimary),
               onChanged: (value) => setState(() => _searchQuery = value),
             ),
           ),
@@ -427,9 +427,7 @@ class _ExerciseSelectionScreenState extends State<ExerciseSelectionScreen> {
                       final card = Padding(
                         padding: const EdgeInsets.only(bottom: 6),
                         child: Card(
-                          color: isSelected
-                              ? Colors.white.withValues(alpha: 0.15)
-                              : null,
+                          color: isSelected ? context.selectionHighlight : null,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                             side: isSelected
@@ -454,7 +452,7 @@ class _ExerciseSelectionScreenState extends State<ExerciseSelectionScreen> {
                                             ? Icons.check_circle
                                             : Icons.radio_button_unchecked,
                                         color: isSelected
-                                            ? Colors.greenAccent
+                                            ? AppColors.success
                                             : context.textSubtle,
                                       ),
                                     ),
@@ -470,7 +468,7 @@ class _ExerciseSelectionScreenState extends State<ExerciseSelectionScreen> {
                                             fontWeight: isSelected
                                                 ? FontWeight.bold
                                                 : FontWeight.normal,
-                                            color: Colors.white,
+                                            color: context.textPrimary,
                                           ),
                                         ),
                                         const SizedBox(height: 4),
@@ -554,7 +552,7 @@ class _DifficultyIndicator extends StatelessWidget {
           margin: const EdgeInsets.symmetric(horizontal: 1),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: i < difficulty ? Colors.greenAccent : Colors.white12,
+            color: i < difficulty ? AppColors.success : context.bgSubtle,
           ),
         );
       }),

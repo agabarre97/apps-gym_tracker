@@ -49,7 +49,7 @@ class SelectableOptionGridCard extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(option.icon, size: 48, color: Colors.white),
+                      Icon(option.icon, size: 48, color: context.textPrimary),
                       const SizedBox(height: 12),
                       Text(
                         option.label,
@@ -69,7 +69,7 @@ class SelectableOptionGridCard extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 8, vertical: 2),
                         decoration: BoxDecoration(
-                          color: Colors.white12,
+                          color: context.bgSubtle,
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
@@ -110,7 +110,7 @@ class SelectableOptionListCard extends StatelessWidget {
       child: Card(
         elevation: option.enabled ? 4 : 1,
         child: ListTile(
-          leading: Icon(option.icon, color: Colors.white),
+          leading: Icon(option.icon, color: context.textPrimary),
           title: Text(option.label),
           trailing: option.enabled
               ? Icon(Icons.chevron_right, color: context.textSecondary)

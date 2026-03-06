@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:gym_tracker/presentation/theme/app_theme.dart';
+
 /// A compact vertical scroll-wheel picker for time values in seconds.
 ///
 /// Values range from [minSeconds] to [maxSeconds] in [stepSeconds] increments.
@@ -127,9 +129,9 @@ class _TimeWheelPickerState extends State<TimeWheelPicker> {
               child: Container(
                 height: _itemExtent + 4,
                 decoration: BoxDecoration(
-                  color: Colors.white.withAlpha(18),
+                  color: context.inputFill,
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.white24, width: 0.5),
+                  border: Border.all(color: context.dividerSubtle, width: 0.5),
                 ),
               ),
             ),
@@ -149,10 +151,10 @@ class _TimeWheelPickerState extends State<TimeWheelPicker> {
                   return Center(
                     child: Text(
                       formatSeconds(_values[index]),
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
-                        color: Colors.white,
+                        color: context.textPrimary,
                       ),
                     ),
                   );

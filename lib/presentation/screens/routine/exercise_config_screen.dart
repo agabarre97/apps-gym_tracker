@@ -231,7 +231,8 @@ class _ExerciseConfigScreenState extends State<ExerciseConfigScreen> {
                                     const Spacer(),
                                     IconButton(
                                       icon: const Icon(Icons.delete_outline,
-                                          color: Colors.redAccent, size: 20),
+                                          color: AppColors.destructive,
+                                          size: 20),
                                       visualDensity: VisualDensity.compact,
                                       tooltip: 'Eliminar',
                                       onPressed: setConfigs.length > 1

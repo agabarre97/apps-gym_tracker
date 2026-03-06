@@ -455,7 +455,7 @@ class _HiitDetailScreenState extends State<HiitDetailScreen> {
                     children: [
                       CircleAvatar(
                         radius: 16,
-                        backgroundColor: Colors.white12,
+                        backgroundColor: context.bgSubtle,
                         child: Text(
                           '${index + 1}',
                           style: TextStyle(
@@ -470,9 +470,9 @@ class _HiitDetailScreenState extends State<HiitDetailScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(exercise.name,
-                                style: const TextStyle(
+                                style: TextStyle(
                                     fontWeight: FontWeight.w600,
-                                    color: Colors.white)),
+                                    color: context.textPrimary)),
                             if (exercise.description.isNotEmpty) ...[
                               const SizedBox(height: 2),
                               Text(
@@ -546,8 +546,8 @@ class _HiitDetailScreenState extends State<HiitDetailScreen> {
                     icon: const Icon(Icons.delete_outline, size: 18),
                     label: Text(l10n.routineDelete),
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.redAccent,
-                      side: const BorderSide(color: Colors.redAccent),
+                      foregroundColor: AppColors.destructive,
+                      side: const BorderSide(color: AppColors.destructive),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),

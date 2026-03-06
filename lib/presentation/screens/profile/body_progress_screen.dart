@@ -295,11 +295,11 @@ class _BodyProgressScreenState extends State<BodyProgressScreen> {
   Color _goalColor(String goal) {
     switch (goal) {
       case 'gain':
-        return Colors.greenAccent.withValues(alpha: 0.12);
+        return AppColors.success.withValues(alpha: 0.12);
       case 'lose':
-        return Colors.orangeAccent.withValues(alpha: 0.12);
+        return AppColors.warning.withValues(alpha: 0.12);
       default:
-        return Colors.lightBlueAccent.withValues(alpha: 0.12);
+        return AppColors.info.withValues(alpha: 0.12);
     }
   }
 
@@ -510,8 +510,8 @@ class _SummaryCard extends StatelessWidget {
     final maxPoint = points.reduce((a, b) => a.value >= b.value ? a : b);
     final delta = last.value - first.value;
     final trendColor = delta > 0
-        ? Colors.greenAccent
-        : (delta < 0 ? Colors.redAccent : context.textSecondary);
+        ? AppColors.success
+        : (delta < 0 ? AppColors.destructive : context.textSecondary);
     final trendIcon = delta > 0
         ? Icons.trending_up
         : (delta < 0 ? Icons.trending_down : Icons.trending_flat);
@@ -685,8 +685,8 @@ class _ProgressChart extends StatelessWidget {
             show: true,
             drawVerticalLine: false,
             horizontalInterval: yInterval,
-            getDrawingHorizontalLine: (_) => const FlLine(
-              color: Colors.white12,
+            getDrawingHorizontalLine: (_) => FlLine(
+              color: context.bgSubtle,
               strokeWidth: 1,
             ),
           ),
@@ -763,7 +763,7 @@ class _ProgressChart extends StatelessWidget {
                   .map(
                     (item) => LineTooltipItem(
                       '${formatDate(points[item.spotIndex].date)}\n${formatValue(item.y)}',
-                      const TextStyle(color: Colors.white),
+                      const TextStyle(color: AppColors.darkTextPrimary),
                     ),
                   )
                   .toList(),

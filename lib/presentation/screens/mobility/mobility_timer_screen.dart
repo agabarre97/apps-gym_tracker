@@ -246,7 +246,7 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            style: TextButton.styleFrom(foregroundColor: Colors.redAccent),
+            style: TextButton.styleFrom(foregroundColor: AppColors.destructive),
             child: Text(l10n.mobilityFinishEarly),
           ),
         ],
@@ -356,7 +356,7 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
               onPressed: _confirmFinishEarly,
               child: Text(
                 l10n.mobilityFinishEarly,
-                style: const TextStyle(color: Colors.redAccent),
+                style: const TextStyle(color: AppColors.destructive),
               ),
             ),
           if (showSettings)
@@ -423,10 +423,10 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
           children: [
             Text(
               l10n.mobilityGetReady,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: context.textPrimary,
               ),
             ),
             const SizedBox(height: 12),
@@ -444,8 +444,8 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
                   return CustomPaint(
                     painter: CircularTimerPainter(
                       progress: 1.0 - _progressAnim.value,
-                      color: Colors.amberAccent,
-                      backgroundColor: Colors.white12,
+                      color: AppColors.warning,
+                      backgroundColor: context.bgSubtle,
                       strokeWidth: 10,
                     ),
                     child: child,
@@ -457,7 +457,7 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
                     style: const TextStyle(
                       fontSize: 72,
                       fontWeight: FontWeight.w300,
-                      color: Colors.amberAccent,
+                      color: AppColors.warning,
                     ),
                   ),
                 ),
@@ -504,7 +504,7 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: isRest ? context.textSubtle : Colors.white,
+                color: isRest ? context.textSubtle : context.textPrimary,
               ),
               textAlign: TextAlign.center,
             ),
@@ -513,14 +513,15 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
             decoration: BoxDecoration(
-              color: isRest ? Colors.orange.withAlpha(40) : Colors.white12,
+              color:
+                  isRest ? AppColors.warning.withAlpha(40) : context.bgSubtle,
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
               sideLabel,
               style: TextStyle(
                 fontSize: 14,
-                color: isRest ? Colors.orangeAccent : context.textSecondary,
+                color: isRest ? AppColors.warning : context.textSecondary,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -538,9 +539,8 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
                     return CustomPaint(
                       painter: CircularTimerPainter(
                         progress: 1.0 - _progressAnim.value,
-                        color:
-                            isRest ? Colors.orangeAccent : Colors.greenAccent,
-                        backgroundColor: Colors.white12,
+                        color: isRest ? AppColors.warning : AppColors.success,
+                        backgroundColor: context.bgSubtle,
                         strokeWidth: 10,
                       ),
                       child: child,
@@ -552,16 +552,16 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
                       children: [
                         Text(
                           _formatSeconds(_remainingSeconds),
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 56,
                             fontWeight: FontWeight.w300,
-                            color: Colors.white,
+                            color: context.textPrimary,
                           ),
                         ),
                         if (isRest)
                           Text(l10n.mobilityRest,
                               style: const TextStyle(
-                                  fontSize: 14, color: Colors.orangeAccent)),
+                                  fontSize: 14, color: AppColors.warning)),
                       ],
                     ),
                   ),
@@ -594,7 +594,7 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
             child: IconButton.filled(
               iconSize: 48,
               style: IconButton.styleFrom(
-                backgroundColor: Colors.white24,
+                backgroundColor: context.dividerSubtle,
                 padding: const EdgeInsets.all(16),
               ),
               icon: Icon(_paused ? Icons.play_arrow : Icons.pause),
@@ -614,13 +614,13 @@ class _MobilityTimerScreenState extends State<MobilityTimerScreen>
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.check_circle, size: 80, color: Colors.greenAccent),
+            const Icon(Icons.check_circle, size: 80, color: AppColors.success),
             const SizedBox(height: 24),
             Text(l10n.mobilityComplete,
-                style: const TextStyle(
+                style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white)),
+                    color: context.textPrimary)),
             const SizedBox(height: 12),
             Text(widget.routineName,
                 style: TextStyle(fontSize: 16, color: context.textSecondary)),

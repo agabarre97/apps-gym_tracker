@@ -68,14 +68,14 @@ class _HiitExerciseSelectionScreenState
           // Warning banner
           if (showWarning)
             MaterialBanner(
-              backgroundColor: Colors.amber.withAlpha(30),
+              backgroundColor: AppColors.warning.withAlpha(30),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               content: Text(
                 l10n.hiitWarningTooMany,
-                style: const TextStyle(color: Colors.amberAccent),
+                style: const TextStyle(color: AppColors.warning),
               ),
               leading:
-                  const Icon(Icons.warning_amber, color: Colors.amberAccent),
+                  const Icon(Icons.warning_amber, color: AppColors.warning),
               actions: const [SizedBox.shrink()],
             ),
 
@@ -109,9 +109,7 @@ class _HiitExerciseSelectionScreenState
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 6),
                   child: Card(
-                    color: isSelected
-                        ? Colors.white.withValues(alpha: 0.15)
-                        : null,
+                    color: isSelected ? context.selectionHighlight : null,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                       side: isSelected
@@ -131,7 +129,7 @@ class _HiitExerciseSelectionScreenState
                                   ? Icons.check_circle
                                   : Icons.radio_button_unchecked,
                               color: isSelected
-                                  ? Colors.greenAccent
+                                  ? AppColors.success
                                   : context.textSubtle,
                             ),
                             const SizedBox(width: 12),
@@ -145,7 +143,7 @@ class _HiitExerciseSelectionScreenState
                                       fontWeight: isSelected
                                           ? FontWeight.bold
                                           : FontWeight.normal,
-                                      color: Colors.white,
+                                      color: context.textPrimary,
                                     ),
                                   ),
                                   const SizedBox(height: 4),
