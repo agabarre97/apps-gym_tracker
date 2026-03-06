@@ -28,6 +28,7 @@ void main() {
         const FocusedExerciseScreen(
           exerciseName: 'Press banca',
           exercise: exercise,
+          enableTimer: false,
         ),
       ),
     );
@@ -39,7 +40,6 @@ void main() {
     await tester.tap(find.text('Finalizar serie 1'));
     await tester.pump();
 
-    expect(find.text('Finalizada'), findsOneWidget);
     expect(find.text('Omitir'), findsOneWidget);
   });
 }

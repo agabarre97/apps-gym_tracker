@@ -60,6 +60,7 @@ class WorkoutSessionBuilder {
         plannedRestSeconds: config.restSeconds ?? target.restSeconds,
         isDropSet: isDropSet,
         dropParentSetNumber: parentSetNumberByIndex[index],
+        notes: previous?.notes ?? '',
       );
     }, growable: false);
   }

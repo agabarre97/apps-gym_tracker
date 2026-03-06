@@ -386,6 +386,15 @@
       "rest": { "type": "String" }
     }
   },
+  "workoutSetNotes": "Observaciones de la serie",
+  "workoutSaveSet": "Guardar serie",
+  "workoutDeleteExercise": "Eliminar ejercicio",
+  "workoutDeleteExerciseConfirm": "¿Eliminar {name} de esta sesión?",
+  "@workoutDeleteExerciseConfirm": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
   "workoutSessionsForDay": "Entrenamientos del día",
   "workoutSessionTime": "{start} - {end}",
   "@workoutSessionTime": {

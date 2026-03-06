@@ -348,6 +348,15 @@
       "rest": { "type": "String" }
     }
   },
+  "workoutSetNotes": "Set notes",
+  "workoutSaveSet": "Save set",
+  "workoutDeleteExercise": "Delete exercise",
+  "workoutDeleteExerciseConfirm": "Remove {name} from this session?",
+  "@workoutDeleteExerciseConfirm": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
   "workoutSessionsForDay": "Sessions for this day",
   "workoutSessionTime": "{start} - {end}",
   "workoutSessionNoTime": "No time recorded",

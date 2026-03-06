@@ -65,36 +65,35 @@ void main() {
             workoutSessionPort: workoutPort,
             routineName: 'Push Pull',
             trackTime: false,
+            enableExerciseTimer: false,
           ),
         ),
       );
       await tester.pumpAndSettle();
 
-      // Open first exercise in focused editor.
+      // Navigate to focused exercise editor.
       await tester.tap(find.text('Press banca'));
       await tester.pumpAndSettle();
 
       expect(find.textContaining('Serie 1'), findsOneWidget);
 
-      // Update first set values directly in focused fields.
+      // Update first set values.
       final inputFields = find.byType(TextField);
       await tester.enterText(inputFields.at(0), '9');
       await tester.pumpAndSettle();
       await tester.enterText(inputFields.at(1), '61.25');
       await tester.pumpAndSettle();
 
-      // Complete both sets so exercise is marked as completed.
-      // Complete all main sets currently pending.
+      // Complete all pending sets (scroll to them first since notes fields
+      // may push buttons off screen).
       while (tester.any(find.byIcon(Icons.task_alt_outlined))) {
-        await tester.tap(find.byIcon(Icons.task_alt_outlined).first);
-        await tester.pumpAndSettle();
+        await tester.scrollToAndTap(find.byIcon(Icons.task_alt_outlined).first);
       }
 
-      // Save edited exercise and return to summary.
-      await tester.tap(find.byIcon(Icons.save));
-      await tester.pumpAndSettle();
+      // Save exercise and navigate back.
+      await tester.scrollToAndTap(find.byIcon(Icons.save));
 
-      // Save full session changes.
+      // Save full session.
       await tester.tap(find.text('Guardar entrenamiento'));
       await tester.pumpAndSettle();
 

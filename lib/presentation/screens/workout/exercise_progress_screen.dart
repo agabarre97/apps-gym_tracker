@@ -28,6 +28,7 @@ class ExerciseProgressScreen extends StatefulWidget {
     required this.routineDayIndex,
     required this.exerciseKey,
     required this.exerciseDisplayName,
+    this.clock,
   });
 
   final WorkoutSessionPort workoutSessionPort;
@@ -36,6 +37,9 @@ class ExerciseProgressScreen extends StatefulWidget {
   final int routineDayIndex;
   final String exerciseKey;
   final String exerciseDisplayName;
+
+  /// Optional clock override for testing. Returns `DateTime.now()` when null.
+  final DateTime Function()? clock;
 
   @override
   State<ExerciseProgressScreen> createState() => _ExerciseProgressScreenState();
@@ -101,7 +105,7 @@ class _ExerciseProgressScreenState extends State<ExerciseProgressScreen> {
   }
 
   DateTime _cutoffDate() {
-    final now = DateTime.now();
+    final now = widget.clock?.call() ?? DateTime.now();
     if (_periodMonths != _customPeriodSentinel) {
       return DateTime(now.year, now.month - _periodMonths, now.day);
     }

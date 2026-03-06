@@ -13,6 +13,9 @@ void main() {
     fakePort = FakeWorkoutSessionPort();
   });
 
+  /// Fixed clock so tests don't depend on the real date.
+  DateTime fixedNow() => DateTime(2026, 2, 20);
+
   Widget buildScreen() {
     return buildTestableWidget(
       ExerciseProgressScreen(
@@ -22,6 +25,7 @@ void main() {
         routineDayIndex: 0,
         exerciseKey: 'bench_press',
         exerciseDisplayName: 'Press de banca',
+        clock: fixedNow,
       ),
     );
   }

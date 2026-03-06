@@ -13,10 +13,20 @@ class FocusedExerciseScreen extends StatefulWidget {
     super.key,
     required this.exerciseName,
     required this.exercise,
+    this.enableTimer = true,
+    this.isActiveWorkout = true,
   });
 
   final String exerciseName;
   final WorkoutExercise exercise;
+
+  /// Whether to start the per-exercise stopwatch. Set to `false` in widget
+  /// tests that rely on [pumpAndSettle] (periodic timers prevent settling).
+  final bool enableTimer;
+
+  /// When `false` (viewing a completed workout), hides the exercise stopwatch,
+  /// the rest configuration card, and disables rest countdown timers.
+  final bool isActiveWorkout;
 
   @override
   State<FocusedExerciseScreen> createState() => _FocusedExerciseScreenState();
@@ -25,11 +35,15 @@ class FocusedExerciseScreen extends StatefulWidget {
 class _FocusedExerciseScreenState extends State<FocusedExerciseScreen> {
   late WorkoutExercise _exercise;
   Map<int, DateTime> _setCompletionTimes = {};
+  final Set<int> _previouslyCompletedSets = {};
 
   Timer? _restTicker;
   int _restRemainingSeconds = 0;
   int? _activeRestSetIndex;
   bool _saving = false;
+
+  Timer? _exerciseTicker;
+  int _exerciseElapsedSeconds = 0;
 
   bool get _restActive => _restRemainingSeconds > 0;
 
@@ -37,12 +51,27 @@ class _FocusedExerciseScreenState extends State<FocusedExerciseScreen> {
   void initState() {
     super.initState();
     _exercise = widget.exercise;
+    for (var i = 0; i < _exercise.sets.length; i++) {
+      if (_exercise.sets[i].completed) _previouslyCompletedSets.add(i);
+    }
+    _exerciseElapsedSeconds = widget.exercise.elapsedSeconds ?? 0;
+    if (widget.enableTimer && widget.isActiveWorkout) _startExerciseTimer();
   }
 
   @override
   void dispose() {
     _restTicker?.cancel();
+    _exerciseTicker?.cancel();
     super.dispose();
+  }
+
+  void _startExerciseTimer() {
+    _exerciseTicker = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (!mounted) return;
+      setState(() {
+        _exerciseElapsedSeconds += 1;
+      });
+    });
   }
 
   void _updateSetAt(
@@ -52,11 +81,33 @@ class _FocusedExerciseScreenState extends State<FocusedExerciseScreen> {
     int? targetReps,
   }) {
     final updatedSets = List<ExerciseSet>.from(_exercise.sets);
+    final wasCompleted = updatedSets[setIndex].completed;
     updatedSets[setIndex] = updatedSets[setIndex].copyWith(
       reps: reps,
       weight: weight,
       targetReps: targetReps,
+      completed: wasCompleted ? false : null,
     );
+    setState(() {
+      _exercise = _exercise.copyWith(
+        sets: updatedSets,
+        completed: updatedSets.every((set) => set.completed),
+      );
+    });
+  }
+
+  void _updateSetNotes(int setIndex, String notes) {
+    final updatedSets = List<ExerciseSet>.from(_exercise.sets);
+    updatedSets[setIndex] = updatedSets[setIndex].copyWith(notes: notes);
+    setState(() {
+      _exercise = _exercise.copyWith(sets: updatedSets);
+    });
+  }
+
+  void _saveEditedSet(int setIndex) {
+    final updatedSets = List<ExerciseSet>.from(_exercise.sets);
+    updatedSets[setIndex] = updatedSets[setIndex].copyWith(completed: true);
+    _previouslyCompletedSets.add(setIndex);
     setState(() {
       _exercise = _exercise.copyWith(
         sets: updatedSets,
@@ -174,6 +225,8 @@ class _FocusedExerciseScreenState extends State<FocusedExerciseScreen> {
     );
     _setCompletionTimes[setIndex] = now;
 
+    _previouslyCompletedSets.add(setIndex);
+
     if (!set.isDropSet) {
       final parentSeries = _mainSeriesNumberForIndex(setIndex);
       for (var i = setIndex + 1; i < updatedSets.length; i++) {
@@ -185,6 +238,7 @@ class _FocusedExerciseScreenState extends State<FocusedExerciseScreen> {
             clearRest: true,
           );
           _setCompletionTimes[i] = now;
+          _previouslyCompletedSets.add(i);
         } else if (!updatedSets[i].isDropSet) {
           break;
         }
@@ -199,7 +253,7 @@ class _FocusedExerciseScreenState extends State<FocusedExerciseScreen> {
     });
 
     final restSeconds = _exercise.restSeconds ?? set.plannedRestSeconds;
-    if (restSeconds != null && restSeconds > 0) {
+    if (widget.isActiveWorkout && restSeconds != null && restSeconds > 0) {
       _startRestTimer(seconds: restSeconds, setIndex: setIndex);
     }
   }
@@ -229,7 +283,9 @@ class _FocusedExerciseScreenState extends State<FocusedExerciseScreen> {
   void _insertDropSetAfter(int setIndex) {
     final source = _exercise.sets[setIndex];
     final updatedSets = List<ExerciseSet>.from(_exercise.sets);
-    final parentSeries = _mainSeriesNumberForIndex(setIndex);
+    final parentSeries = source.isDropSet
+        ? source.dropParentSetNumber ?? _mainSeriesNumberForIndex(setIndex)
+        : _mainSeriesNumberForIndex(setIndex);
     final dropSet = ExerciseSet(
       reps: 0,
       weight: source.weight,
@@ -237,7 +293,12 @@ class _FocusedExerciseScreenState extends State<FocusedExerciseScreen> {
       isDropSet: true,
       dropParentSetNumber: parentSeries,
     );
-    final insertAt = setIndex + 1;
+    var insertAt = setIndex + 1;
+    while (insertAt < updatedSets.length &&
+        updatedSets[insertAt].isDropSet &&
+        updatedSets[insertAt].dropParentSetNumber == parentSeries) {
+      insertAt++;
+    }
     _remapCompletionTimesForInsertion(insertAt);
     updatedSets.insert(insertAt, dropSet);
     setState(() {
@@ -421,9 +482,11 @@ class _FocusedExerciseScreenState extends State<FocusedExerciseScreen> {
     setState(() {
       _saving = true;
     });
+    _exerciseTicker?.cancel();
     Navigator.of(context).pop(
       _exercise.copyWith(
         completed: _exercise.sets.every((set) => set.completed),
+        elapsedSeconds: _exerciseElapsedSeconds,
       ),
     );
   }
@@ -435,24 +498,52 @@ class _FocusedExerciseScreenState extends State<FocusedExerciseScreen> {
     final restLabel = _exercise.restSeconds == null
         ? l10n.mobilityRestOff
         : TimeFormatter.mmss(_exercise.restSeconds!);
+    final exerciseTimerLabel =
+        Duration(seconds: _exerciseElapsedSeconds).toHumanReadable();
 
     return Scaffold(
-      appBar: AppBar(title: Text(widget.exerciseName)),
+      appBar: AppBar(),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 130),
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 130),
         children: [
-          Card(
-            margin: const EdgeInsets.only(bottom: 10),
-            child: ListTile(
-              leading: const Icon(Icons.hourglass_bottom),
-              title: Text(l10n.workoutRestTimer),
-              subtitle: Text(restLabel),
-              trailing: OutlinedButton(
-                onPressed: _configureExerciseRest,
-                child: Text(l10n.routineEditDay),
-              ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 4),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    widget.exerciseName,
+                    style: const TextStyle(
+                        fontSize: 22, fontWeight: FontWeight.w700),
+                  ),
+                ),
+                if (widget.isActiveWorkout) ...[
+                  const SizedBox(width: 8),
+                  Icon(Icons.timer_outlined,
+                      size: 18, color: context.textSecondary),
+                  const SizedBox(width: 4),
+                  Text(
+                    exerciseTimerLabel,
+                    style:
+                        TextStyle(fontSize: 14, color: context.textSecondary),
+                  ),
+                ],
+              ],
             ),
           ),
+          if (widget.isActiveWorkout)
+            Card(
+              margin: const EdgeInsets.only(bottom: 10),
+              child: ListTile(
+                leading: const Icon(Icons.hourglass_bottom),
+                title: Text(l10n.workoutRestTimer),
+                subtitle: Text(restLabel),
+                trailing: OutlinedButton(
+                  onPressed: _configureExerciseRest,
+                  child: Text(l10n.routineEditDay),
+                ),
+              ),
+            ),
           ...groups.map((group) {
             final mainSet = _exercise.sets[group.mainIndex];
             return Column(
@@ -460,8 +551,11 @@ class _FocusedExerciseScreenState extends State<FocusedExerciseScreen> {
                 _SeriesCard(
                   title: l10n.workoutSet('${group.seriesNumber}'),
                   finishLabel: l10n.workoutFinishSet('${group.seriesNumber}'),
+                  saveLabel: l10n.workoutSaveSet,
                   set: mainSet,
                   isCompleted: mainSet.completed,
+                  wasEverCompleted:
+                      _previouslyCompletedSets.contains(group.mainIndex),
                   isActiveRest:
                       _restActive && _activeRestSetIndex == group.mainIndex,
                   activeRestSeconds: _restRemainingSeconds,
@@ -471,7 +565,10 @@ class _FocusedExerciseScreenState extends State<FocusedExerciseScreen> {
                       _updateSetAt(group.mainIndex, reps: value),
                   onWeightChanged: (value) =>
                       _updateSetAt(group.mainIndex, weight: value),
+                  onNotesChanged: (value) =>
+                      _updateSetNotes(group.mainIndex, value),
                   onComplete: () => _completeSet(group.mainIndex),
+                  onSaveEdited: () => _saveEditedSet(group.mainIndex),
                   onMenuPressed: () => _showSeriesMenu(
                     setIndex: group.mainIndex,
                     canInsertDrop: true,
@@ -482,9 +579,12 @@ class _FocusedExerciseScreenState extends State<FocusedExerciseScreen> {
                   return _SeriesCard(
                     title: 'Drop set',
                     finishLabel: l10n.workoutFinishSet('Drop'),
+                    saveLabel: l10n.workoutSaveSet,
                     set: dropSet,
                     compact: true,
                     isCompleted: dropSet.completed,
+                    wasEverCompleted:
+                        _previouslyCompletedSets.contains(dropIndex),
                     isActiveRest:
                         _restActive && _activeRestSetIndex == dropIndex,
                     activeRestSeconds: _restRemainingSeconds,
@@ -494,7 +594,10 @@ class _FocusedExerciseScreenState extends State<FocusedExerciseScreen> {
                         _updateSetAt(dropIndex, reps: value),
                     onWeightChanged: (value) =>
                         _updateSetAt(dropIndex, weight: value),
+                    onNotesChanged: (value) =>
+                        _updateSetNotes(dropIndex, value),
                     onComplete: () => _completeSet(dropIndex),
+                    onSaveEdited: () => _saveEditedSet(dropIndex),
                     onMenuPressed: () => _showSeriesMenu(
                       setIndex: dropIndex,
                       canInsertDrop: false,
@@ -534,11 +637,15 @@ class _SeriesCard extends StatelessWidget {
   const _SeriesCard({
     required this.title,
     required this.finishLabel,
+    required this.saveLabel,
     required this.set,
     required this.isCompleted,
+    this.wasEverCompleted = false,
     required this.onRepsChanged,
     required this.onWeightChanged,
+    required this.onNotesChanged,
     required this.onComplete,
+    required this.onSaveEdited,
     required this.onMenuPressed,
     required this.restLabel,
     required this.isActiveRest,
@@ -549,17 +656,24 @@ class _SeriesCard extends StatelessWidget {
 
   final String title;
   final String finishLabel;
+  final String saveLabel;
   final ExerciseSet set;
   final bool isCompleted;
+  final bool wasEverCompleted;
   final ValueChanged<int> onRepsChanged;
   final ValueChanged<double> onWeightChanged;
+  final ValueChanged<String> onNotesChanged;
   final VoidCallback onComplete;
+  final VoidCallback onSaveEdited;
   final VoidCallback onMenuPressed;
   final String restLabel;
   final bool isActiveRest;
   final int activeRestSeconds;
   final VoidCallback onSkipRest;
   final bool compact;
+
+  /// The set was completed before but then edited → show "Save" instead.
+  bool get _needsResave => !set.completed && wasEverCompleted;
 
   @override
   Widget build(BuildContext context) {
@@ -651,20 +765,22 @@ class _SeriesCard extends StatelessWidget {
             ),
             if (!compact) ...[
               const SizedBox(height: 8),
-              SizedBox(
-                width: double.infinity,
-                child: FilledButton.icon(
-                  onPressed: set.completed ? null : onComplete,
-                  icon: Icon(
-                    set.completed
-                        ? Icons.check_circle
-                        : Icons.task_alt_outlined,
-                  ),
-                  label: Text(
-                    set.completed ? l10n.workoutSetCompleted : finishLabel,
+              _NotesField(
+                initialValue: set.notes,
+                onChanged: onNotesChanged,
+              ),
+              const SizedBox(height: 8),
+              if (!isCompleted)
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton.icon(
+                    onPressed: _needsResave ? onSaveEdited : onComplete,
+                    icon: const Icon(Icons.task_alt_outlined),
+                    label: Text(
+                      _needsResave ? saveLabel : finishLabel,
+                    ),
                   ),
                 ),
-              ),
             ],
           ],
         ),
@@ -706,6 +822,62 @@ class _SetInputEditor extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _NotesField extends StatefulWidget {
+  const _NotesField({
+    required this.initialValue,
+    required this.onChanged,
+  });
+
+  final String initialValue;
+  final ValueChanged<String> onChanged;
+
+  @override
+  State<_NotesField> createState() => _NotesFieldState();
+}
+
+class _NotesFieldState extends State<_NotesField> {
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.initialValue);
+  }
+
+  @override
+  void didUpdateWidget(covariant _NotesField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.initialValue != widget.initialValue &&
+        widget.initialValue != _controller.text) {
+      _controller.text = widget.initialValue;
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return TextField(
+      controller: _controller,
+      decoration: InputDecoration(
+        labelText: l10n.workoutSetNotes,
+        border: const OutlineInputBorder(),
+        isDense: true,
+        prefixIcon: const Icon(Icons.notes, size: 20),
+      ),
+      maxLines: 2,
+      minLines: 1,
+      textInputAction: TextInputAction.done,
+      onChanged: widget.onChanged,
     );
   }
 }

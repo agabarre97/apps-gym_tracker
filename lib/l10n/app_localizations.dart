@@ -1628,6 +1628,30 @@ abstract class AppLocalizations {
   /// **'Descanso medio: {rest}'**
   String workoutAvgRest(String rest);
 
+  /// No description provided for @workoutSetNotes.
+  ///
+  /// In es, this message translates to:
+  /// **'Observaciones de la serie'**
+  String get workoutSetNotes;
+
+  /// No description provided for @workoutSaveSet.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar serie'**
+  String get workoutSaveSet;
+
+  /// No description provided for @workoutDeleteExercise.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar ejercicio'**
+  String get workoutDeleteExercise;
+
+  /// No description provided for @workoutDeleteExerciseConfirm.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Eliminar {name} de esta sesión?'**
+  String workoutDeleteExerciseConfirm(String name);
+
   /// No description provided for @workoutSessionsForDay.
   ///
   /// In es, this message translates to:

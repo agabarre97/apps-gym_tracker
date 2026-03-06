@@ -823,6 +823,20 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get workoutSetNotes => 'Set notes';
+
+  @override
+  String get workoutSaveSet => 'Save set';
+
+  @override
+  String get workoutDeleteExercise => 'Delete exercise';
+
+  @override
+  String workoutDeleteExerciseConfirm(String name) {
+    return 'Remove $name from this session?';
+  }
+
+  @override
   String get workoutSessionsForDay => 'Sessions for this day';
 
   @override

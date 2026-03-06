@@ -11,6 +11,7 @@ class ExerciseSet {
     this.dropParentSetNumber,
     this.estimatedRestSeconds,
     this.completed = false,
+    this.notes = '',
   });
 
   final int reps;
@@ -28,6 +29,10 @@ class ExerciseSet {
   final int? estimatedRestSeconds;
   final bool completed;
 
+  /// Free-text observations for this set. Carried over from the previous
+  /// session so the user can see what they wrote last time.
+  final String notes;
+
   Map<String, dynamic> toJson() => {
         'reps': reps,
         'weight': weight,
@@ -40,6 +45,7 @@ class ExerciseSet {
         if (estimatedRestSeconds != null)
           'estimatedRestSeconds': estimatedRestSeconds,
         if (completed) 'completed': completed,
+        if (notes.isNotEmpty) 'notes': notes,
       };
 
   factory ExerciseSet.fromJson(Map<String, dynamic> json) => ExerciseSet(
@@ -51,6 +57,7 @@ class ExerciseSet {
         dropParentSetNumber: json['dropParentSetNumber'] as int?,
         estimatedRestSeconds: json['estimatedRestSeconds'] as int?,
         completed: json['completed'] as bool? ?? false,
+        notes: json['notes'] as String? ?? '',
       );
 
   ExerciseSet copyWith({
@@ -62,6 +69,7 @@ class ExerciseSet {
     int? dropParentSetNumber,
     int? estimatedRestSeconds,
     bool? completed,
+    String? notes,
     bool clearRest = false,
     bool clearDropParentSetNumber = false,
   }) =>
@@ -78,6 +86,7 @@ class ExerciseSet {
             ? null
             : (estimatedRestSeconds ?? this.estimatedRestSeconds),
         completed: completed ?? this.completed,
+        notes: notes ?? this.notes,
       );
 }
 
@@ -89,6 +98,7 @@ class WorkoutExercise {
     this.notes = '',
     this.completed = false,
     this.restSeconds,
+    this.elapsedSeconds,
   });
 
   /// Locale-independent exercise identifier.
@@ -106,12 +116,17 @@ class WorkoutExercise {
   /// Optional rest countdown configured for this exercise (in seconds).
   final int? restSeconds;
 
+  /// Accumulated per-exercise stopwatch time in seconds, persisted so it
+  /// survives navigation and app lifecycle events.
+  final int? elapsedSeconds;
+
   Map<String, dynamic> toJson() => {
         'exerciseKey': exerciseKey,
         'sets': sets.map((s) => s.toJson()).toList(),
         'notes': notes,
         'completed': completed,
         if (restSeconds != null) 'restSeconds': restSeconds,
+        if (elapsedSeconds != null) 'elapsedSeconds': elapsedSeconds,
       };
 
   factory WorkoutExercise.fromJson(Map<String, dynamic> json) =>
@@ -124,6 +139,7 @@ class WorkoutExercise {
         notes: json['notes'] as String? ?? '',
         completed: json['completed'] as bool? ?? false,
         restSeconds: json['restSeconds'] as int?,
+        elapsedSeconds: json['elapsedSeconds'] as int?,
       );
 
   WorkoutExercise copyWith({
@@ -132,7 +148,9 @@ class WorkoutExercise {
     String? notes,
     bool? completed,
     int? restSeconds,
+    int? elapsedSeconds,
     bool clearRestSeconds = false,
+    bool clearElapsedSeconds = false,
   }) =>
       WorkoutExercise(
         exerciseKey: exerciseKey ?? this.exerciseKey,
@@ -141,6 +159,9 @@ class WorkoutExercise {
         completed: completed ?? this.completed,
         restSeconds:
             clearRestSeconds ? null : (restSeconds ?? this.restSeconds),
+        elapsedSeconds: clearElapsedSeconds
+            ? null
+            : (elapsedSeconds ?? this.elapsedSeconds),
       );
 
   /// Creates default exercise with 3 empty sets.

@@ -69,6 +69,8 @@ void main() {
         (tester) async {
       await seedSessions();
 
+      DateTime fixedNow() => DateTime(2026, 2, 20);
+
       await tester.pumpWidget(
         buildTestableWidget(
           ExerciseProgressScreen(
@@ -78,6 +80,7 @@ void main() {
             routineDayIndex: 0,
             exerciseKey: 'bench_press',
             exerciseDisplayName: 'Press de banca',
+            clock: fixedNow,
           ),
         ),
       );

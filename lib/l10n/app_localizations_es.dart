@@ -829,6 +829,20 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String get workoutSetNotes => 'Observaciones de la serie';
+
+  @override
+  String get workoutSaveSet => 'Guardar serie';
+
+  @override
+  String get workoutDeleteExercise => 'Eliminar ejercicio';
+
+  @override
+  String workoutDeleteExerciseConfirm(String name) {
+    return '¿Eliminar $name de esta sesión?';
+  }
+
+  @override
   String get workoutSessionsForDay => 'Entrenamientos del día';
 
   @override
