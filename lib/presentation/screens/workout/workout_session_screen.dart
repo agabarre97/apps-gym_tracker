@@ -387,74 +387,111 @@ class _WorkoutSessionScreenState extends State<WorkoutSessionScreen> {
                 return Card(
                   key: ValueKey('${exercise.exerciseKey}_$index'),
                   margin: const EdgeInsets.only(bottom: 10),
-                  child: ListTile(
-                    leading: ReorderableDragStartListener(
-                      index: index,
-                      child: Icon(
-                        Icons.drag_handle,
-                        color: context.textSecondary,
+                  child: InkWell(
+                    onTap: () => _openExercise(index),
+                    borderRadius: BorderRadius.circular(12),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ReorderableDragStartListener(
+                            index: index,
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 12, top: 2),
+                              child: Icon(
+                                Icons.drag_handle,
+                                color: context.textSecondary,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 1),
+                                      child: Icon(
+                                        exercise.completed
+                                            ? Icons.check_circle
+                                            : Icons.fitness_center,
+                                        color: exercise.completed
+                                            ? AppColors.success
+                                            : context.textSecondary,
+                                        size: 18,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: Text(
+                                        _nameForKey(exercise.exerciseKey),
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 4),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 26),
+                                  child: Text(
+                                    exercise.completed
+                                        ? _briefSummary(exercise)
+                                        : _plannedSummary(exercise, l10n),
+                                    style: TextStyle(
+                                        fontSize: 13,
+                                        color: context.textSecondary),
+                                  ),
+                                ),
+                                if (avgRest != null)
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.only(left: 26, top: 2),
+                                    child: Text(
+                                      l10n.workoutAvgRest(avgRest),
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          color: context.textSubtle),
+                                    ),
+                                  ),
+                                const SizedBox(height: 12),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    IconButton(
+                                      onPressed: () =>
+                                          _confirmDeleteExercise(index),
+                                      icon: const Icon(Icons.delete_outline,
+                                          color: AppColors.destructive),
+                                      tooltip: l10n.workoutDeleteExercise,
+                                    ),
+                                    FilledButton.tonalIcon(
+                                      onPressed: () => _openExercise(index),
+                                      icon: Icon(
+                                        exercise.completed
+                                            ? Icons.edit
+                                            : Icons.play_arrow,
+                                      ),
+                                      label: Text(
+                                        exercise.completed
+                                            ? l10n.routineEditDay
+                                            : l10n.sharedStart,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    title: Row(
-                      children: [
-                        Icon(
-                          exercise.completed
-                              ? Icons.check_circle
-                              : Icons.fitness_center,
-                          color: exercise.completed
-                              ? AppColors.success
-                              : context.textSecondary,
-                          size: 18,
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(_nameForKey(exercise.exerciseKey)),
-                        ),
-                      ],
-                    ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 2),
-                        Text(
-                          exercise.completed
-                              ? _briefSummary(exercise)
-                              : _plannedSummary(exercise, l10n),
-                          style: TextStyle(
-                              fontSize: 12, color: context.textSecondary),
-                        ),
-                        if (avgRest != null)
-                          Text(
-                            l10n.workoutAvgRest(avgRest),
-                            style: TextStyle(
-                                fontSize: 11, color: context.textSubtle),
-                          ),
-                      ],
-                    ),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          onPressed: () => _confirmDeleteExercise(index),
-                          icon: const Icon(Icons.delete_outline,
-                              color: AppColors.destructive),
-                          visualDensity: VisualDensity.compact,
-                          tooltip: l10n.workoutDeleteExercise,
-                        ),
-                        FilledButton.tonalIcon(
-                          onPressed: () => _openExercise(index),
-                          icon: Icon(
-                            exercise.completed ? Icons.edit : Icons.play_arrow,
-                          ),
-                          label: Text(
-                            exercise.completed
-                                ? l10n.routineEditDay
-                                : l10n.sharedStart,
-                          ),
-                        ),
-                      ],
-                    ),
-                    onTap: () => _openExercise(index),
                   ),
                 );
               },

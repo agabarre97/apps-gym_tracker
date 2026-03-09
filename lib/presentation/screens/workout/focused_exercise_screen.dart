@@ -115,6 +115,20 @@ class _FocusedExerciseScreenState extends State<FocusedExerciseScreen> {
     final updatedSets = List<ExerciseSet>.from(_exercise.sets);
     updatedSets[setIndex] = updatedSets[setIndex].copyWith(completed: true);
     _previouslyCompletedSets.add(setIndex);
+
+    if (!updatedSets[setIndex].isDropSet) {
+      final parentSeries = _mainSeriesNumberForIndex(setIndex);
+      for (var i = setIndex + 1; i < updatedSets.length; i++) {
+        if (updatedSets[i].isDropSet &&
+            updatedSets[i].dropParentSetNumber == parentSeries) {
+          updatedSets[i] = updatedSets[i].copyWith(completed: true);
+          _previouslyCompletedSets.add(i);
+        } else if (!updatedSets[i].isDropSet) {
+          break;
+        }
+      }
+    }
+
     setState(() {
       _exercise = _exercise.copyWith(
         sets: updatedSets,
@@ -515,129 +529,137 @@ class _FocusedExerciseScreenState extends State<FocusedExerciseScreen> {
     final exerciseTimerLabel =
         Duration(seconds: _exerciseElapsedSeconds).toHumanReadable();
 
-    return Scaffold(
-      appBar: AppBar(),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 0, 16, 130),
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 4),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    widget.exerciseName,
-                    style: const TextStyle(
-                        fontSize: 22, fontWeight: FontWeight.w700),
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        appBar: AppBar(
+          actions: [
+            if (widget.isActiveWorkout)
+              Padding(
+                padding: const EdgeInsets.only(right: 16),
+                child: Center(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.timer_outlined,
+                          size: 18, color: context.textSecondary),
+                      const SizedBox(width: 4),
+                      Text(
+                        exerciseTimerLabel,
+                        style: TextStyle(
+                            fontSize: 14, color: context.textSecondary),
+                      ),
+                    ],
                   ),
-                ),
-                if (widget.isActiveWorkout) ...[
-                  const SizedBox(width: 8),
-                  Icon(Icons.timer_outlined,
-                      size: 18, color: context.textSecondary),
-                  const SizedBox(width: 4),
-                  Text(
-                    exerciseTimerLabel,
-                    style:
-                        TextStyle(fontSize: 14, color: context.textSecondary),
-                  ),
-                ],
-              ],
-            ),
-          ),
-          if (widget.isActiveWorkout)
-            Card(
-              margin: const EdgeInsets.only(bottom: 10),
-              child: ListTile(
-                leading: const Icon(Icons.hourglass_bottom),
-                title: Text(l10n.workoutRestTimer),
-                subtitle: Text(restLabel),
-                trailing: OutlinedButton(
-                  onPressed: _configureExerciseRest,
-                  child: Text(l10n.routineEditDay),
                 ),
               ),
+          ],
+        ),
+        body: ListView(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 130),
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 4),
+              child: Text(
+                widget.exerciseName,
+                style:
+                    const TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+              ),
             ),
-          ...groups.map((group) {
-            final mainSet = _exercise.sets[group.mainIndex];
-            return Column(
-              children: [
-                _SeriesCard(
-                  title: l10n.workoutSet('${group.seriesNumber}'),
-                  finishLabel: l10n.workoutFinishSet('${group.seriesNumber}'),
-                  saveLabel: l10n.workoutSaveSet,
-                  set: mainSet,
-                  isCompleted: mainSet.completed,
-                  wasEverCompleted:
-                      _previouslyCompletedSets.contains(group.mainIndex),
-                  isActiveRest:
-                      _restActive && _activeRestSetIndex == group.mainIndex,
-                  activeRestSeconds: _restRemainingSeconds,
-                  restLabel: restLabel,
-                  onSkipRest: _skipRestTimer,
-                  onRepsChanged: (value) =>
-                      _updateSetAt(group.mainIndex, reps: value),
-                  onWeightChanged: (value) =>
-                      _updateSetAt(group.mainIndex, weight: value),
-                  onNotesChanged: (value) =>
-                      _updateSetNotes(group.mainIndex, value),
-                  onComplete: () => _completeSet(group.mainIndex),
-                  onSaveEdited: () => _saveEditedSet(group.mainIndex),
-                  onMenuPressed: () => _showSeriesMenu(
-                    setIndex: group.mainIndex,
-                    canInsertDrop: true,
+            if (widget.isActiveWorkout)
+              Card(
+                margin: const EdgeInsets.only(bottom: 10),
+                child: ListTile(
+                  leading: const Icon(Icons.hourglass_bottom),
+                  title: Text(l10n.workoutRestTimer),
+                  subtitle: Text(restLabel),
+                  trailing: OutlinedButton(
+                    onPressed: _configureExerciseRest,
+                    child: Text(l10n.routineEditDay),
                   ),
                 ),
-                ...group.dropIndexes.map((dropIndex) {
-                  final dropSet = _exercise.sets[dropIndex];
-                  return _SeriesCard(
-                    title: 'Drop set',
-                    finishLabel: l10n.workoutFinishSet('Drop'),
+              ),
+            ...groups.map((group) {
+              final mainSet = _exercise.sets[group.mainIndex];
+              return Column(
+                children: [
+                  _SeriesCard(
+                    title: l10n.workoutSet('${group.seriesNumber}'),
+                    finishLabel: l10n.workoutFinishSet('${group.seriesNumber}'),
                     saveLabel: l10n.workoutSaveSet,
-                    set: dropSet,
-                    compact: true,
-                    isCompleted: dropSet.completed,
+                    set: mainSet,
+                    isCompleted: mainSet.completed,
                     wasEverCompleted:
-                        _previouslyCompletedSets.contains(dropIndex),
+                        _previouslyCompletedSets.contains(group.mainIndex),
                     isActiveRest:
-                        _restActive && _activeRestSetIndex == dropIndex,
+                        _restActive && _activeRestSetIndex == group.mainIndex,
                     activeRestSeconds: _restRemainingSeconds,
                     restLabel: restLabel,
                     onSkipRest: _skipRestTimer,
                     onRepsChanged: (value) =>
-                        _updateSetAt(dropIndex, reps: value),
+                        _updateSetAt(group.mainIndex, reps: value),
                     onWeightChanged: (value) =>
-                        _updateSetAt(dropIndex, weight: value),
+                        _updateSetAt(group.mainIndex, weight: value),
                     onNotesChanged: (value) =>
-                        _updateSetNotes(dropIndex, value),
-                    onComplete: () => _completeSet(dropIndex),
-                    onSaveEdited: () => _saveEditedSet(dropIndex),
+                        _updateSetNotes(group.mainIndex, value),
+                    onComplete: () => _completeSet(group.mainIndex),
+                    onSaveEdited: () => _saveEditedSet(group.mainIndex),
                     onMenuPressed: () => _showSeriesMenu(
-                      setIndex: dropIndex,
-                      canInsertDrop: false,
+                      setIndex: group.mainIndex,
+                      canInsertDrop: true,
                     ),
-                  );
-                }),
-                const SizedBox(height: 4),
-              ],
-            );
-          }),
-          OutlinedButton.icon(
-            onPressed: () => _showAddSetSheet(),
-            icon: const Icon(Icons.add),
-            label: Text(l10n.workoutAddSet),
-          ),
-        ],
-      ),
-      bottomNavigationBar: SafeArea(
-        top: false,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
-          child: SizedBox(
-            height: 52,
-            child: FilledButton(
-              onPressed: _saving ? null : _saveAndReturn,
-              child: Text(l10n.workoutFinishExercise),
+                  ),
+                  ...group.dropIndexes.map((dropIndex) {
+                    final dropSet = _exercise.sets[dropIndex];
+                    return _SeriesCard(
+                      title: 'Drop set',
+                      finishLabel: l10n.workoutFinishSet('Drop'),
+                      saveLabel: l10n.workoutSaveSet,
+                      set: dropSet,
+                      compact: true,
+                      isCompleted: dropSet.completed,
+                      wasEverCompleted:
+                          _previouslyCompletedSets.contains(dropIndex),
+                      isActiveRest:
+                          _restActive && _activeRestSetIndex == dropIndex,
+                      activeRestSeconds: _restRemainingSeconds,
+                      restLabel: restLabel,
+                      onSkipRest: _skipRestTimer,
+                      onRepsChanged: (value) =>
+                          _updateSetAt(dropIndex, reps: value),
+                      onWeightChanged: (value) =>
+                          _updateSetAt(dropIndex, weight: value),
+                      onNotesChanged: (value) =>
+                          _updateSetNotes(dropIndex, value),
+                      onComplete: () => _completeSet(dropIndex),
+                      onSaveEdited: () => _saveEditedSet(dropIndex),
+                      onMenuPressed: () => _showSeriesMenu(
+                        setIndex: dropIndex,
+                        canInsertDrop: false,
+                      ),
+                    );
+                  }),
+                  const SizedBox(height: 4),
+                ],
+              );
+            }),
+            OutlinedButton.icon(
+              onPressed: () => _showAddSetSheet(),
+              icon: const Icon(Icons.add),
+              label: Text(l10n.workoutAddSet),
+            ),
+          ],
+        ),
+        bottomNavigationBar: SafeArea(
+          top: false,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+            child: SizedBox(
+              height: 52,
+              child: FilledButton(
+                onPressed: _saving ? null : _saveAndReturn,
+                child: Text(l10n.workoutFinishExercise),
+              ),
             ),
           ),
         ),
@@ -819,7 +841,8 @@ class _SetInputEditor extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(
+        Flexible(
+          flex: 2,
           child: _StepperIntField(
             value: reps,
             step: 1,
@@ -827,7 +850,8 @@ class _SetInputEditor extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 8),
-        Expanded(
+        Flexible(
+          flex: 3,
           child: _StepperDoubleField(
             value: weight,
             step: 1.25,
