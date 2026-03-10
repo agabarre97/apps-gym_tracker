@@ -839,24 +839,18 @@ class _SetInputEditor extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       children: [
-        Flexible(
-          flex: 2,
-          child: _StepperIntField(
-            value: reps,
-            step: 1,
-            onChanged: onRepsChanged,
-          ),
+        _StepperIntField(
+          value: reps,
+          step: 1,
+          onChanged: onRepsChanged,
         ),
-        const SizedBox(width: 8),
-        Flexible(
-          flex: 3,
-          child: _StepperDoubleField(
-            value: weight,
-            step: 1.25,
-            onChanged: onWeightChanged,
-          ),
+        const SizedBox(height: 12),
+        _StepperDoubleField(
+          value: weight,
+          step: 1.25,
+          onChanged: onWeightChanged,
         ),
       ],
     );
@@ -1173,7 +1167,7 @@ class _FieldShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
           label,
@@ -1181,6 +1175,7 @@ class _FieldShell extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             IconButton(
               onPressed: onDecrement,
@@ -1188,7 +1183,12 @@ class _FieldShell extends StatelessWidget {
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
             ),
-            Expanded(child: child),
+            const SizedBox(width: 8),
+            SizedBox(
+              width: 120,
+              child: child,
+            ),
+            const SizedBox(width: 8),
             IconButton(
               onPressed: onIncrement,
               icon: const Icon(Icons.add_circle_outline, size: 28),
