@@ -412,5 +412,248 @@ void main() {
       expect(session.exercises.first.sets.first.reps, 7);
       expect(session.exercises.first.sets.first.weight, 77.5);
     });
+
+    test('uses older matching session when exercise is absent from most recent',
+        () {
+      final older = WorkoutSession(
+        id: 'older',
+        routineId: 'r1',
+        routineDayIndex: 0,
+        date: DateTime(2026, 2, 10),
+        exercises: [
+          const WorkoutExercise(
+            exerciseKey: 'incline_press',
+            sets: [
+              ExerciseSet(reps: 11, weight: 27.5),
+              ExerciseSet(reps: 10, weight: 30),
+            ],
+          ),
+        ],
+      );
+      final newer = WorkoutSession(
+        id: 'newer',
+        routineId: 'r1',
+        routineDayIndex: 0,
+        date: DateTime(2026, 2, 14),
+        exercises: [
+          const WorkoutExercise(
+            exerciseKey: 'bench_press',
+            sets: [
+              ExerciseSet(reps: 10, weight: 82.5),
+              ExerciseSet(reps: 8, weight: 85),
+            ],
+          ),
+        ],
+      );
+
+      final session = WorkoutSessionBuilder.build(
+        id: 'latest',
+        routine: routine,
+        dayIndex: 0,
+        date: DateTime(2026, 2, 16),
+        trackTime: false,
+        previousSessions: [older, newer],
+      );
+
+      expect(session.exercises[0].exerciseKey, 'bench_press');
+      expect(session.exercises[0].sets.first.weight, 82.5);
+
+      expect(session.exercises[1].exerciseKey, 'incline_press');
+      expect(session.exercises[1].sets.length, 2);
+      expect(session.exercises[1].sets[0].weight, 27.5);
+      expect(session.exercises[1].sets[1].weight, 30);
+    });
+
+    test('carries over drop set weights when routine configures drops', () {
+      final routineWithDrops = Routine(
+        id: 'r1',
+        name: 'Push',
+        type: 'musculacion',
+        days: [
+          RoutineDay(
+            muscleGroups: ['pectoral'],
+            exerciseKeys: ['bench_press'],
+            exerciseConfigs: [
+              RoutineExerciseConfig(
+                exerciseKey: 'bench_press',
+                restSeconds: 120,
+                setConfigs: [
+                  RoutineSetConfig(targetReps: 8, dropSetCount: 1),
+                  RoutineSetConfig(targetReps: 8),
+                ],
+              ),
+            ],
+          ),
+        ],
+      );
+
+      final previous = WorkoutSession(
+        id: 'prev-drops',
+        routineId: 'r1',
+        routineDayIndex: 0,
+        date: DateTime(2026, 2, 14),
+        exercises: [
+          WorkoutExercise(
+            exerciseKey: 'bench_press',
+            sets: [
+              const ExerciseSet(reps: 8, weight: 80),
+              const ExerciseSet(
+                reps: 10,
+                weight: 65,
+                isDropSet: true,
+                dropParentSetNumber: 1,
+              ),
+              const ExerciseSet(reps: 8, weight: 85),
+            ],
+          ),
+        ],
+      );
+
+      final session = WorkoutSessionBuilder.build(
+        id: 'next',
+        routine: routineWithDrops,
+        dayIndex: 0,
+        date: DateTime(2026, 2, 16),
+        trackTime: false,
+        previousSessions: [previous],
+      );
+
+      final sets = session.exercises.single.sets;
+      expect(sets.length, 3);
+      expect(sets[0].isDropSet, false);
+      expect(sets[0].weight, 80);
+      expect(sets[1].isDropSet, true);
+      expect(sets[1].dropParentSetNumber, 1);
+      expect(sets[1].weight, 65);
+      expect(sets[2].isDropSet, false);
+      expect(sets[2].weight, 85);
+    });
+
+    test('preserves manually-added drop sets when routine has dropSetCount 0',
+        () {
+      final routineNoTemplateDrops = Routine(
+        id: 'r1',
+        name: 'Push',
+        type: 'musculacion',
+        days: [
+          RoutineDay(
+            muscleGroups: ['pectoral'],
+            exerciseKeys: ['bench_press'],
+            exerciseConfigs: [
+              RoutineExerciseConfig(
+                exerciseKey: 'bench_press',
+                restSeconds: 120,
+                setConfigs: [
+                  const RoutineSetConfig(targetReps: 8, dropSetCount: 0),
+                  const RoutineSetConfig(targetReps: 8),
+                ],
+              ),
+            ],
+          ),
+        ],
+      );
+
+      final previous = WorkoutSession(
+        id: 'prev-manual-drops',
+        routineId: 'r1',
+        routineDayIndex: 0,
+        date: DateTime(2026, 2, 14),
+        exercises: [
+          WorkoutExercise(
+            exerciseKey: 'bench_press',
+            sets: [
+              const ExerciseSet(reps: 8, weight: 80),
+              const ExerciseSet(
+                reps: 10,
+                weight: 62.5,
+                isDropSet: true,
+                dropParentSetNumber: 1,
+              ),
+              const ExerciseSet(reps: 8, weight: 82.5),
+            ],
+          ),
+        ],
+      );
+
+      final session = WorkoutSessionBuilder.build(
+        id: 'next-manual',
+        routine: routineNoTemplateDrops,
+        dayIndex: 0,
+        date: DateTime(2026, 2, 16),
+        trackTime: false,
+        previousSessions: [previous],
+      );
+
+      final sets = session.exercises.single.sets;
+      expect(sets.length, 3);
+      expect(sets[0].weight, 80);
+      expect(sets[1].isDropSet, true);
+      expect(sets[1].weight, 62.5);
+      expect(sets[2].weight, 82.5);
+    });
+
+    test(
+        'does not shift main set weights when previous session had interleaved drops',
+        () {
+      final routineTwoMains = Routine(
+        id: 'r1',
+        name: 'Push',
+        type: 'musculacion',
+        days: [
+          RoutineDay(
+            muscleGroups: ['pectoral'],
+            exerciseKeys: ['bench_press'],
+            exerciseConfigs: [
+              RoutineExerciseConfig(
+                exerciseKey: 'bench_press',
+                restSeconds: 120,
+                setConfigs: [
+                  const RoutineSetConfig(targetReps: 8, dropSetCount: 0),
+                  const RoutineSetConfig(targetReps: 8),
+                ],
+              ),
+            ],
+          ),
+        ],
+      );
+
+      final previous = WorkoutSession(
+        id: 'prev-shift-test',
+        routineId: 'r1',
+        routineDayIndex: 0,
+        date: DateTime(2026, 2, 14),
+        exercises: [
+          WorkoutExercise(
+            exerciseKey: 'bench_press',
+            sets: [
+              const ExerciseSet(reps: 8, weight: 100),
+              const ExerciseSet(
+                reps: 12,
+                weight: 50,
+                isDropSet: true,
+                dropParentSetNumber: 1,
+              ),
+              const ExerciseSet(reps: 6, weight: 90),
+            ],
+          ),
+        ],
+      );
+
+      final session = WorkoutSessionBuilder.build(
+        id: 'after-shift-test',
+        routine: routineTwoMains,
+        dayIndex: 0,
+        date: DateTime(2026, 2, 16),
+        trackTime: false,
+        previousSessions: [previous],
+      );
+
+      final sets = session.exercises.single.sets;
+      expect(sets[0].weight, 100);
+      expect(sets[1].weight, 50);
+      expect(sets[1].isDropSet, true);
+      expect(sets[2].weight, 90);
+      expect(sets[2].isDropSet, false);
+    });
   });
 }
